@@ -1,0 +1,808 @@
+esphome:
+  name: esp32-poe-technik
+  friendly_name: ESP32-PoE Technik
+  includes: 
+    - stiebeltools/communication.h
+    - stiebeltools/mappings.h
+    - stiebeltools/property.h
+    - stiebeltools/type.h
+    - stiebeltools/type.cpp
+    - sml_reader.h
+  libraries:
+    - git+https://github.com/volkszaehler/libsml
+
+# external_components:
+#   - source:
+#       type: git
+#       url: https://github.com/muxa/esphome-state-machine
+
+esp32:
+  board: esp32-poe
+  #board: esp32dev
+  framework:
+    type: arduino
+
+# Enable logging
+logger:
+  level: DEBUG
+  baud_rate: 0
+  hardware_uart: UART1
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: !secret api_encryption_key
+
+ota:
+  password: !secret ota_password
+
+time:
+  - platform: homeassistant
+    id: homeassistant_time
+
+substitutions:
+  update_interval_very_fast: 15s
+  update_interval_fast: 30s
+  update_interval_medium: 60s
+  update_interval_slow: 5min
+  update_interval_very_slow: 15min
+  update_interval_once_in_a_while: 1h
+
+#########################################
+#                                       #
+#   ETHERNET Konfiguration              #
+#                                       #
+#########################################
+#wifi:
+#  ssid: !secret wifi_ssid
+#  password: !secret wifi_password
+
+ethernet:
+  type: LAN8720
+  mdc_pin: GPIO23
+  mdio_pin: GPIO18
+  clk_mode: GPIO0_OUT
+  phy_addr: 0
+  power_pin: GPIO12
+
+#########################################
+#                                       #
+#   SPI Konfiguration                   #
+#                                       #
+#########################################
+spi:
+  id: McpSpi
+  clk_pin: GPIO14
+  mosi_pin: GPIO13
+  miso_pin: GPIO4
+
+#########################################
+#                                       #
+#   UART Konfiguration                  #
+#                                       #
+#########################################
+uart:
+  id: smartmeter_uart
+  rx_pin: GPIO2
+  baud_rate: 9600
+
+#########################################
+#                                       #
+#   EVU Sperre                          #
+#                                       #
+#########################################
+switch:
+  - platform: gpio
+    name: "EVU Sperre"
+    id: evu_sperre
+    pin: GPIO5
+
+#########################################
+#                                       #
+#   INTERVAL                            #
+#                                       #
+#########################################
+interval:
+  - interval: 1sec
+    then:
+      - lambda: |-
+          // This prevents warnings like "Component canbus took a long time for an operation"
+          if(!request_queue.empty()) {
+            constexpr auto use_extended_id{false};
+            const auto request_element = request_queue.front();
+            request_queue.pop();
+            requestData(request_element.first, request_element.second);
+          }
+
+#########################################
+#                                       #
+#   SELECT                              #
+#                                       #
+#########################################
+select:
+  - platform: template
+    name: "PROGRAMMSCHALTER"
+    id: PROGRAMMSCHALTER
+    options:
+      - "Notbetrieb"
+      - "Bereitschaft"
+      - "Automatik"
+      - "Tagbetrieb"
+      - "Absenkbetrieb"
+      - "Warmwasser"
+      - "Unbekannt"
+    initial_option: "Unbekannt"
+    optimistic: true
+    setup_priority: 100
+    on_value:
+      then:
+        - lambda: |-
+            const auto it = std::find_if(BetriebsartMappings.begin(), BetriebsartMappings.end(), 
+              [x](const BetriebsartMapping& mapping){ 
+              return (std::string(mapping.name) == x);
+            });
+            if(it != BetriebsartMappings.end()) {
+              sendData(Manager, Property::kPROGRAMMSCHALTER, it->id);
+            }
+
+  - platform: template
+    name: "LUEFTUNGSSTUFE_TAG"
+    id: LUEFTUNGSSTUFE_TAG
+    optimistic: true
+    options:
+      - "3"
+      - "2"
+      - "1"
+      - "0"
+      - "Unbekannt"
+    initial_option: "Unbekannt"
+    set_action:
+      lambda: |-
+        if(x != "Unbekannt") {
+          sendData(Kessel, Property::kLUEFT_STUFE_TAG, std::stoi(x));
+        }
+
+  - platform: template
+    name: "LUEFTUNGSSTUFE_NACHT"
+    id: LUEFTUNGSSTUFE_NACHT
+    optimistic: true
+    options:
+      - "3"
+      - "2"
+      - "1"
+      - "0"
+      - "Unbekannt"
+    initial_option: "Unbekannt"
+    set_action:
+      lambda: |-
+        if(x != "Unbekannt") {
+          sendData(Kessel, Property::kLUEFT_STUFE_NACHT, std::stoi(x));
+        }
+
+  - platform: template
+    name: "LUEFTUNGSSTUFE_PARTY"
+    id: LUEFTUNGSSTUFE_PARTY
+    optimistic: true
+    options:
+      - "3"
+      - "2"
+      - "1"
+      - "0"
+      - "Unbekannt"
+    initial_option: "Unbekannt"
+    set_action:
+      lambda: |-
+        if(x != "Unbekannt") {
+          sendData(Kessel, Property::kLUEFT_STUFE_PARTY, std::stoi(x));
+        }
+
+#########################################
+#                                       #
+#   SML READER                          #
+#                                       #
+#########################################
+
+custom_component:
+- lambda: |-
+    auto sml_reader = new SMLReader(id(smartmeter_uart));
+    return {sml_reader};
+
+#########################################
+#                                       #
+#   SENSORS                             #
+#                                       #
+#########################################
+sensor:
+  - platform: template
+    name: "FEHLERMELDUNG"
+    id: FEHLERMELDUNG
+    icon: "mdi:alert-circle"
+    accuracy_decimals: 0
+
+  - platform: template
+    name: "AUSSENTEMP"
+    id: AUSSENTEMP
+    unit_of_measurement: "°C"
+    icon: "mdi:thermometer-lines"
+    device_class: "temperature"
+    state_class: "measurement"
+    accuracy_decimals: 1
+    update_interval: 5min
+    lambda: |-
+      queueRequest(Kessel, Property::kAUSSENTEMP);
+      return {};
+
+  - platform: template
+    name: "SAMMLERISTTEMP"
+    id: SAMMLERISTTEMP
+    unit_of_measurement: "°C"
+    icon: "mdi:thermometer-lines"
+    device_class: "temperature"
+    state_class: "measurement"
+    accuracy_decimals: 1
+    update_interval: 60s
+    lambda: |-
+      queueRequest(Kessel, Property::kSAMMLERISTTEMP);
+      return {};
+
+  - platform: template
+    name: "VERDAMPFERTEMP"
+    id: VERDAMPFERTEMP
+    unit_of_measurement: "°C"
+    icon: "mdi:thermometer-lines"
+    device_class: "temperature"
+    state_class: "measurement"
+    accuracy_decimals: 1
+    update_interval: 15s
+    lambda: |-
+      queueRequest(Kessel, Property::kVERDAMPFERTEMP);
+      return {};
+
+  - platform: template
+    name: "RUECKLAUFISTTEMP"
+    id: RUECKLAUFISTTEMP
+    unit_of_measurement: "°C"
+    icon: "mdi:thermometer-lines"
+    device_class: "temperature"
+    state_class: "measurement"
+    accuracy_decimals: 1
+    update_interval: 30s
+    lambda: |-
+      queueRequest(Kessel, Property::kRUECKLAUFISTTEMP);
+      return {};
+
+  - platform: template
+    name: "SCHALTFKT_IWS"
+    id: SCHALTFKT_IWS
+    icon: "mdi:description"
+    accuracy_decimals: 0
+
+  - platform: template
+    name: "JAHR"
+    id: JAHR
+    icon: "mdi:calendar"
+    accuracy_decimals: 0
+
+  - platform: template
+    name: "MONAT"
+    id: MONAT
+    icon: "mdi:calendar"
+    accuracy_decimals: 0
+
+  - platform: template
+    name: "WOCHENTAG"
+    id: WOCHENTAG
+    icon: "mdi:calendar-today"
+    accuracy_decimals: 0
+
+  - platform: template
+    name: "TAG"
+    id: TAG
+    icon: "mdi:calendar-today"
+    accuracy_decimals: 0
+  
+  - platform: template
+    name: "STUNDE"
+    id: STUNDE
+    icon: "mdi:calendar-clock"
+    accuracy_decimals: 0
+
+  - platform: template
+    name: "MINUTE"
+    id: MINUTE
+    icon: "mdi:calendar-clock"
+    accuracy_decimals: 0
+
+  - platform: template
+    name: "BETRIEBS_STATUS"
+    id: BETRIEBS_STATUS
+    accuracy_decimals: 0
+
+  - platform: template
+    name: "ABLUFT_IST"
+    id: ABLUFT_IST
+    unit_of_measurement: "l/min"
+    icon: "mdi:fan"
+    state_class: "measurement"
+    accuracy_decimals: 0
+    update_interval: 60s
+    lambda: |-
+      queueRequest(Kessel, Property::kABLUFT_IST);
+      return {};
+
+  - platform: template
+    name: "FORTLUFT_SOLL"
+    id: FORTLUFT_SOLL
+    unit_of_measurement: "l/min"
+    icon: "mdi:fan"
+    state_class: "measurement"
+    accuracy_decimals: 0
+    update_interval: 60s
+    lambda: |-
+      queueRequest(Kessel, Property::kFORTLUFT_SOLL);
+      return {};
+
+  - platform: template
+    name: "FORTLUFT_IST"
+    id: FORTLUFT_IST
+    unit_of_measurement: "l/min"
+    icon: "mdi:fan"
+    state_class: "measurement"
+    accuracy_decimals: 0
+    update_interval: 60s
+    lambda: |-
+      queueRequest(Kessel, Property::kFORTLUFT_IST);
+      return {};
+
+  - platform: template
+    name: "VERDICHTER"
+    id: VERDICHTER
+    accuracy_decimals: 2
+
+  - platform: template
+    name: "ANZEIGE_NIEDERDRUCK"
+    id: ANZEIGE_NIEDERDRUCK
+    accuracy_decimals: 2
+
+  - platform: template
+    name: "PUMPENZYKLEN_MIN_AUSSENT"
+    id: PUMPENZYKLEN_MIN_AUSSENT
+    accuracy_decimals: 0
+
+  - platform: template
+    name: "VOLUMENSTROM"
+    id: VOLUMENSTROM
+    unit_of_measurement: "l/min"
+    icon: "mdi:pump"
+    device_class: "volume"
+    state_class: "measurement"
+    accuracy_decimals: 1
+    update_interval: $update_interval_very_slow
+    filters:
+      - or:
+        - throttle: $update_interval_very_slow
+        - delta: 1.0
+    lambda: |-
+      queueRequest(Kessel, Property::kVOLUMENSTROM);
+      return {};
+
+  - platform: template
+    name: "SPEICHERSOLLTEMP"
+    id: SPEICHERSOLLTEMP
+    unit_of_measurement: "°C"
+    icon: "mdi:thermometer-lines"
+    device_class: "temperature"
+    state_class: "measurement"
+    accuracy_decimals: 1
+    update_interval: $update_interval_very_slow
+    filters:
+      - or:
+        - throttle: $update_interval_very_slow
+        - delta: 1.0
+    lambda: |-
+      queueRequest(Kessel, Property::kSPEICHERSOLLTEMP);
+      return {};
+
+  - platform: template
+    name: "ABLUFT_SOLL"
+    id: ABLUFT_SOLL
+    unit_of_measurement: "l/min"
+    icon: "mdi:fan"
+    state_class: "measurement"
+    accuracy_decimals: 0
+    update_interval: $update_interval_slow
+    filters:
+      - throttle: $update_interval_slow
+    lambda: |-
+      queueRequest(Kessel, Property::kABLUFT_SOLL);
+      return {};
+
+  - platform: template
+    name: "ZULUFT_IST"
+    id: ZULUFT_IST
+    unit_of_measurement: "l/min"
+    icon: "mdi:fan"
+    state_class: "measurement"
+    accuracy_decimals: 0
+    update_interval: $update_interval_slow
+    filters:
+      - throttle: $update_interval_slow
+    lambda: |-
+      queueRequest(Kessel, Property::kZULUFT_IST);
+      return {};
+
+  - platform: template
+    name: "WAERMEERTRAG_HEIZ_SUM_KWH"
+    id: WAERMEERTRAG_HEIZ_SUM_KWH
+    unit_of_measurement: "kWh"
+    icon: "mdi:heating-coil"
+    state_class: "measurement"
+    accuracy_decimals: 0
+    update_interval: $update_interval_once_in_a_while
+    filters:
+      - throttle: $update_interval_once_in_a_while
+    lambda: |-
+      queueRequest(Kessel, Property::kWAERMEERTRAG_HEIZ_SUM_KWH);
+      return {};
+
+  - platform: template
+    name: "WAERMEERTRAG_WW_SUM_KWH"
+    id: WAERMEERTRAG_WW_SUM_KWH
+    unit_of_measurement: "kWh"
+    icon: "mdi:heating-coil"
+    state_class: "measurement"
+    accuracy_decimals: 0
+    update_interval: $update_interval_once_in_a_while
+    filters:
+      - throttle: $update_interval_once_in_a_while
+    lambda: |-
+      queueRequest(Kessel, Property::kWAERMEERTRAG_WW_SUM_KWH);
+      return {};
+
+  - platform: template
+    name: "WAERMEERTRAG_RUECKGE_SUMME_KWH"
+    id: WAERMEERTRAG_RUECKGE_SUMME_KWH
+    unit_of_measurement: "kWh"
+    icon: "mdi:heating-coil"
+    state_class: "measurement"
+    accuracy_decimals: 0
+    update_interval: $update_interval_once_in_a_while
+    filters:
+      - throttle: $update_interval_once_in_a_while
+    lambda: |-
+      queueRequest(Kessel, Property::kWAERMEERTRAG_RUECKGE_SUMME_KWH);
+      return {};
+
+#########################################
+#                                       #
+#   SML                                 #
+#                                       #
+#########################################
+  - platform: template
+    name: "Total incoming"
+    id: Total_incoming
+    #obis_code: "1-0:1.8.0"
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total_increasing
+    filters:
+      - multiply: 0.001
+    update_interval: 15s
+      
+  - platform: template
+    name: "Total outgoing"
+    id: Total_Outgoing
+    #obis_code: "1-0:2.8.0"
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total_increasing
+    filters:
+      - multiply: 0.001
+    update_interval: 15s
+
+  - platform: template
+    name: "Instantaneous Power"
+    id: Instantaneous_Power
+    #obis_code: "1-0:16.7.0"
+    unit_of_measurement: W
+    device_class: power
+    update_interval: 15s
+
+  - platform: template
+    name: "Frequency"
+    id: Frequency
+    #obis_code: "1-0:14.7.0"
+    unit_of_measurement: Hz
+    device_class: frequency
+    update_interval: 15s
+
+  - platform: template
+    name: "Instantaneous Power L1"
+    id: Instantaneous_Power_L1
+    #obis_code: "1-0:36.7.0"
+    unit_of_measurement: W
+    device_class: power
+    update_interval: 15s
+
+  - platform: template
+    name: "Instantaneous Power L2"
+    id: Instantaneous_Power_L2
+    #obis_code: "1-0:56.7.0"
+    unit_of_measurement: W
+    device_class: power
+    update_interval: 15s
+
+  - platform: template
+    name: "Instantaneous Power L3"
+    id: Instantaneous_Power_L3
+    #obis_code: "1-0:76.7.0"
+    unit_of_measurement: W
+    device_class: power
+    update_interval: 15s
+
+  - platform: template
+    name: "Instantaneous Voltage L1"
+    id: Instantaneous_Voltage_L1
+    #obis_code: "1-0:32.7.0"
+    unit_of_measurement: V
+    device_class: voltage
+    update_interval: 15s
+
+  - platform: template
+    name: "Instantaneous Voltage L2"
+    id: Instantaneous_Voltage_L2
+    #obis_code: "1-0:52.7.0"
+    unit_of_measurement: V
+    device_class: voltage
+    update_interval: 15s
+
+  - platform: template
+    name: "Instantaneous Voltage L3"
+    id: Instantaneous_Voltage_L3
+    #obis_code: "1-0:72.7.0"
+    unit_of_measurement: V
+    device_class: voltage
+    update_interval: 15s
+
+  - platform: template
+    name: "Instantaneous Current L1"
+    id: Instantaneous_Current_L1
+    #obis_code: "1-0:31.7.0"
+    unit_of_measurement: A
+    device_class: current
+    update_interval: 15s
+
+  - platform: template
+    name: "Instantaneous Current L2"
+    id: Instantaneous_Current_L2
+    #obis_code: "1-0:51.7.0"
+    unit_of_measurement: A
+    device_class: current
+    update_interval: 15s
+
+  - platform: template
+    name: "Instantaneous Current L3"
+    id: Instantaneous_Current_L3
+    #obis_code: "1-0:71.7.0"
+    unit_of_measurement: A
+    device_class: current
+    update_interval: 15s
+
+#########################################
+#                                       #
+#   water sensor                        #
+#                                       #
+#########################################
+
+  - platform: pulse_counter
+    pin: 
+      number: GPIO33
+      mode:
+        input: true
+        pullup: true
+    name: "water pulse"
+    id: water_pulse
+
+  - platform: pulse_meter
+    pin: GPIO33
+    name: "Water Pulse Meter"
+    unit_of_measurement: "liter/min"
+    icon: "mdi:water"
+    internal_filter: 100ms
+    total:
+      name: "Water Total"
+      unit_of_measurement: "liter"
+
+  - platform: pulse_meter
+    pin: GPIO33
+    name: "Water Pulse Meter"
+    unit_of_measurement: "liter/min"
+    icon: "mdi:water"
+    internal_filter: 100ms
+    total:
+      name: "Water Meter Total"
+      unit_of_measurement: "m³"
+      id: water_meter_total
+      accuracy_decimals: 3
+      device_class: water
+      state_class: total_increasing
+      filters:
+        - multiply: 0.001
+
+  - platform: template
+    name: "Water Usage Liter"
+    id: water_flow_rate
+    accuracy_decimals: 1
+    unit_of_measurement: "l/min"
+    icon: "mdi:water"
+    lambda: return (id(water_pulse).state * 10);
+
+#########################################
+#                                       #
+#   Kondensatpumpe Störung              #
+#                                       #
+#########################################
+binary_sensor:
+  - platform: gpio
+    pin: 
+      number: GPIO32
+      mode:
+        input: true
+        pullup: true
+      inverted: true
+    name: "Kondensatpumpe Störung"
+    filters:
+      - delayed_on: 1s
+      - delayed_off: 1min
+    on_press:
+      then:
+        - switch.turn_on: evu_sperre
+    on_release:
+      then:
+        - switch.turn_off: evu_sperre
+
+#########################################
+#                                       #
+#   Wassermelder                        #
+#                                       #
+#########################################
+  - platform: gpio
+    pin: 
+      number: GPIO3
+      mode:
+        input: true
+        pullup: true
+      inverted: true
+    filters:
+      - delayed_on_off: 1s
+    name: "Wassermelder 1"
+
+  - platform: gpio
+    pin: 
+      number: GPIO1
+      mode:
+        input: true
+        pullup: true
+      inverted: true
+#    filters:
+#      - delayed_on_off: 1s
+    name: "Wassermelder 2"
+
+#########################################
+#                                       #
+#   CANbus Konfiguration                #
+#                                       #
+#########################################
+canbus:
+  - platform: mcp2515
+    id: my_mcp2515
+    spi_id: McpSpi
+    cs_pin: GPIO15
+    can_id: 680
+    use_extended_id: false
+    bit_rate: 20kbps
+    on_frame:
+
+#########################################
+#                                       #
+#   KESSEL Nachrichten                  #
+#                                       #
+#########################################
+    - can_id: 0x180
+      then:
+        - lambda: |-
+            std::string value;
+            const auto property = processCanMessage(value, x);
+
+            switch(property) {
+              case Property::kFEHLERMELDUNG:
+                id(FEHLERMELDUNG).publish_state(std::stoi(value));
+                break;
+              case Property::kAUSSENTEMP:
+                id(AUSSENTEMP).publish_state(std::stof(value));
+                break;
+              case Property::kSAMMLERISTTEMP:
+                id(SAMMLERISTTEMP).publish_state(std::stof(value));
+                break;
+              case Property::kVERDAMPFERTEMP:
+                id(VERDAMPFERTEMP).publish_state(std::stof(value));
+                break;
+              case Property::kRUECKLAUFISTTEMP:
+                id(RUECKLAUFISTTEMP).publish_state(std::stof(value));
+                break;
+              case Property::kSCHALTFKT_IWS:
+                id(SCHALTFKT_IWS).publish_state(std::stoi(value));
+                break;
+              case Property::kPROGRAMMSCHALTER:
+                {
+                  auto call = id(PROGRAMMSCHALTER).make_call();
+                  const auto option = id(PROGRAMMSCHALTER).at(std::stoi(value));
+                  if(option.has_value()) { 
+                    call.set_option(option.value());
+                    call.perform();
+                  }
+                  break;
+                }
+              case Property::kWOCHENTAG:
+                id(WOCHENTAG).publish_state(std::stoi(value));
+                break;
+              case Property::kTAG:
+                id(TAG).publish_state(std::stoi(value));
+                break;
+              case Property::kMONAT:
+                id(MONAT).publish_state(std::stoi(value));
+                break;
+              case Property::kJAHR:
+                id(JAHR).publish_state(std::stoi(value) + 2000U);
+                break;
+              case Property::kSTUNDE:
+                id(STUNDE).publish_state(std::stoi(value));
+                break;
+              case Property::kMINUTE:
+                id(MINUTE).publish_state(std::stoi(value));
+                break;
+              case Property::kBETRIEBS_STATUS:
+                id(BETRIEBS_STATUS).publish_state(std::stoi(value));
+                break;
+              case Property::kABLUFT_IST:
+                id(ABLUFT_IST).publish_state(std::stoi(value));
+                break;
+              case Property::kFORTLUFT_SOLL:
+                id(FORTLUFT_SOLL).publish_state(std::stoi(value));
+                break;
+              case Property::kFORTLUFT_IST:
+                id(FORTLUFT_IST).publish_state(std::stoi(value));
+                break;
+              case Property::kPUMPENZYKLEN_MIN_AUSSENT:
+                id(PUMPENZYKLEN_MIN_AUSSENT).publish_state(std::stoi(value));
+                break;
+              case Property::kANZEIGE_NIEDERDRUCK:
+                id(ANZEIGE_NIEDERDRUCK).publish_state(std::stof(value));
+                break;
+              case Property::kVERDICHTER:
+                id(VERDICHTER).publish_state(std::stof(value));
+                break;
+              case Property::kVOLUMENSTROM:
+                id(VOLUMENSTROM).publish_state(std::stof(value));
+                break;
+              case Property::kSPEICHERSOLLTEMP:
+                id(SPEICHERSOLLTEMP).publish_state(std::stof(value));
+                break;
+              case Property::kABLUFT_SOLL:
+                id(ABLUFT_SOLL).publish_state(std::stoi(value));
+                break;
+              case Property::kZULUFT_IST:
+                id(ZULUFT_IST).publish_state(std::stoi(value));
+                break;
+              case Property::kWAERMEERTRAG_HEIZ_SUM_KWH:
+                id(WAERMEERTRAG_HEIZ_SUM_KWH).publish_state(std::stoi(value));
+                break;
+              case Property::kWAERMEERTRAG_WW_SUM_KWH:
+                id(WAERMEERTRAG_WW_SUM_KWH).publish_state(std::stoi(value));
+                break;
+              case Property::kWAERMEERTRAG_RUECKGE_SUMME_KWH:
+                id(WAERMEERTRAG_RUECKGE_SUMME_KWH).publish_state(std::stoi(value));
+                break;
+              default:
+                ESP_LOGI("custom","Unhandled Id %04x  sent by %02x %02x", property, !x.empty() ? x[0U] : 0x00, !x.empty() ? x[1U] : 0x00);
+            }
