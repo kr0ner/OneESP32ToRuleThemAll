@@ -396,10 +396,6 @@ sensor:
     state_class: "measurement"
     accuracy_decimals: 1
     update_interval: $update_interval_very_slow
-    filters:
-      - or:
-        - throttle: $update_interval_very_slow
-        - delta: 1.0
     lambda: |-
       queueRequest(Kessel, Property::kSPEICHERSOLLTEMP);
       return {};
@@ -412,8 +408,6 @@ sensor:
     state_class: "measurement"
     accuracy_decimals: 0
     update_interval: $update_interval_slow
-    filters:
-      - throttle: $update_interval_slow
     lambda: |-
       queueRequest(Kessel, Property::kABLUFT_SOLL);
       return {};
@@ -487,7 +481,33 @@ sensor:
       - throttle: $update_interval_very_slow
       - delta: 1.0
     lambda: |-
-      queueRequest(Kessel, Property::kRAUMISTTEMP);
+      queueRequest(Manager, Property::kRAUMISTTEMP);
+      return {};
+
+  - platform: template
+    name: "RAUMSOLLTEMP_I"
+    id: RAUMSOLLTEMP_I
+    unit_of_measurement: "°C"
+    icon: "mdi:thermometer-lines"
+    device_class: "temperature"
+    state_class: "measurement"
+    accuracy_decimals: 1
+    update_interval: $update_interval_very_slow
+    lambda: |-
+      queueRequest(Heizmodul, Property::kRAUMSOLLTEMP_I);
+      return {};
+
+  - platform: template
+    name: "RAUMSOLLTEMP_NACHT"
+    id: RAUMSOLLTEMP_NACHT
+    unit_of_measurement: "°C"
+    icon: "mdi:thermometer-lines"
+    device_class: "temperature"
+    state_class: "measurement"
+    accuracy_decimals: 1
+    update_interval: $update_interval_very_slow
+    lambda: |-
+      queueRequest(Heizmodul, Property::kRAUMSOLLTEMP_NACHT);
       return {};
 
   - platform: template
@@ -504,6 +524,19 @@ sensor:
       - delta: 1.0
     lambda: |-
       queueRequest(Kessel, Property::kSPEICHERISTTEMP);
+      return {};
+
+  - platform: template
+    name: "EINSTELL_SPEICHERSOLLTEMP"
+    id: EINSTELL_SPEICHERSOLLTEMP
+    unit_of_measurement: "°C"
+    icon: "mdi:thermometer-lines"
+    device_class: "temperature"
+    state_class: "measurement"
+    accuracy_decimals: 1
+    update_interval: $update_interval_once_in_a_while
+    lambda: |-
+      queueRequest(Kessel, Property::kEINSTELL_SPEICHERSOLLTEMP);
       return {};
 
 #########################################
@@ -652,7 +685,7 @@ sensor:
 climate:
 - platform: custom
   lambda: |-
-    auto heating = new HeatingDay(id(RAUMISTTEMP));
+    auto heating = new HeatingDay(id(RAUMISTTEMP),id(RAUMSOLLTEMP_I));
     App.register_component(heating);
     return {heating};
   climates:
@@ -660,7 +693,7 @@ climate:
 
 - platform: custom
   lambda: |-
-    auto heating = new HeatingNight(id(RAUMISTTEMP));
+    auto heating = new HeatingNight(id(RAUMISTTEMP),id(RAUMSOLLTEMP_NACHT));
     App.register_component(heating);
     return {heating};
   climates:
@@ -668,7 +701,7 @@ climate:
 
 - platform: custom
   lambda: |-
-    auto hot_water = new HotWater(id(SPEICHERISTTEMP));
+    auto hot_water = new HotWater(id(SPEICHERISTTEMP),id(EINSTELL_SPEICHERSOLLTEMP));
     App.register_component(hot_water);
     return {hot_water};
   climates:
@@ -748,7 +781,7 @@ canbus:
     - can_id: 0x180
       then:
         - lambda: |-
-            std::string value;
+            std::string value{"0"};
             const auto property = processCanMessage(value, x);
 
             switch(property) {
@@ -838,11 +871,11 @@ canbus:
               case Property::kWAERMEERTRAG_RUECKGE_SUMME_KWH:
                 id(WAERMEERTRAG_RUECKGE_SUMME_KWH).publish_state(std::stoi(value));
                 break;
-              case Property::kRAUMISTTEMP:
-                id(RAUMISTTEMP).publish_state(std::stof(value));
-                break;
               case Property::kSPEICHERISTTEMP:
                 id(SPEICHERISTTEMP).publish_state(std::stof(value));
+                break;
+              case Property::kEINSTELL_SPEICHERSOLLTEMP:
+                id(EINSTELL_SPEICHERSOLLTEMP).publish_state(std::stof(value));
                 break;
               case Property::kLUEFT_STUFE_PARTY:
                 {
@@ -869,5 +902,36 @@ canbus:
                   break;
                 }
               default:
-                ESP_LOGI("custom","Unhandled Id %04x  sent by %02x %02x", property, !x.empty() ? x[0U] : 0x00, !x.empty() ? x[1U] : 0x00);
+                ESP_LOGI("custom","Unhandled Id %04x sent by %02x %02x with value %d", property, !x.empty() ? x[0U] : 0x00, !x.empty() ? x[1U] : 0x00, std::stoi(value));
+            }
+
+    - can_id: 0x301
+      then:
+        - lambda: |-
+            std::string value{"0"};
+            const auto property = processCanMessage(value, x);
+
+            switch(property) {
+              case Property::kRAUMSOLLTEMP_I:
+                id(RAUMSOLLTEMP_I).publish_state(std::stof(value));
+                break;
+              case Property::kRAUMSOLLTEMP_NACHT:
+                id(RAUMSOLLTEMP_NACHT).publish_state(std::stof(value));
+                break;
+              default:
+                ESP_LOGI("custom","Unhandled Id %04x sent by %02x %02x with value %d", property, !x.empty() ? x[0U] : 0x00, !x.empty() ? x[1U] : 0x00, std::stoi(value));
+            }
+
+    - can_id: 0x302
+      then:
+        - lambda: |-
+            std::string value{"0"};
+            const auto property = processCanMessage(value, x);
+
+            switch(property) {
+              case Property::kRAUMISTTEMP:
+                id(RAUMISTTEMP).publish_state(std::stof(value));
+                break;
+              default:
+                ESP_LOGI("custom","Unhandled Id %04x sent by %02x %02x with value %d", property, !x.empty() ? x[0U] : 0x00, !x.empty() ? x[1U] : 0x00, std::stoi(value));
             }

@@ -59,8 +59,8 @@ struct CanMember
 //  Name               CanId      ReadId          WriteId         ConfirmationID
 static const CanMember ESPClient {0x6a2,    {0x00, 0x00},   {0x00, 0x00},   {0xE2, 0x00}}; //The ESP Home Client, thus no valid read/write IDs
 static const CanMember Kessel    {0x180,    {0x31, 0x00},   {0x30, 0x00},   {0x00, 0x00}};
-static const CanMember Manager   {0x480,    {0x91, 0x00},   {0x90, 0x00},   {0x00, 0x00}};
-static const CanMember Heizmodul {0x500,    {0xA1, 0x00},   {0xA0, 0x00},   {0x00, 0x00}};
+static const CanMember Manager   {0x302,    {0x61, 0x02},   {0x60, 0x02},   {0x00, 0x00}};
+static const CanMember Heizmodul {0x301,    {0x61, 0x01},   {0x60, 0x01},   {0x00, 0x00}};
 
 using Request = std::pair<const CanMember, const Property>;
 static std::queue<Request> request_queue;
@@ -132,7 +132,7 @@ void sendData(const CanMember& member, const Property property, const std::uint1
     const std::uint8_t ValueByte2{static_cast<std::uint8_t>(value & 0xff)};
     std::vector<std::uint8_t> data;
 
-    if(IndexByte1 == 0x00) {
+    /*if(IndexByte1 == 0x00) {
         data.insert(data.end(), {
             IdByte1,
             IdByte2,
@@ -142,7 +142,7 @@ void sendData(const CanMember& member, const Property property, const std::uint1
             0x00,
             0x00
         });
-    } else {
+    } else {*/
         data.insert(data.end(), {
             IdByte1,
             IdByte2,
@@ -152,7 +152,7 @@ void sendData(const CanMember& member, const Property property, const std::uint1
             ValueByte1,
             ValueByte2
         });
-    }
+    //}
     
     id(my_mcp2515).send_data(ESPClient.CanId, use_extended_id, data);
 }
