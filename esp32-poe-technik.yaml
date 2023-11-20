@@ -7,6 +7,7 @@ esphome:
     - stiebeltools/property.h
     - stiebeltools/type.h
     - stiebeltools/type.cpp
+    - stiebeltools/waermepumpe.h
     - sml_reader.h
   libraries:
     - git+https://github.com/volkszaehler/libsml
@@ -138,10 +139,10 @@ select:
       then:
         - lambda: |-
             const auto it = std::find_if(BetriebsartMappings.begin(), BetriebsartMappings.end(), 
-              [x](const BetriebsartMapping& mapping){ 
+              [x](const BetriebsartMapping& mapping){
               return (std::string(mapping.name) == x);
             });
-            if(it != BetriebsartMappings.end()) {
+            if(it != BetriebsartMappings.end() && id(PROGRAMMSCHALTER).state != x) {
               sendData(Manager, Property::kPROGRAMMSCHALTER, it->id);
             }
 
@@ -158,7 +159,7 @@ select:
     initial_option: "Unbekannt"
     set_action:
       lambda: |-
-        if(x != "Unbekannt") {
+        if(x != "Unbekannt" && id(LUEFTUNGSSTUFE_TAG).state != x) {
           sendData(Kessel, Property::kLUEFT_STUFE_TAG, std::stoi(x));
         }
 
@@ -175,7 +176,7 @@ select:
     initial_option: "Unbekannt"
     set_action:
       lambda: |-
-        if(x != "Unbekannt") {
+        if(x != "Unbekannt" && id(LUEFTUNGSSTUFE_NACHT).state != x) {
           sendData(Kessel, Property::kLUEFT_STUFE_NACHT, std::stoi(x));
         }
 
@@ -192,7 +193,7 @@ select:
     initial_option: "Unbekannt"
     set_action:
       lambda: |-
-        if(x != "Unbekannt") {
+        if(x != "Unbekannt" && id(LUEFTUNGSSTUFE_PARTY).state != x) {
           sendData(Kessel, Property::kLUEFT_STUFE_PARTY, std::stoi(x));
         }
 
@@ -473,6 +474,38 @@ sensor:
       queueRequest(Kessel, Property::kWAERMEERTRAG_RUECKGE_SUMME_KWH);
       return {};
 
+  - platform: template
+    name: "RAUMISTTEMP"
+    id: RAUMISTTEMP
+    unit_of_measurement: "°C"
+    icon: "mdi:thermometer-lines"
+    device_class: "temperature"
+    state_class: "measurement"
+    accuracy_decimals: 1
+    update_interval: $update_interval_very_slow
+    filters:
+      - throttle: $update_interval_very_slow
+      - delta: 1.0
+    lambda: |-
+      queueRequest(Kessel, Property::kRAUMISTTEMP);
+      return {};
+
+  - platform: template
+    name: "SPEICHERISTTEMP"
+    id: SPEICHERISTTEMP
+    unit_of_measurement: "°C"
+    icon: "mdi:thermometer-lines"
+    device_class: "temperature"
+    state_class: "measurement"
+    accuracy_decimals: 1
+    update_interval: $update_interval_slow
+    filters:
+      - throttle: $update_interval_slow
+      - delta: 1.0
+    lambda: |-
+      queueRequest(Kessel, Property::kSPEICHERISTTEMP);
+      return {};
+
 #########################################
 #                                       #
 #   SML                                 #
@@ -593,49 +626,53 @@ sensor:
 #   water sensor                        #
 #                                       #
 #########################################
-
-  - platform: pulse_counter
-    pin: 
-      number: GPIO33
-      mode:
-        input: true
-        pullup: true
-    name: "water pulse"
-    id: water_pulse
-
   - platform: pulse_meter
     pin: GPIO33
-    name: "Water Pulse Meter"
+    name: "Active water consumption"
+    id: active_water_consumption
     unit_of_measurement: "liter/min"
     icon: "mdi:water"
     internal_filter: 100ms
+    internal_filter_mode: PULSE
     total:
-      name: "Water Total"
-      unit_of_measurement: "liter"
-
-  - platform: pulse_meter
-    pin: GPIO33
-    name: "Water Pulse Meter"
-    unit_of_measurement: "liter/min"
-    icon: "mdi:water"
-    internal_filter: 100ms
-    total:
-      name: "Water Meter Total"
+      name: "Total water consumption"
       unit_of_measurement: "m³"
-      id: water_meter_total
+      id: total_water_consumption
       accuracy_decimals: 3
       device_class: water
       state_class: total_increasing
       filters:
         - multiply: 0.001
 
-  - platform: template
-    name: "Water Usage Liter"
-    id: water_flow_rate
-    accuracy_decimals: 1
-    unit_of_measurement: "l/min"
-    icon: "mdi:water"
-    lambda: return (id(water_pulse).state * 10);
+#########################################
+#                                       #
+#   Wärmepumpe climates                 #
+#                                       #
+#########################################
+climate:
+- platform: custom
+  lambda: |-
+    auto heating = new HeatingDay(id(RAUMISTTEMP));
+    App.register_component(heating);
+    return {heating};
+  climates:
+    - name: "Heating Day"
+
+- platform: custom
+  lambda: |-
+    auto heating = new HeatingNight(id(RAUMISTTEMP));
+    App.register_component(heating);
+    return {heating};
+  climates:
+    - name: "Heating Night"
+
+- platform: custom
+  lambda: |-
+    auto hot_water = new HotWater(id(SPEICHERISTTEMP));
+    App.register_component(hot_water);
+    return {hot_water};
+  climates:
+    - name: "HotWater"
 
 #########################################
 #                                       #
@@ -735,11 +772,9 @@ canbus:
                 break;
               case Property::kPROGRAMMSCHALTER:
                 {
-                  auto call = id(PROGRAMMSCHALTER).make_call();
-                  const auto option = id(PROGRAMMSCHALTER).at(std::stoi(value));
-                  if(option.has_value()) { 
-                    call.set_option(option.value());
-                    call.perform();
+                  const auto index = id(PROGRAMMSCHALTER).index_of(value);
+                  if(index.has_value()) {
+                    id(PROGRAMMSCHALTER).publish_state(value);
                   }
                   break;
                 }
@@ -803,6 +838,36 @@ canbus:
               case Property::kWAERMEERTRAG_RUECKGE_SUMME_KWH:
                 id(WAERMEERTRAG_RUECKGE_SUMME_KWH).publish_state(std::stoi(value));
                 break;
+              case Property::kRAUMISTTEMP:
+                id(RAUMISTTEMP).publish_state(std::stof(value));
+                break;
+              case Property::kSPEICHERISTTEMP:
+                id(SPEICHERISTTEMP).publish_state(std::stof(value));
+                break;
+              case Property::kLUEFT_STUFE_PARTY:
+                {
+                  const auto index = id(LUEFTUNGSSTUFE_PARTY).index_of(value);
+                  if(index.has_value()) {
+                    id(LUEFTUNGSSTUFE_PARTY).publish_state(value);
+                  }
+                  break;
+                }
+              case Property::kLUEFT_STUFE_TAG:
+                {
+                  const auto index = id(LUEFTUNGSSTUFE_TAG).index_of(value);
+                  if(index.has_value()) {
+                    id(LUEFTUNGSSTUFE_TAG).publish_state(value);
+                  }
+                  break;
+                }
+              case Property::kLUEFT_STUFE_NACHT:
+                {
+                  const auto index = id(LUEFTUNGSSTUFE_NACHT).index_of(value);
+                  if(index.has_value()) {
+                    id(LUEFTUNGSSTUFE_NACHT).publish_state(value);
+                  }
+                  break;
+                }
               default:
                 ESP_LOGI("custom","Unhandled Id %04x  sent by %02x %02x", property, !x.empty() ? x[0U] : 0x00, !x.empty() ? x[1U] : 0x00);
             }

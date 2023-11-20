@@ -57,7 +57,7 @@ struct CanMember
 */
 
 //  Name               CanId      ReadId          WriteId         ConfirmationID
-static const CanMember ESPClient {0x700,    {0x00, 0x00},   {0x00, 0x00},   {0xE2, 0x00}}; //The ESP Home Client, thus no valid read/write IDs
+static const CanMember ESPClient {0x6a2,    {0x00, 0x00},   {0x00, 0x00},   {0xE2, 0x00}}; //The ESP Home Client, thus no valid read/write IDs
 static const CanMember Kessel    {0x180,    {0x31, 0x00},   {0x30, 0x00},   {0x00, 0x00}};
 static const CanMember Manager   {0x480,    {0x91, 0x00},   {0x90, 0x00},   {0x00, 0x00}};
 static const CanMember Heizmodul {0x500,    {0xA1, 0x00},   {0xA0, 0x00},   {0x00, 0x00}};
@@ -103,35 +103,22 @@ Property processCanMessage(std::string &signalValue, const std::vector<std::uint
 
 void requestData(const CanMember& member, const Property& property) {
     const auto use_extended_id{false}; //No use of extended ID
-    const std::uint8_t IdByte1{member.WriteId[0U]};
-    const std::uint8_t IdByte2{member.WriteId[1U]};
+    const std::uint8_t IdByte1{member.ReadId[0U]};
+    const std::uint8_t IdByte2{member.ReadId[1U]};
     const std::uint8_t IndexByte1{static_cast<std::uint8_t>((property >> 8U) & 0xff)};
     const std::uint8_t IndexByte2{static_cast<std::uint8_t>(property & 0xff)};
     std::vector<std::uint8_t> data;
 
-    if(IndexByte1 == 0x00) {
-        data.insert(data.end(), {
-            IdByte1,
-            IdByte2,
-            IndexByte2,
-            0x00,
-            0x00,
-            0x00,
-            0x00
-        });
-    } else {
-        data.insert(data.end(), {
-            IdByte1,
-            IdByte2,
-            0xfa,
-            IndexByte1,
-            IndexByte2,
-            0x00,
-            0x00
-        });
-    }
+    data.insert(data.end(), {
+        IdByte1,
+        IdByte2,
+        0xfa,
+        IndexByte1,
+        IndexByte2,
+        0x00,
+        0x00
+    });
 
-    ESP_LOGD("requestData","%02x %02x %02x %02x %02x %02x %02x", data[0U],data[1U],data[2U],data[3U],data[4U],data[5U],data[6U]);
     id(my_mcp2515).send_data(ESPClient.CanId, use_extended_id, data);
 }
 
@@ -167,7 +154,6 @@ void sendData(const CanMember& member, const Property property, const std::uint1
         });
     }
     
-    ESP_LOGD("sendData","%02x %02x %02x %02x %02x %02x %02x", data[0U],data[1U],data[2U],data[3U],data[4U],data[5U],data[6U]);
     id(my_mcp2515).send_data(ESPClient.CanId, use_extended_id, data);
 }
 
