@@ -204,6 +204,7 @@ class SMLReader : public Component, public UARTDevice {
 	}
 
 	void loop() override {
+		static auto last_run = std::chrono::steady_clock::now();
 		switch(current_state) {
 			case(State::kWaitingForStartSequence):
 				waitForSequence(start_sequence,[this](){ current_state = State::kWaitingForEndSequence; buffer.clear(); });
@@ -212,7 +213,11 @@ class SMLReader : public Component, public UARTDevice {
 				waitForSequence(end_sequence,[this](){ current_state = State::kParseMessage; });
 				break;
 			case(State::kParseMessage):
-				parseMessage();
+				if(std::chrono::steady_clock::now() - last_run > std::chrono::seconds(14)) {
+					parseMessage();
+					last_run = std::chrono::steady_clock::now();
+				}
+				buffer.clear();
 				current_state = State::kWaitingForStartSequence;
 				break;
 			default:
