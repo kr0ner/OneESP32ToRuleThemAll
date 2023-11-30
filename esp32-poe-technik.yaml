@@ -12,14 +12,8 @@ esphome:
   libraries:
     - git+https://github.com/volkszaehler/libsml
 
-# external_components:
-#   - source:
-#       type: git
-#       url: https://github.com/muxa/esphome-state-machine
-
 esp32:
   board: esp32-poe
-  #board: esp32dev
   framework:
     type: arduino
 
@@ -42,22 +36,18 @@ time:
     id: homeassistant_time
 
 substitutions:
-  update_interval_very_fast: 15s
-  update_interval_fast: 30s
-  update_interval_medium: 60s
-  update_interval_slow: 5min
-  update_interval_very_slow: 15min
-  update_interval_once_in_a_while: 1h
+  interval_very_fast: 15s
+  interval_fast: 30s
+  interval_medium: 60s
+  interval_slow: 5min
+  interval_very_slow: 15min
+  interval_once_in_a_while: 1h
 
 #########################################
 #                                       #
 #   ETHERNET Konfiguration              #
 #                                       #
 #########################################
-#wifi:
-#  ssid: !secret wifi_ssid
-#  password: !secret wifi_password
-
 ethernet:
   type: LAN8720
   mdc_pin: GPIO23
@@ -228,7 +218,11 @@ sensor:
     device_class: "temperature"
     state_class: "measurement"
     accuracy_decimals: 1
-    update_interval: 5min
+    update_interval: $interval_slow
+    filters:
+      - or:
+        - throttle: $interval_slow
+        - delta: 1.0
     lambda: |-
       queueRequest(Kessel, Property::kAUSSENTEMP);
       return {};
@@ -241,7 +235,11 @@ sensor:
     device_class: "temperature"
     state_class: "measurement"
     accuracy_decimals: 1
-    update_interval: 60s
+    update_interval: $interval_medium
+    filters:
+      - or:
+        - throttle: $interval_medium
+        - delta: 1.0
     lambda: |-
       queueRequest(Kessel, Property::kSAMMLERISTTEMP);
       return {};
@@ -254,7 +252,11 @@ sensor:
     device_class: "temperature"
     state_class: "measurement"
     accuracy_decimals: 1
-    update_interval: 15s
+    update_interval: $interval_medium
+    filters:
+      - or:
+        - throttle: $interval_medium
+        - delta: 1.0
     lambda: |-
       queueRequest(Kessel, Property::kVERDAMPFERTEMP);
       return {};
@@ -267,7 +269,11 @@ sensor:
     device_class: "temperature"
     state_class: "measurement"
     accuracy_decimals: 1
-    update_interval: 30s
+    update_interval: $interval_medium
+    filters:
+      - or:
+        - throttle: $interval_medium
+        - delta: 1.0
     lambda: |-
       queueRequest(Kessel, Property::kRUECKLAUFISTTEMP);
       return {};
@@ -301,7 +307,7 @@ sensor:
     id: TAG
     icon: "mdi:calendar-today"
     accuracy_decimals: 0
-  
+
   - platform: template
     name: "STUNDE"
     id: STUNDE
@@ -326,7 +332,11 @@ sensor:
     icon: "mdi:fan"
     state_class: "measurement"
     accuracy_decimals: 0
-    update_interval: 60s
+    update_interval: $interval_medium
+    filters:
+      - or:
+        - throttle: $interval_medium
+        - delta: 10%
     lambda: |-
       queueRequest(Kessel, Property::kABLUFT_IST);
       return {};
@@ -338,7 +348,7 @@ sensor:
     icon: "mdi:fan"
     state_class: "measurement"
     accuracy_decimals: 0
-    update_interval: 60s
+    update_interval: $interval_medium
     lambda: |-
       queueRequest(Kessel, Property::kFORTLUFT_SOLL);
       return {};
@@ -350,7 +360,11 @@ sensor:
     icon: "mdi:fan"
     state_class: "measurement"
     accuracy_decimals: 0
-    update_interval: 60s
+    update_interval: $interval_medium
+    filters:
+      - or:
+        - throttle: $interval_medium
+        - delta: 10%
     lambda: |-
       queueRequest(Kessel, Property::kFORTLUFT_IST);
       return {};
@@ -378,10 +392,10 @@ sensor:
     device_class: "volume"
     state_class: "measurement"
     accuracy_decimals: 1
-    update_interval: $update_interval_very_slow
+    update_interval: $interval_very_slow
     filters:
       - or:
-        - throttle: $update_interval_very_slow
+        - throttle: $interval_very_slow
         - delta: 1.0
     lambda: |-
       queueRequest(Kessel, Property::kVOLUMENSTROM);
@@ -395,7 +409,7 @@ sensor:
     device_class: "temperature"
     state_class: "measurement"
     accuracy_decimals: 1
-    update_interval: $update_interval_very_slow
+    update_interval: $interval_very_slow
     lambda: |-
       queueRequest(Kessel, Property::kSPEICHERSOLLTEMP);
       return {};
@@ -407,7 +421,7 @@ sensor:
     icon: "mdi:fan"
     state_class: "measurement"
     accuracy_decimals: 0
-    update_interval: $update_interval_slow
+    update_interval: $interval_slow
     lambda: |-
       queueRequest(Kessel, Property::kABLUFT_SOLL);
       return {};
@@ -419,9 +433,9 @@ sensor:
     icon: "mdi:fan"
     state_class: "measurement"
     accuracy_decimals: 0
-    update_interval: $update_interval_slow
+    update_interval: $interval_slow
     filters:
-      - throttle: $update_interval_slow
+      - throttle: $interval_slow
     lambda: |-
       queueRequest(Kessel, Property::kZULUFT_IST);
       return {};
@@ -433,9 +447,9 @@ sensor:
     icon: "mdi:heating-coil"
     state_class: "measurement"
     accuracy_decimals: 0
-    update_interval: $update_interval_once_in_a_while
+    update_interval: $interval_once_in_a_while
     filters:
-      - throttle: $update_interval_once_in_a_while
+      - throttle: $interval_once_in_a_while
     lambda: |-
       queueRequest(Kessel, Property::kWAERMEERTRAG_HEIZ_SUM_KWH);
       return {};
@@ -447,9 +461,9 @@ sensor:
     icon: "mdi:heating-coil"
     state_class: "measurement"
     accuracy_decimals: 0
-    update_interval: $update_interval_once_in_a_while
+    update_interval: $interval_once_in_a_while
     filters:
-      - throttle: $update_interval_once_in_a_while
+      - throttle: $interval_once_in_a_while
     lambda: |-
       queueRequest(Kessel, Property::kWAERMEERTRAG_WW_SUM_KWH);
       return {};
@@ -461,9 +475,9 @@ sensor:
     icon: "mdi:heating-coil"
     state_class: "measurement"
     accuracy_decimals: 0
-    update_interval: $update_interval_once_in_a_while
+    update_interval: $interval_once_in_a_while
     filters:
-      - throttle: $update_interval_once_in_a_while
+      - throttle: $interval_once_in_a_while
     lambda: |-
       queueRequest(Kessel, Property::kWAERMEERTRAG_RUECKGE_SUMME_KWH);
       return {};
@@ -476,9 +490,9 @@ sensor:
     device_class: "temperature"
     state_class: "measurement"
     accuracy_decimals: 1
-    update_interval: $update_interval_very_slow
+    update_interval: $interval_very_slow
     filters:
-      - throttle: $update_interval_very_slow
+      - throttle: $interval_very_slow
       - delta: 1.0
     lambda: |-
       queueRequest(Manager, Property::kRAUMISTTEMP);
@@ -492,7 +506,7 @@ sensor:
     device_class: "temperature"
     state_class: "measurement"
     accuracy_decimals: 1
-    update_interval: $update_interval_very_slow
+    update_interval: $interval_very_slow
     lambda: |-
       queueRequest(Heizmodul, Property::kRAUMSOLLTEMP_I);
       return {};
@@ -505,7 +519,7 @@ sensor:
     device_class: "temperature"
     state_class: "measurement"
     accuracy_decimals: 1
-    update_interval: $update_interval_very_slow
+    update_interval: $interval_very_slow
     lambda: |-
       queueRequest(Heizmodul, Property::kRAUMSOLLTEMP_NACHT);
       return {};
@@ -518,9 +532,9 @@ sensor:
     device_class: "temperature"
     state_class: "measurement"
     accuracy_decimals: 1
-    update_interval: $update_interval_slow
+    update_interval: $interval_slow
     filters:
-      - throttle: $update_interval_slow
+      - throttle: $interval_slow
       - delta: 1.0
     lambda: |-
       queueRequest(Kessel, Property::kSPEICHERISTTEMP);
@@ -534,7 +548,7 @@ sensor:
     device_class: "temperature"
     state_class: "measurement"
     accuracy_decimals: 1
-    update_interval: $update_interval_once_in_a_while
+    update_interval: $interval_once_in_a_while
     lambda: |-
       queueRequest(Kessel, Property::kEINSTELL_SPEICHERSOLLTEMP);
       return {};
@@ -553,8 +567,8 @@ sensor:
     state_class: total_increasing
     filters:
       - multiply: 0.001
-    update_interval: 15s
-      
+      - throttle: $interval_very_fast
+
   - platform: template
     name: "Total outgoing"
     id: Total_Outgoing
@@ -564,7 +578,7 @@ sensor:
     state_class: total_increasing
     filters:
       - multiply: 0.001
-    update_interval: 15s
+      - throttle: $interval_very_fast
 
   - platform: template
     name: "Instantaneous Power"
@@ -572,7 +586,8 @@ sensor:
     #obis_code: "1-0:16.7.0"
     unit_of_measurement: W
     device_class: power
-    update_interval: 15s
+    filters:
+      - throttle: $interval_very_fast
 
   - platform: template
     name: "Frequency"
@@ -580,7 +595,8 @@ sensor:
     #obis_code: "1-0:14.7.0"
     unit_of_measurement: Hz
     device_class: frequency
-    update_interval: 15s
+    filters:
+      - throttle: $interval_very_fast
 
   - platform: template
     name: "Instantaneous Power L1"
@@ -588,7 +604,8 @@ sensor:
     #obis_code: "1-0:36.7.0"
     unit_of_measurement: W
     device_class: power
-    update_interval: 15s
+    filters:
+      - throttle: $interval_very_fast
 
   - platform: template
     name: "Instantaneous Power L2"
@@ -596,7 +613,8 @@ sensor:
     #obis_code: "1-0:56.7.0"
     unit_of_measurement: W
     device_class: power
-    update_interval: 15s
+    filters:
+      - throttle: $interval_very_fast
 
   - platform: template
     name: "Instantaneous Power L3"
@@ -604,7 +622,8 @@ sensor:
     #obis_code: "1-0:76.7.0"
     unit_of_measurement: W
     device_class: power
-    update_interval: 15s
+    filters:
+      - throttle: $interval_very_fast
 
   - platform: template
     name: "Instantaneous Voltage L1"
@@ -612,7 +631,8 @@ sensor:
     #obis_code: "1-0:32.7.0"
     unit_of_measurement: V
     device_class: voltage
-    update_interval: 15s
+    filters:
+      - throttle: $interval_very_fast
 
   - platform: template
     name: "Instantaneous Voltage L2"
@@ -620,7 +640,8 @@ sensor:
     #obis_code: "1-0:52.7.0"
     unit_of_measurement: V
     device_class: voltage
-    update_interval: 15s
+    filters:
+      - throttle: $interval_very_fast
 
   - platform: template
     name: "Instantaneous Voltage L3"
@@ -628,7 +649,8 @@ sensor:
     #obis_code: "1-0:72.7.0"
     unit_of_measurement: V
     device_class: voltage
-    update_interval: 15s
+    filters:
+      - throttle: $interval_very_fast
 
   - platform: template
     name: "Instantaneous Current L1"
@@ -636,7 +658,8 @@ sensor:
     #obis_code: "1-0:31.7.0"
     unit_of_measurement: A
     device_class: current
-    update_interval: 15s
+    filters:
+      - throttle: $interval_very_fast
 
   - platform: template
     name: "Instantaneous Current L2"
@@ -644,7 +667,8 @@ sensor:
     #obis_code: "1-0:51.7.0"
     unit_of_measurement: A
     device_class: current
-    update_interval: 15s
+    filters:
+      - throttle: $interval_very_fast
 
   - platform: template
     name: "Instantaneous Current L3"
@@ -652,7 +676,8 @@ sensor:
     #obis_code: "1-0:71.7.0"
     unit_of_measurement: A
     device_class: current
-    update_interval: 15s
+    filters:
+      - throttle: $interval_very_fast
 
 #########################################
 #                                       #
@@ -683,29 +708,29 @@ sensor:
 #                                       #
 #########################################
 climate:
-- platform: custom
-  lambda: |-
-    auto heating = new HeatingDay(id(RAUMISTTEMP),id(RAUMSOLLTEMP_I));
-    App.register_component(heating);
-    return {heating};
-  climates:
-    - name: "Heating Day"
+  - platform: custom
+    lambda: |-
+      auto heating = new HeatingDay(id(RAUMISTTEMP),id(RAUMSOLLTEMP_I));
+      App.register_component(heating);
+      return {heating};
+    climates:
+      - name: "Heating Day"
 
-- platform: custom
-  lambda: |-
-    auto heating = new HeatingNight(id(RAUMISTTEMP),id(RAUMSOLLTEMP_NACHT));
-    App.register_component(heating);
-    return {heating};
-  climates:
-    - name: "Heating Night"
+  - platform: custom
+    lambda: |-
+      auto heating = new HeatingNight(id(RAUMISTTEMP),id(RAUMSOLLTEMP_NACHT));
+      App.register_component(heating);
+      return {heating};
+    climates:
+      - name: "Heating Night"
 
-- platform: custom
-  lambda: |-
-    auto hot_water = new HotWater(id(SPEICHERISTTEMP),id(EINSTELL_SPEICHERSOLLTEMP));
-    App.register_component(hot_water);
-    return {hot_water};
-  climates:
-    - name: "HotWater"
+  - platform: custom
+    lambda: |-
+      auto hot_water = new HotWater(id(SPEICHERISTTEMP),id(EINSTELL_SPEICHERSOLLTEMP));
+      App.register_component(hot_water);
+      return {hot_water};
+    climates:
+      - name: "HotWater"
 
 #########################################
 #                                       #
@@ -754,8 +779,8 @@ binary_sensor:
         input: true
         pullup: true
       inverted: true
-#    filters:
-#      - delayed_on_off: 1s
+    filters:
+      - delayed_on_off: 1s
     name: "Wassermelder 2"
 
 #########################################
