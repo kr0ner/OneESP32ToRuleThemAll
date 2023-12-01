@@ -1,0 +1,736 @@
+#########################################
+#                                       #
+#   Obtain initial states               #
+#                                       #
+#########################################
+esphome:
+  on_boot:
+    priority: -100
+    then:
+       - lambda: |-
+          queueRequest(Kessel, Property::kLUEFT_STUFE_TAG);
+          queueRequest(Kessel, Property::kLUEFT_STUFE_NACHT);
+          queueRequest(Kessel, Property::kLUEFT_STUFE_PARTY);
+          queueRequest(Kessel, Property::kPROGRAMMSCHALTER);
+
+#########################################
+#                                       #
+#   SPI configuration                   #
+#                                       #
+#########################################
+spi:
+  id: McpSpi
+  clk_pin: GPIO14
+  mosi_pin: GPIO13
+  miso_pin: GPIO4
+
+#########################################
+#                                       #
+#   EVU Sperre                          #
+#                                       #
+#########################################
+switch:
+  - platform: gpio
+    name: "EVU Sperre"
+    id: evu_sperre
+    pin: GPIO5
+
+#########################################
+#                                       #
+#   Kondensatpumpe Störung              #
+#                                       #
+#########################################
+binary_sensor:
+  - platform: gpio
+    pin: 
+      number: GPIO32
+      mode:
+        input: true
+        pullup: true
+      inverted: true
+    name: "Kondensatpumpe Störung"
+    filters:
+      - delayed_on: 1s
+      - delayed_off: 1min
+    on_press:
+      then:
+        - switch.turn_on: evu_sperre
+    on_release:
+      then:
+        - switch.turn_off: evu_sperre
+
+#########################################
+#                                       #
+#   intervals                           #
+#                                       #
+#########################################
+interval:
+  - interval: 1sec
+    then:
+      - lambda: |-
+          // Request sensor value one after another. This prevents warnings like "Component canbus took a long time for an operation"
+          if(!request_queue.empty()) {
+            constexpr auto use_extended_id{false};
+            const auto request_element = request_queue.front();
+            request_queue.pop();
+            requestData(request_element.first, request_element.second);
+          }
+
+#########################################
+#                                       #
+#   sensors                             #
+#                                       #
+#########################################
+sensor:
+  - platform: template
+    name: "FEHLERMELDUNG"
+    id: FEHLERMELDUNG
+    icon: "mdi:alert-circle"
+    accuracy_decimals: 0
+
+  - platform: template
+    name: "AUSSENTEMP"
+    id: AUSSENTEMP
+    unit_of_measurement: "°C"
+    icon: "mdi:thermometer-lines"
+    device_class: "temperature"
+    state_class: "measurement"
+    accuracy_decimals: 1
+    update_interval: $interval_slow
+    filters:
+      - or:
+        - throttle: $interval_slow
+        - delta: 1.0
+    lambda: |-
+      queueRequest(Kessel, Property::kAUSSENTEMP);
+      return {};
+
+  - platform: template
+    name: "SAMMLERISTTEMP"
+    id: SAMMLERISTTEMP
+    unit_of_measurement: "°C"
+    icon: "mdi:thermometer-lines"
+    device_class: "temperature"
+    state_class: "measurement"
+    accuracy_decimals: 1
+    update_interval: $interval_medium
+    filters:
+      - or:
+        - throttle: $interval_medium
+        - delta: 1.0
+    lambda: |-
+      queueRequest(Kessel, Property::kSAMMLERISTTEMP);
+      return {};
+
+  - platform: template
+    name: "VERDAMPFERTEMP"
+    id: VERDAMPFERTEMP
+    unit_of_measurement: "°C"
+    icon: "mdi:thermometer-lines"
+    device_class: "temperature"
+    state_class: "measurement"
+    accuracy_decimals: 1
+    update_interval: $interval_medium
+    filters:
+      - or:
+        - throttle: $interval_medium
+        - delta: 1.0
+    lambda: |-
+      queueRequest(Kessel, Property::kVERDAMPFERTEMP);
+      return {};
+
+  - platform: template
+    name: "RUECKLAUFISTTEMP"
+    id: RUECKLAUFISTTEMP
+    unit_of_measurement: "°C"
+    icon: "mdi:thermometer-lines"
+    device_class: "temperature"
+    state_class: "measurement"
+    accuracy_decimals: 1
+    update_interval: $interval_medium
+    filters:
+      - or:
+        - throttle: $interval_medium
+        - delta: 1.0
+    lambda: |-
+      queueRequest(Kessel, Property::kRUECKLAUFISTTEMP);
+      return {};
+
+  - platform: template
+    name: "SCHALTFKT_IWS"
+    id: SCHALTFKT_IWS
+    icon: "mdi:description"
+    accuracy_decimals: 0
+
+  - platform: template
+    name: "JAHR"
+    id: JAHR
+    icon: "mdi:calendar"
+    accuracy_decimals: 0
+
+  - platform: template
+    name: "MONAT"
+    id: MONAT
+    icon: "mdi:calendar"
+    accuracy_decimals: 0
+
+  - platform: template
+    name: "WOCHENTAG"
+    id: WOCHENTAG
+    icon: "mdi:calendar-today"
+    accuracy_decimals: 0
+
+  - platform: template
+    name: "TAG"
+    id: TAG
+    icon: "mdi:calendar-today"
+    accuracy_decimals: 0
+
+  - platform: template
+    name: "STUNDE"
+    id: STUNDE
+    icon: "mdi:calendar-clock"
+    accuracy_decimals: 0
+
+  - platform: template
+    name: "MINUTE"
+    id: MINUTE
+    icon: "mdi:calendar-clock"
+    accuracy_decimals: 0
+
+  - platform: template
+    name: "BETRIEBS_STATUS"
+    id: BETRIEBS_STATUS
+    accuracy_decimals: 0
+
+  - platform: template
+    name: "ABLUFT_IST"
+    id: ABLUFT_IST
+    unit_of_measurement: "l/min"
+    icon: "mdi:fan"
+    state_class: "measurement"
+    accuracy_decimals: 0
+    update_interval: $interval_medium
+    filters:
+      - or:
+        - throttle: $interval_medium
+        - delta: 10%
+    lambda: |-
+      queueRequest(Kessel, Property::kABLUFT_IST);
+      return {};
+
+  - platform: template
+    name: "FORTLUFT_SOLL"
+    id: FORTLUFT_SOLL
+    unit_of_measurement: "l/min"
+    icon: "mdi:fan"
+    state_class: "measurement"
+    accuracy_decimals: 0
+    update_interval: $interval_medium
+    lambda: |-
+      queueRequest(Kessel, Property::kFORTLUFT_SOLL);
+      return {};
+
+  - platform: template
+    name: "FORTLUFT_IST"
+    id: FORTLUFT_IST
+    unit_of_measurement: "l/min"
+    icon: "mdi:fan"
+    state_class: "measurement"
+    accuracy_decimals: 0
+    update_interval: $interval_medium
+    filters:
+      - or:
+        - throttle: $interval_medium
+        - delta: 10%
+    lambda: |-
+      queueRequest(Kessel, Property::kFORTLUFT_IST);
+      return {};
+
+  - platform: template
+    name: "VERDICHTER"
+    id: VERDICHTER
+    accuracy_decimals: 2
+
+  - platform: template
+    name: "ANZEIGE_NIEDERDRUCK"
+    id: ANZEIGE_NIEDERDRUCK
+    accuracy_decimals: 2
+
+  - platform: template
+    name: "PUMPENZYKLEN_MIN_AUSSENT"
+    id: PUMPENZYKLEN_MIN_AUSSENT
+    accuracy_decimals: 0
+
+  - platform: template
+    name: "VOLUMENSTROM"
+    id: VOLUMENSTROM
+    unit_of_measurement: "l/min"
+    icon: "mdi:pump"
+    device_class: "volume"
+    state_class: "measurement"
+    accuracy_decimals: 1
+    update_interval: $interval_very_slow
+    filters:
+      - or:
+        - throttle: $interval_very_slow
+        - delta: 1.0
+    lambda: |-
+      queueRequest(Kessel, Property::kVOLUMENSTROM);
+      return {};
+
+  - platform: template
+    name: "SPEICHERSOLLTEMP"
+    id: SPEICHERSOLLTEMP
+    unit_of_measurement: "°C"
+    icon: "mdi:thermometer-lines"
+    device_class: "temperature"
+    state_class: "measurement"
+    accuracy_decimals: 1
+    update_interval: $interval_very_slow
+    lambda: |-
+      queueRequest(Kessel, Property::kSPEICHERSOLLTEMP);
+      return {};
+
+  - platform: template
+    name: "ABLUFT_SOLL"
+    id: ABLUFT_SOLL
+    unit_of_measurement: "l/min"
+    icon: "mdi:fan"
+    state_class: "measurement"
+    accuracy_decimals: 0
+    update_interval: $interval_slow
+    lambda: |-
+      queueRequest(Kessel, Property::kABLUFT_SOLL);
+      return {};
+
+  - platform: template
+    name: "ZULUFT_IST"
+    id: ZULUFT_IST
+    unit_of_measurement: "l/min"
+    icon: "mdi:fan"
+    state_class: "measurement"
+    accuracy_decimals: 0
+    update_interval: $interval_slow
+    filters:
+      - throttle: $interval_slow
+    lambda: |-
+      queueRequest(Kessel, Property::kZULUFT_IST);
+      return {};
+
+  - platform: template
+    name: "WAERMEERTRAG_HEIZ_SUM_KWH"
+    id: WAERMEERTRAG_HEIZ_SUM_KWH
+    unit_of_measurement: "kWh"
+    icon: "mdi:heating-coil"
+    state_class: "measurement"
+    accuracy_decimals: 0
+    update_interval: $interval_once_in_a_while
+    filters:
+      - throttle: $interval_once_in_a_while
+    lambda: |-
+      queueRequest(Kessel, Property::kWAERMEERTRAG_HEIZ_SUM_KWH);
+      return {};
+
+  - platform: template
+    name: "WAERMEERTRAG_WW_SUM_KWH"
+    id: WAERMEERTRAG_WW_SUM_KWH
+    unit_of_measurement: "kWh"
+    icon: "mdi:heating-coil"
+    state_class: "measurement"
+    accuracy_decimals: 0
+    update_interval: $interval_once_in_a_while
+    filters:
+      - throttle: $interval_once_in_a_while
+    lambda: |-
+      queueRequest(Kessel, Property::kWAERMEERTRAG_WW_SUM_KWH);
+      return {};
+
+  - platform: template
+    name: "WAERMEERTRAG_RUECKGE_SUMME_KWH"
+    id: WAERMEERTRAG_RUECKGE_SUMME_KWH
+    unit_of_measurement: "kWh"
+    icon: "mdi:heating-coil"
+    state_class: "measurement"
+    accuracy_decimals: 0
+    update_interval: $interval_once_in_a_while
+    filters:
+      - throttle: $interval_once_in_a_while
+    lambda: |-
+      queueRequest(Kessel, Property::kWAERMEERTRAG_RUECKGE_SUMME_KWH);
+      return {};
+
+  - platform: template
+    name: "RAUMISTTEMP"
+    id: RAUMISTTEMP
+    unit_of_measurement: "°C"
+    icon: "mdi:thermometer-lines"
+    device_class: "temperature"
+    state_class: "measurement"
+    accuracy_decimals: 1
+    update_interval: $interval_very_slow
+    filters:
+      - throttle: $interval_very_slow
+      - delta: 1.0
+    lambda: |-
+      queueRequest(Manager, Property::kRAUMISTTEMP);
+      return {};
+
+  - platform: template
+    name: "RAUMSOLLTEMP_I"
+    id: RAUMSOLLTEMP_I
+    unit_of_measurement: "°C"
+    icon: "mdi:thermometer-lines"
+    device_class: "temperature"
+    state_class: "measurement"
+    accuracy_decimals: 1
+    update_interval: $interval_very_slow
+    lambda: |-
+      queueRequest(Heizmodul, Property::kRAUMSOLLTEMP_I);
+      return {};
+
+  - platform: template
+    name: "RAUMSOLLTEMP_NACHT"
+    id: RAUMSOLLTEMP_NACHT
+    unit_of_measurement: "°C"
+    icon: "mdi:thermometer-lines"
+    device_class: "temperature"
+    state_class: "measurement"
+    accuracy_decimals: 1
+    update_interval: $interval_very_slow
+    lambda: |-
+      queueRequest(Heizmodul, Property::kRAUMSOLLTEMP_NACHT);
+      return {};
+
+  - platform: template
+    name: "SPEICHERISTTEMP"
+    id: SPEICHERISTTEMP
+    unit_of_measurement: "°C"
+    icon: "mdi:thermometer-lines"
+    device_class: "temperature"
+    state_class: "measurement"
+    accuracy_decimals: 1
+    update_interval: $interval_slow
+    filters:
+      - throttle: $interval_slow
+      - delta: 1.0
+    lambda: |-
+      queueRequest(Kessel, Property::kSPEICHERISTTEMP);
+      return {};
+
+  - platform: template
+    name: "EINSTELL_SPEICHERSOLLTEMP"
+    id: EINSTELL_SPEICHERSOLLTEMP
+    unit_of_measurement: "°C"
+    icon: "mdi:thermometer-lines"
+    device_class: "temperature"
+    state_class: "measurement"
+    accuracy_decimals: 1
+    update_interval: $interval_once_in_a_while
+    lambda: |-
+      queueRequest(Kessel, Property::kEINSTELL_SPEICHERSOLLTEMP);
+      return {};
+
+#########################################
+#                                       #
+#   selects                             #
+#                                       #
+#########################################
+select:
+  - platform: template
+    name: "PROGRAMMSCHALTER"
+    id: PROGRAMMSCHALTER
+    options:
+      - "Notbetrieb"
+      - "Bereitschaft"
+      - "Automatik"
+      - "Tagbetrieb"
+      - "Absenkbetrieb"
+      - "Warmwasser"
+      - "Unbekannt"
+    initial_option: "Unbekannt"
+    optimistic: true
+    setup_priority: 100
+    on_value:
+      then:
+        - lambda: |-
+            const auto it = std::find_if(BetriebsartMappings.begin(), BetriebsartMappings.end(), 
+              [x](const BetriebsartMapping& mapping){
+              return (std::string(mapping.name) == x);
+            });
+            if(it != BetriebsartMappings.end() && id(PROGRAMMSCHALTER).state != x) {
+              sendData(Manager, Property::kPROGRAMMSCHALTER, it->id);
+            }
+
+  - platform: template
+    name: "LUEFTUNGSSTUFE_TAG"
+    id: LUEFTUNGSSTUFE_TAG
+    optimistic: true
+    options:
+      - "3"
+      - "2"
+      - "1"
+      - "0"
+      - "Unbekannt"
+    initial_option: "Unbekannt"
+    set_action:
+      lambda: |-
+        if(x != "Unbekannt" && id(LUEFTUNGSSTUFE_TAG).state != x) {
+          sendData(Kessel, Property::kLUEFT_STUFE_TAG, std::stoi(x));
+        }
+
+  - platform: template
+    name: "LUEFTUNGSSTUFE_NACHT"
+    id: LUEFTUNGSSTUFE_NACHT
+    optimistic: true
+    options:
+      - "3"
+      - "2"
+      - "1"
+      - "0"
+      - "Unbekannt"
+    initial_option: "Unbekannt"
+    set_action:
+      lambda: |-
+        if(x != "Unbekannt" && id(LUEFTUNGSSTUFE_NACHT).state != x) {
+          sendData(Kessel, Property::kLUEFT_STUFE_NACHT, std::stoi(x));
+        }
+
+  - platform: template
+    name: "LUEFTUNGSSTUFE_PARTY"
+    id: LUEFTUNGSSTUFE_PARTY
+    optimistic: true
+    options:
+      - "3"
+      - "2"
+      - "1"
+      - "0"
+      - "Unbekannt"
+    initial_option: "Unbekannt"
+    set_action:
+      lambda: |-
+        if(x != "Unbekannt" && id(LUEFTUNGSSTUFE_PARTY).state != x) {
+          sendData(Kessel, Property::kLUEFT_STUFE_PARTY, std::stoi(x));
+        }
+
+#########################################
+#                                       #
+#   Wärmepumpe climates                 #
+#                                       #
+#########################################
+climate:
+  - platform: custom
+    lambda: |-
+      auto heating = new HeatingDay(id(RAUMISTTEMP),id(RAUMSOLLTEMP_I));
+      App.register_component(heating);
+      return {heating};
+    climates:
+      - name: "Heating Day"
+
+  - platform: custom
+    lambda: |-
+      auto heating = new HeatingNight(id(RAUMISTTEMP),id(RAUMSOLLTEMP_NACHT));
+      App.register_component(heating);
+      return {heating};
+    climates:
+      - name: "Heating Night"
+
+  - platform: custom
+    lambda: |-
+      auto hot_water = new HotWater(id(SPEICHERISTTEMP),id(EINSTELL_SPEICHERSOLLTEMP));
+      App.register_component(hot_water);
+      return {hot_water};
+    climates:
+      - name: "HotWater"
+
+#########################################
+#                                       #
+#   CANbus configuration                #
+#                                       #
+#########################################
+canbus:
+  - platform: mcp2515
+    id: my_mcp2515
+    spi_id: McpSpi
+    cs_pin: GPIO15
+    can_id: 680
+    use_extended_id: false
+    bit_rate: 20kbps
+    on_frame:
+
+#########################################
+#                                       #
+#   KESSEL messages                     #
+#                                       #
+#########################################
+    - can_id: 0x180
+      then:
+        - lambda: |-
+            std::string value{"0"};
+            const auto property = processCanMessage(value, x);
+
+            switch(property) {
+              case Property::kFEHLERMELDUNG:
+                id(FEHLERMELDUNG).publish_state(std::stoi(value));
+                break;
+              case Property::kAUSSENTEMP:
+                {
+                  // FixMe: this is crap ... but I can't use std::variant ... yet
+                  const auto signed_value = static_cast<std::int16_t>(std::stof(value) * 10.0f);
+                  id(AUSSENTEMP).publish_state(signed_value / 10.0f);
+                  break;
+                }
+              case Property::kSAMMLERISTTEMP:
+                id(SAMMLERISTTEMP).publish_state(std::stof(value));
+                break;
+              case Property::kVERDAMPFERTEMP:
+                id(VERDAMPFERTEMP).publish_state(std::stof(value));
+                break;
+              case Property::kRUECKLAUFISTTEMP:
+                id(RUECKLAUFISTTEMP).publish_state(std::stof(value));
+                break;
+              case Property::kSCHALTFKT_IWS:
+                id(SCHALTFKT_IWS).publish_state(std::stoi(value));
+                break;
+              case Property::kPROGRAMMSCHALTER:
+                {
+                  const auto index = id(PROGRAMMSCHALTER).index_of(value);
+                  if(index.has_value()) {
+                    id(PROGRAMMSCHALTER).publish_state(value);
+                  }
+                  break;
+                }
+              case Property::kWOCHENTAG:
+                id(WOCHENTAG).publish_state(std::stoi(value));
+                break;
+              case Property::kTAG:
+                id(TAG).publish_state(std::stoi(value));
+                break;
+              case Property::kMONAT:
+                id(MONAT).publish_state(std::stoi(value));
+                break;
+              case Property::kJAHR:
+                id(JAHR).publish_state(std::stoi(value) + 2000U);
+                break;
+              case Property::kSTUNDE:
+                id(STUNDE).publish_state(std::stoi(value));
+                break;
+              case Property::kMINUTE:
+                id(MINUTE).publish_state(std::stoi(value));
+                break;
+              case Property::kBETRIEBS_STATUS:
+                id(BETRIEBS_STATUS).publish_state(std::stoi(value));
+                break;
+              case Property::kABLUFT_IST:
+                id(ABLUFT_IST).publish_state(std::stoi(value));
+                break;
+              case Property::kFORTLUFT_SOLL:
+                id(FORTLUFT_SOLL).publish_state(std::stoi(value));
+                break;
+              case Property::kFORTLUFT_IST:
+                id(FORTLUFT_IST).publish_state(std::stoi(value));
+                break;
+              case Property::kPUMPENZYKLEN_MIN_AUSSENT:
+                id(PUMPENZYKLEN_MIN_AUSSENT).publish_state(std::stoi(value));
+                break;
+              case Property::kANZEIGE_NIEDERDRUCK:
+                id(ANZEIGE_NIEDERDRUCK).publish_state(std::stof(value));
+                break;
+              case Property::kVERDICHTER:
+                id(VERDICHTER).publish_state(std::stof(value));
+                break;
+              case Property::kVOLUMENSTROM:
+                id(VOLUMENSTROM).publish_state(std::stof(value));
+                break;
+              case Property::kSPEICHERSOLLTEMP:
+                id(SPEICHERSOLLTEMP).publish_state(std::stof(value));
+                break;
+              case Property::kABLUFT_SOLL:
+                id(ABLUFT_SOLL).publish_state(std::stoi(value));
+                break;
+              case Property::kZULUFT_IST:
+                id(ZULUFT_IST).publish_state(std::stoi(value));
+                break;
+              case Property::kWAERMEERTRAG_HEIZ_SUM_KWH:
+                id(WAERMEERTRAG_HEIZ_SUM_KWH).publish_state(std::stoi(value));
+                break;
+              case Property::kWAERMEERTRAG_WW_SUM_KWH:
+                id(WAERMEERTRAG_WW_SUM_KWH).publish_state(std::stoi(value));
+                break;
+              case Property::kWAERMEERTRAG_RUECKGE_SUMME_KWH:
+                id(WAERMEERTRAG_RUECKGE_SUMME_KWH).publish_state(std::stoi(value));
+                break;
+              case Property::kSPEICHERISTTEMP:
+                id(SPEICHERISTTEMP).publish_state(std::stof(value));
+                break;
+              case Property::kEINSTELL_SPEICHERSOLLTEMP:
+                id(EINSTELL_SPEICHERSOLLTEMP).publish_state(std::stof(value));
+                break;
+              case Property::kLUEFT_STUFE_PARTY:
+                {
+                  const auto index = id(LUEFTUNGSSTUFE_PARTY).index_of(value);
+                  if(index.has_value()) {
+                    id(LUEFTUNGSSTUFE_PARTY).publish_state(value);
+                  }
+                  break;
+                }
+              case Property::kLUEFT_STUFE_TAG:
+                {
+                  const auto index = id(LUEFTUNGSSTUFE_TAG).index_of(value);
+                  if(index.has_value()) {
+                    id(LUEFTUNGSSTUFE_TAG).publish_state(value);
+                  }
+                  break;
+                }
+              case Property::kLUEFT_STUFE_NACHT:
+                {
+                  const auto index = id(LUEFTUNGSSTUFE_NACHT).index_of(value);
+                  if(index.has_value()) {
+                    id(LUEFTUNGSSTUFE_NACHT).publish_state(value);
+                  }
+                  break;
+                }
+              default:
+                ESP_LOGI("custom","Unhandled Id %04x sent by %02x %02x with value %d", property, !x.empty() ? x[0U] : 0x00, !x.empty() ? x[1U] : 0x00, std::stoi(value));
+            }
+
+#########################################
+#                                       #
+#   HEIZMODUL messages                  #
+#                                       #
+#########################################
+    - can_id: 0x301
+      then:
+        - lambda: |-
+            std::string value{"0"};
+            const auto property = processCanMessage(value, x);
+
+            switch(property) {
+              case Property::kRAUMSOLLTEMP_I:
+                id(RAUMSOLLTEMP_I).publish_state(std::stof(value));
+                break;
+              case Property::kRAUMSOLLTEMP_NACHT:
+                id(RAUMSOLLTEMP_NACHT).publish_state(std::stof(value));
+                break;
+              default:
+                ESP_LOGI("custom","Unhandled Id %04x sent by %02x %02x with value %d", property, !x.empty() ? x[0U] : 0x00, !x.empty() ? x[1U] : 0x00, std::stoi(value));
+            }
+
+#########################################
+#                                       #
+#   MANAGER messages                    #
+#                                       #
+#########################################
+    - can_id: 0x302
+      then:
+        - lambda: |-
+            std::string value{"0"};
+            const auto property = processCanMessage(value, x);
+
+            switch(property) {
+              case Property::kRAUMISTTEMP:
+                id(RAUMISTTEMP).publish_state(std::stof(value));
+                break;
+              default:
+                ESP_LOGI("custom","Unhandled Id %04x sent by %02x %02x with value %d", property, !x.empty() ? x[0U] : 0x00, !x.empty() ? x[1U] : 0x00, std::stoi(value));
+            }

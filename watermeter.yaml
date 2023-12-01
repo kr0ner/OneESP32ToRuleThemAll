@@ -1,0 +1,23 @@
+#########################################
+#                                       #
+#   sensor configuration                #
+#                                       #
+#########################################
+sensor:
+  - platform: pulse_meter
+    pin: GPIO33
+    name: "Active water consumption"
+    id: active_water_consumption
+    unit_of_measurement: "liter/min"
+    icon: "mdi:water"
+    internal_filter: 100ms
+    internal_filter_mode: PULSE
+    total:
+      name: "Total water consumption"
+      unit_of_measurement: "m³"
+      id: total_water_consumption
+      accuracy_decimals: 3
+      device_class: water
+      state_class: total_increasing
+      filters:
+        - multiply: 0.001

@@ -1,0 +1,27 @@
+#########################################
+#                                       #
+#   Wassermelder                        #
+#                                       #
+#########################################
+binary_sensor:
+  - platform: gpio
+    pin: 
+      number: GPIO3
+      mode:
+        input: true
+        pullup: true
+      inverted: true
+    filters:
+      - delayed_on_off: 1s
+    name: "Wassermelder 1"
+
+  - platform: gpio
+    pin: 
+      number: GPIO1
+      mode:
+        input: true
+        pullup: true
+      inverted: true
+    filters:
+      - delayed_on_off: 1s
+    name: "Wassermelder 2"
