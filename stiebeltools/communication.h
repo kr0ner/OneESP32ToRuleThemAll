@@ -20,10 +20,11 @@
 #include <cstdint>
 #include <vector>
 #include <string>
-#include "mappings.h"
-#include "type.h"
-#include "property.h"
 #include <queue>
+
+#include "mappings.h"
+#include "property.h"
+#include "type.h"
 
 using CANID=std::uint16_t;
 
@@ -69,16 +70,15 @@ void queueRequest(const CanMember& member, const Property& property) {
     request_queue.push(std::make_pair(member,property));
 }
 
-Property processCanMessage(std::string &signalValue, const std::vector<std::uint8_t>& msg)
+std::pair<Property,SimpleVariant> processCanMessage(const std::vector<std::uint8_t>& msg)
 {
     Property property{Property::kINDEX_NOT_FOUND};
     std::uint8_t byte1{0U};
     std::uint8_t byte2{0U};
-    char charValue[16U];
 
     // Return if the message is too small
     if(msg.size() < 7U) {
-        return property;
+        return {Property::kINDEX_NOT_FOUND,{}};
     }
 
     if(msg[2U] == 0xfa) {
@@ -91,14 +91,16 @@ Property processCanMessage(std::string &signalValue, const std::vector<std::uint
         property = static_cast<Property>(msg[2U]);
     }
 
-    const auto it = std::find_if(PropertyTypeMappings.begin(), PropertyTypeMappings.end(), [property](const PropertyTypeMapping property_type_mapping){ return property_type_mapping.property == property; });
+    const auto it = std::find_if(PropertyTypeMappings.begin(),
+                                 PropertyTypeMappings.end(),
+                                 [property](const PropertyTypeMapping property_type_mapping){
+        return property_type_mapping.property == property;
+    });
     if(it != PropertyTypeMappings.end()) {
         const std::uint16_t value{static_cast<std::uint16_t>((byte1<<8U) | byte2)};
-        SetValueType(charValue, it->type, value);
-        signalValue = std::string(charValue);
-        return property;
+        return {property,GetValueByType(value,it->type)};
     }
-    return Property::kINDEX_NOT_FOUND;
+    return {Property::kINDEX_NOT_FOUND,{}};
 }
 
 void requestData(const CanMember& member, const Property& property) {

@@ -1,0 +1,14 @@
+sensor:
+  - platform: template
+    name: ${property}
+    id: ${property}
+    unit_of_measurement: ${unit}
+    icon: "mdi:heating-coil"
+    state_class: "measurement"
+    accuracy_decimals: 0
+    update_interval: $interval_once_in_a_while
+    filters:
+        - throttle: $interval_once_in_a_while
+    lambda: |-
+        queueRequest(Kessel, Property::k${property});
+        return {};

@@ -1,0 +1,9 @@
+sensor:
+  - platform: template
+    name: ${property}
+    id: ${property}
+    unit_of_measurement: "°C"
+    icon: "mdi:thermometer-lines"
+    device_class: "temperature"
+    state_class: "measurement"
+    accuracy_decimals: 1

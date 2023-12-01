@@ -1,0 +1,17 @@
+select:
+  - platform: template
+    name: ${property}
+    id: ${property}
+    optimistic: true
+    options:
+      - "3"
+      - "2"
+      - "1"
+      - "0"
+      - "Unbekannt"
+    initial_option: "Unbekannt"
+    set_action:
+      lambda: |-
+        if(x != "Unbekannt" && id(${property}).state != x) {
+          sendData(Kessel, Property::k${property}, std::stoi(x));
+        }

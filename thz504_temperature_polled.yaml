@@ -1,0 +1,9 @@
+packages:
+  ${property}: !include 
+    file: thz504_temperature.yaml
+    vars: 
+      property: ${property}
+    update_interval: ${interval}
+    lambda: |-
+      queueRequest(${target}, Property::k${property});
+      return {};

@@ -22,119 +22,73 @@
 
 #include "mappings.h"
 
-void SetValueType(char * val, const Type type, const std::uint16_t value)
+SimpleVariant GetValueByType(const std::uint16_t value, const Type type)
 {
-  switch (type)
-  {
-    case Type::et_byte:
-      sprintf(val, "%d", (value & 0xFF));
-      break;
-
-    case Type::et_dec_val:
-      sprintf(val, "%.1f", (value / 10.0));
-      break;
-
-    case Type::et_cent_val:
-      sprintf(val, "%.2f", (value / 100.0));
-      break;
-
-    case Type::et_mil_val:
-      sprintf(val, "%.3f", (value/ 1000.0));
-      break;
-
-    case Type::et_little_endian:
-      sprintf(val, "%d", ((value >> 8U) & 0xFF) | ((value & 0xff) << 8U));
-      break;
-      
-    case Type::et_little_bool:
-      if (value == 0x0100) {
-        strcpy(val, "on");
-      } else {
-        if (!value) {
-          strcpy(val, "off");
-        }
-        else {
-          strcpy(val, "?");
-        }
-      }
-      break;
-      
-    case Type::et_bool:
-      if (value == 0x0001) {
-        strcpy(val, "on");
-      } else {
-        if (!value) {
-          strcpy(val, "off");
-        } else {
-          strcpy(val, "?");
-        }
-      }
-      break;
-    
-    case Type::et_betriebsart:
-      {
-        const auto it = std::find_if(BetriebsartMappings.begin(), BetriebsartMappings.end(), [value](const BetriebsartMapping& element){ return element.id == value;});
-        if (it != BetriebsartMappings.end()) {
-          strcpy(val, it->name);
-        } else {
-          strcpy(val, "?");
-        }
-      }
-      break;
-
-    case Type::et_zeit:{
-      sprintf(val, "%2.2d:%2.2d", ((value >> 8U) & 0xff), (value & 0xff));
-      break;
-    }
-
-    case Type::et_datum:
-      sprintf(val, "%2.2d.%2.2d.", ((value >> 8U) & 0xff), (value & 0xff));
-      break;
-
-    case Type::et_time_domain:
-      if (value & 0x8080) {
-        strcpy(val, "not used time domain");
-      } else {
-        sprintf(val, "%2.2d:%2.2d-%2.2d:%2.2d",
-                (value >> 8) / 4, 15*((value >> 8) % 4),
-                (value & 0xff) / 4, 15*(value % 4));
-      }
-      break;
-
-    case Type::et_dev_nr:
-      if (value >= 0x80) {
-        strcpy(val, "--");
-      } else {
-        sprintf(val, "%d", value + 1);
-      }
-      break;
-
-    case Type::et_dev_id:
-      sprintf(val, "%d-%2.2d", ((value >> 8U) & 0xff), (value & 0xff));
-      break;
-
-    case Type::et_err_nr:
+    char buffer[32U];
+    switch (type)
     {
-      const auto it = std::find_if(ErrorMappings.begin(), ErrorMappings.end(), [value](const ErrorMapping& element){ return element.id == value;});
-      if(it != ErrorMappings.end()) {
-        strcpy(val, it->name);
-      } else {
-        sprintf(val, "ERR %d", value);
-      }
-      break;
+        case Type::et_byte:
+            return (static_cast<std::uint8_t>(value & 0xFF));
+        case Type::et_dec_val:
+            return (static_cast<std::int16_t>(value) / 10.0f);
+        case Type::et_cent_val:
+            return (static_cast<std::int16_t>(value) / 100.0f);
+        case Type::et_mil_val:
+            return (static_cast<std::int16_t>(value) / 1000.0f);
+        case Type::et_little_endian:
+            return static_cast<std::uint16_t>((((value >> 8U) & 0xFF) | ((value & 0xff) << 8U)));
+        case Type::et_little_bool:
+            return (value == 0x0100) ? true : false;
+        case Type::et_bool:
+            return (value == 0x0001) ? true : false;
+        case Type::et_betriebsart:
+            {
+                const auto it = std::find_if(BetriebsartMappings.begin(), BetriebsartMappings.end(), [value](const BetriebsartMapping& element){ return element.id == value;});
+                if (it != BetriebsartMappings.end()) {
+                    return std::string(it->name);
+                }
+                return std::string("Unbekannt");
+            }
+        case Type::et_zeit:
+            sprintf(buffer, "%2.2d:%2.2d", ((value >> 8U) & 0xff), (value & 0xff));
+            return std::string(buffer);
+        case Type::et_datum:
+            sprintf(buffer, "%2.2d.%2.2d.", ((value >> 8U) & 0xff), (value & 0xff));
+            return std::string(buffer);
+        case Type::et_time_domain:
+            if (value & 0x8080) {
+                return std::string("xx:xx-xx:xx?");
+            }
+            sprintf(buffer, "%2.2d:%2.2d-%2.2d:%2.2d",
+                    (value >> 8U) / 4U, 15U*((value >> 8U) % 4U),
+                    (value & 0xff) / 4U, 15U*(value % 4U));
+            return std::string(buffer);
+        case Type::et_dev_nr:
+            if (value >= 0x80) {
+                return std::string("--");
+            } else {
+                sprintf(buffer, "%d", value + 1);
+                return std::string(buffer);
+            }
+        case Type::et_dev_id:
+            sprintf(buffer, "%d-%2.2d", ((value >> 8U) & 0xff), (value & 0xff));
+            return std::string(buffer);
+        case Type::et_err_nr:
+        {
+            const auto it = std::find_if(ErrorMappings.begin(), ErrorMappings.end(), [value](const ErrorMapping& element){ return element.id == value;});
+            if(it != ErrorMappings.end()) {
+                return std::string(it->name);
+            } else {
+                sprintf(buffer, "ERR %d", value);
+                return std::string(buffer);
+            }
+        }
+        // just convert to double and handle the decimals in yaml
+        case Type::et_double_val:
+        case Type::et_triple_val:
+            return value * 1.0;
+        case Type::et_default:
+        default:
+            return value;
     }
-
-    case Type::et_double_val:
-      sprintf(val, "%.3f", value * 1.0f);
-      break;
-
-    case Type::et_triple_val:
-      sprintf(val, "%.6f", value * 1.0f);
-      break;
-
-    case Type::et_default:
-    default:
-      sprintf(val, "%d", value);
-      break;
-  }
 }

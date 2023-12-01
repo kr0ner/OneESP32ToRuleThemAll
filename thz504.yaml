@@ -78,6 +78,48 @@ interval:
 
 #########################################
 #                                       #
+#   packages                            #
+#                                       #
+#########################################
+packages:
+  WAERMEERTRAG_RUECKGE_SUMME_KWH: !include { file: thz504_energy.yaml, vars: { property: "WAERMEERTRAG_RUECKGE_SUMME_KWH", unit: "kWh" }}
+  WAERMEERTRAG_RUECKGE_TAG_WH:    !include { file: thz504_energy.yaml, vars: { property: "WAERMEERTRAG_RUECKGE_TAG_WH"   , unit: "Wh"  }}
+  WAERMEERTRAG_RUECKGE_TAG_KWH:   !include { file: thz504_energy.yaml, vars: { property: "WAERMEERTRAG_RUECKGE_TAG_KWH"  , unit: "kWh" }}
+  WAERMEERTRAG_2WE_WW_SUM_KWH:    !include { file: thz504_energy.yaml, vars: { property: "WAERMEERTRAG_2WE_WW_SUM_KWH"   , unit: "kWh" }}
+  WAERMEERTRAG_2WE_WW_SUM_MWH:    !include { file: thz504_energy.yaml, vars: { property: "WAERMEERTRAG_2WE_WW_SUM_MWH"   , unit: "MWh" }}
+  WAERMEERTRAG_2WE_HEIZ_TAG_WH:   !include { file: thz504_energy.yaml, vars: { property: "WAERMEERTRAG_2WE_HEIZ_TAG_WH"  , unit: "Wh"  }}
+  WAERMEERTRAG_2WE_HEIZ_TAG_KWH:  !include { file: thz504_energy.yaml, vars: { property: "WAERMEERTRAG_2WE_HEIZ_TAG_KWH" , unit: "kWh" }}
+  WAERMEERTRAG_2WE_HEIZ_SUM_KWH:  !include { file: thz504_energy.yaml, vars: { property: "WAERMEERTRAG_2WE_HEIZ_SUM_KWH" , unit: "kWh" }}
+  WAERMEERTRAG_2WE_HEIZ_SUM_MWH:  !include { file: thz504_energy.yaml, vars: { property: "WAERMEERTRAG_2WE_HEIZ_SUM_MWH" , unit: "MWh" }}
+  WAERMEERTRAG_WW_TAG_WH:         !include { file: thz504_energy.yaml, vars: { property: "WAERMEERTRAG_WW_TAG_WH"        , unit: "Wh"  }}
+  WAERMEERTRAG_WW_TAG_KWH:        !include { file: thz504_energy.yaml, vars: { property: "WAERMEERTRAG_WW_TAG_KWH"       , unit: "kWh" }}
+  WAERMEERTRAG_WW_SUM_KWH:        !include { file: thz504_energy.yaml, vars: { property: "WAERMEERTRAG_WW_SUM_KWH"       , unit: "kWh" }}
+  WAERMEERTRAG_WW_SUM_MWH:        !include { file: thz504_energy.yaml, vars: { property: "WAERMEERTRAG_WW_SUM_MWH"       , unit: "kWh" }}
+  WAERMEERTRAG_HEIZ_TAG_WH:       !include { file: thz504_energy.yaml, vars: { property: "WAERMEERTRAG_HEIZ_TAG_WH"      , unit: "Wh"  }}
+  WAERMEERTRAG_HEIZ_TAG_KWH:      !include { file: thz504_energy.yaml, vars: { property: "WAERMEERTRAG_HEIZ_TAG_KWH"     , unit: "kWh" }}
+  WAERMEERTRAG_HEIZ_SUM_KWH:      !include { file: thz504_energy.yaml, vars: { property: "WAERMEERTRAG_HEIZ_SUM_KWH"     , unit: "kWh" }}
+  WAERMEERTRAG_HEIZ_SUM_MWH:      !include { file: thz504_energy.yaml, vars: { property: "WAERMEERTRAG_HEIZ_SUM_MWH"     , unit: "MWh" }}
+
+  # SOLL values are always actively changed and transmitted, so we just need to limit the update interval
+  SPEICHERSOLLTEMP:               !include { file: thz504_temperature_throttled.yaml, vars: { property: "SPEICHERSOLLTEMP"         , target: "Kessel"   , interval: $interval_very_slow, delta: 1.0 }}
+  RAUMSOLLTEMP_NACHT:             !include { file: thz504_temperature_throttled.yaml, vars: { property: "RAUMSOLLTEMP_NACHT"       , target: "Heizmodul", interval: $interval_very_slow, delta: 1.0 }}
+  RAUMSOLLTEMP_I:                 !include { file: thz504_temperature_throttled.yaml, vars: { property: "RAUMSOLLTEMP_I"           , target: "Heizmodul", interval: $interval_very_slow, delta: 1.0 }}
+  EINSTELL_SPEICHERSOLLTEMP:      !include { file: thz504_temperature_throttled.yaml, vars: { property: "EINSTELL_SPEICHERSOLLTEMP", target: "Kessel"   , interval: $interval_very_slow, delta: 1.0 }}
+
+  # IST values can change at any time, but we want to limit the updates to not flood the database. Still update if delta is too big.
+  RAUMISTTEMP:                    !include { file: thz504_temperature_polled_throttled.yaml, vars: { property: "RAUMISTTEMP"    , target: "Manager", interval: $interval_very_slow, delta: 1.0 }}
+  SPEICHERISTTEMP:                !include { file: thz504_temperature_polled_throttled.yaml, vars: { property: "SPEICHERISTTEMP", target: "Kessel" , interval: $interval_very_slow, delta: 1.0 }}
+  AUSSENTEMP:                     !include { file: thz504_temperature_polled_throttled.yaml, vars: { property: "AUSSENTEMP"     , target: "Kessel" , interval: $interval_very_slow, delta: 1.0 }}
+  SAMMLERISTTEMP:                 !include { file: thz504_temperature_polled_throttled.yaml, vars: { property: "SAMMLERISTTEMP" , target: "Kessel" , interval: $interval_very_slow, delta: 1.0 }}
+  VERDAMPFERTEMP:                 !include { file: thz504_temperature_polled_throttled.yaml, vars: { property: "VERDAMPFERTEMP" , target: "Kessel" , interval: $interval_very_slow, delta: 1.0 }}
+  RUECKLAUFISTTEMP:               !include { file: thz504_temperature_polled_throttled.yaml, vars: { property: "RUECKLAUFISTTEMP" , target: "Kessel" , interval: $interval_very_slow, delta: 1.0 }}
+
+  LUEFT_STUFE_TAG:                !include { file: thz504_ventilation.yaml, vars: { property: "LUEFT_STUFE_TAG"   }}
+  LUEFT_STUFE_NACHT:              !include { file: thz504_ventilation.yaml, vars: { property: "LUEFT_STUFE_NACHT" }}
+  LUEFT_STUFE_PARTY:              !include { file: thz504_ventilation.yaml, vars: { property: "LUEFT_STUFE_PARTY" }}
+
+#########################################
+#                                       #
 #   sensors                             #
 #                                       #
 #########################################
@@ -87,74 +129,6 @@ sensor:
     id: FEHLERMELDUNG
     icon: "mdi:alert-circle"
     accuracy_decimals: 0
-
-  - platform: template
-    name: "AUSSENTEMP"
-    id: AUSSENTEMP
-    unit_of_measurement: "°C"
-    icon: "mdi:thermometer-lines"
-    device_class: "temperature"
-    state_class: "measurement"
-    accuracy_decimals: 1
-    update_interval: $interval_slow
-    filters:
-      - or:
-        - throttle: $interval_slow
-        - delta: 1.0
-    lambda: |-
-      queueRequest(Kessel, Property::kAUSSENTEMP);
-      return {};
-
-  - platform: template
-    name: "SAMMLERISTTEMP"
-    id: SAMMLERISTTEMP
-    unit_of_measurement: "°C"
-    icon: "mdi:thermometer-lines"
-    device_class: "temperature"
-    state_class: "measurement"
-    accuracy_decimals: 1
-    update_interval: $interval_medium
-    filters:
-      - or:
-        - throttle: $interval_medium
-        - delta: 1.0
-    lambda: |-
-      queueRequest(Kessel, Property::kSAMMLERISTTEMP);
-      return {};
-
-  - platform: template
-    name: "VERDAMPFERTEMP"
-    id: VERDAMPFERTEMP
-    unit_of_measurement: "°C"
-    icon: "mdi:thermometer-lines"
-    device_class: "temperature"
-    state_class: "measurement"
-    accuracy_decimals: 1
-    update_interval: $interval_medium
-    filters:
-      - or:
-        - throttle: $interval_medium
-        - delta: 1.0
-    lambda: |-
-      queueRequest(Kessel, Property::kVERDAMPFERTEMP);
-      return {};
-
-  - platform: template
-    name: "RUECKLAUFISTTEMP"
-    id: RUECKLAUFISTTEMP
-    unit_of_measurement: "°C"
-    icon: "mdi:thermometer-lines"
-    device_class: "temperature"
-    state_class: "measurement"
-    accuracy_decimals: 1
-    update_interval: $interval_medium
-    filters:
-      - or:
-        - throttle: $interval_medium
-        - delta: 1.0
-    lambda: |-
-      queueRequest(Kessel, Property::kRUECKLAUFISTTEMP);
-      return {};
 
   - platform: template
     name: "SCHALTFKT_IWS"
@@ -280,19 +254,6 @@ sensor:
       return {};
 
   - platform: template
-    name: "SPEICHERSOLLTEMP"
-    id: SPEICHERSOLLTEMP
-    unit_of_measurement: "°C"
-    icon: "mdi:thermometer-lines"
-    device_class: "temperature"
-    state_class: "measurement"
-    accuracy_decimals: 1
-    update_interval: $interval_very_slow
-    lambda: |-
-      queueRequest(Kessel, Property::kSPEICHERSOLLTEMP);
-      return {};
-
-  - platform: template
     name: "ABLUFT_SOLL"
     id: ABLUFT_SOLL
     unit_of_measurement: "l/min"
@@ -316,119 +277,6 @@ sensor:
       - throttle: $interval_slow
     lambda: |-
       queueRequest(Kessel, Property::kZULUFT_IST);
-      return {};
-
-  - platform: template
-    name: "WAERMEERTRAG_HEIZ_SUM_KWH"
-    id: WAERMEERTRAG_HEIZ_SUM_KWH
-    unit_of_measurement: "kWh"
-    icon: "mdi:heating-coil"
-    state_class: "measurement"
-    accuracy_decimals: 0
-    update_interval: $interval_once_in_a_while
-    filters:
-      - throttle: $interval_once_in_a_while
-    lambda: |-
-      queueRequest(Kessel, Property::kWAERMEERTRAG_HEIZ_SUM_KWH);
-      return {};
-
-  - platform: template
-    name: "WAERMEERTRAG_WW_SUM_KWH"
-    id: WAERMEERTRAG_WW_SUM_KWH
-    unit_of_measurement: "kWh"
-    icon: "mdi:heating-coil"
-    state_class: "measurement"
-    accuracy_decimals: 0
-    update_interval: $interval_once_in_a_while
-    filters:
-      - throttle: $interval_once_in_a_while
-    lambda: |-
-      queueRequest(Kessel, Property::kWAERMEERTRAG_WW_SUM_KWH);
-      return {};
-
-  - platform: template
-    name: "WAERMEERTRAG_RUECKGE_SUMME_KWH"
-    id: WAERMEERTRAG_RUECKGE_SUMME_KWH
-    unit_of_measurement: "kWh"
-    icon: "mdi:heating-coil"
-    state_class: "measurement"
-    accuracy_decimals: 0
-    update_interval: $interval_once_in_a_while
-    filters:
-      - throttle: $interval_once_in_a_while
-    lambda: |-
-      queueRequest(Kessel, Property::kWAERMEERTRAG_RUECKGE_SUMME_KWH);
-      return {};
-
-  - platform: template
-    name: "RAUMISTTEMP"
-    id: RAUMISTTEMP
-    unit_of_measurement: "°C"
-    icon: "mdi:thermometer-lines"
-    device_class: "temperature"
-    state_class: "measurement"
-    accuracy_decimals: 1
-    update_interval: $interval_very_slow
-    filters:
-      - throttle: $interval_very_slow
-      - delta: 1.0
-    lambda: |-
-      queueRequest(Manager, Property::kRAUMISTTEMP);
-      return {};
-
-  - platform: template
-    name: "RAUMSOLLTEMP_I"
-    id: RAUMSOLLTEMP_I
-    unit_of_measurement: "°C"
-    icon: "mdi:thermometer-lines"
-    device_class: "temperature"
-    state_class: "measurement"
-    accuracy_decimals: 1
-    update_interval: $interval_very_slow
-    lambda: |-
-      queueRequest(Heizmodul, Property::kRAUMSOLLTEMP_I);
-      return {};
-
-  - platform: template
-    name: "RAUMSOLLTEMP_NACHT"
-    id: RAUMSOLLTEMP_NACHT
-    unit_of_measurement: "°C"
-    icon: "mdi:thermometer-lines"
-    device_class: "temperature"
-    state_class: "measurement"
-    accuracy_decimals: 1
-    update_interval: $interval_very_slow
-    lambda: |-
-      queueRequest(Heizmodul, Property::kRAUMSOLLTEMP_NACHT);
-      return {};
-
-  - platform: template
-    name: "SPEICHERISTTEMP"
-    id: SPEICHERISTTEMP
-    unit_of_measurement: "°C"
-    icon: "mdi:thermometer-lines"
-    device_class: "temperature"
-    state_class: "measurement"
-    accuracy_decimals: 1
-    update_interval: $interval_slow
-    filters:
-      - throttle: $interval_slow
-      - delta: 1.0
-    lambda: |-
-      queueRequest(Kessel, Property::kSPEICHERISTTEMP);
-      return {};
-
-  - platform: template
-    name: "EINSTELL_SPEICHERSOLLTEMP"
-    id: EINSTELL_SPEICHERSOLLTEMP
-    unit_of_measurement: "°C"
-    icon: "mdi:thermometer-lines"
-    device_class: "temperature"
-    state_class: "measurement"
-    accuracy_decimals: 1
-    update_interval: $interval_once_in_a_while
-    lambda: |-
-      queueRequest(Kessel, Property::kEINSTELL_SPEICHERSOLLTEMP);
       return {};
 
 #########################################
@@ -461,57 +309,6 @@ select:
             if(it != BetriebsartMappings.end() && id(PROGRAMMSCHALTER).state != x) {
               sendData(Manager, Property::kPROGRAMMSCHALTER, it->id);
             }
-
-  - platform: template
-    name: "LUEFTUNGSSTUFE_TAG"
-    id: LUEFTUNGSSTUFE_TAG
-    optimistic: true
-    options:
-      - "3"
-      - "2"
-      - "1"
-      - "0"
-      - "Unbekannt"
-    initial_option: "Unbekannt"
-    set_action:
-      lambda: |-
-        if(x != "Unbekannt" && id(LUEFTUNGSSTUFE_TAG).state != x) {
-          sendData(Kessel, Property::kLUEFT_STUFE_TAG, std::stoi(x));
-        }
-
-  - platform: template
-    name: "LUEFTUNGSSTUFE_NACHT"
-    id: LUEFTUNGSSTUFE_NACHT
-    optimistic: true
-    options:
-      - "3"
-      - "2"
-      - "1"
-      - "0"
-      - "Unbekannt"
-    initial_option: "Unbekannt"
-    set_action:
-      lambda: |-
-        if(x != "Unbekannt" && id(LUEFTUNGSSTUFE_NACHT).state != x) {
-          sendData(Kessel, Property::kLUEFT_STUFE_NACHT, std::stoi(x));
-        }
-
-  - platform: template
-    name: "LUEFTUNGSSTUFE_PARTY"
-    id: LUEFTUNGSSTUFE_PARTY
-    optimistic: true
-    options:
-      - "3"
-      - "2"
-      - "1"
-      - "0"
-      - "Unbekannt"
-    initial_option: "Unbekannt"
-    set_action:
-      lambda: |-
-        if(x != "Unbekannt" && id(LUEFTUNGSSTUFE_PARTY).state != x) {
-          sendData(Kessel, Property::kLUEFT_STUFE_PARTY, std::stoi(x));
-        }
 
 #########################################
 #                                       #
@@ -566,132 +363,171 @@ canbus:
     - can_id: 0x180
       then:
         - lambda: |-
-            std::string value{"0"};
-            const auto property = processCanMessage(value, x);
+            const auto property_value_pair = processCanMessage(x);
+            Property property{property_value_pair.first};
+            SimpleVariant value{property_value_pair.second};
 
             switch(property) {
               case Property::kFEHLERMELDUNG:
-                id(FEHLERMELDUNG).publish_state(std::stoi(value));
+                id(FEHLERMELDUNG).publish_state(value.get<std::uint16_t>());
                 break;
               case Property::kAUSSENTEMP:
                 {
-                  // FixMe: this is crap ... but I can't use std::variant ... yet
-                  const auto signed_value = static_cast<std::int16_t>(std::stof(value) * 10.0f);
-                  id(AUSSENTEMP).publish_state(signed_value / 10.0f);
+                  id(AUSSENTEMP).publish_state(value.get<float>());
                   break;
                 }
               case Property::kSAMMLERISTTEMP:
-                id(SAMMLERISTTEMP).publish_state(std::stof(value));
+                id(SAMMLERISTTEMP).publish_state(value.get<float>());
                 break;
               case Property::kVERDAMPFERTEMP:
-                id(VERDAMPFERTEMP).publish_state(std::stof(value));
+                id(VERDAMPFERTEMP).publish_state(value.get<float>());
                 break;
               case Property::kRUECKLAUFISTTEMP:
-                id(RUECKLAUFISTTEMP).publish_state(std::stof(value));
+                id(RUECKLAUFISTTEMP).publish_state(value.get<float>());
                 break;
               case Property::kSCHALTFKT_IWS:
-                id(SCHALTFKT_IWS).publish_state(std::stoi(value));
+                id(SCHALTFKT_IWS).publish_state(value.get<std::uint16_t>());
                 break;
               case Property::kPROGRAMMSCHALTER:
                 {
-                  const auto index = id(PROGRAMMSCHALTER).index_of(value);
+                  const auto index = id(PROGRAMMSCHALTER).index_of(value.get<std::string>());
                   if(index.has_value()) {
-                    id(PROGRAMMSCHALTER).publish_state(value);
+                    id(PROGRAMMSCHALTER).publish_state(value.get<std::string>());
                   }
                   break;
                 }
               case Property::kWOCHENTAG:
-                id(WOCHENTAG).publish_state(std::stoi(value));
+                id(WOCHENTAG).publish_state(value.get<std::uint16_t>());
                 break;
               case Property::kTAG:
-                id(TAG).publish_state(std::stoi(value));
+                id(TAG).publish_state(value.get<std::uint16_t>());
                 break;
               case Property::kMONAT:
-                id(MONAT).publish_state(std::stoi(value));
+                id(MONAT).publish_state(value.get<std::uint16_t>());
                 break;
               case Property::kJAHR:
-                id(JAHR).publish_state(std::stoi(value) + 2000U);
+                id(JAHR).publish_state(value.get<std::uint16_t>() + 2000U);
                 break;
               case Property::kSTUNDE:
-                id(STUNDE).publish_state(std::stoi(value));
+                id(STUNDE).publish_state(value.get<std::uint16_t>());
                 break;
               case Property::kMINUTE:
-                id(MINUTE).publish_state(std::stoi(value));
+                id(MINUTE).publish_state(value.get<std::uint16_t>());
                 break;
               case Property::kBETRIEBS_STATUS:
-                id(BETRIEBS_STATUS).publish_state(std::stoi(value));
+                id(BETRIEBS_STATUS).publish_state(value.get<std::uint16_t>());
                 break;
               case Property::kABLUFT_IST:
-                id(ABLUFT_IST).publish_state(std::stoi(value));
+                id(ABLUFT_IST).publish_state(value.get<std::uint16_t>());
                 break;
               case Property::kFORTLUFT_SOLL:
-                id(FORTLUFT_SOLL).publish_state(std::stoi(value));
+                id(FORTLUFT_SOLL).publish_state(value.get<std::uint16_t>());
                 break;
               case Property::kFORTLUFT_IST:
-                id(FORTLUFT_IST).publish_state(std::stoi(value));
-                break;
-              case Property::kPUMPENZYKLEN_MIN_AUSSENT:
-                id(PUMPENZYKLEN_MIN_AUSSENT).publish_state(std::stoi(value));
+                id(FORTLUFT_IST).publish_state(value.get<std::uint16_t>());
                 break;
               case Property::kANZEIGE_NIEDERDRUCK:
-                id(ANZEIGE_NIEDERDRUCK).publish_state(std::stof(value));
+                id(ANZEIGE_NIEDERDRUCK).publish_state(value.get<float>());
                 break;
               case Property::kVERDICHTER:
-                id(VERDICHTER).publish_state(std::stof(value));
+                id(VERDICHTER).publish_state(value.get<float>());
                 break;
               case Property::kVOLUMENSTROM:
-                id(VOLUMENSTROM).publish_state(std::stof(value));
+                id(VOLUMENSTROM).publish_state(value.get<std::uint16_t>());
                 break;
               case Property::kSPEICHERSOLLTEMP:
-                id(SPEICHERSOLLTEMP).publish_state(std::stof(value));
+                id(SPEICHERSOLLTEMP).publish_state(value.get<float>());
                 break;
               case Property::kABLUFT_SOLL:
-                id(ABLUFT_SOLL).publish_state(std::stoi(value));
+                id(ABLUFT_SOLL).publish_state(value.get<std::uint16_t>());
                 break;
               case Property::kZULUFT_IST:
-                id(ZULUFT_IST).publish_state(std::stoi(value));
-                break;
-              case Property::kWAERMEERTRAG_HEIZ_SUM_KWH:
-                id(WAERMEERTRAG_HEIZ_SUM_KWH).publish_state(std::stoi(value));
-                break;
-              case Property::kWAERMEERTRAG_WW_SUM_KWH:
-                id(WAERMEERTRAG_WW_SUM_KWH).publish_state(std::stoi(value));
+                id(ZULUFT_IST).publish_state(value.get<std::uint16_t>());
                 break;
               case Property::kWAERMEERTRAG_RUECKGE_SUMME_KWH:
-                id(WAERMEERTRAG_RUECKGE_SUMME_KWH).publish_state(std::stoi(value));
+                id(WAERMEERTRAG_RUECKGE_SUMME_KWH).publish_state(value.get<std::uint16_t>());
+                break;
+              case Property::kWAERMEERTRAG_RUECKGE_TAG_WH:
+                id(WAERMEERTRAG_RUECKGE_TAG_WH).publish_state(value.get<std::uint16_t>());
+                break;
+              case Property::kWAERMEERTRAG_RUECKGE_TAG_KWH:
+                id(WAERMEERTRAG_RUECKGE_TAG_KWH).publish_state(value.get<std::uint16_t>());
+                break;
+              case Property::kWAERMEERTRAG_2WE_WW_SUM_KWH:
+                id(WAERMEERTRAG_2WE_WW_SUM_KWH).publish_state(value.get<std::uint16_t>());
+                break;
+              case Property::kWAERMEERTRAG_2WE_WW_SUM_MWH:
+                id(WAERMEERTRAG_2WE_WW_SUM_MWH).publish_state(value.get<double>());
+                break;
+              case Property::kWAERMEERTRAG_2WE_HEIZ_TAG_WH:
+                id(WAERMEERTRAG_2WE_HEIZ_TAG_WH).publish_state(value.get<std::uint16_t>());
+                break;
+              case Property::kWAERMEERTRAG_2WE_HEIZ_TAG_KWH:
+                id(WAERMEERTRAG_2WE_HEIZ_TAG_KWH).publish_state(value.get<std::uint16_t>());
+                break;
+              case Property::kWAERMEERTRAG_2WE_HEIZ_SUM_KWH:
+                id(WAERMEERTRAG_2WE_HEIZ_SUM_KWH).publish_state(value.get<std::uint16_t>());
+                break;
+              case Property::kWAERMEERTRAG_2WE_HEIZ_SUM_MWH:
+                id(WAERMEERTRAG_2WE_HEIZ_SUM_MWH).publish_state(value.get<double>());
+                break;
+              case Property::kWAERMEERTRAG_WW_TAG_WH:
+                id(WAERMEERTRAG_WW_TAG_WH).publish_state(value.get<std::uint16_t>());
+                break;
+              case Property::kWAERMEERTRAG_WW_TAG_KWH:
+                id(WAERMEERTRAG_WW_TAG_KWH).publish_state(value.get<std::uint16_t>());
+                break;
+              case Property::kWAERMEERTRAG_WW_SUM_KWH:
+                id(WAERMEERTRAG_WW_SUM_KWH).publish_state(value.get<std::uint16_t>());
+                break;
+              case Property::kWAERMEERTRAG_WW_SUM_MWH:
+                id(WAERMEERTRAG_WW_SUM_MWH).publish_state(value.get<double>());
+                break;
+              case Property::kWAERMEERTRAG_HEIZ_TAG_WH:
+                id(WAERMEERTRAG_HEIZ_TAG_WH).publish_state(value.get<std::uint16_t>());
+                break;
+              case Property::kWAERMEERTRAG_HEIZ_TAG_KWH:
+                id(WAERMEERTRAG_HEIZ_TAG_KWH).publish_state(value.get<std::uint16_t>());
+                break;
+              case Property::kWAERMEERTRAG_HEIZ_SUM_KWH:
+                id(WAERMEERTRAG_HEIZ_SUM_KWH).publish_state(value.get<std::uint16_t>());
+                break;
+              case Property::kWAERMEERTRAG_HEIZ_SUM_MWH:
+                id(WAERMEERTRAG_HEIZ_SUM_MWH).publish_state(value.get<double>());
                 break;
               case Property::kSPEICHERISTTEMP:
-                id(SPEICHERISTTEMP).publish_state(std::stof(value));
+                id(SPEICHERISTTEMP).publish_state(value.get<float>());
                 break;
               case Property::kEINSTELL_SPEICHERSOLLTEMP:
-                id(EINSTELL_SPEICHERSOLLTEMP).publish_state(std::stof(value));
+                id(EINSTELL_SPEICHERSOLLTEMP).publish_state(value.get<float>());
                 break;
               case Property::kLUEFT_STUFE_PARTY:
                 {
-                  const auto index = id(LUEFTUNGSSTUFE_PARTY).index_of(value);
+                  const auto index = id(LUEFT_STUFE_PARTY).index_of(std::to_string(value.get<std::uint16_t>()));
                   if(index.has_value()) {
-                    id(LUEFTUNGSSTUFE_PARTY).publish_state(value);
+                    id(LUEFT_STUFE_PARTY).publish_state(std::to_string(value.get<std::uint16_t>()));
                   }
                   break;
                 }
               case Property::kLUEFT_STUFE_TAG:
                 {
-                  const auto index = id(LUEFTUNGSSTUFE_TAG).index_of(value);
+                  const auto index = id(LUEFT_STUFE_TAG).index_of(std::to_string(value.get<std::uint16_t>()));
                   if(index.has_value()) {
-                    id(LUEFTUNGSSTUFE_TAG).publish_state(value);
+                    id(LUEFT_STUFE_TAG).publish_state(std::to_string(value.get<std::uint16_t>()));
                   }
                   break;
                 }
               case Property::kLUEFT_STUFE_NACHT:
                 {
-                  const auto index = id(LUEFTUNGSSTUFE_NACHT).index_of(value);
+                  const auto index = id(LUEFT_STUFE_NACHT).index_of(std::to_string(value.get<std::uint16_t>()));
                   if(index.has_value()) {
-                    id(LUEFTUNGSSTUFE_NACHT).publish_state(value);
+                    id(LUEFT_STUFE_NACHT).publish_state(std::to_string(value.get<std::uint16_t>()));
                   }
                   break;
                 }
               default:
-                ESP_LOGI("custom","Unhandled Id %04x sent by %02x %02x with value %d", property, !x.empty() ? x[0U] : 0x00, !x.empty() ? x[1U] : 0x00, std::stoi(value));
+                std::string log_str;
+                ESP_LOGI("custom","Unhandled Id %04x", property);
             }
 
 #########################################
@@ -702,18 +538,19 @@ canbus:
     - can_id: 0x301
       then:
         - lambda: |-
-            std::string value{"0"};
-            const auto property = processCanMessage(value, x);
+            const auto property_value_pair = processCanMessage(x);
+            Property property{property_value_pair.first};
+            SimpleVariant value{property_value_pair.second};
 
             switch(property) {
               case Property::kRAUMSOLLTEMP_I:
-                id(RAUMSOLLTEMP_I).publish_state(std::stof(value));
+                id(RAUMSOLLTEMP_I).publish_state(value.get<float>());
                 break;
               case Property::kRAUMSOLLTEMP_NACHT:
-                id(RAUMSOLLTEMP_NACHT).publish_state(std::stof(value));
+                id(RAUMSOLLTEMP_NACHT).publish_state(value.get<float>());
                 break;
               default:
-                ESP_LOGI("custom","Unhandled Id %04x sent by %02x %02x with value %d", property, !x.empty() ? x[0U] : 0x00, !x.empty() ? x[1U] : 0x00, std::stoi(value));
+                ESP_LOGI("custom","Unhandled Id %04x");
             }
 
 #########################################
@@ -724,13 +561,14 @@ canbus:
     - can_id: 0x302
       then:
         - lambda: |-
-            std::string value{"0"};
-            const auto property = processCanMessage(value, x);
+            const auto property_value_pair = processCanMessage(x);
+            Property property{property_value_pair.first};
+            SimpleVariant value{property_value_pair.second};
 
             switch(property) {
               case Property::kRAUMISTTEMP:
-                id(RAUMISTTEMP).publish_state(std::stof(value));
+                id(RAUMISTTEMP).publish_state(value.get<float>());
                 break;
               default:
-                ESP_LOGI("custom","Unhandled Id %04x sent by %02x %02x with value %d", property, !x.empty() ? x[0U] : 0x00, !x.empty() ? x[1U] : 0x00, std::stoi(value));
+                ESP_LOGI("custom","Unhandled Id %04x");
             }

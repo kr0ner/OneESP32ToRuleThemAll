@@ -2,6 +2,7 @@
 #define TYPE_H
 
 #include <cstdint>
+#include <simple_variant.h>
 
 enum Type : std::uint8_t
 {
@@ -24,6 +25,6 @@ enum Type : std::uint8_t
     et_dev_id
 };
 
-void SetValueType(char * val, const Type type, const std::uint16_t value);
+SimpleVariant GetValueByType(const std::uint16_t value, const Type type);
 
 #endif

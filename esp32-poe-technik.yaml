@@ -5,12 +5,21 @@ esphome:
     - stiebeltools/communication.h
     - stiebeltools/mappings.h
     - stiebeltools/property.h
+    - stiebeltools/simple_variant.h
     - stiebeltools/type.h
     - stiebeltools/type.cpp
     - stiebeltools/waermepumpe.h
     - sml_reader.h
   libraries:
     - git+https://github.com/volkszaehler/libsml
+  platformio_options:
+    build_flags:
+      -std=c++17
+      -std=gnu++17
+      -frtti
+    build_unflags:
+      -std=gnu++11
+      -fno-rtti
 
 esp32:
   board: esp32-poe

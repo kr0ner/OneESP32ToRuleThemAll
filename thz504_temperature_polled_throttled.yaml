@@ -1,0 +1,10 @@
+packages:
+  ${property}: !include 
+    file: thz504_temperature_polled.yaml
+    vars: 
+      property: ${property}
+      interval: ${interval}
+      target: ${target}
+    filters:
+      - throttle: ${interval}
+      - delta: ${delta}
