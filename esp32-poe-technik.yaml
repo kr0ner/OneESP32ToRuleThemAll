@@ -814,8 +814,12 @@ canbus:
                 id(FEHLERMELDUNG).publish_state(std::stoi(value));
                 break;
               case Property::kAUSSENTEMP:
-                id(AUSSENTEMP).publish_state(std::stof(value));
-                break;
+                {
+                  // FixMe: this is crap ... but I can't use std::variant ... yet
+                  const auto signed_value = static_cast<std::int16_t>(std::stof(value) * 10.0f);
+                  id(AUSSENTEMP).publish_state(signed_value / 10.0f);
+                  break;
+                }
               case Property::kSAMMLERISTTEMP:
                 id(SAMMLERISTTEMP).publish_state(std::stof(value));
                 break;

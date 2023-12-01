@@ -132,27 +132,15 @@ void sendData(const CanMember& member, const Property property, const std::uint1
     const std::uint8_t ValueByte2{static_cast<std::uint8_t>(value & 0xff)};
     std::vector<std::uint8_t> data;
 
-    /*if(IndexByte1 == 0x00) {
-        data.insert(data.end(), {
-            IdByte1,
-            IdByte2,
-            IndexByte2,
-            ValueByte1,
-            ValueByte2,
-            0x00,
-            0x00
-        });
-    } else {*/
-        data.insert(data.end(), {
-            IdByte1,
-            IdByte2,
-            0xfa,
-            IndexByte1,
-            IndexByte2,
-            ValueByte1,
-            ValueByte2
-        });
-    //}
+    data.insert(data.end(), {
+        IdByte1,
+        IdByte2,
+        0xfa,
+        IndexByte1,
+        IndexByte2,
+        ValueByte1,
+        ValueByte2
+    });
     
     id(my_mcp2515).send_data(ESPClient.CanId, use_extended_id, data);
 }
