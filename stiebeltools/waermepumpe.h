@@ -115,8 +115,8 @@ class HeatingNight : public HeatingDayNight {
 class HotWater : public GenericCustomClimate {
   public:
     HotWater(sensor::Sensor *current_temperature_sensor, sensor::Sensor *target_temperature_sensor, sensor::Sensor *current_mode_sensor = nullptr) : GenericCustomClimate(
-        45.0f,
-        90.0f,
+        35.0f,
+        70.0f,
         0.5f,
         {climate::CLIMATE_MODE_HEAT},
         {climate::CLIMATE_PRESET_COMFORT, climate::CLIMATE_PRESET_ECO, climate::CLIMATE_PRESET_AWAY},
