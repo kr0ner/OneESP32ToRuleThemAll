@@ -7,11 +7,11 @@ esphome:
   on_boot:
     priority: -100
     then:
-       - lambda: |-
+      - lambda: |-
           queueRequest(Kessel, Property::kLUEFT_STUFE_TAG);
           queueRequest(Kessel, Property::kLUEFT_STUFE_NACHT);
           queueRequest(Kessel, Property::kLUEFT_STUFE_PARTY);
-          queueRequest(Kessel, Property::kPROGRAMMSCHALTER);
+          queueRequest(Heizmodul, Property::kPROGRAMMSCHALTER);
 
 #########################################
 #                                       #
@@ -278,6 +278,16 @@ sensor:
     lambda: |-
       queueRequest(Kessel, Property::kZULUFT_IST);
       return {};
+
+  - platform: homeassistant
+    name: "Temperature Sensor From Home Assistant"
+    entity_id: sensor.durchschnittstemperatur_haus
+    filters:
+      - throttle: $interval_slow
+    on_value:
+      then:
+        - lambda: |-
+            sendData(Manager, Property::kRAUMISTTEMP, x);
 
 #########################################
 #                                       #
