@@ -11,7 +11,11 @@ esphome:
           queueRequest(Kessel, Property::kLUEFT_STUFE_TAG);
           queueRequest(Kessel, Property::kLUEFT_STUFE_NACHT);
           queueRequest(Kessel, Property::kLUEFT_STUFE_PARTY);
-          queueRequest(Heizmodul, Property::kPROGRAMMSCHALTER);
+          queueRequest(Kessel, Property::kPROGRAMMSCHALTER);
+          queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_HEIZ_TAG_WH);
+          queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_HEIZ_TAG_KWH);
+          queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_WW_TAG_WH);
+          queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_WW_TAG_KWH);
 
 #########################################
 #                                       #
@@ -102,16 +106,16 @@ packages:
 
   # SOLL values are always actively changed and transmitted, so we just need to limit the update interval
   SPEICHERSOLLTEMP:               !include { file: thz504_temperature_throttled.yaml, vars: { property: "SPEICHERSOLLTEMP"         , target: "Kessel"   , interval: $interval_very_slow, delta: 1.0 }}
-  RAUMSOLLTEMP_NACHT:             !include { file: thz504_temperature_throttled.yaml, vars: { property: "RAUMSOLLTEMP_NACHT"       , target: "Heizmodul", interval: $interval_very_slow, delta: 1.0 }}
-  RAUMSOLLTEMP_I:                 !include { file: thz504_temperature_throttled.yaml, vars: { property: "RAUMSOLLTEMP_I"           , target: "Heizmodul", interval: $interval_very_slow, delta: 1.0 }}
+  VERSTELLTE_RAUMSOLLTEMP:        !include { file: thz504_temperature_throttled.yaml, vars: { property: "VERSTELLTE_RAUMSOLLTEMP"  , target: "HK1"      , interval: $interval_very_slow, delta: 1.0 }}
+  RAUMSOLLTEMP_I:                 !include { file: thz504_temperature_throttled.yaml, vars: { property: "RAUMSOLLTEMP_I"           , target: "HK1"      , interval: $interval_very_slow, delta: 1.0 }}
   EINSTELL_SPEICHERSOLLTEMP:      !include { file: thz504_temperature_throttled.yaml, vars: { property: "EINSTELL_SPEICHERSOLLTEMP", target: "Kessel"   , interval: $interval_very_slow, delta: 1.0 }}
 
   # IST values can change at any time, but we want to limit the updates to not flood the database. Still update if delta is too big.
-  RAUMISTTEMP:                    !include { file: thz504_temperature_polled_throttled.yaml, vars: { property: "RAUMISTTEMP"    , target: "Manager", interval: $interval_very_slow, delta: 1.0 }}
-  SPEICHERISTTEMP:                !include { file: thz504_temperature_polled_throttled.yaml, vars: { property: "SPEICHERISTTEMP", target: "Kessel" , interval: $interval_very_slow, delta: 1.0 }}
-  AUSSENTEMP:                     !include { file: thz504_temperature_polled_throttled.yaml, vars: { property: "AUSSENTEMP"     , target: "Kessel" , interval: $interval_very_slow, delta: 1.0 }}
-  SAMMLERISTTEMP:                 !include { file: thz504_temperature_polled_throttled.yaml, vars: { property: "SAMMLERISTTEMP" , target: "Kessel" , interval: $interval_very_slow, delta: 1.0 }}
-  VERDAMPFERTEMP:                 !include { file: thz504_temperature_polled_throttled.yaml, vars: { property: "VERDAMPFERTEMP" , target: "Kessel" , interval: $interval_very_slow, delta: 1.0 }}
+  RAUMISTTEMP:                    !include { file: thz504_temperature_polled_throttled.yaml, vars: { property: "RAUMISTTEMP"    ,   target: "HK1",     interval: $interval_very_slow, delta: 1.0 }}
+  SPEICHERISTTEMP:                !include { file: thz504_temperature_polled_throttled.yaml, vars: { property: "SPEICHERISTTEMP",   target: "Kessel" , interval: $interval_very_slow, delta: 1.0 }}
+  AUSSENTEMP:                     !include { file: thz504_temperature_polled_throttled.yaml, vars: { property: "AUSSENTEMP"     ,   target: "Kessel" , interval: $interval_very_slow, delta: 1.0 }}
+  SAMMLERISTTEMP:                 !include { file: thz504_temperature_polled_throttled.yaml, vars: { property: "SAMMLERISTTEMP" ,   target: "Kessel" , interval: $interval_very_slow, delta: 1.0 }}
+  VERDAMPFERTEMP:                 !include { file: thz504_temperature_polled_throttled.yaml, vars: { property: "VERDAMPFERTEMP" ,   target: "Kessel" , interval: $interval_very_slow, delta: 1.0 }}
   RUECKLAUFISTTEMP:               !include { file: thz504_temperature_polled_throttled.yaml, vars: { property: "RUECKLAUFISTTEMP" , target: "Kessel" , interval: $interval_very_slow, delta: 1.0 }}
 
   LUEFT_STUFE_TAG:                !include { file: thz504_ventilation.yaml, vars: { property: "LUEFT_STUFE_TAG"   }}
@@ -287,7 +291,64 @@ sensor:
     on_value:
       then:
         - lambda: |-
-            sendData(Manager, Property::kRAUMISTTEMP, x);
+            ESP_LOGI("SET", "Avg temperature set to %f", x);
+            sendData(HK1, Property::kRAUMISTTEMP, static_cast<std::uint16_t>(x * 10));
+
+  - platform: template
+    name: "EL_AUFNAHMELEISTUNG_WW_TAG_WH"
+    id: EL_AUFNAHMELEISTUNG_WW_TAG_WH
+    unit_of_measurement: "Wh"
+    icon: "mdi:power"
+    state_class: "measurement"
+    accuracy_decimals: 0
+    update_interval: $interval_once_in_a_while
+    filters:
+      - throttle: $interval_once_in_a_while
+    lambda: |-
+      queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_WW_TAG_WH);
+      return {};
+
+  - platform: template
+    name: "EL_AUFNAHMELEISTUNG_WW_TAG_KWH"
+    id: EL_AUFNAHMELEISTUNG_WW_TAG_KWH
+    unit_of_measurement: "kWh"
+    icon: "mdi:power"
+    state_class: "measurement"
+    accuracy_decimals: 2
+    update_interval: $interval_once_in_a_while
+    filters:
+      - throttle: $interval_once_in_a_while
+    lambda: |-
+      queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_WW_TAG_KWH);
+      return {};
+
+  - platform: template
+    name: "EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH"
+    id: EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH
+    unit_of_measurement: "Wh"
+    icon: "mdi:power"
+    state_class: "measurement"
+    accuracy_decimals: 0
+    update_interval: $interval_once_in_a_while
+    filters:
+      - throttle: $interval_once_in_a_while
+    lambda: |-
+      queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_HEIZ_TAG_WH);
+      return {};
+
+  - platform: template
+    name: "EL_AUFNAHMELEISTUNG_HEIZ_TAG_KWH"
+    id: EL_AUFNAHMELEISTUNG_HEIZ_TAG_KWH
+    unit_of_measurement: "kWh"
+    icon: "mdi:power"
+    state_class: "measurement"
+    accuracy_decimals: 2
+    update_interval: $interval_once_in_a_while
+    filters:
+      - throttle: $interval_once_in_a_while
+    lambda: |-
+      queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_HEIZ_TAG_KWH);
+      return {};
 
 #########################################
 #                                       #
@@ -305,6 +366,7 @@ select:
       - "Tagbetrieb"
       - "Absenkbetrieb"
       - "Warmwasser"
+      - "Handbetrieb"
       - "Unbekannt"
     initial_option: "Unbekannt"
     optimistic: true
@@ -314,10 +376,10 @@ select:
         - lambda: |-
             const auto it = std::find_if(BetriebsartMappings.begin(), BetriebsartMappings.end(), 
               [x](const BetriebsartMapping& mapping){
-              return (std::string(mapping.name) == x);
+              return (x == std::string(mapping.name) && x != "Unbekannt");
             });
             if(it != BetriebsartMappings.end() && id(PROGRAMMSCHALTER).state != x) {
-              sendData(Manager, Property::kPROGRAMMSCHALTER, it->id);
+              sendData(Kessel, Property::kPROGRAMMSCHALTER, it->id);
             }
 
 #########################################
@@ -328,7 +390,7 @@ select:
 climate:
   - platform: custom
     lambda: |-
-      auto heating = new HeatingDay(id(RAUMISTTEMP),id(RAUMSOLLTEMP_I));
+      auto heating = new HeatingDay(id(RAUMISTTEMP),id(VERSTELLTE_RAUMSOLLTEMP));
       App.register_component(heating);
       return {heating};
     climates:
@@ -336,7 +398,7 @@ climate:
 
   - platform: custom
     lambda: |-
-      auto heating = new HeatingNight(id(RAUMISTTEMP),id(RAUMSOLLTEMP_NACHT));
+      auto heating = new HeatingNight(id(RAUMISTTEMP),id(VERSTELLTE_RAUMSOLLTEMP));
       App.register_component(heating);
       return {heating};
     climates:
@@ -382,10 +444,8 @@ canbus:
                 id(FEHLERMELDUNG).publish_state(value.get<std::uint16_t>());
                 break;
               case Property::kAUSSENTEMP:
-                {
-                  id(AUSSENTEMP).publish_state(value.get<float>());
-                  break;
-                }
+                id(AUSSENTEMP).publish_state(value.get<float>());
+                break;
               case Property::kSAMMLERISTTEMP:
                 id(SAMMLERISTTEMP).publish_state(value.get<float>());
                 break;
@@ -443,7 +503,7 @@ canbus:
                 id(VERDICHTER).publish_state(value.get<float>());
                 break;
               case Property::kVOLUMENSTROM:
-                id(VOLUMENSTROM).publish_state(value.get<std::uint16_t>());
+                id(VOLUMENSTROM).publish_state(value.get<float>());
                 break;
               case Property::kSPEICHERSOLLTEMP:
                 id(SPEICHERSOLLTEMP).publish_state(value.get<float>());
@@ -535,14 +595,26 @@ canbus:
                   }
                   break;
                 }
+              case Property::kEL_AUFNAHMELEISTUNG_HEIZ_TAG_WH:
+                id(EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH).publish_state(value.get<std::uint16_t>());
+                break;
+              case Property::kEL_AUFNAHMELEISTUNG_HEIZ_TAG_KWH:
+                id(EL_AUFNAHMELEISTUNG_HEIZ_TAG_KWH).publish_state(value.get<double>());
+                break;
+              case Property::kEL_AUFNAHMELEISTUNG_WW_TAG_WH:
+                id(EL_AUFNAHMELEISTUNG_WW_TAG_WH).publish_state(value.get<std::uint16_t>());
+                break;
+              case Property::kEL_AUFNAHMELEISTUNG_WW_TAG_KWH:
+                id(EL_AUFNAHMELEISTUNG_WW_TAG_KWH).publish_state(value.get<double>());
+                break;
+              case 0x064a: //druck heizkreis /10
               default:
-                std::string log_str;
-                ESP_LOGI("custom","Unhandled Id %04x", property);
+                ESP_LOGI("custom","[Kessel] Unhandled Id %04x", property);
             }
 
 #########################################
 #                                       #
-#   HEIZMODUL messages                  #
+#   HK1 messages                        #
 #                                       #
 #########################################
     - can_id: 0x301
@@ -556,16 +628,22 @@ canbus:
               case Property::kRAUMSOLLTEMP_I:
                 id(RAUMSOLLTEMP_I).publish_state(value.get<float>());
                 break;
-              case Property::kRAUMSOLLTEMP_NACHT:
-                id(RAUMSOLLTEMP_NACHT).publish_state(value.get<float>());
+              case Property::kVERSTELLTE_RAUMSOLLTEMP:
+                id(VERSTELLTE_RAUMSOLLTEMP).publish_state(value.get<float>());
                 break;
+              case Property::kRAUMISTTEMP:
+                id(RAUMISTTEMP).publish_state(value.get<float>());
+                break;
+              case Property::kVORLAUFISTTEMP:
+              case Property::kVORLAUFSOLLTEMP:
+              case Property::kFEUCHTE:
               default:
-                ESP_LOGI("custom","Unhandled Id %04x");
+                ESP_LOGI("custom","[HK1] Unhandled Id %04x", property);
             }
 
 #########################################
 #                                       #
-#   MANAGER messages                    #
+#   HK2 messages                        #
 #                                       #
 #########################################
     - can_id: 0x302
@@ -577,8 +655,28 @@ canbus:
 
             switch(property) {
               case Property::kRAUMISTTEMP:
-                id(RAUMISTTEMP).publish_state(value.get<float>());
+              case Property::kVORLAUFISTTEMP:
+              case Property::kVORLAUFSOLLTEMP:
+              case Property::kVERSTELLTE_RAUMSOLLTEMP:
+              case Property::kFEUCHTE:
                 break;
               default:
-                ESP_LOGI("custom","Unhandled Id %04x");
+                ESP_LOGI("custom","[HK2] Unhandled Id %04x", property);
+            }
+
+#########################################
+#                                       #
+#   Message requests                    #
+#                                       #
+#########################################
+    - can_id: 0x6a1
+      then:
+        - lambda: |-
+            const auto property_value_pair = processCanMessage(x);
+            Property property{property_value_pair.first};
+            SimpleVariant value{property_value_pair.second};
+
+            switch(property) {
+              default:
+                ESP_LOGD("custom","Unhandled id %04x requested", property);
             }

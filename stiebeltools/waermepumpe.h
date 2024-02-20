@@ -47,6 +47,7 @@ class GenericCustomClimate : public Component, public Climate {
 
 
     void update_mode(const float /*mode*/) {
+        //this->mode = mode;
         this->publish_state();
     }
 
@@ -55,10 +56,10 @@ class GenericCustomClimate : public Component, public Climate {
             // User requested mode change
             ClimateMode mode = *call.get_mode();
 
-            if(mode_ != Property::kINDEX_NOT_FOUND) {
+            //if(mode_ != Property::kINDEX_NOT_FOUND) {
                 this->mode = mode;
                 //sendData(Kessel, mode_, mode);
-            }
+            //}
         }
         if (call.get_target_temperature().has_value()) {
             // User requested target temperature change
@@ -90,7 +91,7 @@ class HeatingDayNight : public GenericCustomClimate {
         {climate::CLIMATE_MODE_COOL, climate::CLIMATE_MODE_HEAT, climate::CLIMATE_MODE_AUTO},
         {climate::CLIMATE_PRESET_NONE, climate::CLIMATE_PRESET_HOME, climate::CLIMATE_PRESET_AWAY},
         Property::kINDEX_NOT_FOUND,
-        std::make_pair(Heizmodul,temperature)
+        std::make_pair(HK1,temperature)
     ){};
 };
 
@@ -118,7 +119,7 @@ class HotWater : public GenericCustomClimate {
         35.0f,
         70.0f,
         0.5f,
-        {climate::CLIMATE_MODE_HEAT},
+        {climate::CLIMATE_MODE_HEAT, climate::CLIMATE_MODE_AUTO},
         {climate::CLIMATE_PRESET_COMFORT, climate::CLIMATE_PRESET_ECO, climate::CLIMATE_PRESET_AWAY},
         Property::kINDEX_NOT_FOUND,
         std::make_pair(Kessel,Property::kEINSTELL_SPEICHERSOLLTEMP)

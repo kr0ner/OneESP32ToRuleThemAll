@@ -36,37 +36,18 @@ struct CanMember
     std::uint8_t ConfirmationId[2U];
 };
 
-/*
-#################################################################
-#Stiebel Eltron WPL 13 E (2013)
-#WPM3i software version 391-08
-#FEK software version 416 - 02
-#################################################################
-#WPL 13 E: CAN ID 180: read - 3100, write - 3000 # Pump
-#WPL 13 E: CAN ID 500: read - A100, write - A000 # Heating Module
-#WPL 13 E: CAN ID 480: read - 9100, write - 9000 # Manager
-
-#OLD: CAN ID 301: read - 0c01, FEK-device (no active can request, only listening)
-#
-#OLD: other addresses
-#OLD:   180 read: 3100  write: 3000
-#OLD:  	301	read: 6101  write: 6001
-#OLD: 	480	read: 9100  write: 9000    WMPme Wärmepumpenmanager
-#OLD: 	601	read: C101  write: C001
-#OLD: 	680	confirmation: D200
-#################################################################
-*/
-
 //  Name               CanId      ReadId          WriteId         ConfirmationID
 static const CanMember ESPClient {0x6a2,    {0x00, 0x00},   {0x00, 0x00},   {0xE2, 0x00}}; //The ESP Home Client, thus no valid read/write IDs
+static const CanMember Anfrage   {0x6a1,    {0x00, 0x00},   {0x00, 0x00},   {0x00, 0x00}};
 static const CanMember Kessel    {0x180,    {0x31, 0x00},   {0x30, 0x00},   {0x00, 0x00}};
-static const CanMember Manager   {0x302,    {0x61, 0x02},   {0x60, 0x02},   {0x00, 0x00}};
-static const CanMember Heizmodul {0x301,    {0x61, 0x01},   {0x60, 0x01},   {0x00, 0x00}};
+static const CanMember HK1       {0x301,    {0x61, 0x01},   {0x60, 0x01},   {0x00, 0x00}};
+static const CanMember HK2       {0x302,    {0x61, 0x02},   {0x60, 0x02},   {0x00, 0x00}};
 
 using Request = std::pair<const CanMember, const Property>;
 static std::queue<Request> request_queue;
 
 void queueRequest(const CanMember& member, const Property& property) {
+    ESP_LOGI("QUEUE","Requesting data for %04x", property);
     request_queue.push(std::make_pair(member,property));
 }
 

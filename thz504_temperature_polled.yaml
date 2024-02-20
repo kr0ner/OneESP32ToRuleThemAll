@@ -1,9 +1,13 @@
-packages:
-  ${property}: !include 
-    file: thz504_temperature.yaml
-    vars: 
-      property: ${property}
+sensor:
+  - platform: template
+    name: ${property}
+    id: ${property}
+    unit_of_measurement: "°C"
+    icon: "mdi:thermometer-lines"
+    device_class: "temperature"
+    state_class: "measurement"
+    accuracy_decimals: 1
     update_interval: ${interval}
     lambda: |-
-      queueRequest(${target}, Property::k${property});
-      return {};
+        queueRequest(${target}, Property::k${property});
+        return {};

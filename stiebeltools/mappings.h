@@ -418,7 +418,7 @@ static const std::array<PropertyTypeMapping,3613U> PropertyTypeMappings =
   { Property::kHILFSKESSELSOLL, Type::et_dec_val},// Ruecklaufsoll.?
   { Property::kFUEHLER_1, Type::et_dec_val},
   { Property::kFUEHLER_2, Type::et_dec_val},
-  { Property::kVOLUMENSTROM, Type::et_default},
+  { Property::kVOLUMENSTROM, Type::et_dec_val},
   { Property::kERTRAG_AKT, Type::et_default},
   { Property::kERTRAG_TAG_W, Type::et_default},
   { Property::kERTRAG_TAG_KW, Type::et_default},
@@ -3762,14 +3762,15 @@ static const std::array<ErrorMapping,24U> ErrorMappings=
 }};
 
 using BetriebsartMapping = IdToNameMapping;
-static const std::array<BetriebsartMapping,6U> BetriebsartMappings =
+static const std::array<BetriebsartMapping,7U> BetriebsartMappings =
 {{
   { 0x0000, "Notbetrieb" },
   { 0x0100, "Bereitschaft" }, 
-  { 0x0200, "Automatik" },
   { 0x0300, "Tagbetrieb" },
   { 0x0400, "Absenkbetrieb" },
-  { 0x0500, "Warmwasser" }
+  { 0x0500, "Warmwasser" },
+  { 0x0B00, "Automatik" },
+  { 0x0E00, "Handbetrieb"}
 }};
 
 #endif

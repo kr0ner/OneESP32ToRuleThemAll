@@ -1,10 +1,17 @@
-packages:
-  ${property}: !include 
-    file: thz504_temperature_polled.yaml
-    vars: 
-      property: ${property}
-      interval: ${interval}
-      target: ${target}
+sensor:
+  - platform: template
+    name: ${property}
+    id: ${property}
+    unit_of_measurement: "°C"
+    icon: "mdi:thermometer-lines"
+    device_class: "temperature"
+    state_class: "measurement"
+    accuracy_decimals: 1
+    update_interval: ${interval}
     filters:
-      - throttle: ${interval}
-      - delta: ${delta}
+      - or:
+        - throttle: ${interval}
+        - delta: ${delta}
+    lambda: |-
+        queueRequest(${target}, Property::k${property});
+        return {};
