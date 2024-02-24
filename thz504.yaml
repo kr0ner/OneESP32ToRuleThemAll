@@ -12,10 +12,6 @@ esphome:
           queueRequest(Kessel, Property::kLUEFT_STUFE_NACHT);
           queueRequest(Kessel, Property::kLUEFT_STUFE_PARTY);
           queueRequest(Kessel, Property::kPROGRAMMSCHALTER);
-          queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_HEIZ_TAG_WH);
-          queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_HEIZ_TAG_KWH);
-          queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_WW_TAG_WH);
-          queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_WW_TAG_KWH);
 
 #########################################
 #                                       #
@@ -79,6 +75,42 @@ interval:
             request_queue.pop();
             requestData(request_element.first, request_element.second);
           }
+
+#########################################
+#                                       #
+#   time triggers                       #
+#                                       #
+#########################################
+time:
+  - platform: sntp
+    on_time:
+      # Every hour except midnight
+      - seconds: 0
+        minutes: 0
+        hours: 1-23
+        then:
+          - lambda: |-
+              queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_WW_TAG_WH);
+              queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_WW_TAG_KWH);
+              queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_HEIZ_TAG_WH);
+              queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_HEIZ_TAG_KWH);
+      # At midnight reset power consumptions
+      - seconds: 0
+        minutes: 0
+        hours: 0
+        then:
+          - sensor.template.publish:
+              id: EL_AUFNAHMELEISTUNG_WW_TAG_WH
+              state: 0.0
+          - sensor.template.publish:
+              id: EL_AUFNAHMELEISTUNG_WW_TAG_KWH
+              state: 0.0
+          - sensor.template.publish:
+              id: EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH
+              state: 0.0
+          - sensor.template.publish:
+              id: EL_AUFNAHMELEISTUNG_HEIZ_TAG_KWH
+              state: 0.0
 
 #########################################
 #                                       #
@@ -301,12 +333,6 @@ sensor:
     icon: "mdi:power"
     state_class: "measurement"
     accuracy_decimals: 0
-    update_interval: $interval_once_in_a_while
-    filters:
-      - throttle: $interval_once_in_a_while
-    lambda: |-
-      queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_WW_TAG_WH);
-      return {};
 
   - platform: template
     name: "EL_AUFNAHMELEISTUNG_WW_TAG_KWH"
@@ -315,12 +341,6 @@ sensor:
     icon: "mdi:power"
     state_class: "measurement"
     accuracy_decimals: 2
-    update_interval: $interval_once_in_a_while
-    filters:
-      - throttle: $interval_once_in_a_while
-    lambda: |-
-      queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_WW_TAG_KWH);
-      return {};
 
   - platform: template
     name: "EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH"
@@ -329,12 +349,6 @@ sensor:
     icon: "mdi:power"
     state_class: "measurement"
     accuracy_decimals: 0
-    update_interval: $interval_once_in_a_while
-    filters:
-      - throttle: $interval_once_in_a_while
-    lambda: |-
-      queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_HEIZ_TAG_WH);
-      return {};
 
   - platform: template
     name: "EL_AUFNAHMELEISTUNG_HEIZ_TAG_KWH"
@@ -343,12 +357,6 @@ sensor:
     icon: "mdi:power"
     state_class: "measurement"
     accuracy_decimals: 2
-    update_interval: $interval_once_in_a_while
-    filters:
-      - throttle: $interval_once_in_a_while
-    lambda: |-
-      queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_HEIZ_TAG_KWH);
-      return {};
 
 #########################################
 #                                       #
