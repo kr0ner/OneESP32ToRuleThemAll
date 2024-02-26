@@ -12,6 +12,23 @@ esphome:
           queueRequest(Kessel, Property::kLUEFT_STUFE_NACHT);
           queueRequest(Kessel, Property::kLUEFT_STUFE_PARTY);
           queueRequest(Kessel, Property::kPROGRAMMSCHALTER);
+          queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_WW_TAG_WH);
+          queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_WW_TAG_KWH);
+          queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_HEIZ_TAG_WH);
+          queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_HEIZ_TAG_KWH);
+
+#########################################
+#                                       #
+#   SPI configuration                   #
+#                                       #
+#########################################
+globals:
+  - id: gEL_AUFNAHMELEISTUNG_WW_TAG_WH
+    type: int
+    initial_value: '0'
+  - id: gEL_AUFNAHMELEISTUNG_HEIZ_TAG_WH
+    type: int
+    initial_value: '0'
 
 #########################################
 #                                       #
@@ -84,7 +101,7 @@ interval:
 time:
   - platform: sntp
     on_time:
-      # Every hour except midnight
+      # Every hour except midnight. Helper will be set when the response is received
       - seconds: 0
         minutes: 0
         hours: 1-23
@@ -94,7 +111,7 @@ time:
               queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_WW_TAG_KWH);
               queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_HEIZ_TAG_WH);
               queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_HEIZ_TAG_KWH);
-      # At midnight reset power consumptions
+      # At midnight reset power consumptions. The helper must not be set!
       - seconds: 0
         minutes: 0
         hours: 0
@@ -604,14 +621,36 @@ canbus:
                   break;
                 }
               case Property::kEL_AUFNAHMELEISTUNG_HEIZ_TAG_WH:
-                id(EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH).publish_state(value.get<std::uint16_t>());
-                break;
+                {
+                  // This value is not reset after midnight, messing up the Energy Dashboard
+                  // We manually set the sensor value to zero at midnight (see above) and ignore
+                  // the stale sensor value until we get a proper reading.
+                  const auto new_value = value.get<std::uint16_t>();
+                  if(new_value != id(gEL_AUFNAHMELEISTUNG_HEIZ_TAG_WH)) {
+                    // Set the actual sensor value
+                    id(EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH).publish_state(new_value);
+                    // Set the helper
+                    id(gEL_AUFNAHMELEISTUNG_HEIZ_TAG_WH) = new_value;
+                  }
+                  break;
+                }
               case Property::kEL_AUFNAHMELEISTUNG_HEIZ_TAG_KWH:
                 id(EL_AUFNAHMELEISTUNG_HEIZ_TAG_KWH).publish_state(value.get<double>());
                 break;
               case Property::kEL_AUFNAHMELEISTUNG_WW_TAG_WH:
-                id(EL_AUFNAHMELEISTUNG_WW_TAG_WH).publish_state(value.get<std::uint16_t>());
-                break;
+                {
+                  // This value is not reset after midnight, messing up the Energy Dashboard
+                  // We manually set the sensor value to zero at midnight (see above) and ignore
+                  // the stale sensor value until we get a proper reading.
+                  const auto new_value = value.get<std::uint16_t>();
+                  if(new_value != id(gEL_AUFNAHMELEISTUNG_WW_TAG_WH)) {
+                    // Set the actual sensor value
+                    id(EL_AUFNAHMELEISTUNG_WW_TAG_WH).publish_state(new_value);
+                    // Set the helper
+                    id(gEL_AUFNAHMELEISTUNG_WW_TAG_WH) = new_value;
+                  }
+                  break;
+                }
               case Property::kEL_AUFNAHMELEISTUNG_WW_TAG_KWH:
                 id(EL_AUFNAHMELEISTUNG_WW_TAG_KWH).publish_state(value.get<double>());
                 break;
