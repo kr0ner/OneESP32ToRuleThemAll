@@ -170,6 +170,12 @@ packages:
   LUEFT_STUFE_TAG:                !include { file: thz504_ventilation.yaml, vars: { property: "LUEFT_STUFE_TAG"   }}
   LUEFT_STUFE_NACHT:              !include { file: thz504_ventilation.yaml, vars: { property: "LUEFT_STUFE_NACHT" }}
   LUEFT_STUFE_PARTY:              !include { file: thz504_ventilation.yaml, vars: { property: "LUEFT_STUFE_PARTY" }}
+# Remove once https://github.com/esphome/issues/issues/5541 is fixed
+# This is needed to prevent missing headers for SpeedFan component
+output:
+  - platform: gpio
+    pin: GPIO16 # is anyways not connected
+    id: dummy_gpio
 
 #########################################
 #                                       #
@@ -598,26 +604,26 @@ canbus:
                 break;
               case Property::kLUEFT_STUFE_PARTY:
                 {
-                  const auto index = id(LUEFT_STUFE_PARTY).index_of(std::to_string(value.get<std::uint16_t>()));
-                  if(index.has_value()) {
-                    id(LUEFT_STUFE_PARTY).publish_state(std::to_string(value.get<std::uint16_t>()));
-                  }
+                  const auto fan_speed = std::min(static_cast<std::uint16_t>(3U),value.get<std::uint16_t>());
+                  auto call = (fan_speed == 0U) ? id(LUEFT_STUFE_PARTY).turn_off() : id(LUEFT_STUFE_PARTY).turn_on();
+                  call.set_speed(fan_speed);
+                  call.perform();
                   break;
                 }
               case Property::kLUEFT_STUFE_TAG:
                 {
-                  const auto index = id(LUEFT_STUFE_TAG).index_of(std::to_string(value.get<std::uint16_t>()));
-                  if(index.has_value()) {
-                    id(LUEFT_STUFE_TAG).publish_state(std::to_string(value.get<std::uint16_t>()));
-                  }
+                  const auto fan_speed = std::min(static_cast<std::uint16_t>(3U),value.get<std::uint16_t>());
+                  auto call = (fan_speed == 0U) ? id(LUEFT_STUFE_TAG).turn_off() : id(LUEFT_STUFE_TAG).turn_on();
+                  call.set_speed(fan_speed);
+                  call.perform();
                   break;
                 }
               case Property::kLUEFT_STUFE_NACHT:
                 {
-                  const auto index = id(LUEFT_STUFE_NACHT).index_of(std::to_string(value.get<std::uint16_t>()));
-                  if(index.has_value()) {
-                    id(LUEFT_STUFE_NACHT).publish_state(std::to_string(value.get<std::uint16_t>()));
-                  }
+                  const auto fan_speed = std::min(static_cast<std::uint16_t>(3U),value.get<std::uint16_t>());
+                  auto call = (fan_speed == 0U) ? id(LUEFT_STUFE_NACHT).turn_off() : id(LUEFT_STUFE_NACHT).turn_on();
+                  call.set_speed(fan_speed);
+                  call.perform();
                   break;
                 }
               case Property::kEL_AUFNAHMELEISTUNG_HEIZ_TAG_WH:

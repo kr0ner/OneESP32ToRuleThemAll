@@ -1,17 +1,9 @@
-select:
-  - platform: template
+fan:
+  - platform: speed
     name: ${property}
     id: ${property}
-    optimistic: true
-    options:
-      - "3"
-      - "2"
-      - "1"
-      - "0"
-      - "Unbekannt"
-    initial_option: "Unbekannt"
-    set_action:
-      lambda: |-
-        if(x != "Unbekannt" && id(${property}).state != x) {
-          sendData(Kessel, Property::k${property}, std::stoi(x));
-        }
+    speed_count: 3
+    on_speed_set:
+      - lambda: |-
+          const auto fan_speed = std::min(3U, id(${property}).state ? id(${property}).speed : 0U);
+          sendData(Kessel, Property::k${property}, fan_speed);
