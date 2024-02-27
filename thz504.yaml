@@ -19,7 +19,7 @@ esphome:
 
 #########################################
 #                                       #
-#   SPI configuration                   #
+#   Global variables                    #
 #                                       #
 #########################################
 globals:
@@ -54,10 +54,15 @@ switch:
 
 #########################################
 #                                       #
-#   Kondensatpumpe Störung              #
+#   Binary Sensors                      #
 #                                       #
 #########################################
 binary_sensor:
+#########################################
+#                                       #
+#   Kondensatpumpe Störung              #
+#                                       #
+#########################################
   - platform: gpio
     pin: 
       number: GPIO32
@@ -75,6 +80,71 @@ binary_sensor:
     on_release:
       then:
         - switch.turn_off: evu_sperre
+
+#########################################
+#                                       #
+#   Betriebstatus Sensors               #
+#                                       #
+#########################################
+  - platform: template
+    name: "SCHALTPROGRAMM_AKTIV"
+    id: SCHALTPROGRAMM_AKTIV
+
+  - platform: template
+    name: "VERDICHTER"
+    id: VERDICHTER
+
+  - platform: template
+    name: "HEIZEN"
+    id: HEIZEN
+
+  - platform: template
+    name: "KUEHLEN"
+    id: KUEHLEN
+
+  - platform: template
+    name: "WARMWASSERBEREITUNG"
+    id: WARMWASSERBEREITUNG
+
+  - platform: template
+    name: "ELEKTRISCHE_NACHERWAERMUNG"
+    id: ELEKTRISCHE_NACHERWAERMUNG
+
+  - platform: template
+    name: "SERVICE"
+    id: SERVICE
+
+  - platform: template
+    name: "EVU_SPERRE"
+    id: EVU_SPERRE
+
+  - platform: template
+    name: "FILTERWECHSEL_BEIDE"
+    id: FILTERWECHSEL_BEIDE
+
+  - platform: template
+    name: "LUEFTUNG"
+    id: LUEFTUNG
+
+  - platform: template
+    name: "HEIZKREISPUMPE"
+    id: HEIZKREISPUMPE
+
+  - platform: template
+    name: "ABTAUEN_VERDAMPFER"
+    id: ABTAUEN_VERDAMPFER
+
+  - platform: template
+    name: "FILTERWECHSEL_ABLUFT"
+    id: FILTERWECHSEL_ABLUFT
+
+  - platform: template
+    name: "FILTERWECHSEL_ZULUFT"
+    id: FILTERWECHSEL_ZULUFT
+
+  - platform: template
+    name: "AUFHEIZPROGRAMM_AKTIV"
+    id: AUFHEIZPROGRAMM_AKTIV
 
 #########################################
 #                                       #
@@ -120,13 +190,13 @@ time:
               id: EL_AUFNAHMELEISTUNG_WW_TAG_WH
               state: 0.0
           - sensor.template.publish:
-              id: EL_AUFNAHMELEISTUNG_WW_TAG_KWH
+              id: EL_AUFNAHMELEISTUNG_WW_SUMME_KWH
               state: 0.0
           - sensor.template.publish:
               id: EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH
               state: 0.0
           - sensor.template.publish:
-              id: EL_AUFNAHMELEISTUNG_HEIZ_TAG_KWH
+              id: EL_AUFNAHMELEISTUNG_HEIZ_SUMME_KWH
               state: 0.0
 
 #########################################
@@ -190,12 +260,6 @@ sensor:
     accuracy_decimals: 0
 
   - platform: template
-    name: "SCHALTFKT_IWS"
-    id: SCHALTFKT_IWS
-    icon: "mdi:description"
-    accuracy_decimals: 0
-
-  - platform: template
     name: "JAHR"
     id: JAHR
     icon: "mdi:calendar"
@@ -229,11 +293,6 @@ sensor:
     name: "MINUTE"
     id: MINUTE
     icon: "mdi:calendar-clock"
-    accuracy_decimals: 0
-
-  - platform: template
-    name: "BETRIEBS_STATUS"
-    id: BETRIEBS_STATUS
     accuracy_decimals: 0
 
   - platform: template
@@ -279,11 +338,6 @@ sensor:
     lambda: |-
       queueRequest(Kessel, Property::kFORTLUFT_IST);
       return {};
-
-  - platform: template
-    name: "VERDICHTER"
-    id: VERDICHTER
-    accuracy_decimals: 2
 
   - platform: template
     name: "ANZEIGE_NIEDERDRUCK"
@@ -356,14 +410,16 @@ sensor:
     icon: "mdi:power"
     state_class: "measurement"
     accuracy_decimals: 0
+    internal: true
 
   - platform: template
-    name: "EL_AUFNAHMELEISTUNG_WW_TAG_KWH"
-    id: EL_AUFNAHMELEISTUNG_WW_TAG_KWH
+    name: "EL_AUFNAHMELEISTUNG_WW_SUMME_KWH"
+    id: EL_AUFNAHMELEISTUNG_WW_SUMME_KWH
     unit_of_measurement: "kWh"
     icon: "mdi:power"
-    state_class: "measurement"
     accuracy_decimals: 2
+    device_class: energy
+    state_class: total_increasing
 
   - platform: template
     name: "EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH"
@@ -372,14 +428,16 @@ sensor:
     icon: "mdi:power"
     state_class: "measurement"
     accuracy_decimals: 0
+    internal: true
 
   - platform: template
-    name: "EL_AUFNAHMELEISTUNG_HEIZ_TAG_KWH"
-    id: EL_AUFNAHMELEISTUNG_HEIZ_TAG_KWH
+    name: "EL_AUFNAHMELEISTUNG_HEIZ_SUMME_KWH"
+    id: EL_AUFNAHMELEISTUNG_HEIZ_SUMME_KWH
     unit_of_measurement: "kWh"
     icon: "mdi:power"
-    state_class: "measurement"
     accuracy_decimals: 2
+    state_class: total_increasing
+    device_class: energy
 
 #########################################
 #                                       #
@@ -486,9 +544,6 @@ canbus:
               case Property::kRUECKLAUFISTTEMP:
                 id(RUECKLAUFISTTEMP).publish_state(value.get<float>());
                 break;
-              case Property::kSCHALTFKT_IWS:
-                id(SCHALTFKT_IWS).publish_state(value.get<std::uint16_t>());
-                break;
               case Property::kPROGRAMMSCHALTER:
                 {
                   const auto index = id(PROGRAMMSCHALTER).index_of(value.get<std::string>());
@@ -516,8 +571,25 @@ canbus:
                 id(MINUTE).publish_state(value.get<std::uint16_t>());
                 break;
               case Property::kBETRIEBS_STATUS:
-                id(BETRIEBS_STATUS).publish_state(value.get<std::uint16_t>());
-                break;
+                {
+                  const std::bitset<15U> status_bits{value.get<std::uint16_t>()};
+                  id(SCHALTPROGRAMM_AKTIV).publish_state(status_bits.test(0U));
+                  id(VERDICHTER).publish_state(status_bits.test(1U));
+                  id(HEIZEN).publish_state(status_bits.test(2U));
+                  id(KUEHLEN).publish_state(status_bits.test(3U));
+                  id(WARMWASSERBEREITUNG).publish_state(status_bits.test(4U));
+                  id(ELEKTRISCHE_NACHERWAERMUNG).publish_state(status_bits.test(5U));
+                  id(SERVICE).publish_state(status_bits.test(6U));
+                  id(EVU_SPERRE).publish_state(status_bits.test(7U));
+                  id(FILTERWECHSEL_BEIDE).publish_state(status_bits.test(8U));
+                  id(LUEFTUNG).publish_state(status_bits.test(9U));
+                  id(HEIZKREISPUMPE).publish_state(status_bits.test(10U));
+                  id(ABTAUEN_VERDAMPFER).publish_state(status_bits.test(11U));
+                  id(FILTERWECHSEL_ABLUFT).publish_state(status_bits.test(12U));
+                  id(FILTERWECHSEL_ZULUFT).publish_state(status_bits.test(13U));
+                  id(AUFHEIZPROGRAMM_AKTIV).publish_state(status_bits.test(14U));
+                  break;
+                }
               case Property::kABLUFT_IST:
                 id(ABLUFT_IST).publish_state(value.get<std::uint16_t>());
                 break;
@@ -529,9 +601,6 @@ canbus:
                 break;
               case Property::kANZEIGE_NIEDERDRUCK:
                 id(ANZEIGE_NIEDERDRUCK).publish_state(value.get<float>());
-                break;
-              case Property::kVERDICHTER:
-                id(VERDICHTER).publish_state(value.get<float>());
                 break;
               case Property::kVOLUMENSTROM:
                 id(VOLUMENSTROM).publish_state(value.get<float>());
@@ -641,7 +710,7 @@ canbus:
                   break;
                 }
               case Property::kEL_AUFNAHMELEISTUNG_HEIZ_TAG_KWH:
-                id(EL_AUFNAHMELEISTUNG_HEIZ_TAG_KWH).publish_state(value.get<double>());
+                id(EL_AUFNAHMELEISTUNG_HEIZ_SUMME_KWH).publish_state(value.get<double>() + id(gEL_AUFNAHMELEISTUNG_HEIZ_TAG_WH));
                 break;
               case Property::kEL_AUFNAHMELEISTUNG_WW_TAG_WH:
                 {
@@ -658,7 +727,7 @@ canbus:
                   break;
                 }
               case Property::kEL_AUFNAHMELEISTUNG_WW_TAG_KWH:
-                id(EL_AUFNAHMELEISTUNG_WW_TAG_KWH).publish_state(value.get<double>());
+                id(EL_AUFNAHMELEISTUNG_WW_SUMME_KWH).publish_state(value.get<double>() + id(gEL_AUFNAHMELEISTUNG_WW_TAG_WH));
                 break;
               case 0x064a: //druck heizkreis /10
               default:

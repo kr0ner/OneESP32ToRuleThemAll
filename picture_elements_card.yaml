@@ -1,0 +1,53 @@
+type: picture-elements
+image: /local/Tecalor/blank.png
+elements:
+  - type: image
+    entity: binary_sensor.esp32_poe_technik_schaltprogramm_aktiv
+    state_image:
+      'on': /local/Tecalor/ProgrammAktiv.png
+      'off': null
+    style:
+      top: 50%
+      left: 50%
+      height: 100%
+      width: 100%
+  - type: image
+    entity: binary_sensor.esp32_poe_technik_heizkreispumpe
+    state_image:
+      'on': /local/Tecalor/Heizkreispumpe.png
+      'off': null
+    style:
+      top: 50%
+      left: 50%
+      height: 100%
+      width: 100%
+  - type: image
+    entity: binary_sensor.esp32_poe_technik_abtauen_verdampfer
+    state_image:
+      'on': /local/Tecalor/Abtauen.png
+      'off': null
+    style:
+      top: 50%
+      left: 50%
+      height: 100%
+      width: 100%
+  - type: image
+    entity: binary_sensor.esp32_poe_technik_filterwechsel_beide
+    state_image:
+      'on': /local/Tecalor/FilterObenUnten.png
+      'off': null
+    style:
+      top: 50%
+      left: 50%
+      height: 100%
+      width: 100%
+  - type: image
+    entity: binary_sensor.esp32_poe_technik_heizen
+    state_image:
+      'on': /local/Tecalor/Heizen.png
+      'off': null
+    style:
+      top: 50%
+      left: 50%
+      height: 100%
+      width: 100%
