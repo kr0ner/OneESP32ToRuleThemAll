@@ -16,6 +16,23 @@ esphome:
           queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_WW_TAG_KWH);
           queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_HEIZ_TAG_WH);
           queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_HEIZ_TAG_KWH);
+          queueRequest(Kessel, Property::kSPEICHERSOLLTEMP);
+          queueRequest(HK1, Property::kRAUMSOLLTEMP_NACHT);
+          queueRequest(HK1, Property::kRAUMSOLLTEMP_I);
+          queueRequest(Kessel, Property::kEINSTELL_SPEICHERSOLLTEMP);
+          queueRequest(HK1, Property::kRAUMISTTEMP);
+          queueRequest(Kessel, Property::kSPEICHERISTTEMP);
+          queueRequest(Kessel, Property::kAUSSENTEMP);
+          queueRequest(Kessel, Property::kSAMMLERISTTEMP);
+          queueRequest(Kessel, Property::kVERDAMPFERTEMP);
+          queueRequest(Kessel, Property::kRUECKLAUFISTTEMP);
+          queueRequest(Kessel, Property::kVORLAUFISTTEMP);
+          queueRequest(HK1, Property::kVORLAUFSOLLTEMP);
+          queueRequest(Kessel, Property::kVERDICHTER_STARTS_K);
+          queueRequest(Kessel, Property::kVERDICHTER_STARTS);
+          queueRequest(Kessel, Property::kWAERMEERTRAG_WW_TAG_KWH);
+          queueRequest(Kessel, Property::kWAERMEERTRAG_2WE_HEIZ_TAG_WH);
+          queueRequest(Kessel, Property::kWAERMEERTRAG_2WE_HEIZ_TAG_KWH);
 
 #########################################
 #                                       #
@@ -46,11 +63,11 @@ spi:
 #   EVU Sperre                          #
 #                                       #
 #########################################
-switch:
-  - platform: gpio
-    name: "EVU Sperre"
-    id: evu_sperre
-    pin: GPIO5
+# switch:
+#   - platform: gpio
+#     name: "EVU Sperre"
+#     id: evu_sperre
+#     pin: GPIO5
 
 #########################################
 #                                       #
@@ -63,23 +80,23 @@ binary_sensor:
 #   Kondensatpumpe Störung              #
 #                                       #
 #########################################
-  - platform: gpio
-    pin: 
-      number: GPIO32
-      mode:
-        input: true
-        pullup: true
-      inverted: true
-    name: "Kondensatpumpe Störung"
-    filters:
-      - delayed_on: 1s
-      - delayed_off: 1min
-    on_press:
-      then:
-        - switch.turn_on: evu_sperre
-    on_release:
-      then:
-        - switch.turn_off: evu_sperre
+  # - platform: gpio
+  #   pin: 
+  #     number: GPIO32
+  #     mode:
+  #       input: true
+  #       pullup: true
+  #     inverted: true
+  #   name: "Kondensatpumpe Störung"
+  #   filters:
+  #     - delayed_on: 1s
+  #     - delayed_off: 1min
+  #   on_press:
+  #     then:
+  #       - switch.turn_on: evu_sperre
+  #   on_release:
+  #     then:
+  #       - switch.turn_off: evu_sperre
 
 #########################################
 #                                       #
@@ -228,6 +245,7 @@ packages:
   VERSTELLTE_RAUMSOLLTEMP:        !include { file: thz504_temperature_throttled.yaml, vars: { property: "VERSTELLTE_RAUMSOLLTEMP"  , target: "HK1"      , interval: $interval_very_slow, delta: 1.0 }}
   RAUMSOLLTEMP_I:                 !include { file: thz504_temperature_throttled.yaml, vars: { property: "RAUMSOLLTEMP_I"           , target: "HK1"      , interval: $interval_very_slow, delta: 1.0 }}
   EINSTELL_SPEICHERSOLLTEMP:      !include { file: thz504_temperature_throttled.yaml, vars: { property: "EINSTELL_SPEICHERSOLLTEMP", target: "Kessel"   , interval: $interval_very_slow, delta: 1.0 }}
+  VORLAUFSOLLTEMP:                !include { file: thz504_temperature_throttled.yaml, vars: { property: "VORLAUFSOLLTEMP"          , target: "HK1"      , interval: $interval_very_slow, delta: 1.0 }}
 
   # IST values can change at any time, but we want to limit the updates to not flood the database. Still update if delta is too big.
   RAUMISTTEMP:                    !include { file: thz504_temperature_polled_throttled.yaml, vars: { property: "RAUMISTTEMP"    ,   target: "HK1",     interval: $interval_very_slow, delta: 1.0 }}
@@ -236,6 +254,7 @@ packages:
   SAMMLERISTTEMP:                 !include { file: thz504_temperature_polled_throttled.yaml, vars: { property: "SAMMLERISTTEMP" ,   target: "Kessel" , interval: $interval_very_slow, delta: 1.0 }}
   VERDAMPFERTEMP:                 !include { file: thz504_temperature_polled_throttled.yaml, vars: { property: "VERDAMPFERTEMP" ,   target: "Kessel" , interval: $interval_very_slow, delta: 1.0 }}
   RUECKLAUFISTTEMP:               !include { file: thz504_temperature_polled_throttled.yaml, vars: { property: "RUECKLAUFISTTEMP" , target: "Kessel" , interval: $interval_very_slow, delta: 1.0 }}
+  VORLAUFISTTEMP:                 !include { file: thz504_temperature_polled_throttled.yaml, vars: { property: "VORLAUFISTTEMP" ,   target: "Kessel" , interval: $interval_very_slow, delta: 1.0 }}
 
   LUEFT_STUFE_TAG:                !include { file: thz504_ventilation.yaml, vars: { property: "LUEFT_STUFE_TAG"   }}
   LUEFT_STUFE_NACHT:              !include { file: thz504_ventilation.yaml, vars: { property: "LUEFT_STUFE_NACHT" }}
@@ -257,6 +276,12 @@ sensor:
     name: "FEHLERMELDUNG"
     id: FEHLERMELDUNG
     icon: "mdi:alert-circle"
+    accuracy_decimals: 0
+
+  - platform: template
+    name: "SCHALTFKT_IWS"
+    id: SCHALTFKT_IWS
+    icon: "mdi:description"
     accuracy_decimals: 0
 
   - platform: template
@@ -338,6 +363,16 @@ sensor:
     lambda: |-
       queueRequest(Kessel, Property::kFORTLUFT_IST);
       return {};
+
+  - platform: template
+    name: "VERDICHTER_STARTS_K"
+    id: VERDICHTER_STARTS_K
+    accuracy_decimals: 0
+
+  - platform: template
+    name: "VERDICHTER_STARTS"
+    id: VERDICHTER_STARTS
+    accuracy_decimals: 0
 
   - platform: template
     name: "ANZEIGE_NIEDERDRUCK"
@@ -544,6 +579,12 @@ canbus:
               case Property::kRUECKLAUFISTTEMP:
                 id(RUECKLAUFISTTEMP).publish_state(value.get<float>());
                 break;
+              case Property::kVORLAUFISTTEMP:
+                id(VORLAUFISTTEMP).publish_state(value.get<float>());
+                break;
+              case Property::kSCHALTFKT_IWS:
+                id(SCHALTFKT_IWS).publish_state(value.get<std::uint16_t>());
+                break;
               case Property::kPROGRAMMSCHALTER:
                 {
                   const auto index = id(PROGRAMMSCHALTER).index_of(value.get<std::string>());
@@ -602,6 +643,12 @@ canbus:
               case Property::kANZEIGE_NIEDERDRUCK:
                 id(ANZEIGE_NIEDERDRUCK).publish_state(value.get<float>());
                 break;
+              case Property::kVERDICHTER_STARTS:
+                id(VERDICHTER_STARTS).publish_state(value.get<std::uint16_t>());
+                break;
+              case Property::kVERDICHTER_STARTS_K:
+                id(VERDICHTER_STARTS_K).publish_state(value.get<std::uint16_t>());
+                break;
               case Property::kVOLUMENSTROM:
                 id(VOLUMENSTROM).publish_state(value.get<float>());
                 break;
@@ -627,7 +674,7 @@ canbus:
                 id(WAERMEERTRAG_2WE_WW_SUM_KWH).publish_state(value.get<std::uint16_t>());
                 break;
               case Property::kWAERMEERTRAG_2WE_WW_SUM_MWH:
-                id(WAERMEERTRAG_2WE_WW_SUM_MWH).publish_state(value.get<double>());
+                id(WAERMEERTRAG_2WE_WW_SUM_MWH).publish_state(value.get<std::uint16_t>());
                 break;
               case Property::kWAERMEERTRAG_2WE_HEIZ_TAG_WH:
                 id(WAERMEERTRAG_2WE_HEIZ_TAG_WH).publish_state(value.get<std::uint16_t>());
@@ -757,8 +804,8 @@ canbus:
                 id(RAUMISTTEMP).publish_state(value.get<float>());
                 break;
               case Property::kVORLAUFISTTEMP:
-              case Property::kVORLAUFSOLLTEMP:
-              case Property::kFEUCHTE:
+                id(VORLAUFISTTEMP).publish_state(value.get<float>());
+                break;
               default:
                 ESP_LOGI("custom","[HK1] Unhandled Id %04x", property);
             }
@@ -776,11 +823,11 @@ canbus:
             SimpleVariant value{property_value_pair.second};
 
             switch(property) {
-              case Property::kRAUMISTTEMP:
-              case Property::kVORLAUFISTTEMP:
-              case Property::kVORLAUFSOLLTEMP:
               case Property::kVERSTELLTE_RAUMSOLLTEMP:
-              case Property::kFEUCHTE:
+                id(VERSTELLTE_RAUMSOLLTEMP).publish_state(value.get<float>());
+                break;
+              case Property::kVORLAUFSOLLTEMP:
+                id(VORLAUFSOLLTEMP).publish_state(value.get<float>());
                 break;
               default:
                 ESP_LOGI("custom","[HK2] Unhandled Id %04x", property);
