@@ -36,7 +36,7 @@ struct CanMember
     std::uint8_t ConfirmationId[2U];
 };
 
-//  Name               CanId      ReadId          WriteId         ConfirmationID
+//  Name                          CanId      ReadId          WriteId         ConfirmationID
 static const CanMember ESPClient {0x6a2,    {0x00, 0x00},   {0x00, 0x00},   {0xE2, 0x00}}; //The ESP Home Client, thus no valid read/write IDs
 static const CanMember Anfrage   {0x6a1,    {0x00, 0x00},   {0x00, 0x00},   {0x00, 0x00}};
 static const CanMember Kessel    {0x180,    {0x31, 0x00},   {0x30, 0x00},   {0x00, 0x00}};

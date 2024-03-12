@@ -710,7 +710,7 @@ canbus:
                   break;
                 }
               case Property::kEL_AUFNAHMELEISTUNG_HEIZ_TAG_KWH:
-                id(EL_AUFNAHMELEISTUNG_HEIZ_SUMME_KWH).publish_state(value.get<double>() + id(gEL_AUFNAHMELEISTUNG_HEIZ_TAG_WH));
+                id(EL_AUFNAHMELEISTUNG_HEIZ_SUMME_KWH).publish_state(value.get<double>() + (0.001*id(gEL_AUFNAHMELEISTUNG_HEIZ_TAG_WH)));
                 break;
               case Property::kEL_AUFNAHMELEISTUNG_WW_TAG_WH:
                 {
@@ -727,7 +727,7 @@ canbus:
                   break;
                 }
               case Property::kEL_AUFNAHMELEISTUNG_WW_TAG_KWH:
-                id(EL_AUFNAHMELEISTUNG_WW_SUMME_KWH).publish_state(value.get<double>() + id(gEL_AUFNAHMELEISTUNG_WW_TAG_WH));
+                id(EL_AUFNAHMELEISTUNG_WW_SUMME_KWH).publish_state(value.get<double>() + (0.001*id(gEL_AUFNAHMELEISTUNG_WW_TAG_WH)));
                 break;
               case 0x064a: //druck heizkreis /10
               default:
