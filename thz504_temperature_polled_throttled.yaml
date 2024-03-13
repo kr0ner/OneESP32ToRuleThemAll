@@ -1,3 +1,8 @@
+defaults:
+  interval: $interval_very_slow
+  delta: "1.0"
+  target: "Kessel"
+
 sensor:
   - platform: template
     name: ${property}
@@ -15,3 +20,14 @@ sensor:
     lambda: |-
         queueRequest(${target}, Property::k${property});
         return {};
+
+esphome:
+  on_boot:
+    priority: -100
+    then:
+      - lambda: |-
+          CallbackHandler::instance().addCallback(std::make_pair(${target},Property::k${property}),[](const SimpleVariant& value){
+              using type = TypeMapping<Property::k${property}>::type;
+              id(${property}).publish_state(value.get<type>());
+          });
+          queueRequest(${target}, Property::k${property});

@@ -2,24 +2,22 @@ esphome:
   name: esp32-poe-technik
   friendly_name: ESP32-PoE Technik
   includes: 
+    - stiebeltools/callback_handler.h
     - stiebeltools/communication.h
-    - stiebeltools/mappings.h
+    - stiebeltools/custom_climate.h
+    - stiebeltools/mapper.h
     - stiebeltools/property.h
     - stiebeltools/simple_variant.h
+    - stiebeltools/sml_reader.h
     - stiebeltools/type.h
-    - stiebeltools/type.cpp
-    - stiebeltools/waermepumpe.h
-    - sml_reader.h
   libraries:
     - git+https://github.com/volkszaehler/libsml
   platformio_options:
     build_flags:
-      -std=c++17
-      -std=gnu++17
-      -frtti
+      - "-std=gnu++17"
     build_unflags:
-      -std=gnu++11
-      -fno-rtti
+      - "-std=gnu++11"
+      - "-fno-rtti"
 
 esp32:
   board: esp32-poe

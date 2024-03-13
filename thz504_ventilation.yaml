@@ -7,3 +7,16 @@ fan:
       - lambda: |-
           const auto fan_speed = std::min(3U, id(${property}).state ? id(${property}).speed : 0U);
           sendData(Kessel, Property::k${property}, fan_speed);
+
+esphome:
+  on_boot:
+    priority: -100
+    then:
+      - lambda: |-
+          CallbackHandler::instance().addCallback(std::make_pair(Kessel,Property::k${property}),[](const SimpleVariant& value){
+              const auto fan_speed = std::min(static_cast<std::uint16_t>(3U),value.get<std::uint16_t>());
+              auto call = (fan_speed == 0U) ? id(${property}).turn_off() : id(${property}).turn_on();
+              call.set_speed(fan_speed);
+              call.perform();
+          });
+          queueRequest(Kessel, Property::k${property});

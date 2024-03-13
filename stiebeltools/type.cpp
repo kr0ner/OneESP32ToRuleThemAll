@@ -17,16 +17,14 @@
  */
 #include "type.h"
 
-#include <cstring>
 #include <algorithm>
+#include <cstring>
 
-#include "mappings.h"
+#include "mapper.h"
 
-SimpleVariant GetValueByType(const std::uint16_t value, const Type type)
-{
+SimpleVariant GetValueByType(const std::uint16_t value, const Type type) {
     char buffer[32U];
-    switch (type)
-    {
+    switch (type) {
         case Type::et_byte:
             return (static_cast<std::uint8_t>(value & 0xFF));
         case Type::et_dec_val:
@@ -41,14 +39,14 @@ SimpleVariant GetValueByType(const std::uint16_t value, const Type type)
             return (value == 0x0100) ? true : false;
         case Type::et_bool:
             return (value == 0x0001) ? true : false;
-        case Type::et_betriebsart:
-            {
-                const auto it = std::find_if(BetriebsartMappings.begin(), BetriebsartMappings.end(), [value](const BetriebsartMapping& element){ return element.id == value;});
-                if (it != BetriebsartMappings.end()) {
-                    return std::string(it->name);
-                }
-                return std::string("Unbekannt");
+        case Type::et_betriebsart: {
+            const auto result = Mapper::instance().getBetriebsart(value);
+            if (result.has_value()) {
+                return result.value();
+            } else {
+                return std::string("Unknown");
             }
+        }
         case Type::et_zeit:
             sprintf(buffer, "%2.2d:%2.2d", ((value >> 8U) & 0xff), (value & 0xff));
             return std::string(buffer);
@@ -59,9 +57,8 @@ SimpleVariant GetValueByType(const std::uint16_t value, const Type type)
             if (value & 0x8080) {
                 return std::string("xx:xx-xx:xx?");
             }
-            sprintf(buffer, "%2.2d:%2.2d-%2.2d:%2.2d",
-                    (value >> 8U) / 4U, 15U*((value >> 8U) % 4U),
-                    (value & 0xff) / 4U, 15U*(value % 4U));
+            sprintf(buffer, "%2.2d:%2.2d-%2.2d:%2.2d", (value >> 8U) / 4U, 15U * ((value >> 8U) % 4U),
+                    (value & 0xff) / 4U, 15U * (value % 4U));
             return std::string(buffer);
         case Type::et_dev_nr:
             if (value >= 0x80) {
@@ -73,20 +70,18 @@ SimpleVariant GetValueByType(const std::uint16_t value, const Type type)
         case Type::et_dev_id:
             sprintf(buffer, "%d-%2.2d", ((value >> 8U) & 0xff), (value & 0xff));
             return std::string(buffer);
-        case Type::et_err_nr:
-        {
-            const auto it = std::find_if(ErrorMappings.begin(), ErrorMappings.end(), [value](const ErrorMapping& element){ return element.id == value;});
-            if(it != ErrorMappings.end()) {
-                return std::string(it->name);
+        case Type::et_err_nr: {
+            const auto result = Mapper::instance().getError(value);
+            if (result.has_value()) {
+                return result.value();
             } else {
-                sprintf(buffer, "ERR %d", value);
-                return std::string(buffer);
+                return std::string("Unknown");
             }
         }
-        // just convert to double and handle the decimals in yaml
+        // just convert to float and handle the decimals in yaml
         case Type::et_double_val:
         case Type::et_triple_val:
-            return value * 1.0;
+            return value * 1.0f;
         case Type::et_default:
         default:
             return value;

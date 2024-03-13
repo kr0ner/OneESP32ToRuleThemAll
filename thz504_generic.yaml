@@ -1,15 +1,14 @@
 defaults:
+  icon: "mdi:blank"
+  accuracy_decimals: "0"
   target: "Kessel"
 
 sensor:
   - platform: template
     name: ${property}
     id: ${property}
-    unit_of_measurement: "°C"
-    icon: "mdi:thermometer-lines"
-    device_class: "temperature"
-    state_class: "measurement"
-    accuracy_decimals: 1
+    icon: ${icon}
+    accuracy_decimals: ${accuracy_decimals}
 
 esphome:
   on_boot:
