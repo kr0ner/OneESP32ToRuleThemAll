@@ -22,7 +22,7 @@
 #include <string>
 #include <vector>
 
-#include "mappings.h"
+#include "mapper.h"
 #include "property.h"
 #include "type.h"
 
@@ -30,24 +30,27 @@ using CANID = std::uint16_t;
 
 struct CanMember {
     CANID CanId;
+    std::string name;
     std::uint8_t ReadId[2U];
     std::uint8_t WriteId[2U];
     std::uint8_t ConfirmationId[2U];
     bool operator<(const CanMember& other) const { return CanId < other.CanId; }
 };
 
-//  Name                          CanId      ReadId          WriteId         ConfirmationID
-static const CanMember ESPClient{0x6a2, {0x00, 0x00}, {0x00, 0x00}, {0xE2, 0x00}};
-static const CanMember Anfrage{0x6a1, {0x00, 0x00}, {0x00, 0x00}, {0x00, 0x00}};
-static const CanMember Kessel{0x180, {0x31, 0x00}, {0x30, 0x00}, {0x00, 0x00}};
-static const CanMember HK1{0x301, {0x61, 0x01}, {0x60, 0x01}, {0x00, 0x00}};
-static const CanMember HK2{0x302, {0x61, 0x02}, {0x60, 0x02}, {0x00, 0x00}};
+// clang-format off
+//  Name                          CanId  Name          ReadId        WriteId       ConfirmationID
+static const CanMember ESPClient {0x6a2, "ESPClient", {0x00, 0x00}, {0x00, 0x00}, {0xE2, 0x00}};
+static const CanMember Anfrage   {0x6a1, "Anfrage",   {0x00, 0x00}, {0x00, 0x00}, {0x00, 0x00}};
+static const CanMember Kessel    {0x180, "Kessel",    {0x31, 0x00}, {0x30, 0x00}, {0x00, 0x00}};
+static const CanMember HK1       {0x301, "HK1",       {0x61, 0x01}, {0x60, 0x01}, {0x00, 0x00}};
+static const CanMember HK2       {0x302, "HK2",       {0x61, 0x02}, {0x60, 0x02}, {0x00, 0x00}};
+// clang-format on
 
 using Request = std::pair<const CanMember, const Property>;
 static std::queue<Request> request_queue;
 
 void queueRequest(const CanMember& member, const Property& property) {
-    ESP_LOGI("QUEUE", "Requesting data for %04x", property);
+    ESP_LOGI("QUEUE", "Requesting data from %s for 0x%04x", member.name.c_str(), property);
     request_queue.push(std::make_pair(member, property));
 }
 
@@ -71,15 +74,11 @@ std::pair<Property, SimpleVariant> processCanMessage(const std::vector<std::uint
         property = static_cast<Property>(msg[2U]);
     }
 
-    const auto it = std::find_if(PropertyTypeMappings.begin(), PropertyTypeMappings.end(),
-                                 [property](const PropertyTypeMapping property_type_mapping) {
-                                     return property_type_mapping.property == property;
-                                 });
-    if (it != PropertyTypeMappings.end()) {
-        const std::uint16_t value{static_cast<std::uint16_t>((byte1 << 8U) | byte2)};
-        return {property, GetValueByType(value, it->type)};
-    }
-    return {Property::kINDEX_NOT_FOUND, {}};
+    const std::uint16_t value{static_cast<std::uint16_t>((byte1 << 8U) | byte2)};
+    ESP_LOGI("Communication", "Message received: Read/Write ID 0x%02x 0x%02x for property 0x%04x with raw value: %d",
+             msg[0U], msg[1U], property, value);
+    const auto type = Mapper::instance().getType(property);
+    return {property, GetValueByType(value, type)};
 }
 
 void requestData(const CanMember& member, const Property& property) {

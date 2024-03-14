@@ -21,7 +21,7 @@ class CallbackHandler {
         if (it != callbacks.end()) {
             return it->second;
         }
-        ESP_LOGI("CallbackHandler", "Callback not found for %04x", key.second);
+        ESP_LOGI("CallbackHandler", "Callback not found for %s 0x%04x", key.first.name.c_str(), key.second);
         return [](const SimpleVariant&) -> void {
         };
     }

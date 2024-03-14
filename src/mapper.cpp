@@ -82,7 +82,7 @@ Mapper::Mapper() {
         {Property::kRAUMISTTEMP, Type::et_dec_val},
         {Property::kVERSTELLTE_RAUMSOLLTEMP, Type::et_dec_val},
         {Property::kEINSTELL_SPEICHERSOLLTEMP, Type::et_dec_val},
-        {Property::kVERDAMPFERTEMP, Type::et_byte},
+        {Property::kVERDAMPFERTEMP, Type::et_dec_val},
         {Property::kSAMMLERSOLLTEMP, Type::et_dec_val},
         {Property::kRUECKLAUFISTTEMP, Type::et_dec_val},
         {Property::kSPEICHER_UNTEN_TEMP, Type::et_dec_val},
@@ -188,8 +188,6 @@ Mapper::Mapper() {
         {Property::kSOLAR_WOCHENERTRAG_MWH, Type::et_triple_val},
         {Property::kSOLAR_JAHRESERTRAG_KWH, Type::et_double_val},
         {Property::kSOLAR_JAHRESERTRAG_MWH, Type::et_triple_val},
-        {Property::kWAERMEERTRAG_RUECKGE_TAG_KWH, Type::et_double_val},
-        {Property::kWAERMEERTRAG_RUECKGE_SUMME_MWH, Type::et_double_val},
         {Property::kSOLAR_KOLLEKTORSCHUTZTEMP, Type::et_dec_val},
         {Property::kANZEIGE_HOCHDRUCK, Type::et_dec_val},
         {Property::kANZEIGE_NIEDERDRUCK, Type::et_dec_val},
@@ -591,5 +589,6 @@ Mapper::Mapper() {
         {Property::kFREIGABE_2WE, Type::et_little_endian},
         {Property::kDYNAMIK, Type::et_little_endian},
         {Property::kBETRIEBSART_HZK_PUMPE, Type::et_little_endian},
+        {Property::kDRUCK_HEIZKREIS, Type::et_dec_val},
     };
 }

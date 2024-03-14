@@ -102,7 +102,7 @@ struct TypeMapping<Property::kEINSTELL_SPEICHERSOLLTEMP> {
 };
 template <>
 struct TypeMapping<Property::kVERDAMPFERTEMP> {
-    using type = std::uint8_t;
+    using type = float;
 };
 template <>
 struct TypeMapping<Property::kSAMMLERSOLLTEMP> {
@@ -522,14 +522,6 @@ struct TypeMapping<Property::kSOLAR_JAHRESERTRAG_KWH> {
 };
 template <>
 struct TypeMapping<Property::kSOLAR_JAHRESERTRAG_MWH> {
-    using type = float;
-};
-template <>
-struct TypeMapping<Property::kWAERMEERTRAG_RUECKGE_TAG_KWH> {
-    using type = float;
-};
-template <>
-struct TypeMapping<Property::kWAERMEERTRAG_RUECKGE_SUMME_MWH> {
     using type = float;
 };
 template <>
@@ -2135,6 +2127,10 @@ struct TypeMapping<Property::kDYNAMIK> {
 template <>
 struct TypeMapping<Property::kBETRIEBSART_HZK_PUMPE> {
     using type = std::uint16_t;
+};
+template <>
+struct TypeMapping<Property::kDRUCK_HEIZKREIS> {
+    using type = float;
 };
 
 #endif

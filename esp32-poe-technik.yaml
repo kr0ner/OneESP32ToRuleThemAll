@@ -2,14 +2,14 @@ esphome:
   name: esp32-poe-technik
   friendly_name: ESP32-PoE Technik
   includes: 
-    - stiebeltools/callback_handler.h
-    - stiebeltools/communication.h
-    - stiebeltools/custom_climate.h
-    - stiebeltools/mapper.h
-    - stiebeltools/property.h
-    - stiebeltools/simple_variant.h
-    - stiebeltools/sml_reader.h
-    - stiebeltools/type.h
+    - src/callback_handler.h
+    - src/communication.h
+    - src/custom_climate.h
+    - src/mapper.h
+    - src/property.h
+    - src/simple_variant.h
+    - src/sml_reader.h
+    - src/type.h
   libraries:
     - git+https://github.com/volkszaehler/libsml
   platformio_options:
@@ -69,7 +69,7 @@ ethernet:
 #                                       #
 #########################################
 packages:
-  energymeter: !include energymeter.yaml
-  watermeter: !include watermeter.yaml
-  sensors: !include sensors.yaml
-  thz504: !include thz504.yaml
+  energymeter: !include yaml/energymeter.yaml
+  watermeter: !include yaml/watermeter.yaml
+  sensors: !include yaml/sensors.yaml
+  thz504: !include yaml/thz504.yaml
