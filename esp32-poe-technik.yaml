@@ -6,10 +6,12 @@ esphome:
     - src/communication.h
     - src/custom_climate.h
     - src/mapper.h
+    - src/mapper.cpp
     - src/property.h
     - src/simple_variant.h
     - src/sml_reader.h
     - src/type.h
+    - src/type.cpp
   libraries:
     - git+https://github.com/volkszaehler/libsml
   platformio_options:
