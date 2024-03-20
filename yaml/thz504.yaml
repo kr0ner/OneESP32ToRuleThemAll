@@ -14,6 +14,16 @@ esphome:
           queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_WW_TAG_KWH);
           queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_HEIZ_TAG_WH);
           queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_HEIZ_TAG_KWH);
+          CallbackHandler::instance().addCallback(std::make_pair(Kessel,Property::kVERDICHTER_STARTS_K),[](const SimpleVariant& value){
+              using type = TypeMapping<Property::kVERDICHTER_STARTS_K>::type;
+              id(gVERDICHTER_STARTS_K) = value.get<type>() * 1000U;
+          });
+          CallbackHandler::instance().addCallback(std::make_pair(Kessel,Property::kVERDICHTER_STARTS),[](const SimpleVariant& value){
+              using type = TypeMapping<Property::kVERDICHTER_STARTS>::type;
+              id(VERDICHTER_STARTS).publish_state(id(gVERDICHTER_STARTS_K) + value.get<type>());
+          });
+          queueRequest(Kessel, Property::kVERDICHTER_STARTS_K);
+          queueRequest(Kessel, Property::kVERDICHTER_STARTS);
 
 #########################################
 #                                       #
@@ -23,10 +33,13 @@ esphome:
 globals:
   - id: gEL_AUFNAHMELEISTUNG_WW_TAG_WH
     type: int
-    initial_value: '0'
+    initial_value: "0"
   - id: gEL_AUFNAHMELEISTUNG_HEIZ_TAG_WH
     type: int
-    initial_value: '0'
+    initial_value: "0"
+  - id: gVERDICHTER_STARTS_K
+    type: int
+    initial_value: "0"
 
 #########################################
 #                                       #
@@ -307,6 +320,16 @@ sensor:
     accuracy_decimals: 2
     state_class: total_increasing
     device_class: energy
+
+  - platform: template
+    name: "VERDICHTER_STARTS"
+    id: VERDICHTER_STARTS
+    icon: "mdi:counter"
+    accuracy_decimals: 0
+    update_interval: $interval_very_slow
+    lambda: |-
+        queueRequest(Kessel, Property::kVERDICHTER_STARTS);
+        return {};
 
 #########################################
 #                                       #
