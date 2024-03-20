@@ -288,6 +288,10 @@ packages:
   VOLUMENSTROM:                   !include { file: thz504_airflow.yaml, vars: { property: "VOLUMENSTROM"  }}
   ZULUFT_IST:                     !include { file: thz504_airflow.yaml, vars: { property: "ZULUFT_IST"    }}
 
+  LEISTUNG_AUSLEGUNG_HEIZUNG:     !include { file: thz504_number.yaml, vars: { property: "LEISTUNG_AUSLEGUNG_HEIZUNG" }}
+  PUMPENDREHZAHL_HEIZEN:          !include { file: thz504_number.yaml, vars: { property: "PUMPENDREHZAHL_HEIZEN"      , step:   "0.1" }}
+  RAUMEINFLUSS:                   !include { file: thz504_number.yaml, vars: { property: "RAUMEINFLUSS"               , target: "HK1" }}
+
 #########################################
 #                                       #
 #   Sensors                             #

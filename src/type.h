@@ -2132,5 +2132,9 @@ template <>
 struct TypeMapping<Property::kDRUCK_HEIZKREIS> {
     using type = float;
 };
+template <>
+struct TypeMapping<Property::kPUMPENDREHZAHL_HEIZEN> {
+    using type = float;
+};
 
 #endif
