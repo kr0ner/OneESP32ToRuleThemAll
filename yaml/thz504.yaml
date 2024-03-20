@@ -215,7 +215,7 @@ packages:
   WAERMEERTRAG_WW_TAG_WH:         !include { file: thz504_energy.yaml, vars: { property: "WAERMEERTRAG_WW_TAG_WH"        , unit: "Wh"  }}
   WAERMEERTRAG_WW_TAG_KWH:        !include { file: thz504_energy.yaml, vars: { property: "WAERMEERTRAG_WW_TAG_KWH"       , unit: "kWh" }}
   WAERMEERTRAG_WW_SUM_KWH:        !include { file: thz504_energy.yaml, vars: { property: "WAERMEERTRAG_WW_SUM_KWH"       , unit: "kWh" }}
-  WAERMEERTRAG_WW_SUM_MWH:        !include { file: thz504_energy.yaml, vars: { property: "WAERMEERTRAG_WW_SUM_MWH"       , unit: "kWh" }}
+  WAERMEERTRAG_WW_SUM_MWH:        !include { file: thz504_energy.yaml, vars: { property: "WAERMEERTRAG_WW_SUM_MWH"       , unit: "MWh" }}
   WAERMEERTRAG_HEIZ_TAG_WH:       !include { file: thz504_energy.yaml, vars: { property: "WAERMEERTRAG_HEIZ_TAG_WH"      , unit: "Wh"  }}
   WAERMEERTRAG_HEIZ_TAG_KWH:      !include { file: thz504_energy.yaml, vars: { property: "WAERMEERTRAG_HEIZ_TAG_KWH"     , unit: "kWh" }}
   WAERMEERTRAG_HEIZ_SUM_KWH:      !include { file: thz504_energy.yaml, vars: { property: "WAERMEERTRAG_HEIZ_SUM_KWH"     , unit: "kWh" }}
