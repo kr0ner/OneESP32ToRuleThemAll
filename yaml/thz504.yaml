@@ -40,6 +40,9 @@ globals:
   - id: gVERDICHTER_STARTS_K
     type: int
     initial_value: "0"
+  - id: gRAUMISTTEMP
+    type: float
+    initial_value: "0.0"
 
 #########################################
 #                                       #
@@ -75,7 +78,7 @@ binary_sensor:
 #                                       #
 #########################################
   - platform: gpio
-    pin: 
+    pin:
       number: GPIO32
       mode:
         input: true
@@ -163,15 +166,23 @@ binary_sensor:
 #                                       #
 #########################################
 interval:
-  - interval: 1sec
+  - interval: 250ms
     then:
       - lambda: |-
-          // Request sensor value one after another. This prevents warnings like "Component canbus took a long time for an operation"
+          // Request sensor value one after another.
           if(!request_queue.empty()) {
             constexpr auto use_extended_id{false};
             const auto request_element = request_queue.front();
             request_queue.pop();
             requestData(request_element.first, request_element.second);
+          }
+  - interval: 1min
+    then:
+      - lambda: |-
+          // Send current RAUMISTTEMP
+          const auto room_temp = id(gRAUMISTTEMP);
+          if(room_temp > 0.0f) {
+            sendData(FEK, Property::kRAUMISTTEMP, static_cast<std::uint16_t>(room_temp * 10.0f));
           }
 
 #########################################
@@ -277,13 +288,11 @@ sensor:
   - platform: homeassistant
     name: "Temperature Sensor From Home Assistant"
     entity_id: sensor.durchschnittstemperatur_haus
-    filters:
-      - throttle: $interval_slow
     on_value:
       then:
         - lambda: |-
-            ESP_LOGI("SET", "Avg temperature set to %f", x);
-            sendData(HK1, Property::kRAUMISTTEMP, static_cast<std::uint16_t>(x * 10));
+            ESP_LOGI("SET", "gRAUMISTTEMP set to %f", x);
+            id(gRAUMISTTEMP) = x;
 
   - platform: template
     name: "EL_AUFNAHMELEISTUNG_WW_TAG_WH"

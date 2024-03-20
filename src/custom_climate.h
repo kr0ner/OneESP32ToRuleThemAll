@@ -117,7 +117,7 @@ class HotWater : public CustomClimate {
    public:
     HotWater(sensor::Sensor* current_temperature_sensor, sensor::Sensor* target_temperature_sensor,
              sensor::Sensor* current_mode_sensor = nullptr)
-        : CustomClimate(35.0f, 70.0f, 0.5f, {climate::CLIMATE_MODE_HEAT, climate::CLIMATE_MODE_AUTO},
+        : CustomClimate(30.0f, 70.0f, 0.5f, {climate::CLIMATE_MODE_HEAT, climate::CLIMATE_MODE_AUTO},
                         {climate::CLIMATE_PRESET_COMFORT, climate::CLIMATE_PRESET_ECO, climate::CLIMATE_PRESET_AWAY},
                         Property::kINDEX_NOT_FOUND, std::make_pair(Kessel, Property::kEINSTELL_SPEICHERSOLLTEMP)) {
         register_current_temperature_callback(current_temperature_sensor);
