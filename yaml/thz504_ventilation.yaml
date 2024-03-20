@@ -1,5 +1,5 @@
 fan:
-  - platform: speed
+  - platform: template
     name: ${property}
     id: ${property}
     speed_count: 3
