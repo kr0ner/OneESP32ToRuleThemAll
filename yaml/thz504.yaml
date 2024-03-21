@@ -361,7 +361,7 @@ select:
     initial_option: "Unbekannt"
     optimistic: true
     setup_priority: 100
-    on_value:
+    set_action:
       then:
         - lambda: |-
             const auto betriebsartId = Mapper::instance().getBetriebsartId(x);
