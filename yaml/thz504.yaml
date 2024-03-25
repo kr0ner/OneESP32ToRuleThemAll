@@ -250,6 +250,7 @@ packages:
   VERSTELLTE_RAUMSOLLTEMP:        !include { file: thz504_temperature_throttled.yaml, vars: { property: "VERSTELLTE_RAUMSOLLTEMP"  , target: "HK1" }}
   RAUMSOLLTEMP_I:                 !include { file: thz504_temperature_throttled.yaml, vars: { property: "RAUMSOLLTEMP_I"           , target: "HK1" }}
   EINSTELL_SPEICHERSOLLTEMP:      !include { file: thz504_temperature_throttled.yaml, vars: { property: "EINSTELL_SPEICHERSOLLTEMP" }}
+  VORLAUFSOLLTEMP:                !include { file: thz504_temperature_throttled.yaml, vars: { property: "VORLAUFSOLLTEMP"  , target: "HK1"    }}
 
   # IST values can change at any time, but we want to limit the updates to not flood the database. Still update if delta is too big.
   RAUMISTTEMP:                    !include { file: thz504_temperature_polled_throttled.yaml, vars: { property: "RAUMISTTEMP"      , target: "HK1"    }}
@@ -258,6 +259,7 @@ packages:
   SAMMLERISTTEMP:                 !include { file: thz504_temperature_polled_throttled.yaml, vars: { property: "SAMMLERISTTEMP"   }}
   VERDAMPFERTEMP:                 !include { file: thz504_temperature_polled_throttled.yaml, vars: { property: "VERDAMPFERTEMP"   }}
   RUECKLAUFISTTEMP:               !include { file: thz504_temperature_polled_throttled.yaml, vars: { property: "RUECKLAUFISTTEMP" }}
+  VORLAUFISTTEMP:                 !include { file: thz504_temperature_polled_throttled.yaml, vars: { property: "VORLAUFISTTEMP"   , target: "HK1"    }}
 
   LUEFT_STUFE_TAG:                !include { file: thz504_ventilation.yaml, vars: { property: "LUEFT_STUFE_TAG"   }}
   LUEFT_STUFE_NACHT:              !include { file: thz504_ventilation.yaml, vars: { property: "LUEFT_STUFE_NACHT" }}
