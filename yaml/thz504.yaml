@@ -387,7 +387,7 @@ select:
 climate:
   - platform: custom
     lambda: |-
-      auto heating = new HeatingDay(id(RAUMISTTEMP),id(VERSTELLTE_RAUMSOLLTEMP));
+      auto heating = new HeatingDay(id(RAUMISTTEMP),id(VERSTELLTE_RAUMSOLLTEMP), id(HEIZEN), id(KUEHLEN), id(LUEFTUNG));
       App.register_component(heating);
       return {heating};
     climates:
@@ -395,7 +395,7 @@ climate:
 
   - platform: custom
     lambda: |-
-      auto heating = new HeatingNight(id(RAUMISTTEMP),id(VERSTELLTE_RAUMSOLLTEMP));
+      auto heating = new HeatingNight(id(RAUMISTTEMP),id(VERSTELLTE_RAUMSOLLTEMP), id(HEIZEN), id(KUEHLEN), id(LUEFTUNG));
       App.register_component(heating);
       return {heating};
     climates:
@@ -407,7 +407,7 @@ climate:
       App.register_component(hot_water);
       return {hot_water};
     climates:
-      - name: "HotWater"
+      - name: "Hot Water"
 
 #########################################
 #                                       #

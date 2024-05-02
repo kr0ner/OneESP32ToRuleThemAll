@@ -4,9 +4,8 @@
 class CustomClimate : public Component, public Climate {
    public:
     CustomClimate(const float min_temp, const float max_temp, const float temp_step, std::set<ClimateMode> modes,
-                  std::set<ClimatePreset> presets, const Property mode,
-                  const std::pair<const CanMember, const Property> temperature)
-        : mode_(mode), temperature_(temperature) {
+                  std::set<ClimatePreset> presets, const std::pair<const CanMember, const Property> temperature)
+        : temperature_(temperature) {
         traits_.set_supported_modes(std::move(modes));
         traits_.set_supported_presets(std::move(presets));
         traits_.set_supports_current_temperature(true);
@@ -17,51 +16,72 @@ class CustomClimate : public Component, public Climate {
 
     void setup() override {}
 
-    void register_current_temperature_callback(sensor::Sensor* current_temperature_sensor) {
+    template <typename Sensor>
+    void register_current_temperature_callback(Sensor* current_temperature_sensor) {
         if (current_temperature_sensor != nullptr) {
-            current_temperature_sensor->add_on_state_callback(
-                [this](float temp) { this->update_current_temperature(temp); });
+            current_temperature_sensor->add_on_state_callback([this](float temp) {
+                this->current_temperature = temp;
+                this->publish_state();
+            });
         }
     }
 
-    void register_target_temperature_callback(sensor::Sensor* target_temperature_sensor) {
+    template <typename Sensor>
+    void register_target_temperature_callback(Sensor* target_temperature_sensor) {
         if (target_temperature_sensor != nullptr) {
-            target_temperature_sensor->add_on_state_callback(
-                [this](float temp) { this->update_target_temperature(temp); });
+            target_temperature_sensor->add_on_state_callback([this](float temp) {
+                this->target_temperature = temp;
+                this->publish_state();
+            });
         }
     }
 
-    void register_mode_callback(sensor::Sensor* mode_sensor) {
-        if (mode_sensor != nullptr) {
-            mode_sensor->add_on_state_callback([this](float mode) { this->update_mode(mode); });
+    template <typename BinarySensor>
+    void register_heating_callback(BinarySensor* heating_sensor) {
+        if (heating_sensor != nullptr) {
+            heating_sensor->add_on_state_callback([this](const bool value) {
+                this->isHeating = value;
+                this->update_mode();
+            });
         }
     }
 
-    void update_current_temperature(const float current_temperature) {
-        this->current_temperature = current_temperature;
-        this->publish_state();
+    template <typename BinarySensor>
+    void register_cooling_callback(BinarySensor* cooling_sensor) {
+        if (cooling_sensor != nullptr) {
+            cooling_sensor->add_on_state_callback([this](const bool value) {
+                this->isCooling = value;
+                this->update_mode();
+            });
+        }
     }
 
-    void update_target_temperature(const float target_temperature) {
-        this->target_temperature = target_temperature;
-        this->publish_state();
+    template <typename BinarySensor>
+    void register_fan_callback(BinarySensor* fan_sensor) {
+        if (fan_sensor != nullptr) {
+            fan_sensor->add_on_state_callback([this](const bool value) {
+                this->fanRunning = value;
+                this->update_mode();
+            });
+        }
     }
 
-    void update_mode(const float /*mode*/) {
-        //this->mode = mode;
+    void update_mode() {
+        if (isHeating) {
+            this->mode = climate::CLIMATE_MODE_HEAT;
+        } else if (isCooling) {
+            this->mode = climate::CLIMATE_MODE_COOL;
+        } else if (fanRunning) {
+            this->mode = climate::CLIMATE_MODE_FAN_ONLY;
+        } else {
+            this->mode = climate::CLIMATE_MODE_AUTO;
+        }
         this->publish_state();
     }
 
     void control(const ClimateCall& call) override {
-        if (call.get_mode().has_value()) {
-            // User requested mode change
-            ClimateMode mode = *call.get_mode();
-
-            //if(mode_ != Property::kINDEX_NOT_FOUND) {
-            this->mode = mode;
-            //sendData(Kessel, mode_, mode);
-            //}
-        }
+        // only handle the temp adjustment, since there seems to be no way to explicitly set the
+        // heat pump to cooling or heating, other than setting the temperature.
         if (call.get_target_temperature().has_value()) {
             // User requested target temperature change
             float temp = *call.get_target_temperature();
@@ -78,50 +98,58 @@ class CustomClimate : public Component, public Climate {
 
    private:
     climate::ClimateTraits traits_{};
-    const Property mode_;
     const std::pair<const CanMember, const Property> temperature_;
+    bool isHeating{false};
+    bool isCooling{false};
+    bool fanRunning{false};
 };
 
 class HeatingDayNight : public CustomClimate {
    public:
     HeatingDayNight(const Property temperature)
         : CustomClimate(10.0f, 25.0f, 0.1f,
-                        {climate::CLIMATE_MODE_COOL, climate::CLIMATE_MODE_HEAT, climate::CLIMATE_MODE_AUTO},
+                        {climate::CLIMATE_MODE_COOL, climate::CLIMATE_MODE_HEAT, climate::CLIMATE_MODE_AUTO,
+                         climate::CLIMATE_MODE_FAN_ONLY, climate::CLIMATE_MODE_OFF},
                         {climate::CLIMATE_PRESET_NONE, climate::CLIMATE_PRESET_HOME, climate::CLIMATE_PRESET_AWAY},
-                        Property::kINDEX_NOT_FOUND, std::make_pair(HK1, temperature)){};
+                        std::make_pair(HK1, temperature)){};
 };
 
 class HeatingDay : public HeatingDayNight {
    public:
-    HeatingDay(sensor::Sensor* current_temperature_sensor, sensor::Sensor* target_temperature_sensor,
-               sensor::Sensor* current_mode_sensor = nullptr)
+    template <typename Sensor, typename BinarySensor>
+    HeatingDay(Sensor* current_temperature_sensor, Sensor* target_temperature_sensor, BinarySensor* heating_sensor,
+               BinarySensor* cooling_sensor, BinarySensor* fan_sensor)
         : HeatingDayNight(Property::kRAUMSOLLTEMP_I) {
         register_current_temperature_callback(current_temperature_sensor);
         register_target_temperature_callback(target_temperature_sensor);
-        register_mode_callback(current_mode_sensor);
+        register_heating_callback(heating_sensor);
+        register_cooling_callback(cooling_sensor);
+        register_fan_callback(fan_sensor);
     }
 };
 
 class HeatingNight : public HeatingDayNight {
    public:
-    HeatingNight(sensor::Sensor* current_temperature_sensor, sensor::Sensor* target_temperature_sensor,
-                 sensor::Sensor* current_mode_sensor = nullptr)
+    template <typename Sensor, typename BinarySensor>
+    HeatingNight(Sensor* current_temperature_sensor, Sensor* target_temperature_sensor, BinarySensor* heating_sensor,
+                 BinarySensor* cooling_sensor, BinarySensor* fan_sensor)
         : HeatingDayNight(Property::kRAUMSOLLTEMP_NACHT) {
         register_current_temperature_callback(current_temperature_sensor);
         register_target_temperature_callback(target_temperature_sensor);
-        register_mode_callback(current_mode_sensor);
+        register_heating_callback(heating_sensor);
+        register_cooling_callback(cooling_sensor);
+        register_fan_callback(fan_sensor);
     }
 };
 
 class HotWater : public CustomClimate {
    public:
-    HotWater(sensor::Sensor* current_temperature_sensor, sensor::Sensor* target_temperature_sensor,
-             sensor::Sensor* current_mode_sensor = nullptr)
+    template <typename Sensor>
+    HotWater(Sensor* current_temperature_sensor, Sensor* target_temperature_sensor)
         : CustomClimate(30.0f, 70.0f, 0.5f, {climate::CLIMATE_MODE_HEAT, climate::CLIMATE_MODE_AUTO},
                         {climate::CLIMATE_PRESET_COMFORT, climate::CLIMATE_PRESET_ECO, climate::CLIMATE_PRESET_AWAY},
-                        Property::kINDEX_NOT_FOUND, std::make_pair(Kessel, Property::kEINSTELL_SPEICHERSOLLTEMP)) {
+                        std::make_pair(Kessel, Property::kEINSTELL_SPEICHERSOLLTEMP)) {
         register_current_temperature_callback(current_temperature_sensor);
         register_target_temperature_callback(target_temperature_sensor);
-        register_mode_callback(current_mode_sensor);
     };
 };
