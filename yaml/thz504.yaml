@@ -10,6 +10,7 @@ esphome:
       - lambda: |-
           queueRequest(Kessel, Property::kPROGRAMMSCHALTER);
           queueRequest(Kessel, Property::kBETRIEBS_STATUS);
+          queueRequest(Kessel, Property::kBETRIEBS_STATUS_2);
           queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_WW_TAG_WH);
           queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_WW_TAG_KWH);
           queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_HEIZ_TAG_WH);
@@ -159,6 +160,14 @@ binary_sensor:
   - platform: template
     name: "AUFHEIZPROGRAMM_AKTIV"
     id: AUFHEIZPROGRAMM_AKTIV
+
+  - platform: template
+    name: "SOMMERBETRIEB_AKTIV"
+    id: SOMMERBETRIEB_AKTIV
+
+  - platform: template
+    name: "OFEN_KAMIN_AKTIV"
+    id: OFEN_KAMIN_AKTIV
 
 #########################################
 #                                       #
@@ -437,6 +446,12 @@ canbus:
                     id(PROGRAMMSCHALTER).publish_state(value.get<std::string>());
                   }
                   break;
+                }
+              case Property::kBETRIEBS_STATUS_2:
+                {
+                  const std::bitset<2U> status_bits{value.get<std::uint16_t>()};
+                  id(SOMMERBETRIEB_AKTIV).publish_state(status_bits.test(0U));
+                  id(OFEN_KAMIN_AKTIV).publish_state(status_bits.test(1U));
                 }
               case Property::kBETRIEBS_STATUS:
                 {
