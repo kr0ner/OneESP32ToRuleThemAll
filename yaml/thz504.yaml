@@ -337,6 +337,7 @@ sensor:
     accuracy_decimals: 0
     update_interval: $interval_very_slow
     lambda: |-
+        queueRequest(Kessel, Property::kVERDICHTER_STARTS_K);
         queueRequest(Kessel, Property::kVERDICHTER_STARTS);
         return {};
 
