@@ -31,10 +31,10 @@ esphome:
 #                                       #
 #########################################
 globals:
-  - id: gEL_AUFNAHMELEISTUNG_WW_TAG_WH
+  - id: gOFFSET_EL_AUFNAHMELEISTUNG_WW_TAG_WH
     type: int
     initial_value: "0"
-  - id: gEL_AUFNAHMELEISTUNG_HEIZ_TAG_WH
+  - id: gOFFSET_EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH
     type: int
     initial_value: "0"
   - id: gVERDICHTER_STARTS_K
@@ -208,15 +208,13 @@ time:
         minutes: 0
         hours: 0
         then:
-          - sensor.template.publish:
-              id: EL_AUFNAHMELEISTUNG_WW_TAG_WH
-              state: 0.0
+          - lambda: |-
+              id(gOFFSET_EL_AUFNAHMELEISTUNG_WW_TAG_WH) = id(EL_AUFNAHMELEISTUNG_WW_TAG_WH).state;
           - sensor.template.publish:
               id: EL_AUFNAHMELEISTUNG_WW_SUMME_KWH
               state: 0.0
-          - sensor.template.publish:
-              id: EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH
-              state: 0.0
+          - lambda: |-
+                id(gOFFSET_EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH) = id(EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH).state;
           - sensor.template.publish:
               id: EL_AUFNAHMELEISTUNG_HEIZ_SUMME_KWH
               state: 0.0
@@ -460,38 +458,20 @@ canbus:
                   break;
                 }
               case Property::kEL_AUFNAHMELEISTUNG_HEIZ_TAG_WH:
-                {
-                  // This value is not reset after midnight, messing up the Energy Dashboard
-                  // We manually set the sensor value to zero at midnight (see above) and ignore
-                  // the stale sensor value until we get a proper reading.
-                  const auto new_value = value.get<std::uint16_t>();
-                  if(new_value != id(gEL_AUFNAHMELEISTUNG_HEIZ_TAG_WH)) {
-                    // Set the actual sensor value
-                    id(EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH).publish_state(new_value);
-                    // Set the helper
-                    id(gEL_AUFNAHMELEISTUNG_HEIZ_TAG_WH) = new_value;
-                  }
-                  break;
-                }
+                // This value is never reset, messing up the Energy Dashboard.
+                // The offset is obtained at midnight and subtracted for the next 24 hours..
+                id(EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH).publish_state(value.get<std::uint16_t>());
+                break;
               case Property::kEL_AUFNAHMELEISTUNG_HEIZ_TAG_KWH:
-                id(EL_AUFNAHMELEISTUNG_HEIZ_SUMME_KWH).publish_state(value.get<float>() + (0.001*id(gEL_AUFNAHMELEISTUNG_HEIZ_TAG_WH)));
+                id(EL_AUFNAHMELEISTUNG_HEIZ_SUMME_KWH).publish_state(value.get<float>() + (0.001*(id(EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH).state - id(gOFFSET_EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH))));
                 break;
               case Property::kEL_AUFNAHMELEISTUNG_WW_TAG_WH:
-                {
-                  // This value is not reset after midnight, messing up the Energy Dashboard
-                  // We manually set the sensor value to zero at midnight (see above) and ignore
-                  // the stale sensor value until we get a proper reading.
-                  const auto new_value = value.get<std::uint16_t>();
-                  if(new_value != id(gEL_AUFNAHMELEISTUNG_WW_TAG_WH)) {
-                    // Set the actual sensor value
-                    id(EL_AUFNAHMELEISTUNG_WW_TAG_WH).publish_state(new_value);
-                    // Set the helper
-                    id(gEL_AUFNAHMELEISTUNG_WW_TAG_WH) = new_value;
-                  }
-                  break;
-                }
+                // This value is never reset, messing up the Energy Dashboard.
+                // The offset is obtained at midnight and subtracted for the next 24 hours.
+                id(EL_AUFNAHMELEISTUNG_WW_TAG_WH).publish_state(value.get<std::uint16_t>());
+                break;
               case Property::kEL_AUFNAHMELEISTUNG_WW_TAG_KWH:
-                id(EL_AUFNAHMELEISTUNG_WW_SUMME_KWH).publish_state(value.get<float>() + (0.001*id(gEL_AUFNAHMELEISTUNG_WW_TAG_WH)));
+                id(EL_AUFNAHMELEISTUNG_WW_SUMME_KWH).publish_state(value.get<float>() + (0.001*(id(EL_AUFNAHMELEISTUNG_WW_TAG_WH).state - id(gOFFSET_EL_AUFNAHMELEISTUNG_WW_TAG_WH))));
                 break;
               default:
                 break;
