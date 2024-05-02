@@ -252,12 +252,12 @@ packages:
   WAERMEERTRAG_HEIZ_SUM_KWH:      !include { file: thz504_energy.yaml, vars: { property: "WAERMEERTRAG_HEIZ_SUM_KWH"     , unit: "kWh" }}
   WAERMEERTRAG_HEIZ_SUM_MWH:      !include { file: thz504_energy.yaml, vars: { property: "WAERMEERTRAG_HEIZ_SUM_MWH"     , unit: "MWh" }}
 
-  # SOLL values are always actively changed and transmitted, so we just need to limit the update interval
-  SPEICHERSOLLTEMP:               !include { file: thz504_temperature_throttled.yaml, vars: { property: "SPEICHERSOLLTEMP"          }}
-  VERSTELLTE_RAUMSOLLTEMP:        !include { file: thz504_temperature_throttled.yaml, vars: { property: "VERSTELLTE_RAUMSOLLTEMP"  , target: "HK1" }}
-  RAUMSOLLTEMP_I:                 !include { file: thz504_temperature_throttled.yaml, vars: { property: "RAUMSOLLTEMP_I"           , target: "HK1" }}
-  EINSTELL_SPEICHERSOLLTEMP:      !include { file: thz504_temperature_throttled.yaml, vars: { property: "EINSTELL_SPEICHERSOLLTEMP" }}
-  VORLAUFSOLLTEMP:                !include { file: thz504_temperature_throttled.yaml, vars: { property: "VORLAUFSOLLTEMP"  , target: "HK1"    }}
+  # SOLL values are always actively changed and transmitted. Seems that sometimes a value is missed so we poll periodically.
+  SPEICHERSOLLTEMP:               !include { file: thz504_temperature_polled_throttled.yaml, vars: { property: "SPEICHERSOLLTEMP"          }}
+  VERSTELLTE_RAUMSOLLTEMP:        !include { file: thz504_temperature_polled_throttled.yaml, vars: { property: "VERSTELLTE_RAUMSOLLTEMP"  , target: "HK1" }}
+  RAUMSOLLTEMP_I:                 !include { file: thz504_temperature_polled_throttled.yaml, vars: { property: "RAUMSOLLTEMP_I"           , target: "HK1" }}
+  EINSTELL_SPEICHERSOLLTEMP:      !include { file: thz504_temperature_polled_throttled.yaml, vars: { property: "EINSTELL_SPEICHERSOLLTEMP" }}
+  VORLAUFSOLLTEMP:                !include { file: thz504_temperature_polled_throttled.yaml, vars: { property: "VORLAUFSOLLTEMP"  , target: "HK1"    }}
 
   # IST values can change at any time, but we want to limit the updates to not flood the database. Still update if delta is too big.
   RAUMISTTEMP:                    !include { file: thz504_temperature_polled_throttled.yaml, vars: { property: "RAUMISTTEMP"      , target: "HK1"    }}
@@ -296,7 +296,7 @@ packages:
 sensor:
   - platform: homeassistant
     name: "Temperature Sensor From Home Assistant"
-    entity_id: sensor.durchschnittstemperatur_haus
+    entity_id: sensor.durchschnittstemperatur_haus_ohne_keller
     on_value:
       then:
         - lambda: |-
