@@ -469,7 +469,7 @@ canbus:
                   id(SERVICE).publish_state(status_bits.test(6U));
                   id(EVU_SPERRE).publish_state(status_bits.test(7U));
                   id(FILTERWECHSEL_BEIDE).publish_state(status_bits.test(8U));
-                  id(LUEFTUNG).publish_state(status_bits.test(9U));
+                  // seems to be broken id(LUEFTUNG).publish_state(status_bits.test(9U));
                   id(HEIZKREISPUMPE).publish_state(status_bits.test(10U));
                   id(ABTAUEN_VERDAMPFER).publish_state(status_bits.test(11U));
                   id(FILTERWECHSEL_ABLUFT).publish_state(status_bits.test(12U));
@@ -493,6 +493,13 @@ canbus:
               case Property::kEL_AUFNAHMELEISTUNG_WW_TAG_KWH:
                 id(EL_AUFNAHMELEISTUNG_WW_SUMME_KWH).publish_state(value.get<float>() + (0.001*(id(EL_AUFNAHMELEISTUNG_WW_TAG_WH).state - id(gOFFSET_EL_AUFNAHMELEISTUNG_WW_TAG_WH))));
                 break;
+              case Property::kLUEFT_STUFE_TAG:
+                {
+                  // workaround for broken ninth bit of BETRIEBSSTATUS
+                  const auto fan_speed = std::min(static_cast<std::uint16_t>(3U),value.get<std::uint16_t>());
+                  id(LUEFTUNG).publish_state(fan_speed != 0);
+                  break;
+                }
               default:
                 break;
             }
