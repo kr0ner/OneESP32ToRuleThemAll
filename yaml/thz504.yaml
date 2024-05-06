@@ -407,7 +407,7 @@ climate:
 
   - platform: custom
     lambda: |-
-      auto hot_water = new HotWater(id(SPEICHERISTTEMP),id(EINSTELL_SPEICHERSOLLTEMP));
+      auto hot_water = new HotWater(id(SPEICHERISTTEMP),id(EINSTELL_SPEICHERSOLLTEMP), id(WARMWASSERBEREITUNG));
       App.register_component(hot_water);
       return {hot_water};
     climates:

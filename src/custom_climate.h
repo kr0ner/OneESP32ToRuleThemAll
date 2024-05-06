@@ -144,12 +144,13 @@ class HeatingNight : public HeatingDayNight {
 
 class HotWater : public CustomClimate {
    public:
-    template <typename Sensor>
-    HotWater(Sensor* current_temperature_sensor, Sensor* target_temperature_sensor)
+    template <typename Sensor, typename BinarySensor>
+    HotWater(Sensor* current_temperature_sensor, Sensor* target_temperature_sensor, BinarySensor* heating_sensor)
         : CustomClimate(30.0f, 70.0f, 0.5f, {climate::CLIMATE_MODE_HEAT, climate::CLIMATE_MODE_AUTO},
                         {climate::CLIMATE_PRESET_COMFORT, climate::CLIMATE_PRESET_ECO, climate::CLIMATE_PRESET_AWAY},
                         std::make_pair(Kessel, Property::kEINSTELL_SPEICHERSOLLTEMP)) {
         register_current_temperature_callback(current_temperature_sensor);
         register_target_temperature_callback(target_temperature_sensor);
+        register_heating_callback(heating_sensor);
     };
 };
