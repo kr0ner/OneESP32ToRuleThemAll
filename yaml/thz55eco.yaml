@@ -1,0 +1,569 @@
+defaults:
+  clk_pin: "GPIO14"
+  mosi_pin: "GPIO13"
+  miso_pin: "GPIO4"
+  cs_pin: "GPIO15"
+  evu_pin: "GPIO5"
+  kondensat_pump_pin: "GPIO32"
+
+
+#########################################
+#                                       #
+#   Obtain initial states               #
+#                                       #
+#########################################
+esphome:
+  on_boot:
+    priority: -100
+    then:
+      - lambda: |-
+          queueRequest(Kessel, Property::kPROGRAMMSCHALTER);
+          queueRequest(Kessel, Property::kBETRIEBS_STATUS);
+          queueRequest(Kessel, Property::kBETRIEBS_STATUS_2);
+          queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_WW_TAG_WH);
+          queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_WW_TAG_KWH);
+          queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_HEIZ_TAG_WH);
+          queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_HEIZ_TAG_KWH);
+          CallbackHandler::instance().addCallback(std::make_pair(Kessel,Property::kVERDICHTER_STARTS_K),[](const SimpleVariant& value){
+              using type = TypeMapping<Property::kVERDICHTER_STARTS_K>::type;
+              id(gVERDICHTER_STARTS_K) = value.get<type>() * 1000U;
+          });
+          CallbackHandler::instance().addCallback(std::make_pair(Kessel,Property::kVERDICHTER_STARTS),[](const SimpleVariant& value){
+              using type = TypeMapping<Property::kVERDICHTER_STARTS>::type;
+              id(VERDICHTER_STARTS).publish_state(id(gVERDICHTER_STARTS_K) + value.get<type>());
+          });
+          queueRequest(Kessel, Property::kVERDICHTER_STARTS_K);
+          queueRequest(Kessel, Property::kVERDICHTER_STARTS);
+
+#########################################
+#                                       #
+#   Global variables                    #
+#                                       #
+#########################################
+globals:
+  - id: gOFFSET_EL_AUFNAHMELEISTUNG_WW_TAG_WH
+    type: int
+    initial_value: "0"
+  - id: gOFFSET_EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH
+    type: int
+    initial_value: "0"
+  - id: gVERDICHTER_STARTS_K
+    type: int
+    initial_value: "0"
+  - id: gRAUMISTTEMP
+    type: float
+    initial_value: "0.0"
+
+#########################################
+#                                       #
+#   SPI configuration                   #
+#                                       #
+#########################################
+spi:
+  id: McpSpi
+  clk_pin: $clk_pin
+  mosi_pin: $mosi_pin
+  miso_pin: $miso_pin
+
+#########################################
+#                                       #
+#   EVU Sperre                          #
+#                                       #
+#########################################
+switch:
+  - platform: gpio
+    name: "EVU Sperre"
+    id: evu_sperre
+    pin: $evu_pin
+
+#########################################
+#                                       #
+#   Binary Sensors                      #
+#                                       #
+#########################################
+binary_sensor:
+#########################################
+#                                       #
+#   Kondensatpumpe Störung              #
+#                                       #
+#########################################
+  - platform: gpio
+    pin:
+      number: $kondensat_pump_pin
+      mode:
+        input: true
+        pullup: true
+      inverted: true
+    name: "Kondensatpumpe Störung"
+    filters:
+      - delayed_on: 1s
+      - delayed_off: 1min
+    on_press:
+      then:
+        - switch.turn_on: evu_sperre
+    on_release:
+      then:
+        - switch.turn_off: evu_sperre
+
+#########################################
+#                                       #
+#   Betriebstatus Sensors               #
+#                                       #
+#########################################
+  - platform: template
+    name: "SCHALTPROGRAMM_AKTIV"
+    id: SCHALTPROGRAMM_AKTIV
+
+  - platform: template
+    name: "VERDICHTER"
+    id: VERDICHTER
+
+  - platform: template
+    name: "HEIZEN"
+    id: HEIZEN
+
+  - platform: template
+    name: "KUEHLEN"
+    id: KUEHLEN
+
+  - platform: template
+    name: "WARMWASSERBEREITUNG"
+    id: WARMWASSERBEREITUNG
+
+  - platform: template
+    name: "ELEKTRISCHE_NACHERWAERMUNG"
+    id: ELEKTRISCHE_NACHERWAERMUNG
+
+  - platform: template
+    name: "SERVICE"
+    id: SERVICE
+
+  - platform: template
+    name: "EVU_SPERRE"
+    id: EVU_SPERRE
+
+  - platform: template
+    name: "FILTERWECHSEL_BEIDE"
+    id: FILTERWECHSEL_BEIDE
+
+  - platform: template
+    name: "LUEFTUNG"
+    id: LUEFTUNG
+
+  - platform: template
+    name: "HEIZKREISPUMPE"
+    id: HEIZKREISPUMPE
+
+  - platform: template
+    name: "ABTAUEN_VERDAMPFER"
+    id: ABTAUEN_VERDAMPFER
+
+  - platform: template
+    name: "FILTERWECHSEL_ABLUFT"
+    id: FILTERWECHSEL_ABLUFT
+
+  - platform: template
+    name: "FILTERWECHSEL_ZULUFT"
+    id: FILTERWECHSEL_ZULUFT
+
+  - platform: template
+    name: "AUFHEIZPROGRAMM_AKTIV"
+    id: AUFHEIZPROGRAMM_AKTIV
+
+  - platform: template
+    name: "SOMMERBETRIEB_AKTIV"
+    id: SOMMERBETRIEB_AKTIV
+
+  - platform: template
+    name: "OFEN_KAMIN_AKTIV"
+    id: OFEN_KAMIN_AKTIV
+
+#########################################
+#                                       #
+#   Intervals                           #
+#                                       #
+#########################################
+interval:
+  - interval: 250ms
+    then:
+      - lambda: |-
+          // Request sensor value one after another.
+          if(!request_queue.empty()) {
+            constexpr auto use_extended_id{false};
+            const auto request_element = request_queue.front();
+            request_queue.pop();
+            requestData(request_element.first, request_element.second);
+          }
+  - interval: 1min
+    then:
+      - lambda: |-
+          // Send current RAUMISTTEMP
+          const auto room_temp = id(gRAUMISTTEMP);
+          if(room_temp > 0.0f) {
+            sendData(FEK, Property::kRAUMISTTEMP, static_cast<std::uint16_t>(room_temp * 10.0f));
+          }
+
+#########################################
+#                                       #
+#   Time triggers                       #
+#                                       #
+#########################################
+time:
+  - platform: sntp
+    on_time:
+      # Every hour except midnight. Helper will be set when the response is received
+      - seconds: 0
+        minutes: 0
+        hours: 1-23
+        then:
+          - lambda: |-
+              queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_WW_TAG_WH);
+              queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_WW_TAG_KWH);
+              queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_HEIZ_TAG_WH);
+              queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_HEIZ_TAG_KWH);
+      # At midnight reset power consumptions. The helper must not be set!
+      - seconds: 0
+        minutes: 0
+        hours: 0
+        then:
+          - lambda: |-
+              id(gOFFSET_EL_AUFNAHMELEISTUNG_WW_TAG_WH) = id(EL_AUFNAHMELEISTUNG_WW_TAG_WH).state;
+          - sensor.template.publish:
+              id: EL_AUFNAHMELEISTUNG_WW_SUMME_KWH
+              state: 0.0
+          - lambda: |-
+                id(gOFFSET_EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH) = id(EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH).state;
+          - sensor.template.publish:
+              id: EL_AUFNAHMELEISTUNG_HEIZ_SUMME_KWH
+              state: 0.0
+
+#########################################
+#                                       #
+#   Packages                            #
+#                                       #
+#########################################
+packages:
+  WAERMEERTRAG_RUECKGE_SUMME_KWH: !include { file: thz504_energy.yaml, vars: { property: "WAERMEERTRAG_RUECKGE_SUMME_KWH", unit: "kWh" }}
+  WAERMEERTRAG_RUECKGE_TAG_WH:    !include { file: thz504_energy.yaml, vars: { property: "WAERMEERTRAG_RUECKGE_TAG_WH"   , unit: "Wh"  }}
+  WAERMEERTRAG_RUECKGE_TAG_KWH:   !include { file: thz504_energy.yaml, vars: { property: "WAERMEERTRAG_RUECKGE_TAG_KWH"  , unit: "kWh" }}
+  WAERMEERTRAG_2WE_WW_SUM_KWH:    !include { file: thz504_energy.yaml, vars: { property: "WAERMEERTRAG_2WE_WW_SUM_KWH"   , unit: "kWh" }}
+  WAERMEERTRAG_2WE_WW_SUM_MWH:    !include { file: thz504_energy.yaml, vars: { property: "WAERMEERTRAG_2WE_WW_SUM_MWH"   , unit: "MWh" }}
+  WAERMEERTRAG_2WE_HEIZ_TAG_WH:   !include { file: thz504_energy.yaml, vars: { property: "WAERMEERTRAG_2WE_HEIZ_TAG_WH"  , unit: "Wh"  }}
+  WAERMEERTRAG_2WE_HEIZ_TAG_KWH:  !include { file: thz504_energy.yaml, vars: { property: "WAERMEERTRAG_2WE_HEIZ_TAG_KWH" , unit: "kWh" }}
+  WAERMEERTRAG_2WE_HEIZ_SUM_KWH:  !include { file: thz504_energy.yaml, vars: { property: "WAERMEERTRAG_2WE_HEIZ_SUM_KWH" , unit: "kWh" }}
+  WAERMEERTRAG_2WE_HEIZ_SUM_MWH:  !include { file: thz504_energy.yaml, vars: { property: "WAERMEERTRAG_2WE_HEIZ_SUM_MWH" , unit: "MWh" }}
+  WAERMEERTRAG_WW_TAG_WH:         !include { file: thz504_energy.yaml, vars: { property: "WAERMEERTRAG_WW_TAG_WH"        , unit: "Wh"  }}
+  WAERMEERTRAG_WW_TAG_KWH:        !include { file: thz504_energy.yaml, vars: { property: "WAERMEERTRAG_WW_TAG_KWH"       , unit: "kWh" }}
+  WAERMEERTRAG_WW_SUM_KWH:        !include { file: thz504_energy.yaml, vars: { property: "WAERMEERTRAG_WW_SUM_KWH"       , unit: "kWh" }}
+  WAERMEERTRAG_WW_SUM_MWH:        !include { file: thz504_energy.yaml, vars: { property: "WAERMEERTRAG_WW_SUM_MWH"       , unit: "MWh" }}
+  WAERMEERTRAG_HEIZ_TAG_WH:       !include { file: thz504_energy.yaml, vars: { property: "WAERMEERTRAG_HEIZ_TAG_WH"      , unit: "Wh"  }}
+  WAERMEERTRAG_HEIZ_TAG_KWH:      !include { file: thz504_energy.yaml, vars: { property: "WAERMEERTRAG_HEIZ_TAG_KWH"     , unit: "kWh" }}
+  WAERMEERTRAG_HEIZ_SUM_KWH:      !include { file: thz504_energy.yaml, vars: { property: "WAERMEERTRAG_HEIZ_SUM_KWH"     , unit: "kWh" }}
+  WAERMEERTRAG_HEIZ_SUM_MWH:      !include { file: thz504_energy.yaml, vars: { property: "WAERMEERTRAG_HEIZ_SUM_MWH"     , unit: "MWh" }}
+
+  # SOLL values are always actively changed and transmitted, so we just need to limit the update interval
+  SPEICHERSOLLTEMP:               !include { file: thz504_temperature_throttled.yaml, vars: { property: "SPEICHERSOLLTEMP"          }}
+  VERSTELLTE_RAUMSOLLTEMP:        !include { file: thz504_temperature_throttled.yaml, vars: { property: "VERSTELLTE_RAUMSOLLTEMP"  , target: "HK1" }}
+  RAUMSOLLTEMP_I:                 !include { file: thz504_temperature_throttled.yaml, vars: { property: "RAUMSOLLTEMP_I"           , target: "HK1" }}
+  EINSTELL_SPEICHERSOLLTEMP:      !include { file: thz504_temperature_throttled.yaml, vars: { property: "EINSTELL_SPEICHERSOLLTEMP" }}
+  VORLAUFSOLLTEMP:                !include { file: thz504_temperature_throttled.yaml, vars: { property: "VORLAUFSOLLTEMP"  , target: "HK1"    }}
+
+  # IST values can change at any time, but we want to limit the updates to not flood the database. Still update if delta is too big.
+  RAUMISTTEMP:                    !include { file: thz504_temperature_polled_throttled.yaml, vars: { property: "RAUMISTTEMP"      , target: "HK1"    }}
+  SPEICHERISTTEMP:                !include { file: thz504_temperature_polled_throttled.yaml, vars: { property: "SPEICHERISTTEMP"  }}
+  AUSSENTEMP:                     !include { file: thz504_temperature_polled_throttled.yaml, vars: { property: "AUSSENTEMP"       }}
+  SAMMLERISTTEMP:                 !include { file: thz504_temperature_polled_throttled.yaml, vars: { property: "SAMMLERISTTEMP"   }}
+  VERDAMPFERTEMP:                 !include { file: thz504_temperature_polled_throttled.yaml, vars: { property: "VERDAMPFERTEMP"   }}
+  RUECKLAUFISTTEMP:               !include { file: thz504_temperature_polled_throttled.yaml, vars: { property: "RUECKLAUFISTTEMP" }}
+  VORLAUFISTTEMP:                 !include { file: thz504_temperature_polled_throttled.yaml, vars: { property: "VORLAUFISTTEMP"   , target: "HK1"    }}
+  ABLUFT_TEMP:                    !include { file: thz504_temperature_polled_throttled.yaml, vars: { property: "ABLUFT_TEMP" }}
+  ABLUFT_TAUPUNKT:                !include { file: thz504_temperature_polled_throttled.yaml, vars: { property: "ABLUFT_TAUPUNKT" }}
+
+  LUEFT_STUFE_TAG:                !include { file: thz504_ventilation.yaml, vars: { property: "LUEFT_STUFE_TAG"   }}
+  LUEFT_STUFE_NACHT:              !include { file: thz504_ventilation.yaml, vars: { property: "LUEFT_STUFE_NACHT" }}
+  LUEFT_STUFE_PARTY:              !include { file: thz504_ventilation.yaml, vars: { property: "LUEFT_STUFE_PARTY" }}
+  LUEFT_STUFE_BEREITSCHAFT:       !include { file: thz504_ventilation.yaml, vars: { property: "LUEFT_STUFE_BEREITSCHAFT" }}
+  LUEFT_STUFE_HAND:               !include { file: thz504_ventilation.yaml, vars: { property: "LUEFT_STUFE_HAND" }}
+
+  LUEFT_ZEIT_AUSSERPLAN_STUFE1:   !include { file: thz504_generic_polled.yaml, vars: { property: "LUEFT_ZEIT_AUSSERPLAN_STUFE1",icon: "mdi:timer", unit: "min", interval: $interval_medium  }}
+  LUEFT_ZEIT_AUSSERPLAN_STUFE2:   !include { file: thz504_generic_polled.yaml, vars: { property: "LUEFT_ZEIT_AUSSERPLAN_STUFE2",icon: "mdi:timer", unit: "min", interval: $interval_medium  }}
+  LUEFT_ZEIT_AUSSERPLAN_STUFE3:   !include { file: thz504_generic_polled.yaml, vars: { property: "LUEFT_ZEIT_AUSSERPLAN_STUFE3",icon: "mdi:timer", unit: "min", interval: $interval_medium  }}
+  ABLUFT_LUFTFEUCHTIGKEIT:        !include { file: thz504_generic_polled.yaml, vars: { property: "ABLUFT_LUFTFEUCHTIGKEIT",icon: "mdi:water-percent", unit: "%", interval: $interval_medium  }}
+
+  FEHLERMELDUNG:                  !include { file: thz504_generic.yaml, vars: { property: "FEHLERMELDUNG"            , icon: "mdi:alert-circle" }}
+  JAHR:                           !include { file: thz504_generic.yaml, vars: { property: "JAHR"                     , icon: "mdi:calendar" }}
+  MONAT:                          !include { file: thz504_generic.yaml, vars: { property: "MONAT"                    , icon: "mdi:calendar" }}
+  WOCHENTAG:                      !include { file: thz504_generic.yaml, vars: { property: "WOCHENTAG"                , icon: "mdi:calendar-today" }}
+  TAG:                            !include { file: thz504_generic.yaml, vars: { property: "TAG"                      , icon: "mdi:calendar-today" }}
+  STUNDE:                         !include { file: thz504_generic.yaml, vars: { property: "STUNDE"                   , icon: "mdi:calendar-clock" }}
+  MINUTE:                         !include { file: thz504_generic.yaml, vars: { property: "MINUTE"                   , icon: "mdi:calendar-clock" }}
+  ANZEIGE_NIEDERDRUCK:            !include { file: thz504_generic.yaml, vars: { property: "ANZEIGE_NIEDERDRUCK"      , accuracy_decimals: "2" }}
+  PUMPENZYKLEN_MIN_AUSSENT:       !include { file: thz504_generic.yaml, vars: { property: "PUMPENZYKLEN_MIN_AUSSENT" }}
+
+  LEISTUNG_AUSLEGUNG_HEIZUNG:     !include { file: thz504_number.yaml, vars: { property: "LEISTUNG_AUSLEGUNG_HEIZUNG" }}
+  PUMPENDREHZAHL_HEIZEN:          !include { file: thz504_number.yaml, vars: { property: "PUMPENDREHZAHL_HEIZEN"      , step:   "0.1" }}
+  RAUMEINFLUSS:                   !include { file: thz504_number.yaml, vars: { property: "RAUMEINFLUSS"               , target: "HK1" }}
+
+  ZULUFT_IST:                     !include { file: thz504_generic_polled.yaml, vars: { property: "ZULUFT_IST"         , icon: "mdi:pump", unit: "Hz", interval: $interval_medium }}
+  ABLUFT_IST:                     !include { file: thz504_generic_polled.yaml, vars: { property: "ABLUFT_IST"         , icon: "mdi:pump", unit: "Hz", interval: $interval_medium }}
+
+  ABLUFT_SOLL:                    !include { file: thz504_airflow.yaml, vars: { property: "ABLUFT_SOLL", interval: $interval_medium     }}
+  FORTLUFT_SOLL:                  !include { file: thz504_airflow.yaml, vars: { property: "FORTLUFT_SOLL", interval: $interval_medium  }}
+  FORTLUFT_IST:                   !include { file: thz504_airflow.yaml, vars: { property: "FORTLUFT_IST", interval: $interval_medium   }}
+  VOLUMENSTROM:                   !include { file: thz504_airflow.yaml, vars: { property: "VOLUMENSTROM", interval: $interval_medium   }}
+  ZULUFT_SOLL:                    !include { file: thz504_airflow.yaml, vars: { property: "ZULUFT_SOLL", interval: $interval_medium     }}
+
+#########################################
+#                                       #
+#   Sensors                             #
+#                                       #
+#########################################
+sensor:
+  - platform: homeassistant
+    name: "Temperature Sensor From Home Assistant"
+    entity_id: sensor.durchschnittstemperatur_haus_ohne_keller
+    on_value:
+      then:
+        - lambda: |-
+            ESP_LOGI("SET", "gRAUMISTTEMP set to %f", x);
+            id(gRAUMISTTEMP) = x;
+
+  - platform: template
+    name: "EL_AUFNAHMELEISTUNG_WW_TAG_WH"
+    id: EL_AUFNAHMELEISTUNG_WW_TAG_WH
+    unit_of_measurement: "Wh"
+    icon: "mdi:power"
+    state_class: "measurement"
+    accuracy_decimals: 0
+    internal: true
+
+  - platform: template
+    name: "EL_AUFNAHMELEISTUNG_WW_SUMME_KWH"
+    id: EL_AUFNAHMELEISTUNG_WW_SUMME_KWH
+    unit_of_measurement: "kWh"
+    icon: "mdi:power"
+    accuracy_decimals: 2
+    device_class: energy
+    state_class: total_increasing
+
+  - platform: template
+    name: "EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH"
+    id: EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH
+    unit_of_measurement: "Wh"
+    icon: "mdi:power"
+    state_class: "measurement"
+    accuracy_decimals: 0
+    internal: true
+
+  - platform: template
+    name: "EL_AUFNAHMELEISTUNG_HEIZ_SUMME_KWH"
+    id: EL_AUFNAHMELEISTUNG_HEIZ_SUMME_KWH
+    unit_of_measurement: "kWh"
+    icon: "mdi:power"
+    accuracy_decimals: 2
+    state_class: total_increasing
+    device_class: energy
+
+  - platform: template
+    name: "VERDICHTER_STARTS"
+    id: VERDICHTER_STARTS
+    icon: "mdi:counter"
+    accuracy_decimals: 0
+    update_interval: $interval_very_slow
+    lambda: |-
+        queueRequest(Kessel, Property::kVERDICHTER_STARTS_K);
+        queueRequest(Kessel, Property::kVERDICHTER_STARTS);
+        return {};
+
+#########################################
+#                                       #
+#   Selects                             #
+#                                       #
+#########################################
+select:
+  - platform: template
+    name: "PROGRAMMSCHALTER"
+    id: PROGRAMMSCHALTER
+    options:
+      - "Notbetrieb"
+      - "Bereitschaft"
+      - "Automatik"
+      - "Tagbetrieb"
+      - "Absenkbetrieb"
+      - "Warmwasser"
+      - "Handbetrieb"
+      - "Unbekannt"
+    initial_option: "Unbekannt"
+    optimistic: true
+    setup_priority: 100
+    set_action:
+      then:
+        - lambda: |-
+            const auto betriebsartId = Mapper::instance().getBetriebsartId(x);
+            if(betriebsartId.has_value()) {
+              sendData(Kessel, Property::kPROGRAMMSCHALTER, betriebsartId.value());
+            }
+
+#########################################
+#                                       #
+#   Custom climates                     #
+#                                       #
+#########################################
+climate:
+  - platform: custom
+    lambda: |-
+      auto heating = new HeatingDay(id(RAUMISTTEMP),id(VERSTELLTE_RAUMSOLLTEMP), id(HEIZEN), id(KUEHLEN), id(LUEFTUNG));
+      App.register_component(heating);
+      return {heating};
+    climates:
+      - name: "Heating Day"
+
+  - platform: custom
+    lambda: |-
+      auto heating = new HeatingNight(id(RAUMISTTEMP),id(VERSTELLTE_RAUMSOLLTEMP), id(HEIZEN), id(KUEHLEN), id(LUEFTUNG));
+      App.register_component(heating);
+      return {heating};
+    climates:
+      - name: "Heating Night"
+
+  - platform: custom
+    lambda: |-
+      auto hot_water = new HotWater(id(SPEICHERISTTEMP),id(EINSTELL_SPEICHERSOLLTEMP), id(WARMWASSERBEREITUNG));
+      App.register_component(hot_water);
+      return {hot_water};
+    climates:
+      - name: "Hot Water"
+
+#########################################
+#                                       #
+#   CANbus configuration                #
+#                                       #
+#########################################
+canbus:
+  - platform: mcp2515
+    id: my_mcp2515
+    spi_id: McpSpi
+    cs_pin: $cs_pin
+    can_id: 680
+    use_extended_id: false
+    bit_rate: 20kbps
+    on_frame:
+
+#########################################
+#                                       #
+#   KESSEL messages                     #
+#                                       #
+#########################################
+    - can_id: 0x180
+      then:
+        - lambda: |-
+            const auto property_value_pair = processCanMessage(x);
+            Property property{property_value_pair.first};
+            SimpleVariant value{property_value_pair.second};
+            auto callback = CallbackHandler::instance().getCallback(std::make_pair(Kessel,property));
+
+
+            switch(property) {
+              case Property::kPROGRAMMSCHALTER:
+                {
+                  const auto index = id(PROGRAMMSCHALTER).index_of(value.get<std::string>());
+                  if(index.has_value()) {
+                    id(PROGRAMMSCHALTER).publish_state(value.get<std::string>());
+                  }
+                  break;
+                }
+              case Property::kBETRIEBS_STATUS_2:
+                {
+                  const std::bitset<2U> status_bits{value.get<std::uint16_t>()};
+                  id(SOMMERBETRIEB_AKTIV).publish_state(status_bits.test(0U));
+                  id(OFEN_KAMIN_AKTIV).publish_state(status_bits.test(1U));
+                }
+              case Property::kBETRIEBS_STATUS:
+                {
+                  const std::bitset<15U> status_bits{value.get<std::uint16_t>()};
+                  id(SCHALTPROGRAMM_AKTIV).publish_state(status_bits.test(0U));
+                  id(VERDICHTER).publish_state(status_bits.test(1U));
+                  id(HEIZEN).publish_state(status_bits.test(2U));
+                  id(KUEHLEN).publish_state(status_bits.test(3U));
+                  id(WARMWASSERBEREITUNG).publish_state(status_bits.test(4U));
+                  id(ELEKTRISCHE_NACHERWAERMUNG).publish_state(status_bits.test(5U));
+                  id(SERVICE).publish_state(status_bits.test(6U));
+                  id(EVU_SPERRE).publish_state(status_bits.test(7U));
+                  id(FILTERWECHSEL_BEIDE).publish_state(status_bits.test(8U));
+                  // seems to be broken id(LUEFTUNG).publish_state(status_bits.test(9U));
+                  id(HEIZKREISPUMPE).publish_state(status_bits.test(10U));
+                  id(ABTAUEN_VERDAMPFER).publish_state(status_bits.test(11U));
+                  id(FILTERWECHSEL_ABLUFT).publish_state(status_bits.test(12U));
+                  id(FILTERWECHSEL_ZULUFT).publish_state(status_bits.test(13U));
+                  id(AUFHEIZPROGRAMM_AKTIV).publish_state(status_bits.test(14U));
+                  break;
+                }
+              case Property::kEL_AUFNAHMELEISTUNG_HEIZ_TAG_WH:
+                // This value is never reset, messing up the Energy Dashboard.
+                // The offset is obtained at midnight and subtracted for the next 24 hours..
+                id(EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH).publish_state(value.get<std::uint16_t>());
+                break;
+              case Property::kEL_AUFNAHMELEISTUNG_HEIZ_TAG_KWH:
+                id(EL_AUFNAHMELEISTUNG_HEIZ_SUMME_KWH).publish_state(value.get<float>() + (0.001*(id(EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH).state - id(gOFFSET_EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH))));
+                break;
+              case Property::kEL_AUFNAHMELEISTUNG_WW_TAG_WH:
+                // This value is never reset, messing up the Energy Dashboard.
+                // The offset is obtained at midnight and subtracted for the next 24 hours.
+                id(EL_AUFNAHMELEISTUNG_WW_TAG_WH).publish_state(value.get<std::uint16_t>());
+                break;
+              case Property::kEL_AUFNAHMELEISTUNG_WW_TAG_KWH:
+                id(EL_AUFNAHMELEISTUNG_WW_SUMME_KWH).publish_state(value.get<float>() + (0.001*(id(EL_AUFNAHMELEISTUNG_WW_TAG_WH).state - id(gOFFSET_EL_AUFNAHMELEISTUNG_WW_TAG_WH))));
+                break;
+              case Property::kLUEFT_STUFE_TAG:
+                {
+                  // workaround for broken ninth bit of BETRIEBSSTATUS
+                  const auto fan_speed = std::min(static_cast<std::uint16_t>(3U),value.get<std::uint16_t>());
+                  id(LUEFTUNG).publish_state(fan_speed != 0);
+                  break;
+                }
+              default:
+                callback(value);
+                break;
+            }
+
+#########################################
+#                                       #
+#   HK1 messages                        #
+#                                       #
+#########################################
+    - can_id: 0x301
+      then:
+        - lambda: |-
+            const auto property_value_pair = processCanMessage(x);
+            Property property{property_value_pair.first};
+            SimpleVariant value{property_value_pair.second};
+            auto callback = CallbackHandler::instance().getCallback(std::make_pair(HK1,property));
+            callback(value);
+
+#########################################
+#                                       #
+#   HK2 messages                        #
+#                                       #
+#########################################
+    - can_id: 0x302
+      then:
+        - lambda: |-
+            const auto property_value_pair = processCanMessage(x);
+            Property property{property_value_pair.first};
+            SimpleVariant value{property_value_pair.second};
+            auto callback = CallbackHandler::instance().getCallback(std::make_pair(HK2,property));
+            callback(value);
+
+#########################################
+#                                       #
+#   Message requests                    #
+#                                       #
+#########################################
+    - can_id: 0x6a1
+      then:
+        - lambda: |-
+            const auto property_value_pair = processCanMessage(x);
+            Property property{property_value_pair.first};
+            SimpleVariant value{property_value_pair.second};
+            auto callback = CallbackHandler::instance().getCallback(std::make_pair(Anfrage,property));
+            callback(value);
