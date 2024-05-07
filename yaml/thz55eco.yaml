@@ -5,6 +5,7 @@ defaults:
   cs_pin: "GPIO15"
   evu_pin: "GPIO5"
   kondensat_pump_pin: "GPIO32"
+  entity_room_temperature: "sensor.cr_controller_kitchen_temp_dining"
 
 
 #########################################
@@ -321,7 +322,7 @@ packages:
 sensor:
   - platform: homeassistant
     name: "Temperature Sensor From Home Assistant"
-    entity_id: sensor.durchschnittstemperatur_haus_ohne_keller
+    entity_id: $entity_room_temperature
     on_value:
       then:
         - lambda: |-
