@@ -26,6 +26,9 @@
 #include "property.h"
 #include "type.h"
 
+//include if you wish to have more detailed message decodes
+#include "property_debug_decode.h"
+
 using CANID = std::uint16_t;
 
 struct CanMember {
@@ -74,10 +77,32 @@ std::pair<Property, SimpleVariant> processCanMessage(const std::vector<std::uint
         byte2 = msg[4U];
         property = static_cast<Property>(msg[2U]);
     }
-
+    
     const std::uint16_t value{static_cast<std::uint16_t>((byte1 << 8U) | byte2)};
+    
+    #if defined(PROPERTY_DEBUG_H)
+    //decode value with little endian
+    const std::uint16_t value_le{static_cast<std::uint16_t>((byte2 << 8U) | byte1)};
+    // decode receiver CAN ID 
+    std::uint16_t receiver_id = (((msg[0U] & 0xF0) *8)) + (msg[1U] & 0x0F);
+
+    //detect if it is a Read Write or broadcast message
+    if (msg[0] & 0x01) {
+        ESP_LOGI("Communication", "Message received: Read from CAN ID 0x%03x for property 0x%04x %s",
+             receiver_id, property, getPropertyName(property));
+    }
+    else if (msg[0] & 0x02) {
+        ESP_LOGI("Communication", "Message received: Write to CAN ID 0x%03x for property 0x%04x %s with raw value: %d (little endian: %d)",
+             receiver_id, property, getPropertyName(property), value, value_le);
+    }
+    else ESP_LOGI ("Communication", "Message received: Broadcast to 0x%03x for property 0x%04x %s with raw value: %d (little endian: %d)",
+             receiver_id, property, getPropertyName(property), value, value_le);
+
+    #else
     ESP_LOGI("Communication", "Message received: Read/Write ID 0x%02x 0x%02x for property 0x%04x with raw value: %d",
              msg[0U], msg[1U], property, value);
+    #endif
+
     const auto type = Mapper::instance().getType(property);
     return {property, GetValueByType(value, type)};
 }
