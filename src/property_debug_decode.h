@@ -528,7 +528,7 @@ char* getPropertyName(Property prop) {
         case Property::kANFORDERUNG_KONSTANTTEMPERATUR: std::strcpy(buffer,"ANFORDERUNG_KONSTANTTEMPERATUR"); break;
         case Property::kMATERIALNUMMER_LOW: std::strcpy(buffer,"MATERIALNUMMER_LOW"); break;
         case Property::kMATERIALNUMMER_HIGH: std::strcpy(buffer,"MATERIALNUMMER_HIGH"); break;
-       // case Property::kHEIZSYSTEMTEMP_GEWICHTET: std::strcpy(buffer,"HEIZSYSTEMTEMP_GEWICHTET"); break;
+        case Property::kPUMPENDREHZAHL_HEIZEN : std::strcpy(buffer,"PUMPENDREHZAHL_HEIZEN "); break;
         case Property::kLEISTUNG_PUMPE_HZK: std::strcpy(buffer,"LEISTUNG_PUMPE_HZK"); break;
         case Property::kLEISTUNG_PUMPE_SPL: std::strcpy(buffer,"LEISTUNG_PUMPE_SPL"); break;
         case Property::kLEISTUNG_PUMPE_WW_PRI: std::strcpy(buffer,"LEISTUNG_PUMPE_WW_PRI"); break;
@@ -3017,10 +3017,12 @@ char* getPropertyName(Property prop) {
         case Property::kZEITPROG_4_MO_DO: std::strcpy(buffer,"ZEITPROG_4_MO_DO"); break;
         case Property::kZEITPROG_4_MO_DO_SCHALT_2: std::strcpy(buffer,"ZEITPROG_4_MO_DO_SCHALT_2"); break;
         case Property::kZEITPROG_4_MO_DO_SCHALT_3: std::strcpy(buffer,"ZEITPROG_4_MO_DO_SCHALT_3"); break;
+        case Property::kLEISTUNG_AUSLEGUNG_HEIZUNG: std::strcpy(buffer,"LEISTUNG_AUSLEGUNG_HEIZUNG"); break;
         case Property::kVERDICHTER_STARTS: std::strcpy(buffer,"VERDICHTER_STARTS"); break;
         case Property::kVERDICHTER_STARTS_K: std::strcpy(buffer,"VERDICHTER_STARTS_K"); break;
         case Property::kHF_MONITOR_TYP: std::strcpy(buffer,"HF_MONITOR_TYP"); break;
         case Property::kSTART_BEREICH_SOFTWARE_SIMULATION: std::strcpy(buffer,"START_BEREICH_SOFTWARE_SIMULATION"); break;
+        case Property::kBETRIEBS_STATUS_2: std::strcpy(buffer,"kBETRIEBS_STATUS_2"); break;        
         case Property::kENDE_BEREICH_SOFTWARE_SIMULATION: std::strcpy(buffer,"ENDE_BEREICH_SOFTWARE_SIMULATION"); break;
         case Property::kSTART_CHAR_BEREICH: std::strcpy(buffer,"START_CHAR_BEREICH"); break;
         case Property::kMODE_MULTIFUNKTIONSAUSGANG_2: std::strcpy(buffer,"MODE_MULTIFUNKTIONSAUSGANG_2"); break;
@@ -3120,10 +3122,10 @@ char* getPropertyName(Property prop) {
         case Property::kINFOBLOCK_5: std::strcpy(buffer,"INFOBLOCK_5"); break;
         case Property::kINFOBLOCK_6: std::strcpy(buffer,"INFOBLOCK_6"); break;
 
-        //case Property::kABLUFT_TEMP: std::strcpy(buffer,"ABLUFT_TEMP"); break;
-        //case Property::kABLUFT_LUFTFEUCHTIGKEIT: std::strcpy(buffer,"ABLUFT_LUFTFEUCHTIGKEIT"); break;
-        //case Property::kABLUFT_TAUPUNKT: std::strcpy(buffer,"ABLUFT_TAUPUNKT"); break;
-        //case Property::kLUEFT_STUFE_BEREITSCHAFT: std::strcpy(buffer,"LUEFT_STUFE_BEREITSCHAFT"); break;
+        case Property::kABLUFT_TEMP: std::strcpy(buffer,"ABLUFT_TEMP"); break;
+        case Property::kABLUFT_LUFTFEUCHTIGKEIT: std::strcpy(buffer,"ABLUFT_LUFTFEUCHTIGKEIT"); break;
+        case Property::kABLUFT_TAUPUNKT: std::strcpy(buffer,"ABLUFT_TAUPUNKT"); break;
+        case Property::kLUEFT_STUFE_BEREITSCHAFT: std::strcpy(buffer,"LUEFT_STUFE_BEREITSCHAFT"); break;
         default: std::strcpy(buffer, "Unknown");
     }
     return buffer;

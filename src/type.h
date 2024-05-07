@@ -2136,5 +2136,17 @@ template <>
 struct TypeMapping<Property::kPUMPENDREHZAHL_HEIZEN> {
     using type = float;
 };
+template <>
+struct TypeMapping<Property::kABLUFT_TEMP> {
+    using type = float;
+};
+template <>
+struct TypeMapping<Property::kABLUFT_LUFTFEUCHTIGKEIT> {
+    using type = uint16_t;
+};
+template <>
+struct TypeMapping<Property::kABLUFT_TAUPUNKT> {
+    using type = float;
+};
 
 #endif

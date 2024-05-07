@@ -590,7 +590,7 @@ Mapper::Mapper() {
         {Property::kDYNAMIK, Type::et_little_endian},
         {Property::kBETRIEBSART_HZK_PUMPE, Type::et_little_endian},
         {Property::kDRUCK_HEIZKREIS, Type::et_dec_val},
-        {Property::kPUMPENDREHZAHL_HEIZEN, Type::et_dec_val},
-        {Property::kRAUMEINFLUSS, Type::et_little_endian}
+        {Property::kABLUFT_TEMP, Type::et_dec_val},
+        {Property::kABLUFT_TAUPUNKT, Type::et_dec_val},
     };
 }
