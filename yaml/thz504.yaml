@@ -1,3 +1,11 @@
+defaults:
+  clk_pin: "GPIO14"
+  mosi_pin: "GPIO13"
+  miso_pin: "GPIO4"
+  cs_pin: "GPIO15"
+  evu_pin: "GPIO5"
+  kondensat_pump_pin: "GPIO32"
+
 #########################################
 #                                       #
 #   Obtain initial states               #
@@ -52,9 +60,9 @@ globals:
 #########################################
 spi:
   id: McpSpi
-  clk_pin: GPIO14
-  mosi_pin: GPIO13
-  miso_pin: GPIO4
+  clk_pin: $clk_pin
+  mosi_pin: $mosi_pin
+  miso_pin: $miso_pin
 
 #########################################
 #                                       #
@@ -65,7 +73,7 @@ switch:
   - platform: gpio
     name: "EVU Sperre"
     id: evu_sperre
-    pin: GPIO5
+    pin: $evu_pin
 
 #########################################
 #                                       #
@@ -80,7 +88,7 @@ binary_sensor:
 #########################################
   - platform: gpio
     pin:
-      number: GPIO32
+      number: $kondensat_pump_pin
       mode:
         input: true
         pullup: true
@@ -422,7 +430,7 @@ canbus:
   - platform: mcp2515
     id: my_mcp2515
     spi_id: McpSpi
-    cs_pin: GPIO15
+    cs_pin: $cs_pin
     can_id: 680
     use_extended_id: false
     bit_rate: 20kbps
