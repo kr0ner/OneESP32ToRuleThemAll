@@ -1,0 +1,28 @@
+defaults:
+  icon: "mdi:blank"
+  accuracy_decimals: "0"
+  target: "Kessel"
+  interval: $interval_very_slow
+
+sensor:
+  - platform: template
+    name: ${property}
+    id: ${property}
+    icon: ${icon}
+    unit_of_measurement: ${unit}
+    accuracy_decimals: ${accuracy_decimals}
+    update_interval: ${interval}
+    lambda: |-
+        queueRequest(${target}, Property::k${property});
+        return {};
+
+esphome:
+  on_boot:
+    priority: -100
+    then:
+      - lambda: |-
+          CallbackHandler::instance().addCallback(std::make_pair(${target},Property::k${property}),[](const SimpleVariant& value){
+              using type = TypeMapping<Property::k${property}>::type;
+              id(${property}).publish_state(value.get<type>());
+          });
+          queueRequest(${target}, Property::k${property});
