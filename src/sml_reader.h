@@ -41,6 +41,49 @@ static constexpr std::array<std::uint8_t, 5U> end_sequence{0x1B, 0x1B, 0x1B, 0x1
 
 enum class State : std::uint8_t { kWaitingForStartSequence, kWaitingForEndSequence, kParseMessage };
 
+struct Readings {
+    float power{0.0f};
+    float power_l1{0.0f};
+    float power_l2{0.0f};
+    float power_l3{0.0f};
+    float voltage_l1{0.0f};
+    float voltage_l2{0.0f};
+    float voltage_l3{0.0f};
+    float current_l1{0.0f};
+    float current_l2{0.0f};
+    float current_l3{0.0f};
+    float total_incoming{0.0f};
+    float total_outgoing{0.0f};
+    float frequency{0.0f};
+    
+    void publishMQTT() const {
+        std::ostringstream payload;
+        payload.precision(1);
+        payload << std::fixed;
+        payload << "{\"grid\":{\"power\":" << power << ",";
+        payload << "\"L1\":{\"power\":" << power_l1 <<",\"voltage\":" << voltage_l1 << ",\"current\":" << current_l1 << "},";
+        payload << "\"L2\":{\"power\":" << power_l2 <<",\"voltage\":" << voltage_l2 << ",\"current\":" << current_l2 << "},";
+        payload << "\"L3\":{\"power\":" << power_l3 <<",\"voltage\":" << voltage_l3 << ",\"current\":" << current_l3 << "}}}";
+        id(mqtt_client).publish("homeassistant/energy/grid", payload.str());
+    }
+
+    void publishHA() const {
+        id(Instantaneous_Power).publish_state(power);
+        id(Instantaneous_Power_L1).publish_state(power_l1);
+        id(Instantaneous_Power_L2).publish_state(power_l2);
+        id(Instantaneous_Power_L3).publish_state(power_l3);
+        id(Instantaneous_Voltage_L1).publish_state(voltage_l1);
+        id(Instantaneous_Voltage_L2).publish_state(voltage_l2);
+        id(Instantaneous_Voltage_L3).publish_state(voltage_l3);
+        id(Instantaneous_Current_L1).publish_state(current_l1);
+        id(Instantaneous_Current_L2).publish_state(current_l2);
+        id(Instantaneous_Current_L3).publish_state(current_l3);
+        id(Frequency).publish_state(frequency);
+        id(Total_incoming).publish_state(total_incoming);
+        id(Total_Outgoing).publish_state(total_outgoing);
+    }
+};
+
 class SMLReader : public Component, public UARTDevice {
     std::vector<std::uint8_t> buffer;
     State current_state{State::kWaitingForStartSequence};
@@ -118,6 +161,7 @@ class SMLReader : public Component, public UARTDevice {
         }
 
         ESP_LOGV("SMLReader", "parsing messages %d", file->messages_len);
+        Readings readings;
         for (std::uint8_t i{0U}; i < file->messages_len; ++i) {
             ESP_LOGV("SMLReader", "next message");
             sml_message* message = file->messages[i];
@@ -145,40 +189,36 @@ class SMLReader : public Component, public UARTDevice {
 														obisIdentifier.measurement_type,
 														obisIdentifier.tariff);*/
 
-                    const auto publish_state = [this](esphome::template_::TemplateSensor& id,
-                                                      const sml_list_entry* entry) {
-                        const auto state = parseNumeric(entry);
-                        id.publish_state(state);
-                    };
-
                     if (obisIdentifier == total_incoming) {
-                        publish_state(id(Total_incoming), entry);
+                        readings.total_incoming = parseNumeric(entry);
                     } else if (obisIdentifier == total_outgoing) {
-                        publish_state(id(Total_Outgoing), entry);
+                        readings.total_outgoing = parseNumeric(entry);
                     } else if (obisIdentifier == instantaneous_power) {
-                        publish_state(id(Instantaneous_Power), entry);
+                        readings.power = parseNumeric(entry);
                     } else if (obisIdentifier == frequency) {
-                        publish_state(id(Frequency), entry);
+                        readings.frequency = parseNumeric(entry);
                     } else if (obisIdentifier == instantaneous_power_l1) {
-                        publish_state(id(Instantaneous_Power_L1), entry);
+                        readings.power_l1 = parseNumeric(entry);
                     } else if (obisIdentifier == instantaneous_power_l2) {
-                        publish_state(id(Instantaneous_Power_L2), entry);
+                        readings.power_l2 = parseNumeric(entry);
                     } else if (obisIdentifier == instantaneous_power_l3) {
-                        publish_state(id(Instantaneous_Power_L3), entry);
+                        readings.power_l3 = parseNumeric(entry);
                     } else if (obisIdentifier == instantaneous_voltage_l1) {
-                        publish_state(id(Instantaneous_Voltage_L1), entry);
+                        readings.voltage_l1 = parseNumeric(entry);
                     } else if (obisIdentifier == instantaneous_voltage_l2) {
-                        publish_state(id(Instantaneous_Voltage_L2), entry);
+                        readings.voltage_l2 = parseNumeric(entry);
                     } else if (obisIdentifier == instantaneous_voltage_l3) {
-                        publish_state(id(Instantaneous_Voltage_L3), entry);
+                        readings.voltage_l3 = parseNumeric(entry);
                     } else if (obisIdentifier == instantaneous_current_l1) {
-                        publish_state(id(Instantaneous_Current_L1), entry);
+                        readings.current_l1 = parseNumeric(entry);
                     } else if (obisIdentifier == instantaneous_current_l2) {
-                        publish_state(id(Instantaneous_Current_L2), entry);
+                        readings.current_l2 = parseNumeric(entry);
                     } else if (obisIdentifier == instantaneous_current_l3) {
-                        publish_state(id(Instantaneous_Current_L3), entry);
+                        readings.current_l3 = parseNumeric(entry);
                     }
                 }
+                readings.publishMQTT();
+                readings.publishHA();
             }
             ESP_LOGV("SMLReader", "is not SML_MESSAGE_GET_LIST_RESPONSE %d", *message->message_body->tag);
         }
@@ -194,7 +234,6 @@ class SMLReader : public Component, public UARTDevice {
     void setup() override { buffer.reserve(4096); }
 
     void loop() override {
-        static auto last_run = std::chrono::steady_clock::now();
         switch (current_state) {
             case (State::kWaitingForStartSequence):
                 waitForSequence(start_sequence, [this]() {
@@ -206,10 +245,7 @@ class SMLReader : public Component, public UARTDevice {
                 waitForSequence(end_sequence, [this]() { current_state = State::kParseMessage; });
                 break;
             case (State::kParseMessage):
-                if (std::chrono::steady_clock::now() - last_run > std::chrono::seconds(14)) {
-                    parseMessage();
-                    last_run = std::chrono::steady_clock::now();
-                }
+                parseMessage();
                 buffer.clear();
                 current_state = State::kWaitingForStartSequence;
                 break;

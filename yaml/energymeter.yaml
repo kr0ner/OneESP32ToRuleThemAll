@@ -20,6 +20,17 @@ custom_component:
 
 #########################################
 #                                       #
+#   MQTT                                #
+#                                       #
+#########################################
+mqtt:
+  id: mqtt_client
+  broker: !secret mqtt_server
+  username: !secret mqtt_user
+  password: !secret mqtt_password
+
+#########################################
+#                                       #
 #   sensor configuration                #
 #                                       #
 #########################################
