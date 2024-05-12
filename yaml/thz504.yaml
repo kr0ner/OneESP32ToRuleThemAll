@@ -282,11 +282,13 @@ packages:
   ANZEIGE_NIEDERDRUCK:            !include { file: thz504_generic.yaml, vars: { property: "ANZEIGE_NIEDERDRUCK"      , accuracy_decimals: "2" }}
   PUMPENZYKLEN_MIN_AUSSENT:       !include { file: thz504_generic.yaml, vars: { property: "PUMPENZYKLEN_MIN_AUSSENT" }}
 
-  ABLUFT_IST:                     !include { file: thz504_airflow.yaml, vars: { property: "ABLUFT_IST"    }}
+  ABLUFT_IST:                     !include { file: thz504_frequency.yaml, vars: { property: "ABLUFT_IST"    }}
+  FORTLUFT_IST:                   !include { file: thz504_frequency.yaml, vars: { property: "FORTLUFT_IST"  }}
+  ZULUFT_IST:                     !include { file: thz504_frequency.yaml, vars: { property: "ZULUFT_IST"    }}
+  ABLUFT_SOLL:                    !include { file: thz504_airflow.yaml, vars: { property: "ABLUFT_SOLL"   }}
   FORTLUFT_SOLL:                  !include { file: thz504_airflow.yaml, vars: { property: "FORTLUFT_SOLL" }}
-  FORTLUFT_IST:                   !include { file: thz504_airflow.yaml, vars: { property: "FORTLUFT_IST"  }}
+  ZULUFT_SOLL:                    !include { file: thz504_airflow.yaml, vars: { property: "ZULUFT_SOLL"   }}
   VOLUMENSTROM:                   !include { file: thz504_airflow.yaml, vars: { property: "VOLUMENSTROM"  }}
-  ZULUFT_IST:                     !include { file: thz504_airflow.yaml, vars: { property: "ZULUFT_IST"    }}
 
   LEISTUNG_AUSLEGUNG_HEIZUNG:     !include { file: thz504_number.yaml, vars: { property: "LEISTUNG_AUSLEGUNG_HEIZUNG" }}
   PUMPENDREHZAHL_HEIZEN:          !include { file: thz504_number.yaml, vars: { property: "PUMPENDREHZAHL_HEIZEN"      , step:   "0.1" }}
