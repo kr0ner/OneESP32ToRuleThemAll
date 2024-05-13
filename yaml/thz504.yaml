@@ -288,7 +288,7 @@ packages:
   ABLUFT_SOLL:                    !include { file: thz504_airflow.yaml, vars: { property: "ABLUFT_SOLL"   }}
   FORTLUFT_SOLL:                  !include { file: thz504_airflow.yaml, vars: { property: "FORTLUFT_SOLL" }}
   ZULUFT_SOLL:                    !include { file: thz504_airflow.yaml, vars: { property: "ZULUFT_SOLL"   }}
-  VOLUMENSTROM:                   !include { file: thz504_airflow.yaml, vars: { property: "VOLUMENSTROM"  }}
+  VOLUMENSTROM:                   !include { file: thz504_airflow.yaml, vars: { property: "VOLUMENSTROM", unit_of_measurement: "l/min"  }}
 
   LEISTUNG_AUSLEGUNG_HEIZUNG:     !include { file: thz504_number.yaml, vars: { property: "LEISTUNG_AUSLEGUNG_HEIZUNG" }}
   PUMPENDREHZAHL_HEIZEN:          !include { file: thz504_number.yaml, vars: { property: "PUMPENDREHZAHL_HEIZEN"      , step:   "0.1" }}

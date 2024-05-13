@@ -2,12 +2,13 @@ defaults:
   interval: $interval_very_slow
   delta: "10%"
   target: "Kessel"
+  unit_of_measurement: "m³/h"
 
 sensor:
   - platform: template
     name: ${property}
     id: ${property}
-    unit_of_measurement: "l/min"
+    unit_of_measurement: ${unit_of_measurement}
     icon: "mdi:pump"
     accuracy_decimals: 0
     update_interval: ${interval}
