@@ -44,6 +44,9 @@ globals:
   - id: gRAUMISTTEMP
     type: float
     initial_value: "0.0"
+  - id: gFEUCHTE
+    type: float
+    initial_value: "0.0"
 
 #########################################
 #                                       #
@@ -171,6 +174,11 @@ interval:
           if(room_temp > 0.0f) {
             sendData(FEK, Property::kRAUMISTTEMP, static_cast<std::uint16_t>(room_temp * 10.0f));
           }
+          // Send current FEUCHTE
+          const auto humidity = id(gFEUCHTE);
+          if(humidity > 0.0) {
+            sendData(FEK, Property::kFEUCHTE, static_cast<std::uint16_t>(humidity * 10.0f));
+          }
 
 #########################################
 #                                       #
@@ -259,6 +267,7 @@ packages:
   MINUTE:                         !include { file: thz504_generic.yaml, vars: { property: "MINUTE"                   , icon: "mdi:calendar-clock" }}
   ANZEIGE_NIEDERDRUCK:            !include { file: thz504_generic.yaml, vars: { property: "ANZEIGE_NIEDERDRUCK"      , accuracy_decimals: "2" }}
   PUMPENZYKLEN_MIN_AUSSENT:       !include { file: thz504_generic.yaml, vars: { property: "PUMPENZYKLEN_MIN_AUSSENT" }}
+  FEUCHTE:                        !include { file: thz504_generic.yaml, vars: { property: "FEUCHTE"                  , icon: "mdi:water-percent", target: "HK1", interval: $interval_very_slow, unit: "%",  accuracy_decimals: "1" }}
 
   ABLUFT_IST:                     !include { file: thz504_frequency.yaml, vars: { property: "ABLUFT_IST"    }}
   FORTLUFT_IST:                   !include { file: thz504_frequency.yaml, vars: { property: "FORTLUFT_IST"  }}
@@ -286,6 +295,15 @@ sensor:
         - lambda: |-
             ESP_LOGI("SET", "gRAUMISTTEMP set to %f", x);
             id(gRAUMISTTEMP) = x;
+
+  - platform: homeassistant
+    name: "Humidity Sensor From Home Assistant"
+    entity_id: sensor.durchschnitt_luftfeuchtigkeit_haus
+    on_value:
+      then:
+        - lambda: |-
+            ESP_LOGI("SET", "gFEUCHTE set to %f", x);
+            id(gFEUCHTE) = x;
 
   - platform: template
     name: "EL_AUFNAHMELEISTUNG_WW_TAG_WH"
