@@ -22,6 +22,17 @@
 
 #include "mapper.h"
 
+std::string getTHZType() {
+#if defined(THZ_TYPE_ECO55)
+    return "THZ 5.5 eco";
+#elif defined(THZ_TYPE_404)
+    return "THZ 404";
+#else
+    return "THZ 504";
+#endif
+}
+
+
 SimpleVariant GetValueByType(const std::uint16_t value, const Type type) {
     char buffer[32U];
     switch (type) {

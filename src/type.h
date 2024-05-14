@@ -5,6 +5,8 @@
 #include "property.h"
 #include "simple_variant.h"
 
+std::string getTHZType();
+
 enum Type : std::uint8_t {
     et_default = 0,
     et_dec_val,   // Auflösung: xx.x / auch neg. Werte sind möglich

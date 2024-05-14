@@ -17,6 +17,8 @@ esphome:
   platformio_options:
     build_flags:
       - "-std=gnu++17"
+      - "-DTHZ_TYPE_ECO55"
+      - "-DVERBOSE_OUTPUT"
     build_unflags:
       - "-std=gnu++11"
       - "-fno-rtti"
@@ -75,3 +77,4 @@ packages:
   watermeter: !include yaml/watermeter.yaml
   sensors: !include yaml/sensors.yaml
   thz504: !include yaml/thz504.yaml
+  

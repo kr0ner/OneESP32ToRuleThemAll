@@ -1199,7 +1199,7 @@ enum Property : std::uint16_t {
     //kKUEHL_RAUMSOLL_NACHT = 0x056c, //duplicate
     kLUEFT_STUFE_TAG = 0x056c,
     kLUEFT_STUFE_NACHT = 0x056d,
-    kLUEFT_STUFE_BEREITSCHAFT = 0x056f, //eco 5.5
+    kLUEFT_STUFE_BEREITSCHAFT = 0x056f, //added for eco 5.5 (no conflict)
     kLUEFT_STUFE_ABWESEND = 0x0571,
     kLUEFT_STUFE_PARTY = 0x0570,
     kLUEFT_ZEIT_AUSSERPLAN_STUFE0 = 0x0572,
@@ -1238,11 +1238,18 @@ enum Property : std::uint16_t {
     kPARTY_ANFANG_JAHR = 0x0593,
     kPARTY_ENDE_TAG = 0x0594,
     kPARTY_ENDE_MONAT = 0x0595,
-    kZULUFT_SOLL = 0x0596, //    kPARTY_ENDE_JAHR = 0x0596, eco 5.5
-    kZULUFT_IST = 0x0597, //eco 5.5
-    kABLUFT_SOLL = 0x0598, //eco 5.5
-    kABLUFT_IST = 0x0599, //eco 5.5
-    //kABLUFT_IST = 0x059a, //eco 5.5
+    #if defined(THZ_TYPE_ECO55)
+      kZULUFT_SOLL = 0x0596,
+      kZULUFT_IST = 0x0597,
+      kABLUFT_SOLL = 0x0598,
+      kABLUFT_IST = 0x0599, 
+    #else
+      kPARTY_ENDE_JAHR = 0x0596,
+      kZULUFT_SOLL = 0x0597,
+      kZULUFT_IST = 0x0598,
+      kABLUFT_SOLL = 0x0599,
+      kABLUFT_IST = 0x059a,
+    #endif
     kFORTLUFT_SOLL = 0x059b,
     kFORTLUFT_IST = 0x059c,
     kVERFLUESSIGER_TEMP = 0x059d,
@@ -1362,8 +1369,12 @@ enum Property : std::uint16_t {
     kWE_STB_TESTFUNKTION_14 = 0x060f,
     kWE_STB_TESTFUNKTION_15 = 0x0610,
     kWE_STB_TESTFUNKTION_16 = 0x0611,
-    kLUEFT_STUFE_HAND = 0x0612, //eco 5.5 //vorher: kUNTERD_TEMPM_PUMPENANL
-    kLUEFT_STUFE_HAND_OLD = 0x0613,  // Min. Quellentemp. auf aus / Klaus
+    #if defined(THZ_TYPE_ECO55)
+      kLUEFT_STUFE_HAND = 0x0612,
+    #else
+      kUNTERD_TEMPM_PUMPENANL = 0x0612,
+      kLUEFT_STUFE_HAND = 0x0613,  // Min. Quellentemp. auf aus / Klaus
+    #endif
     kKUEHLSYSTEM = 0x0614,
     kKESSEL_STARTVERZOEGERUNG = 0x0615,
     kMFR_HYSTERESE2_1 = 0x0616,
@@ -1492,7 +1503,7 @@ enum Property : std::uint16_t {
     kTEST_OBJEKT_80 = 0x0691,
     kTEST_OBJEKT_81 = 0x0692,
     kTEST_OBJEKT_82 = 0x0693,
-    kABLUFT_TEMP = 0x0694, //eco 5.5
+    kABLUFT_TEMP = 0x0694, // added for eco 5.5
     kTEST_OBJEKT_84 = 0x0695,
     kTEST_OBJEKT_85 = 0x0696,
     kTEST_OBJEKT_86 = 0x0697,
@@ -3267,8 +3278,8 @@ enum Property : std::uint16_t {
     kZEITPROG_4_MO_DO_SCHALT_2 = 0x23b1,
     kZEITPROG_4_MO_DO_SCHALT_3 = 0x23b2,
     kLEISTUNG_AUSLEGUNG_HEIZUNG = 0xc0f1,
-    kABLUFT_LUFTFEUCHTIGKEIT=0xc0ef, // eco 5.5
-    kABLUFT_TAUPUNKT=0xc0f6, // eco 5.5
+    kABLUFT_LUFTFEUCHTIGKEIT = 0xc0ef, // added for eco 5.5 
+    kABLUFT_TAUPUNKT = 0xc0f6, // added for eco 5.5
     kVERDICHTER_STARTS = 0xc0f4,
     kVERDICHTER_STARTS_K = 0xc0f5,
     kHF_MONITOR_TYP = 0xc34f,

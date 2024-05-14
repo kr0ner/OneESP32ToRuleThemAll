@@ -1,3133 +1,2816 @@
 #if !defined(PROPERTY_DEBUG_H)
 #define PROPERTY_DEBUG_H
 
-#include "property.h"
-char* getPropertyName(Property prop) {
-    static char buffer[60];
-    switch (prop) {
-        case Property::kINDEX_NOT_FOUND: std::strcpy(buffer,"INDEX_NOT_FOUND"); break;
-        case Property::kFEHLERMELDUNG: std::strcpy(buffer,"FEHLERMELDUNG"); break;
-        case Property::kKESSELSOLLTEMP: std::strcpy(buffer,"KESSELSOLLTEMP"); break;
-        case Property::kSPEICHERSOLLTEMP: std::strcpy(buffer,"SPEICHERSOLLTEMP"); break;
-        case Property::kVORLAUFSOLLTEMP: std::strcpy(buffer,"VORLAUFSOLLTEMP"); break;
-        case Property::kRAUMSOLLTEMP_I: std::strcpy(buffer,"RAUMSOLLTEMP_I"); break;
-        case Property::kRAUMSOLLTEMP_II: std::strcpy(buffer,"RAUMSOLLTEMP_II"); break;
-        case Property::kRAUMSOLLTEMP_III: std::strcpy(buffer,"RAUMSOLLTEMP_III"); break;
-        case Property::kRAUMSOLLTEMP_NACHT: std::strcpy(buffer,"RAUMSOLLTEMP_NACHT"); break;
-        case Property::kUHRZEIT: std::strcpy(buffer,"UHRZEIT"); break;
-        case Property::kDATUM: std::strcpy(buffer,"DATUM"); break;
-        case Property::kGERAETE_ID: std::strcpy(buffer,"GERAETE_ID"); break;
-        case Property::kAUSSENTEMP: std::strcpy(buffer,"AUSSENTEMP"); break;
-        case Property::kSAMMLERISTTEMP: std::strcpy(buffer,"SAMMLERISTTEMP"); break;
-        case Property::kSPEICHERISTTEMP: std::strcpy(buffer,"SPEICHERISTTEMP"); break;
-        case Property::kVORLAUFISTTEMP: std::strcpy(buffer,"VORLAUFISTTEMP"); break;
-        case Property::kGERAETEKONFIGURATION: std::strcpy(buffer,"GERAETEKONFIGURATION"); break;
-        case Property::kRAUMISTTEMP: std::strcpy(buffer,"RAUMISTTEMP"); break;
-        case Property::kVERSTELLTE_RAUMSOLLTEMP: std::strcpy(buffer,"VERSTELLTE_RAUMSOLLTEMP"); break;
-        case Property::kEINSTELL_SPEICHERSOLLTEMP: std::strcpy(buffer,"EINSTELL_SPEICHERSOLLTEMP"); break;
-        case Property::kVERDAMPFERTEMP: std::strcpy(buffer,"VERDAMPFERTEMP"); break;
-        case Property::kSAMMLERSOLLTEMP: std::strcpy(buffer,"SAMMLERSOLLTEMP"); break;
-        case Property::kRUECKLAUFISTTEMP: std::strcpy(buffer,"RUECKLAUFISTTEMP"); break;
-        case Property::kSPEICHER_UNTEN_TEMP: std::strcpy(buffer,"SPEICHER_UNTEN_TEMP"); break;
-        case Property::kSOLARZONENTEMP: std::strcpy(buffer,"SOLARZONENTEMP"); break;
-        case Property::kSPEICHER_OBEN_TEMP: std::strcpy(buffer,"SPEICHER_OBEN_TEMP"); break;
-        case Property::kKUNDENKENNUNG: std::strcpy(buffer,"KUNDENKENNUNG"); break;
-        case Property::kKOLLEKTORTEMP: std::strcpy(buffer,"KOLLEKTORTEMP"); break;
-        case Property::kFESTSTOFFKESSELTEMP: std::strcpy(buffer,"FESTSTOFFKESSELTEMP"); break;
-        case Property::kWASSERDRUCK: std::strcpy(buffer,"WASSERDRUCK"); break;
-        case Property::kMIN_TEMP_KESSEL: std::strcpy(buffer,"MIN_TEMP_KESSEL"); break;
-        case Property::kANFAHRTEMP: std::strcpy(buffer,"ANFAHRTEMP"); break;
-        case Property::kHYSTERESEZEIT: std::strcpy(buffer,"HYSTERESEZEIT"); break;
-        case Property::kMAX_HYSTERESE: std::strcpy(buffer,"MAX_HYSTERESE"); break;
-        case Property::kPPL: std::strcpy(buffer,"PPL"); break;
-        case Property::kSPEICHERSPERRE: std::strcpy(buffer,"SPEICHERSPERRE"); break;
-        case Property::kSPERRZEIT: std::strcpy(buffer,"SPERRZEIT"); break;
-        case Property::kHYSTERESE2: std::strcpy(buffer,"HYSTERESE2"); break;
-        case Property::kMAX_TEMP_KESSEL: std::strcpy(buffer,"MAX_TEMP_KESSEL"); break;
-        case Property::kMAX_TEMP_HZK: std::strcpy(buffer,"MAX_TEMP_HZK"); break;
-        case Property::kKP: std::strcpy(buffer,"KP"); break;
-        case Property::kTN: std::strcpy(buffer,"TN"); break;
-        case Property::kMISCHERLAUFZEIT: std::strcpy(buffer,"MISCHERLAUFZEIT"); break;
-        case Property::kMODGRAD: std::strcpy(buffer,"MODGRAD"); break;
-        case Property::kKESSELUEBERHOEHUNG_WW: std::strcpy(buffer,"KESSELUEBERHOEHUNG_WW"); break;
-        case Property::kSTAENDIGE_MINIMALBEGRENZUNG: std::strcpy(buffer,"STAENDIGE_MINIMALBEGRENZUNG"); break;
-        case Property::kACCESS_EEPROM: std::strcpy(buffer,"ACCESS_EEPROM"); break;
-        case Property::kMINDESTABTAUZEIT: std::strcpy(buffer,"MINDESTABTAUZEIT"); break;
-        case Property::kACCESS_XRAM: std::strcpy(buffer,"ACCESS_XRAM"); break;
-        case Property::kACCESS_IRAM: std::strcpy(buffer,"ACCESS_IRAM"); break;
-        case Property::kMIN_WASSERDRUCK: std::strcpy(buffer,"MIN_WASSERDRUCK"); break;
-        case Property::kLEISTUNGSKORREKTUR: std::strcpy(buffer,"LEISTUNGSKORREKTUR"); break;
-        case Property::kKOLLEKTORTEMP_2: std::strcpy(buffer,"KOLLEKTORTEMP_2"); break;
-        case Property::kMULTIFUNKTION_ISTTEMP: std::strcpy(buffer,"MULTIFUNKTION_ISTTEMP"); break;
-        case Property::kBRENNER: std::strcpy(buffer,"BRENNER"); break;
-        case Property::kHZK_PUMPE: std::strcpy(buffer,"HZK_PUMPE"); break;
-        case Property::kSPL_PUMPE: std::strcpy(buffer,"SPL_PUMPE"); break;
-        case Property::kDCF: std::strcpy(buffer,"DCF"); break;
-        case Property::kMISCHER_AUF: std::strcpy(buffer,"MISCHER_AUF"); break;
-        case Property::kMISCHER_ZU: std::strcpy(buffer,"MISCHER_ZU"); break;
-        case Property::kHEIZKREIS_STATUS: std::strcpy(buffer,"HEIZKREIS_STATUS"); break;
-        case Property::kSPEICHER_STATUS: std::strcpy(buffer,"SPEICHER_STATUS"); break;
-        case Property::kSCHALTERSTELLUNG: std::strcpy(buffer,"SCHALTERSTELLUNG"); break;
-        case Property::kANFAHRENT: std::strcpy(buffer,"ANFAHRENT"); break;
-        case Property::kTEILVORRANG_WW: std::strcpy(buffer,"TEILVORRANG_WW"); break;
-        case Property::kSPEICHERBEDARF: std::strcpy(buffer,"SPEICHERBEDARF"); break;
-        case Property::kSCHALTFKT_IWS: std::strcpy(buffer,"SCHALTFKT_IWS"); break;
-        case Property::kABTAUUNGAKTIV: std::strcpy(buffer,"ABTAUUNGAKTIV"); break;
-        case Property::kWAERMEPUMPEN_STATUS: std::strcpy(buffer,"WAERMEPUMPEN_STATUS"); break;
-        case Property::kKESSELSTATUS: std::strcpy(buffer,"KESSELSTATUS"); break;
-        case Property::kSAMMLER_PUMPE: std::strcpy(buffer,"SAMMLER_PUMPE"); break;
-        case Property::kZIRK_PUMPE: std::strcpy(buffer,"ZIRK_PUMPE"); break;
-        case Property::kMISCHERSTATUS: std::strcpy(buffer,"MISCHERSTATUS"); break;
-        case Property::kSONDERKREIS_STATUS: std::strcpy(buffer,"SONDERKREIS_STATUS"); break;
-        case Property::kBETRIEBSART: std::strcpy(buffer,"BETRIEBSART"); break;
-        case Property::kIO_TEST: std::strcpy(buffer,"IO_TEST"); break;
-        case Property::kRESET_KONFIGURATION: std::strcpy(buffer,"RESET_KONFIGURATION"); break;
-        case Property::kPARTY_EIN_AUS: std::strcpy(buffer,"PARTY_EIN_AUS"); break;
-        case Property::kECO_EIN_AUS: std::strcpy(buffer,"ECO_EIN_AUS"); break;
-        case Property::kWAHLUMSCHALTUNG: std::strcpy(buffer,"WAHLUMSCHALTUNG"); break;
-        case Property::kHEIZKREIS_STATUS_PROGSTELL: std::strcpy(buffer,"HEIZKREIS_STATUS_PROGSTELL"); break;
-        case Property::kFERIENBETRIEB: std::strcpy(buffer,"FERIENBETRIEB"); break;
-        case Property::kDREHZAHLREG_JA_NEIN: std::strcpy(buffer,"DREHZAHLREG_JA_NEIN"); break;
-        case Property::kANFORDERUNG_LEISTUNGSZWANG: std::strcpy(buffer,"ANFORDERUNG_LEISTUNGSZWANG"); break;
-        case Property::kANTILEG_AKTIV: std::strcpy(buffer,"ANTILEG_AKTIV"); break;
-        case Property::kBITSCHALTER: std::strcpy(buffer,"BITSCHALTER"); break;
-        case Property::kEVU_SPERRE_AKTIV: std::strcpy(buffer,"EVU_SPERRE_AKTIV"); break;
-        case Property::kFEUCHTE: std::strcpy(buffer,"FEUCHTE"); break;
-        case Property::kPUFFERTEMP_OBEN1: std::strcpy(buffer,"PUFFERTEMP_OBEN1"); break;
-        case Property::kPUFFERTEMP_MITTE1: std::strcpy(buffer,"PUFFERTEMP_MITTE1"); break;
-        case Property::kPUFFERTEMP_UNTEN1: std::strcpy(buffer,"PUFFERTEMP_UNTEN1"); break;
-        case Property::kPUFFERTEMP_OBEN2: std::strcpy(buffer,"PUFFERTEMP_OBEN2"); break;
-        case Property::kPUFFERTEMP_MITTE2: std::strcpy(buffer,"PUFFERTEMP_MITTE2"); break;
-        case Property::kPUFFERTEMP_UNTEN2: std::strcpy(buffer,"PUFFERTEMP_UNTEN2"); break;
-        case Property::kPUFFERTEMP_OBEN3: std::strcpy(buffer,"PUFFERTEMP_OBEN3"); break;
-        case Property::kPUFFERTEMP_MITTE3: std::strcpy(buffer,"PUFFERTEMP_MITTE3"); break;
-        case Property::kPUFFERTEMP_UNTEN3: std::strcpy(buffer,"PUFFERTEMP_UNTEN3"); break;
-        case Property::kEINSTRAHLUNGS_SENSOR: std::strcpy(buffer,"EINSTRAHLUNGS_SENSOR"); break;
-        case Property::kECO_AKZEPTANZ_WW: std::strcpy(buffer,"ECO_AKZEPTANZ_WW"); break;
-        case Property::kECO_AKZEPTANZ_RAUM: std::strcpy(buffer,"ECO_AKZEPTANZ_RAUM"); break;
-        case Property::kSOLAR_AKT_VOLUMENSTROM: std::strcpy(buffer,"SOLAR_AKT_VOLUMENSTROM"); break;
-        case Property::kSOLAR_DURCHSCHNITT_VOLUMENSTROM: std::strcpy(buffer,"SOLAR_DURCHSCHNITT_VOLUMENSTROM"); break;
-        case Property::kSOLAR_AKT_LEISTUNG_W: std::strcpy(buffer,"SOLAR_AKT_LEISTUNG_W"); break;
-        case Property::kSOLAR_TAGESERTRAG_WH: std::strcpy(buffer,"SOLAR_TAGESERTRAG_WH"); break;
-        case Property::kSOLAR_TAGESERTRAG_KWH: std::strcpy(buffer,"SOLAR_TAGESERTRAG_KWH"); break;
-        case Property::kSOLAR_GESAMTERTRAG_WH: std::strcpy(buffer,"SOLAR_GESAMTERTRAG_WH"); break;
-        case Property::kSOLAR_GESAMTERTRAG_KWH: std::strcpy(buffer,"SOLAR_GESAMTERTRAG_KWH"); break;
-        case Property::kSOLAR_GESAMTERTRAG_MWH: std::strcpy(buffer,"SOLAR_GESAMTERTRAG_MWH"); break;
-        case Property::kMODGRAD_IST: std::strcpy(buffer,"MODGRAD_IST"); break;
-        case Property::kECO_AKZEPTANZ_PUFFER: std::strcpy(buffer,"ECO_AKZEPTANZ_PUFFER"); break;
-        case Property::kGESAMT_MODGRAD: std::strcpy(buffer,"GESAMT_MODGRAD"); break;
-        case Property::kMIN_MOD_KASKADE: std::strcpy(buffer,"MIN_MOD_KASKADE"); break;
-        case Property::kFEUCHTE_HYSTERESE: std::strcpy(buffer,"FEUCHTE_HYSTERESE"); break;
-        case Property::kLOAD_STANDARD: std::strcpy(buffer,"LOAD_STANDARD"); break;
-        case Property::kONL_CODENUMMER: std::strcpy(buffer,"ONL_CODENUMMER"); break;
-        case Property::kSYSTEM_RESET: std::strcpy(buffer,"SYSTEM_RESET"); break;
-        case Property::kCAN_FEHLERMELDUNG: std::strcpy(buffer,"CAN_FEHLERMELDUNG"); break;
-        case Property::kBUSKONFIGURATION: std::strcpy(buffer,"BUSKONFIGURATION"); break;
-        case Property::kINITIALISIERUNG: std::strcpy(buffer,"INITIALISIERUNG"); break;
-        case Property::kUNGUELTIG: std::strcpy(buffer,"UNGUELTIG"); break;
-        case Property::kANTILEGIONELLEN: std::strcpy(buffer,"ANTILEGIONELLEN"); break;
-        case Property::kAUSSENFUEHLER_VERSORGUNG: std::strcpy(buffer,"AUSSENFUEHLER_VERSORGUNG"); break;
-        case Property::kAUFHEIZOPTIMIERUNG: std::strcpy(buffer,"AUFHEIZOPTIMIERUNG"); break;
-        case Property::kFERIENDAUER_TAGE: std::strcpy(buffer,"FERIENDAUER_TAGE"); break;
-        case Property::kRAUMFUEHLERKORREKTUR: std::strcpy(buffer,"RAUMFUEHLERKORREKTUR"); break;
-        case Property::kAUSSENTEMPVERZOEGERUNG: std::strcpy(buffer,"AUSSENTEMPVERZOEGERUNG"); break;
-        case Property::kCODENUMMER: std::strcpy(buffer,"CODENUMMER"); break;
-        case Property::kHEIZKURVE: std::strcpy(buffer,"HEIZKURVE"); break;
-        case Property::kRAUMEINFLUSS: std::strcpy(buffer,"RAUMEINFLUSS"); break;
-        case Property::kMAX_VORVERLEGUNG: std::strcpy(buffer,"MAX_VORVERLEGUNG"); break;
-        case Property::kHZK_KURVENABSTAND: std::strcpy(buffer,"HZK_KURVENABSTAND"); break;
-        case Property::kPROGRAMMSCHALTER: std::strcpy(buffer,"PROGRAMMSCHALTER"); break;
-        case Property::kSPRACHE: std::strcpy(buffer,"SPRACHE"); break;
-        case Property::kAKTIVES_HEIZPROGRAMM: std::strcpy(buffer,"AKTIVES_HEIZPROGRAMM"); break;
-        case Property::kHEIZKURVENADAPTION: std::strcpy(buffer,"HEIZKURVENADAPTION"); break;
-        case Property::kHEIZGRENZE_TAG: std::strcpy(buffer,"HEIZGRENZE_TAG"); break;
-        case Property::kHEIZGRENZE_NACHT: std::strcpy(buffer,"HEIZGRENZE_NACHT"); break;
-        case Property::kECO_BETRIEB: std::strcpy(buffer,"ECO_BETRIEB"); break;
-        case Property::kAUSWAHL_STANDARDTEMP: std::strcpy(buffer,"AUSWAHL_STANDARDTEMP"); break;
-        case Property::kESTRICHFUNKTION: std::strcpy(buffer,"ESTRICHFUNKTION"); break;
-        case Property::kFERIENANFANG_TAG: std::strcpy(buffer,"FERIENANFANG_TAG"); break;
-        case Property::kFERIENANFANG_MONAT: std::strcpy(buffer,"FERIENANFANG_MONAT"); break;
-        case Property::kFERIENANFANG_JAHR: std::strcpy(buffer,"FERIENANFANG_JAHR"); break;
-        case Property::kFERIENENDE_TAG: std::strcpy(buffer,"FERIENENDE_TAG"); break;
-        case Property::kFERIENENDE_MONAT: std::strcpy(buffer,"FERIENENDE_MONAT"); break;
-        case Property::kFERIENENDE_JAHR: std::strcpy(buffer,"FERIENENDE_JAHR"); break;
-        case Property::kWOCHENTAG: std::strcpy(buffer,"WOCHENTAG"); break;
-        case Property::kTAG: std::strcpy(buffer,"TAG"); break;
-        case Property::kMONAT: std::strcpy(buffer,"MONAT"); break;
-        case Property::kJAHR: std::strcpy(buffer,"JAHR"); break;
-        case Property::kSTUNDE: std::strcpy(buffer,"STUNDE"); break;
-        case Property::kMINUTE: std::strcpy(buffer,"MINUTE"); break;
-        case Property::kSEKUNDE: std::strcpy(buffer,"SEKUNDE"); break;
-        case Property::kBAUWEISE: std::strcpy(buffer,"BAUWEISE"); break;
-        case Property::kVORLAUF_NENN_SOLLWERT: std::strcpy(buffer,"VORLAUF_NENN_SOLLWERT"); break;
-        case Property::kVORLAUF_REDUZIER_SOLLWERT: std::strcpy(buffer,"VORLAUF_REDUZIER_SOLLWERT"); break;
-        case Property::kMIN_TEMP_HZK: std::strcpy(buffer,"MIN_TEMP_HZK"); break;
-        case Property::kFERIEN_ABSENKTEMP: std::strcpy(buffer,"FERIEN_ABSENKTEMP"); break;
-        case Property::kAUSSCHALTZEITOPTI: std::strcpy(buffer,"AUSSCHALTZEITOPTI"); break;
-        case Property::kMAX_PUMPENDREHZAHL: std::strcpy(buffer,"MAX_PUMPENDREHZAHL"); break;
-        case Property::kMIN_PUMPENDREHZAHL: std::strcpy(buffer,"MIN_PUMPENDREHZAHL"); break;
-        case Property::kBETRIEBSNIVEAU_PWMPUMPE: std::strcpy(buffer,"BETRIEBSNIVEAU_PWMPUMPE"); break;
-        case Property::kHZK_PUMPE_ABSENK: std::strcpy(buffer,"HZK_PUMPE_ABSENK"); break;
-        case Property::kWW_SOLLWERT_REDUZIERT: std::strcpy(buffer,"WW_SOLLWERT_REDUZIERT"); break;
-        case Property::kWW_MAXTEMP: std::strcpy(buffer,"WW_MAXTEMP"); break;
-        case Property::kWARMWASSERMODE: std::strcpy(buffer,"WARMWASSERMODE"); break;
-        case Property::kADAPT_INFO: std::strcpy(buffer,"ADAPT_INFO"); break;
-        case Property::kKESSELSOLLTEMP_2WE: std::strcpy(buffer,"KESSELSOLLTEMP_2WE"); break;
-        case Property::kDURCHFLUSS_CH: std::strcpy(buffer,"DURCHFLUSS_CH"); break;
-        case Property::kSTANDBY_GEBLAESE_DREHZAHL: std::strcpy(buffer,"STANDBY_GEBLAESE_DREHZAHL"); break;
-        case Property::kBENOETIGTE_AUFHEIZZEIT: std::strcpy(buffer,"BENOETIGTE_AUFHEIZZEIT"); break;
-        case Property::kABWESENHEITSTEMP: std::strcpy(buffer,"ABWESENHEITSTEMP"); break;
-        case Property::kEINSTELL_SPEICHERSOLLTEMP3: std::strcpy(buffer,"EINSTELL_SPEICHERSOLLTEMP3"); break;
-        case Property::kK_OS_OBERE_GEBLAESE_DREHZAHL: std::strcpy(buffer,"K_OS_OBERE_GEBLAESE_DREHZAHL"); break;
-        case Property::kWW_HYSTERSE: std::strcpy(buffer,"WW_HYSTERSE"); break;
-        case Property::kHZK_MODE: std::strcpy(buffer,"HZK_MODE"); break;
-        case Property::kHZK_NACHLAUF: std::strcpy(buffer,"HZK_NACHLAUF"); break;
-        case Property::kTAKTSPERRE: std::strcpy(buffer,"TAKTSPERRE"); break;
-        case Property::kEINMAL_WW_AKTIV: std::strcpy(buffer,"EINMAL_WW_AKTIV"); break;
-        case Property::kABGASTEMP: std::strcpy(buffer,"ABGASTEMP"); break;
-        case Property::kKUNDEN_KENNUNG: std::strcpy(buffer,"KUNDEN_KENNUNG"); break;
-        case Property::kHERSTELLER_KENNUNG: std::strcpy(buffer,"HERSTELLER_KENNUNG"); break;
-        case Property::kGERAETE_KENNUNG: std::strcpy(buffer,"GERAETE_KENNUNG"); break;
-        case Property::kK_OS_MAX_VL_AENDERUNG: std::strcpy(buffer,"K_OS_MAX_VL_AENDERUNG"); break;
-        case Property::kK_OS_MAX_DREHZAHLAENDERUNG: std::strcpy(buffer,"K_OS_MAX_DREHZAHLAENDERUNG"); break;
-        case Property::kK_OS_FREIGABEDREHZAHL: std::strcpy(buffer,"K_OS_FREIGABEDREHZAHL"); break;
-        case Property::kK_OS_SOFTSTARTZEIT: std::strcpy(buffer,"K_OS_SOFTSTARTZEIT"); break;
-        case Property::kRUECKLAUF_HYSTERESE: std::strcpy(buffer,"RUECKLAUF_HYSTERESE"); break;
-        case Property::kMIN_PUMPENLEISTUNG: std::strcpy(buffer,"MIN_PUMPENLEISTUNG"); break;
-        case Property::kMAX_PUMPENLEISTUNG: std::strcpy(buffer,"MAX_PUMPENLEISTUNG"); break;
-        case Property::kPUMPENLEISTUNG_WW: std::strcpy(buffer,"PUMPENLEISTUNG_WW"); break;
-        case Property::kPUMPENLEISTUNG_STANDBY: std::strcpy(buffer,"PUMPENLEISTUNG_STANDBY"); break;
-        case Property::kK_OS_OBERE_GEBLAESE_DREHZAHL_WW: std::strcpy(buffer,"K_OS_OBERE_GEBLAESE_DREHZAHL_WW"); break;
-        case Property::kK_OS_UNTERE_GEBLAESE_DREHZAHL: std::strcpy(buffer,"K_OS_UNTERE_GEBLAESE_DREHZAHL"); break;
-        case Property::kGERAETEKONFIGURATION_2: std::strcpy(buffer,"GERAETEKONFIGURATION_2"); break;
-        case Property::kQQ_BEI_TRANSPARENT_MODE: std::strcpy(buffer,"QQ_BEI_TRANSPARENT_MODE"); break;
-        case Property::kNON_FAILSAVE_CRC: std::strcpy(buffer,"NON_FAILSAVE_CRC"); break;
-        case Property::kFAILSAVE_CRC: std::strcpy(buffer,"FAILSAVE_CRC"); break;
-        case Property::kDATEN_GESCHRIEBEN: std::strcpy(buffer,"DATEN_GESCHRIEBEN"); break;
-        case Property::kK_OS_GRENZE_OBERE_GEBLAESEDREHZAHL: std::strcpy(buffer,"K_OS_GRENZE_OBERE_GEBLAESEDREHZAHL"); break;
-        case Property::kKESSELREGLER_P_ANTEIL: std::strcpy(buffer,"KESSELREGLER_P_ANTEIL"); break;
-        case Property::kKESSELREGLER_I_ANTEIL: std::strcpy(buffer,"KESSELREGLER_I_ANTEIL"); break;
-        case Property::kK_OS_FREIGABEDREHZAHL_SPEICHER_KOMBI: std::strcpy(buffer,"K_OS_FREIGABEDREHZAHL_SPEICHER_KOMBI"); break;
-        case Property::kDURCHLAUFREGLER_2_PUNKT_UEBERHOEHUNG: std::strcpy(buffer,"DURCHLAUFREGLER_2_PUNKT_UEBERHOEHUNG"); break;
-        case Property::kK_OS_TURBINENPARAMETRIERUNG: std::strcpy(buffer,"K_OS_TURBINENPARAMETRIERUNG"); break;
-        case Property::kFAKTOR_DURCHLAUFUEBERHOEHUNG: std::strcpy(buffer,"FAKTOR_DURCHLAUFUEBERHOEHUNG"); break;
-        case Property::kZAPFBEGINN: std::strcpy(buffer,"ZAPFBEGINN"); break;
-        case Property::kDURCHLAUFREGLER_P_ANTEIL: std::strcpy(buffer,"DURCHLAUFREGLER_P_ANTEIL"); break;
-        case Property::kDURCHLAUFREGLER_I_ANTEIL: std::strcpy(buffer,"DURCHLAUFREGLER_I_ANTEIL"); break;
-        case Property::kWW_SCHNELL_START_TEMPERATUR: std::strcpy(buffer,"WW_SCHNELL_START_TEMPERATUR"); break;
-        case Property::kGASART: std::strcpy(buffer,"GASART"); break;
-        case Property::kDURCHFLUSS_WW: std::strcpy(buffer,"DURCHFLUSS_WW"); break;
-        case Property::kPWM_SIGNAL_PUMPE: std::strcpy(buffer,"PWM_SIGNAL_PUMPE"); break;
-        case Property::kGEBLAESE_SOLLWERT: std::strcpy(buffer,"GEBLAESE_SOLLWERT"); break;
-        case Property::kGEBLAESEDREHZAHL: std::strcpy(buffer,"GEBLAESEDREHZAHL"); break;
-        case Property::kIO_ISTWERT: std::strcpy(buffer,"IO_ISTWERT"); break;
-        case Property::kINDIKATOR: std::strcpy(buffer,"INDIKATOR"); break;
-        case Property::kK_OS_EINGANGSZUSTAND_KM351: std::strcpy(buffer,"K_OS_EINGANGSZUSTAND_KM351"); break;
-        case Property::kK_OS_AUSGANGSZUSTAND_KM351: std::strcpy(buffer,"K_OS_AUSGANGSZUSTAND_KM351"); break;
-        case Property::kK_OS_STATUS_KM351: std::strcpy(buffer,"K_OS_STATUS_KM351"); break;
-        case Property::kFEUERUNGSAUTOMAT_STATUS: std::strcpy(buffer,"FEUERUNGSAUTOMAT_STATUS"); break;
-        case Property::kBETRIEBS_STATUS: std::strcpy(buffer,"BETRIEBS_STATUS"); break;
-        case Property::kZUSTAND_BCC: std::strcpy(buffer,"ZUSTAND_BCC"); break;
-        case Property::kBUSKENNUNG: std::strcpy(buffer,"BUSKENNUNG"); break;
-        case Property::kK_OS_GERAETEKONFIGURATON: std::strcpy(buffer,"K_OS_GERAETEKONFIGURATON"); break;
-        case Property::kTROCKENLAUFFUNKTION: std::strcpy(buffer,"TROCKENLAUFFUNKTION"); break;
-        case Property::kMISCHERLEISTUNGSSOLLWERT: std::strcpy(buffer,"MISCHERLEISTUNGSSOLLWERT"); break;
-        case Property::kKONFIG_LEISTUNGSSOLLWERT: std::strcpy(buffer,"KONFIG_LEISTUNGSSOLLWERT"); break;
-        case Property::kTELEFONKONTAKT: std::strcpy(buffer,"TELEFONKONTAKT"); break;
-        case Property::kHEIZ_ZEIT_STATUS: std::strcpy(buffer,"HEIZ_ZEIT_STATUS"); break;
-        case Property::kWW_NACHLAUFZEIT: std::strcpy(buffer,"WW_NACHLAUFZEIT"); break;
-        case Property::kMAX_WW_LADEZEIT: std::strcpy(buffer,"MAX_WW_LADEZEIT"); break;
-        case Property::kMAX_WW_TEMP: std::strcpy(buffer,"MAX_WW_TEMP"); break;
-        case Property::kPARAMETER_ZIRKULATIONSPUMPE: std::strcpy(buffer,"PARAMETER_ZIRKULATIONSPUMPE"); break;
-        case Property::kFERNBEDIENUNGSZUORDNUNG: std::strcpy(buffer,"FERNBEDIENUNGSZUORDNUNG"); break;
-        case Property::kMITTELLUNGSZEIT: std::strcpy(buffer,"MITTELLUNGSZEIT"); break;
-        case Property::kEINSTELL_MODULATIONS_SPERRZEIT: std::strcpy(buffer,"EINSTELL_MODULATIONS_SPERRZEIT"); break;
-        case Property::kBRENNERART: std::strcpy(buffer,"BRENNERART"); break;
-        case Property::kBRENNERSTUFEN_WW: std::strcpy(buffer,"BRENNERSTUFEN_WW"); break;
-        case Property::kSOMMER_WINTERZEITUMSTELLUNG: std::strcpy(buffer,"SOMMER_WINTERZEITUMSTELLUNG"); break;
-        case Property::kFEIERTAGS_PROGRAMM: std::strcpy(buffer,"FEIERTAGS_PROGRAMM"); break;
-        case Property::kFEIER_DAUER: std::strcpy(buffer,"FEIER_DAUER"); break;
-        case Property::kUNTERE_GRENZE_MINKESSELTEMP: std::strcpy(buffer,"UNTERE_GRENZE_MINKESSELTEMP"); break;
-        case Property::kSERVICE_MINUTEN: std::strcpy(buffer,"SERVICE_MINUTEN"); break;
-        case Property::kKONFIG_KONTAKT_OHNE_SPF: std::strcpy(buffer,"KONFIG_KONTAKT_OHNE_SPF"); break;
-        case Property::kMODULATIONSDYNAMIK: std::strcpy(buffer,"MODULATIONSDYNAMIK"); break;
-        case Property::kMISCHERPARAMETER: std::strcpy(buffer,"MISCHERPARAMETER"); break;
-        case Property::kRUECKLAUFTEMPERATURANHEBUNG: std::strcpy(buffer,"RUECKLAUFTEMPERATURANHEBUNG"); break;
-        case Property::kBRENNSTOFFVERBRAUCH_PAR_BR1: std::strcpy(buffer,"BRENNSTOFFVERBRAUCH_PAR_BR1"); break;
-        case Property::kBRENNSTOFFVERBRAUCH_PAR_BR2: std::strcpy(buffer,"BRENNSTOFFVERBRAUCH_PAR_BR2"); break;
-        case Property::kMAX_ABGASTEMP: std::strcpy(buffer,"MAX_ABGASTEMP"); break;
-        case Property::kEINSCHALTTEMPERATUR_DIFFERENZ: std::strcpy(buffer,"EINSCHALTTEMPERATUR_DIFFERENZ"); break;
-        case Property::kAUSSCHALTTEMPERATUR_DIFFERENZ: std::strcpy(buffer,"AUSSCHALTTEMPERATUR_DIFFERENZ"); break;
-        case Property::kBRENNSTOFFVERBRAUCH_BRENNER1: std::strcpy(buffer,"BRENNSTOFFVERBRAUCH_BRENNER1"); break;
-        case Property::kBRENNSTOFFVERBRAUCH_BRENNER2: std::strcpy(buffer,"BRENNSTOFFVERBRAUCH_BRENNER2"); break;
-        case Property::kMIN_SOLAR_SPEICHERTEMP: std::strcpy(buffer,"MIN_SOLAR_SPEICHERTEMP"); break;
-        case Property::kSOFTWARE_NUMMER: std::strcpy(buffer,"SOFTWARE_NUMMER"); break;
-        case Property::kSOFTWARE_VERSION: std::strcpy(buffer,"SOFTWARE_VERSION"); break;
-        case Property::kSPEICHER_ZEIT_STATUS: std::strcpy(buffer,"SPEICHER_ZEIT_STATUS"); break;
-        case Property::kINFO_TYP: std::strcpy(buffer,"INFO_TYP"); break;
-        case Property::kMISCHERPARAMETER_ZU: std::strcpy(buffer,"MISCHERPARAMETER_ZU"); break;
-        case Property::kWW_BETRIEB: std::strcpy(buffer,"WW_BETRIEB"); break;
-        case Property::kMULTIFUNKTIONS_SCHALTHYSTERESE: std::strcpy(buffer,"MULTIFUNKTIONS_SCHALTHYSTERESE"); break;
-        case Property::kMULTIFUNKTIONS_SCHALTTEMP: std::strcpy(buffer,"MULTIFUNKTIONS_SCHALTTEMP"); break;
-        case Property::kPC_CODENUMMER: std::strcpy(buffer,"PC_CODENUMMER"); break;
-        case Property::kMAX_WASSERDRUCK: std::strcpy(buffer,"MAX_WASSERDRUCK"); break;
-        case Property::kAUSGANG_KM_OS: std::strcpy(buffer,"AUSGANG_KM_OS"); break;
-        case Property::kEINGANG_KM_OS: std::strcpy(buffer,"EINGANG_KM_OS"); break;
-        case Property::kK_OS_UNTERE_GEBLAESE_DREHZAHL_WW: std::strcpy(buffer,"K_OS_UNTERE_GEBLAESE_DREHZAHL_WW"); break;
-        case Property::kK_OS_GEBLAESE_DREHZAHL_WW: std::strcpy(buffer,"K_OS_GEBLAESE_DREHZAHL_WW"); break;
-        case Property::kK_OS_KASKADENRELAIS_EINSCHALTVERZOEGERUNG: std::strcpy(buffer,"K_OS_KASKADENRELAIS_EINSCHALTVERZOEGERUNG"); break;
-        case Property::kK_OS_KASKADENRELAIS_AUSSCHALTLEISTUNG: std::strcpy(buffer,"K_OS_KASKADENRELAIS_AUSSCHALTLEISTUNG"); break;
-        case Property::kEINGANG_SPANNUNG: std::strcpy(buffer,"EINGANG_SPANNUNG"); break;
-        case Property::kEINGANG_STROM: std::strcpy(buffer,"EINGANG_STROM"); break;
-        case Property::kDONGLE_NR: std::strcpy(buffer,"DONGLE_NR"); break;
-        case Property::kBIVALENTPARALLELTEMPERATUR_HZG: std::strcpy(buffer,"BIVALENTPARALLELTEMPERATUR_HZG"); break;
-        case Property::kBIVALENTPARALLELTEMPERATUR_WW: std::strcpy(buffer,"BIVALENTPARALLELTEMPERATUR_WW"); break;
-        case Property::kBIVALENZALTERNATIVTEMPERATUR_HZG: std::strcpy(buffer,"BIVALENZALTERNATIVTEMPERATUR_HZG"); break;
-        case Property::kBIVALENZALTERNATIVTEMPERATUR_WW: std::strcpy(buffer,"BIVALENZALTERNATIVTEMPERATUR_WW"); break;
-        case Property::kQUELLENSOLLTEMPERATUR: std::strcpy(buffer,"QUELLENSOLLTEMPERATUR"); break;
-        case Property::kSOLLTEMP_ANZEIGE_0_1: std::strcpy(buffer,"SOLLTEMP_ANZEIGE_0_1"); break;
-        case Property::kSOLLTEMP_ANZEIGE_0_2: std::strcpy(buffer,"SOLLTEMP_ANZEIGE_0_2"); break;
-        case Property::kSOLLTEMP_ANZEIGE_0_3: std::strcpy(buffer,"SOLLTEMP_ANZEIGE_0_3"); break;
-        case Property::kSOLLTEMP_ANZEIGE_1_1: std::strcpy(buffer,"SOLLTEMP_ANZEIGE_1_1"); break;
-        case Property::kSOLLTEMP_ANZEIGE_1_2: std::strcpy(buffer,"SOLLTEMP_ANZEIGE_1_2"); break;
-        case Property::kSOLLTEMP_ANZEIGE_1_3: std::strcpy(buffer,"SOLLTEMP_ANZEIGE_1_3"); break;
-        case Property::kAUSSENTEMPERATUR_WARMWASSER: std::strcpy(buffer,"AUSSENTEMPERATUR_WARMWASSER"); break;
-        case Property::kSOLARDIFFERENZ: std::strcpy(buffer,"SOLARDIFFERENZ"); break;
-        case Property::kSOLARTEMP_MAX: std::strcpy(buffer,"SOLARTEMP_MAX"); break;
-        case Property::kESTRICH_STEIGUNG_PRO_TAG: std::strcpy(buffer,"ESTRICH_STEIGUNG_PRO_TAG"); break;
-        case Property::kESTRICH_SOCKELTEMPERATUR: std::strcpy(buffer,"ESTRICH_SOCKELTEMPERATUR"); break;
-        case Property::kESTRICH_HALTEN_SOCKELTEMPERATUR: std::strcpy(buffer,"ESTRICH_HALTEN_SOCKELTEMPERATUR"); break;
-        case Property::kESTRICH_MAX_TEMPERATUR: std::strcpy(buffer,"ESTRICH_MAX_TEMPERATUR"); break;
-        case Property::kESTRICH_HALTEN_MAX_TEMPERATUR: std::strcpy(buffer,"ESTRICH_HALTEN_MAX_TEMPERATUR"); break;
-        case Property::kSW_AUSSENTEMP: std::strcpy(buffer,"SW_AUSSENTEMP"); break;
-        case Property::kFESTWERT: std::strcpy(buffer,"FESTWERT"); break;
-        case Property::kGESAMTERTRAG_WATT: std::strcpy(buffer,"GESAMTERTRAG_WATT"); break;
-        case Property::kGESAMTERTRAG_KWATT: std::strcpy(buffer,"GESAMTERTRAG_KWATT"); break;
-        case Property::kGESAMTERTRAG_MWATT: std::strcpy(buffer,"GESAMTERTRAG_MWATT"); break;
-        case Property::kLAUFZEIT_WP1: std::strcpy(buffer,"LAUFZEIT_WP1"); break;
-        case Property::kLAUFZEIT_WP2: std::strcpy(buffer,"LAUFZEIT_WP2"); break;
-        case Property::kLAUFZEIT_WP3: std::strcpy(buffer,"LAUFZEIT_WP3"); break;
-        case Property::kLAUFZEIT_WP4: std::strcpy(buffer,"LAUFZEIT_WP4"); break;
-        case Property::kLAUFZEIT_WP5: std::strcpy(buffer,"LAUFZEIT_WP5"); break;
-        case Property::kLAUFZEIT_WP6: std::strcpy(buffer,"LAUFZEIT_WP6"); break;
-        case Property::kLAUFZEIT_SOLAR: std::strcpy(buffer,"LAUFZEIT_SOLAR"); break;
-        case Property::kLAUFZEIT_2WE: std::strcpy(buffer,"LAUFZEIT_2WE"); break;
-        case Property::kSTILLSTANDZEIT_0: std::strcpy(buffer,"STILLSTANDZEIT_0"); break;
-        case Property::kSTILLSTANDZEIT_1: std::strcpy(buffer,"STILLSTANDZEIT_1"); break;
-        case Property::kSTILLSTANDZEIT_2: std::strcpy(buffer,"STILLSTANDZEIT_2"); break;
-        case Property::kSTILLSTANDZEIT_3: std::strcpy(buffer,"STILLSTANDZEIT_3"); break;
-        case Property::kSTILLSTANDZEIT_4: std::strcpy(buffer,"STILLSTANDZEIT_4"); break;
-        case Property::kSTILLSTANDZEIT_5: std::strcpy(buffer,"STILLSTANDZEIT_5"); break;
-        case Property::kPUMPENSTATUS: std::strcpy(buffer,"PUMPENSTATUS"); break;
-        case Property::kEVU: std::strcpy(buffer,"EVU"); break;
-        case Property::kQUELLE_IST: std::strcpy(buffer,"QUELLE_IST"); break;
-        case Property::kPUFFERSOLL: std::strcpy(buffer,"PUFFERSOLL"); break;
-        case Property::kWPVORLAUFIST: std::strcpy(buffer,"WPVORLAUFIST"); break;
-        case Property::kHILFSKESSELSOLL: std::strcpy(buffer,"HILFSKESSELSOLL"); break;
-        case Property::kFUEHLER_1: std::strcpy(buffer,"FUEHLER_1"); break;
-        case Property::kFUEHLER_2: std::strcpy(buffer,"FUEHLER_2"); break;
-        case Property::kVOLUMENSTROM: std::strcpy(buffer,"VOLUMENSTROM"); break;
-        case Property::kERTRAG_AKT: std::strcpy(buffer,"ERTRAG_AKT"); break;
-        case Property::kERTRAG_TAG_W: std::strcpy(buffer,"ERTRAG_TAG_W"); break;
-        case Property::kERTRAG_TAG_KW: std::strcpy(buffer,"ERTRAG_TAG_KW"); break;
-        case Property::kKESSELREGLER_D_ANTEIL: std::strcpy(buffer,"KESSELREGLER_D_ANTEIL"); break;
-        case Property::kDURCHLAUFREGLER_D_ANTEIL: std::strcpy(buffer,"DURCHLAUFREGLER_D_ANTEIL"); break;
-        case Property::kFUEHLERFROSTSCHUTZ: std::strcpy(buffer,"FUEHLERFROSTSCHUTZ"); break;
-        case Property::kPUMPENSTEUERUNG_dT: std::strcpy(buffer,"PUMPENSTEUERUNG_dT"); break;
-        case Property::kSOLL_DIFFERENZ_RUECKLAUF: std::strcpy(buffer,"SOLL_DIFFERENZ_RUECKLAUF"); break;
-        case Property::kMAX_DIFFERENZ_RUECKLAUF: std::strcpy(buffer,"MAX_DIFFERENZ_RUECKLAUF"); break;
-        case Property::kK_OS_GEBLAESEREGLERANPASSUNG: std::strcpy(buffer,"K_OS_GEBLAESEREGLERANPASSUNG"); break;
-        case Property::kK_OS_START_PWM: std::strcpy(buffer,"K_OS_START_PWM"); break;
-        case Property::kGEBLAESEREGLER_P_ANTEIL: std::strcpy(buffer,"GEBLAESEREGLER_P_ANTEIL"); break;
-        case Property::kGEBLAESEREGLER_I_ANTEIL: std::strcpy(buffer,"GEBLAESEREGLER_I_ANTEIL"); break;
-        case Property::kMAX_HEIZUNG_TEMP: std::strcpy(buffer,"MAX_HEIZUNG_TEMP"); break;
-        case Property::kMAX_POS_GEBLAESEANSTIEG: std::strcpy(buffer,"MAX_POS_GEBLAESEANSTIEG"); break;
-        case Property::kMAX_NEG_GEBLAESEANSTIEG: std::strcpy(buffer,"MAX_NEG_GEBLAESEANSTIEG"); break;
-        case Property::kSTEP_dT_REGELUNG: std::strcpy(buffer,"STEP_dT_REGELUNG"); break;
-        case Property::kABSENKZEIT: std::strcpy(buffer,"ABSENKZEIT"); break;
-        case Property::kSCHALTPROG_0_6: std::strcpy(buffer,"SCHALTPROG_0_6"); break;
-        case Property::kSCHALTPROG_6_12: std::strcpy(buffer,"SCHALTPROG_6_12"); break;
-        case Property::kSCHALTPROG_12_18: std::strcpy(buffer,"SCHALTPROG_12_18"); break;
-        case Property::kSCHALTPROG_18_24: std::strcpy(buffer,"SCHALTPROG_18_24"); break;
-        case Property::kFEHLERLISTEN_EINTRAG: std::strcpy(buffer,"FEHLERLISTEN_EINTRAG"); break;
-        case Property::kFEHLERART: std::strcpy(buffer,"FEHLERART"); break;
-        case Property::kZUFALLSZAHL: std::strcpy(buffer,"ZUFALLSZAHL"); break;
-        case Property::kDONGELKEY1: std::strcpy(buffer,"DONGELKEY1"); break;
-        case Property::kDONGELKEY2: std::strcpy(buffer,"DONGELKEY2"); break;
-        case Property::kK_OS_PUMPENLEISTUNG_VORSPUELUNG: std::strcpy(buffer,"K_OS_PUMPENLEISTUNG_VORSPUELUNG"); break;
-        case Property::kK_OS_PUMPENTAKTUNG_PAUSE: std::strcpy(buffer,"K_OS_PUMPENTAKTUNG_PAUSE"); break;
-        case Property::kK_OS_PUMPENTAKTUNG_PULS: std::strcpy(buffer,"K_OS_PUMPENTAKTUNG_PULS"); break;
-        case Property::kK_OS_NEG_HYSTERESE_VORL: std::strcpy(buffer,"K_OS_NEG_HYSTERESE_VORL"); break;
-        case Property::kK_OS_WW_SCHNELLSTARTTEMPERATUR: std::strcpy(buffer,"K_OS_WW_SCHNELLSTARTTEMPERATUR"); break;
-        case Property::kK_OS_DYN_KESSELHYSTERESE_ZEIT: std::strcpy(buffer,"K_OS_DYN_KESSELHYSTERESE_ZEIT"); break;
-        case Property::kK_OS_DYN_KESSELHYSTERESE_DELTA: std::strcpy(buffer,"K_OS_DYN_KESSELHYSTERESE_DELTA"); break;
-        case Property::kK_OS_WARMWASSER_HYSTERESE: std::strcpy(buffer,"K_OS_WARMWASSER_HYSTERESE"); break;
-        case Property::kK_OS_TOLERANZZEIT_SW_KONTROLLE: std::strcpy(buffer,"K_OS_TOLERANZZEIT_SW_KONTROLLE"); break;
-        case Property::kK_OS_TOLERANZZEIT_NON_ZERO_CHECK: std::strcpy(buffer,"K_OS_TOLERANZZEIT_NON_ZERO_CHECK"); break;
-        case Property::kK_OS_LEISTUNG_KASKADENRELAIS_EIN: std::strcpy(buffer,"K_OS_LEISTUNG_KASKADENRELAIS_EIN"); break;
-        case Property::kK_OS_AUSSCHALTVERZ_KASKADENRELAIS: std::strcpy(buffer,"K_OS_AUSSCHALTVERZ_KASKADENRELAIS"); break;
-        case Property::kK_OS_FS_OPTIONEN: std::strcpy(buffer,"K_OS_FS_OPTIONEN"); break;
-        case Property::kK_OS_FS_GEBLAESEREGELUNG: std::strcpy(buffer,"K_OS_FS_GEBLAESEREGELUNG"); break;
-        case Property::kK_OS_FS_VORSPUELZEIT: std::strcpy(buffer,"K_OS_FS_VORSPUELZEIT"); break;
-        case Property::kK_OS_FS_SICHERHEITSZEIT: std::strcpy(buffer,"K_OS_FS_SICHERHEITSZEIT"); break;
-        case Property::kK_OS_FS_NACHSPUELZEIT: std::strcpy(buffer,"K_OS_FS_NACHSPUELZEIT"); break;
-        case Property::kK_OS_FS_VORZUENDZEIT: std::strcpy(buffer,"K_OS_FS_VORZUENDZEIT"); break;
-        case Property::kK_OS_FS_FLAMMENSTABILISIERUNGSZEIT: std::strcpy(buffer,"K_OS_FS_FLAMMENSTABILISIERUNGSZEIT"); break;
-        case Property::kK_OS_FS_ZUENDDREHZAHL: std::strcpy(buffer,"K_OS_FS_ZUENDDREHZAHL"); break;
-        case Property::kK_OS_FS_VORSPUELDREHZAHL: std::strcpy(buffer,"K_OS_FS_VORSPUELDREHZAHL"); break;
-        case Property::kK_OS_FS_NACHSPUELDREHZAHL: std::strcpy(buffer,"K_OS_FS_NACHSPUELDREHZAHL"); break;
-        case Property::kK_OS_FS_ANZAHL_STARTVERSUCHE: std::strcpy(buffer,"K_OS_FS_ANZAHL_STARTVERSUCHE"); break;
-        case Property::kK_OS_FS_MINIMALE_DREHZAHL: std::strcpy(buffer,"K_OS_FS_MINIMALE_DREHZAHL"); break;
-        case Property::kK_OS_FS_MAXIMALE_DREHZAHL: std::strcpy(buffer,"K_OS_FS_MAXIMALE_DREHZAHL"); break;
-        case Property::kK_OS_FS_STB_KESSELTEMPERATUR: std::strcpy(buffer,"K_OS_FS_STB_KESSELTEMPERATUR"); break;
-        case Property::kK_OS_FS_STW_KESSELTEMPERATUR: std::strcpy(buffer,"K_OS_FS_STW_KESSELTEMPERATUR"); break;
-        case Property::kK_OS_FS_ASTB_ABSCHALTTEMPERATUR_ABGAS: std::strcpy(buffer,"K_OS_FS_ASTB_ABSCHALTTEMPERATUR_ABGAS"); break;
-        case Property::kK_OS_FS_OFFSET_FLAMMENVERSTAERKER: std::strcpy(buffer,"K_OS_FS_OFFSET_FLAMMENVERSTAERKER"); break;
-        case Property::kK_OS_FS_ABSCHALTSCHWELLE_FLAMMENVERST: std::strcpy(buffer,"K_OS_FS_ABSCHALTSCHWELLE_FLAMMENVERST"); break;
-        case Property::kK_OS_FS_EINSCHALTSCHWELLE_FLAMMENVERST: std::strcpy(buffer,"K_OS_FS_EINSCHALTSCHWELLE_FLAMMENVERST"); break;
-        case Property::kK_OS_FS_MAXIMALE_DREHZAHLGRENZE: std::strcpy(buffer,"K_OS_FS_MAXIMALE_DREHZAHLGRENZE"); break;
-        case Property::kK_OS_FS_CRC: std::strcpy(buffer,"K_OS_FS_CRC"); break;
-        case Property::kK_OS_DONGLE_NR_LO: std::strcpy(buffer,"K_OS_DONGLE_NR_LO"); break;
-        case Property::kK_OS_DONGLE_NR_HI: std::strcpy(buffer,"K_OS_DONGLE_NR_HI"); break;
-        case Property::kK_OS_FIRMWARE_01: std::strcpy(buffer,"K_OS_FIRMWARE_01"); break;
-        case Property::kK_OS_FIRMWARE_02: std::strcpy(buffer,"K_OS_FIRMWARE_02"); break;
-        case Property::kK_OS_FIRMWARE_03: std::strcpy(buffer,"K_OS_FIRMWARE_03"); break;
-        case Property::kK_OS_FIRMWARE_04: std::strcpy(buffer,"K_OS_FIRMWARE_04"); break;
-        case Property::kK_OS_FIRMWARE_05: std::strcpy(buffer,"K_OS_FIRMWARE_05"); break;
-        case Property::kK_OS_BRENNERSTARTS_LO_MID: std::strcpy(buffer,"K_OS_BRENNERSTARTS_LO_MID"); break;
-        case Property::kK_OS_BRENNERSTARTS_HI: std::strcpy(buffer,"K_OS_BRENNERSTARTS_HI"); break;
-        case Property::kK_OS_NETZBETRIEB_LO_HI: std::strcpy(buffer,"K_OS_NETZBETRIEB_LO_HI"); break;
-        case Property::kK_OS_NETZBETRIEB_HI: std::strcpy(buffer,"K_OS_NETZBETRIEB_HI"); break;
-        case Property::kK_OS_BRENNERBETRIEB_LO_HI: std::strcpy(buffer,"K_OS_BRENNERBETRIEB_LO_HI"); break;
-        case Property::kK_OS_STOERMELDUNG_1: std::strcpy(buffer,"K_OS_STOERMELDUNG_1"); break;
-        case Property::kK_OS_STUNDEN_TAGESZAEHLER_1: std::strcpy(buffer,"K_OS_STUNDEN_TAGESZAEHLER_1"); break;
-        case Property::kK_OS_STOERMELDUNG_2: std::strcpy(buffer,"K_OS_STOERMELDUNG_2"); break;
-        case Property::kK_OS_STUNDEN_TAGESZAEHLER_2: std::strcpy(buffer,"K_OS_STUNDEN_TAGESZAEHLER_2"); break;
-        case Property::kK_OS_STOERMELDUNG_3: std::strcpy(buffer,"K_OS_STOERMELDUNG_3"); break;
-        case Property::kK_OS_STUNDEN_TAGESZAEHLER_3: std::strcpy(buffer,"K_OS_STUNDEN_TAGESZAEHLER_3"); break;
-        case Property::kK_OS_STOERMELDUNG_4: std::strcpy(buffer,"K_OS_STOERMELDUNG_4"); break;
-        case Property::kK_OS_STUNDEN_TAGESZAEHLER_4: std::strcpy(buffer,"K_OS_STUNDEN_TAGESZAEHLER_4"); break;
-        case Property::kK_OS_STOERMELDUNG_5: std::strcpy(buffer,"K_OS_STOERMELDUNG_5"); break;
-        case Property::kK_OS_STUNDEN_TAGESZAEHLER_5: std::strcpy(buffer,"K_OS_STUNDEN_TAGESZAEHLER_5"); break;
-        case Property::kK_OS_STOERMELDUNG_6: std::strcpy(buffer,"K_OS_STOERMELDUNG_6"); break;
-        case Property::kK_OS_STUNDEN_TAGESZAEHLER_6: std::strcpy(buffer,"K_OS_STUNDEN_TAGESZAEHLER_6"); break;
-        case Property::kK_OS_STOERMELDUNG_7: std::strcpy(buffer,"K_OS_STOERMELDUNG_7"); break;
-        case Property::kK_OS_STUNDEN_TAGESZAEHLER_7: std::strcpy(buffer,"K_OS_STUNDEN_TAGESZAEHLER_7"); break;
-        case Property::kK_OS_STOERMELDUNG_8: std::strcpy(buffer,"K_OS_STOERMELDUNG_8"); break;
-        case Property::kK_OS_STUNDEN_TAGESZAEHLER_8: std::strcpy(buffer,"K_OS_STUNDEN_TAGESZAEHLER_8"); break;
-        case Property::kK_OS_STOERMELDUNG_9: std::strcpy(buffer,"K_OS_STOERMELDUNG_9"); break;
-        case Property::kK_OS_STUNDEN_TAGESZAEHLER_9: std::strcpy(buffer,"K_OS_STUNDEN_TAGESZAEHLER_9"); break;
-        case Property::kK_OS_STOERMELDUNG_10: std::strcpy(buffer,"K_OS_STOERMELDUNG_10"); break;
-        case Property::kK_OS_STUNDEN_TAGESZAEHLER_10: std::strcpy(buffer,"K_OS_STUNDEN_TAGESZAEHLER_10"); break;
-        case Property::kK_OS_20S_ZAEHLER: std::strcpy(buffer,"K_OS_20S_ZAEHLER"); break;
-        case Property::kDEBUG_MEMORY_POINTER: std::strcpy(buffer,"DEBUG_MEMORY_POINTER"); break;
-        case Property::kDEBUG_MEMORY_WERT_INT8: std::strcpy(buffer,"DEBUG_MEMORY_WERT_INT8"); break;
-        case Property::kDEBUG_MEMORY_WERT_INT16: std::strcpy(buffer,"DEBUG_MEMORY_WERT_INT16"); break;
-        case Property::kDEBUG_EEPROM_POINTER: std::strcpy(buffer,"DEBUG_EEPROM_POINTER"); break;
-        case Property::kDEBUG_EEPROM_WERT_INT8: std::strcpy(buffer,"DEBUG_EEPROM_WERT_INT8"); break;
-        case Property::kDEBUG_EEPROM_WERT_INT16: std::strcpy(buffer,"DEBUG_EEPROM_WERT_INT16"); break;
-        case Property::kTARGET_COMPILING_DATE: std::strcpy(buffer,"TARGET_COMPILING_DATE"); break;
-        case Property::kTARGET_COMPILING_TIME: std::strcpy(buffer,"TARGET_COMPILING_TIME"); break;
-        case Property::kENTRIEGELN_FA: std::strcpy(buffer,"ENTRIEGELN_FA"); break;
-        case Property::kLAUFZEIT_DHC1: std::strcpy(buffer,"LAUFZEIT_DHC1"); break;
-        case Property::kLAUFZEIT_DHC2: std::strcpy(buffer,"LAUFZEIT_DHC2"); break;
-        case Property::kGEBLAESEKUEHLUNG: std::strcpy(buffer,"GEBLAESEKUEHLUNG"); break;
-        case Property::kVORLAUFSOLL_GEBLAESE: std::strcpy(buffer,"VORLAUFSOLL_GEBLAESE"); break;
-        case Property::kRAUMSOLL_GEBLAESE: std::strcpy(buffer,"RAUMSOLL_GEBLAESE"); break;
-        case Property::kHYSTERESE_GEBLAESE: std::strcpy(buffer,"HYSTERESE_GEBLAESE"); break;
-        case Property::kFLAECHENKUEHLUNG: std::strcpy(buffer,"FLAECHENKUEHLUNG"); break;
-        case Property::kVORLAUFSOLL_FLAECHE: std::strcpy(buffer,"VORLAUFSOLL_FLAECHE"); break;
-        case Property::kRAUMSOLL_FLAECHE: std::strcpy(buffer,"RAUMSOLL_FLAECHE"); break;
-        case Property::kHYSTERESE_FLAECHE: std::strcpy(buffer,"HYSTERESE_FLAECHE"); break;
-        case Property::kWWKORREKTUR: std::strcpy(buffer,"WWKORREKTUR"); break;
-        case Property::kTAUPUNKT_TEMP: std::strcpy(buffer,"TAUPUNKT_TEMP"); break;
-        case Property::kHEISSGAS_TEMP: std::strcpy(buffer,"HEISSGAS_TEMP"); break;
-        case Property::kHDSENSOR_TEMP: std::strcpy(buffer,"HDSENSOR_TEMP"); break;
-        case Property::kTASTENSPERRE: std::strcpy(buffer,"TASTENSPERRE"); break;
-        case Property::kMASCHINENDRUCK: std::strcpy(buffer,"MASCHINENDRUCK"); break;
-        case Property::kEXT_RAUMFUEHLER: std::strcpy(buffer,"EXT_RAUMFUEHLER"); break;
-        case Property::kWARTUNGSMELDUNGSZEIT: std::strcpy(buffer,"WARTUNGSMELDUNGSZEIT"); break;
-        case Property::kGEBLAESE_ZUENDDREHZAHL: std::strcpy(buffer,"GEBLAESE_ZUENDDREHZAHL"); break;
-        case Property::kGEBLAESE_VORSPUELDREHZAHL: std::strcpy(buffer,"GEBLAESE_VORSPUELDREHZAHL"); break;
-        case Property::kMIN_DURCHFLUSS_FA: std::strcpy(buffer,"MIN_DURCHFLUSS_FA"); break;
-        case Property::kDURCHFLUSS_SCHUTZ_FA: std::strcpy(buffer,"DURCHFLUSS_SCHUTZ_FA"); break;
-        case Property::kHYSTERESE_MOD_KESSEL: std::strcpy(buffer,"HYSTERESE_MOD_KESSEL"); break;
-        case Property::kGERAETEFOLGE_1: std::strcpy(buffer,"GERAETEFOLGE_1"); break;
-        case Property::kGERAETEFOLGE_2: std::strcpy(buffer,"GERAETEFOLGE_2"); break;
-        case Property::kGERAETEFOLGE_3: std::strcpy(buffer,"GERAETEFOLGE_3"); break;
-        case Property::kGERAETEFOLGE_4: std::strcpy(buffer,"GERAETEFOLGE_4"); break;
-        case Property::kSAMMLERKONSTANT_TEMP: std::strcpy(buffer,"SAMMLERKONSTANT_TEMP"); break;
-        case Property::kUMSCHALTUNG_SPEICHERVORRANG: std::strcpy(buffer,"UMSCHALTUNG_SPEICHERVORRANG"); break;
-        case Property::kDT_MAX_PARALLELBETRIEB: std::strcpy(buffer,"DT_MAX_PARALLELBETRIEB"); break;
-        case Property::kOFFSET_TIME_MISCHERRELAIS: std::strcpy(buffer,"OFFSET_TIME_MISCHERRELAIS"); break;
-        case Property::kSYSTEMAUSWAHL: std::strcpy(buffer,"SYSTEMAUSWAHL"); break;
-        case Property::kTEMPERATURWAECHTER_TEMP: std::strcpy(buffer,"TEMPERATURWAECHTER_TEMP"); break;
-        case Property::kGESPEICHERTE_FEHLER_LOESCHEN: std::strcpy(buffer,"GESPEICHERTE_FEHLER_LOESCHEN"); break;
-        case Property::kFEHLERSTATISTIK_FELDINDEX: std::strcpy(buffer,"FEHLERSTATISTIK_FELDINDEX"); break;
-        case Property::kFEHLERSTATISTIK_FEHLERNUMMER: std::strcpy(buffer,"FEHLERSTATISTIK_FEHLERNUMMER"); break;
-        case Property::kFEHLERSTATISTIK_FEHLERANZAHL: std::strcpy(buffer,"FEHLERSTATISTIK_FEHLERANZAHL"); break;
-        case Property::kWW_ECO: std::strcpy(buffer,"WW_ECO"); break;
-        case Property::kANZEIGE_HEIZPROG_NACH_HEIZKREIS: std::strcpy(buffer,"ANZEIGE_HEIZPROG_NACH_HEIZKREIS"); break;
-        case Property::kSAMMEL_SOLAR_STATUS: std::strcpy(buffer,"SAMMEL_SOLAR_STATUS"); break;
-        case Property::kMODULATION_SOLLWERT_SOLAR_1: std::strcpy(buffer,"MODULATION_SOLLWERT_SOLAR_1"); break;
-        case Property::kMODULATION_SOLLWERT_SOLAR_2: std::strcpy(buffer,"MODULATION_SOLLWERT_SOLAR_2"); break;
-        case Property::kMIN_TEMP_KESSEL_HEIZBETRIEB: std::strcpy(buffer,"MIN_TEMP_KESSEL_HEIZBETRIEB"); break;
-        case Property::kMAX_TEMP_KESSEL_HEIZBETRIEB: std::strcpy(buffer,"MAX_TEMP_KESSEL_HEIZBETRIEB"); break;
-        case Property::kHZK_PUMPENDREHZAHL_SOLLWERT: std::strcpy(buffer,"HZK_PUMPENDREHZAHL_SOLLWERT"); break;
-        case Property::kWEICHENISTTEMP: std::strcpy(buffer,"WEICHENISTTEMP"); break;
-        case Property::kKUEHLMODE: std::strcpy(buffer,"KUEHLMODE"); break;
-        case Property::kKUEHLDYNAMIK_FLAECHE: std::strcpy(buffer,"KUEHLDYNAMIK_FLAECHE"); break;
-        case Property::kKUEHLDYNAMIK_GEBLAESE: std::strcpy(buffer,"KUEHLDYNAMIK_GEBLAESE"); break;
-        case Property::kMIN_WW_TEMP: std::strcpy(buffer,"MIN_WW_TEMP"); break;
-        case Property::kRAUMEINFLUSS_PAR_ON_OFF: std::strcpy(buffer,"RAUMEINFLUSS_PAR_ON_OFF"); break;
-        case Property::kRUECKLAUFKONFIGURATION: std::strcpy(buffer,"RUECKLAUFKONFIGURATION"); break;
-        case Property::kBYPASSPUMPEN_STATUS: std::strcpy(buffer,"BYPASSPUMPEN_STATUS"); break;
-        case Property::kSPG_KURVE: std::strcpy(buffer,"SPG_KURVE"); break;
-        case Property::kSPG_KURVE_U1: std::strcpy(buffer,"SPG_KURVE_U1"); break;
-        case Property::kSPG_KURVE_U2: std::strcpy(buffer,"SPG_KURVE_U2"); break;
-        case Property::kSPG_KURVE_T1: std::strcpy(buffer,"SPG_KURVE_T1"); break;
-        case Property::kSPG_KURVE_T2: std::strcpy(buffer,"SPG_KURVE_T2"); break;
-        case Property::kSPG_KURVE_U_AUS: std::strcpy(buffer,"SPG_KURVE_U_AUS"); break;
-        case Property::kWE1_TYP: std::strcpy(buffer,"WE1_TYP"); break;
-        case Property::kWE_REGELUNGSTYP: std::strcpy(buffer,"WE_REGELUNGSTYP"); break;
-        case Property::kWE1_PELLET: std::strcpy(buffer,"WE1_PELLET"); break;
-        case Property::kWE1_BUS: std::strcpy(buffer,"WE1_BUS"); break;
-        case Property::kWE2_TYP: std::strcpy(buffer,"WE2_TYP"); break;
-        case Property::kHZ_PUFFER: std::strcpy(buffer,"HZ_PUFFER"); break;
-        case Property::kWE2_SPEICHER: std::strcpy(buffer,"WE2_SPEICHER"); break;
-        case Property::kWE2_MAXTEMP: std::strcpy(buffer,"WE2_MAXTEMP"); break;
-        case Property::kWE2_MINTEMP: std::strcpy(buffer,"WE2_MINTEMP"); break;
-        case Property::kKESSELMODGRAD_BEI_WW: std::strcpy(buffer,"KESSELMODGRAD_BEI_WW"); break;
-        case Property::kMIN_WE_MODGRAD: std::strcpy(buffer,"MIN_WE_MODGRAD"); break;
-        case Property::kTN_KASKADE: std::strcpy(buffer,"TN_KASKADE"); break;
-        case Property::kQUOTIENT_KASKADE_AUF: std::strcpy(buffer,"QUOTIENT_KASKADE_AUF"); break;
-        case Property::kQUOTIENT_KASKADE_AB: std::strcpy(buffer,"QUOTIENT_KASKADE_AB"); break;
-        case Property::kANZAHL_START_KESSEL: std::strcpy(buffer,"ANZAHL_START_KESSEL"); break;
-        case Property::kAKTIVE_FOLGE: std::strcpy(buffer,"AKTIVE_FOLGE"); break;
-        case Property::kWARTUNG_BETRIEBS_STD: std::strcpy(buffer,"WARTUNG_BETRIEBS_STD"); break;
-        case Property::kBUSABSCHLUSS: std::strcpy(buffer,"BUSABSCHLUSS"); break;
-        case Property::kFUNKTION_MFR_INDEX: std::strcpy(buffer,"FUNKTION_MFR_INDEX"); break;
-        case Property::kFKT_MFR_FUNKTION: std::strcpy(buffer,"FKT_MFR_FUNKTION"); break;
-        case Property::kFKT_MFR_SCHALTTEMP: std::strcpy(buffer,"FKT_MFR_SCHALTTEMP"); break;
-        case Property::kFKT_MFR_HYSTERESE: std::strcpy(buffer,"FKT_MFR_HYSTERESE"); break;
-        case Property::kBRENNER_INDEX: std::strcpy(buffer,"BRENNER_INDEX"); break;
-        case Property::kBRENNER_LEISTUNG: std::strcpy(buffer,"BRENNER_LEISTUNG"); break;
-        case Property::kBRENNER_STARTS: std::strcpy(buffer,"BRENNER_STARTS"); break;
-        case Property::kBRENNER_LAUFZEIT: std::strcpy(buffer,"BRENNER_LAUFZEIT"); break;
-        case Property::kABGELAUFENE_WARTUNGSZEIT: std::strcpy(buffer,"ABGELAUFENE_WARTUNGSZEIT"); break;
-        case Property::kPUMPENSTOPP_MIT_RAUMREGLER: std::strcpy(buffer,"PUMPENSTOPP_MIT_RAUMREGLER"); break;
-        case Property::kABSENKSTOP: std::strcpy(buffer,"ABSENKSTOP"); break;
-        case Property::kAUSSENTEMP_MAX: std::strcpy(buffer,"AUSSENTEMP_MAX"); break;
-        case Property::kAUSSENTEMP_MIN: std::strcpy(buffer,"AUSSENTEMP_MIN"); break;
-        case Property::kANZAHL_STARTVERSUCHE: std::strcpy(buffer,"ANZAHL_STARTVERSUCHE"); break;
-        case Property::kFA_STATUS: std::strcpy(buffer,"FA_STATUS"); break;
-        case Property::kFERNBEDIENUNG: std::strcpy(buffer,"FERNBEDIENUNG"); break;
-        case Property::kWW_DURCHLADEN: std::strcpy(buffer,"WW_DURCHLADEN"); break;
-        case Property::kEXT_SOLLTEMP: std::strcpy(buffer,"EXT_SOLLTEMP"); break;
-        case Property::kRUECKLAUFISTTEMP_2: std::strcpy(buffer,"RUECKLAUFISTTEMP_2"); break;
-        case Property::kANFORDERUNG_KONSTANTTEMPERATUR: std::strcpy(buffer,"ANFORDERUNG_KONSTANTTEMPERATUR"); break;
-        case Property::kMATERIALNUMMER_LOW: std::strcpy(buffer,"MATERIALNUMMER_LOW"); break;
-        case Property::kMATERIALNUMMER_HIGH: std::strcpy(buffer,"MATERIALNUMMER_HIGH"); break;
-        case Property::kPUMPENDREHZAHL_HEIZEN : std::strcpy(buffer,"PUMPENDREHZAHL_HEIZEN "); break;
-        case Property::kLEISTUNG_PUMPE_HZK: std::strcpy(buffer,"LEISTUNG_PUMPE_HZK"); break;
-        case Property::kLEISTUNG_PUMPE_SPL: std::strcpy(buffer,"LEISTUNG_PUMPE_SPL"); break;
-        case Property::kLEISTUNG_PUMPE_WW_PRI: std::strcpy(buffer,"LEISTUNG_PUMPE_WW_PRI"); break;
-        case Property::kSOLARPUMPEN_STATUS_1: std::strcpy(buffer,"SOLARPUMPEN_STATUS_1"); break;
-        case Property::kSOLARPUMPEN_STATUS_2: std::strcpy(buffer,"SOLARPUMPEN_STATUS_2"); break;
-        case Property::kLADEPUMPE_PUFFER_1: std::strcpy(buffer,"LADEPUMPE_PUFFER_1"); break;
-        case Property::kLADEPUMPE_PUFFER_2: std::strcpy(buffer,"LADEPUMPE_PUFFER_2"); break;
-        case Property::kLADEPUMPE_PUFFER_3: std::strcpy(buffer,"LADEPUMPE_PUFFER_3"); break;
-        case Property::kVOLUMENSTROM_SOLARPUMPE_1: std::strcpy(buffer,"VOLUMENSTROM_SOLARPUMPE_1"); break;
-        case Property::kVOLUMENSTROM_SOLARPUMPE_2: std::strcpy(buffer,"VOLUMENSTROM_SOLARPUMPE_2"); break;
-        case Property::kSOLARPUMPE_DREHZAHL_SOLL_1: std::strcpy(buffer,"SOLARPUMPE_DREHZAHL_SOLL_1"); break;
-        case Property::kSOLARPUMPE_DREHZAHL_MAX_1: std::strcpy(buffer,"SOLARPUMPE_DREHZAHL_MAX_1"); break;
-        case Property::kSOLARPUMPE_DREHZAHL_MIN_1: std::strcpy(buffer,"SOLARPUMPE_DREHZAHL_MIN_1"); break;
-        case Property::kSOLARPUMPE_DREHZAHLDYNAMIK_1: std::strcpy(buffer,"SOLARPUMPE_DREHZAHLDYNAMIK_1"); break;
-        case Property::kKOLLEKTORANZAHL: std::strcpy(buffer,"KOLLEKTORANZAHL"); break;
-        case Property::kPRIO_1_PUFFER: std::strcpy(buffer,"PRIO_1_PUFFER"); break;
-        case Property::kPRIO_2_PUFFER: std::strcpy(buffer,"PRIO_2_PUFFER"); break;
-        case Property::kPRIO_3_PUFFER: std::strcpy(buffer,"PRIO_3_PUFFER"); break;
-        case Property::kWE_GEFUNDEN: std::strcpy(buffer,"WE_GEFUNDEN"); break;
-        case Property::kWE_KONFIG_OK: std::strcpy(buffer,"WE_KONFIG_OK"); break;
-        case Property::kBUS_SCAN: std::strcpy(buffer,"BUS_SCAN"); break;
-        case Property::kWE2_ISTTEMP: std::strcpy(buffer,"WE2_ISTTEMP"); break;
-        case Property::kWE_KONFIGURATION: std::strcpy(buffer,"WE_KONFIGURATION"); break;
-        case Property::kVOLUMENSTROM_PUMPE_HZK: std::strcpy(buffer,"VOLUMENSTROM_PUMPE_HZK"); break;
-        case Property::kVOLUMENSTROM_PUMPE_SPL: std::strcpy(buffer,"VOLUMENSTROM_PUMPE_SPL"); break;
-        case Property::kVOLUMENSTROM_PUMPE_WW_PRI: std::strcpy(buffer,"VOLUMENSTROM_PUMPE_WW_PRI"); break;
-        case Property::kSOLAR_WOCHENERTRAG_WH: std::strcpy(buffer,"SOLAR_WOCHENERTRAG_WH"); break;
-        case Property::kSOLAR_WOCHENERTRAG_KWH: std::strcpy(buffer,"SOLAR_WOCHENERTRAG_KWH"); break;
-        case Property::kSOLAR_WOCHENERTRAG_MWH: std::strcpy(buffer,"SOLAR_WOCHENERTRAG_MWH"); break;
-        case Property::kSOLAR_JAHRESERTRAG_WH: std::strcpy(buffer,"SOLAR_JAHRESERTRAG_WH"); break;
-        case Property::kSOLAR_JAHRESERTRAG_KWH: std::strcpy(buffer,"SOLAR_JAHRESERTRAG_KWH"); break;
-        case Property::kSOLAR_JAHRESERTRAG_MWH: std::strcpy(buffer,"SOLAR_JAHRESERTRAG_MWH"); break;
-        case Property::kSOLAR_UMSCHALTVENTIL_1: std::strcpy(buffer,"SOLAR_UMSCHALTVENTIL_1"); break;
-        case Property::kSOLAR_UMSCHALTVENTIL_2: std::strcpy(buffer,"SOLAR_UMSCHALTVENTIL_2"); break;
-        case Property::kSOLAR_UMSCHALTVENTIL_3: std::strcpy(buffer,"SOLAR_UMSCHALTVENTIL_3"); break;
-        case Property::kSOLARPUMPENDREHZAL_1: std::strcpy(buffer,"SOLARPUMPENDREHZAL_1"); break;
-        case Property::kSOLARPUMPENDREHZAL_2: std::strcpy(buffer,"SOLARPUMPENDREHZAL_2"); break;
-        case Property::kSOLARPUMPENDREHZAL_3: std::strcpy(buffer,"SOLARPUMPENDREHZAL_3"); break;
-        case Property::kSOLAR_BETRIEBSSTATUS: std::strcpy(buffer,"SOLAR_BETRIEBSSTATUS"); break;
-        case Property::kANFORDERUNG_NACHHEIZUNG: std::strcpy(buffer,"ANFORDERUNG_NACHHEIZUNG"); break;
-        case Property::kMODUL_IDENTIFIKATION: std::strcpy(buffer,"MODUL_IDENTIFIKATION"); break;
-        case Property::kAEE_STATUS: std::strcpy(buffer,"AEE_STATUS"); break;
-        case Property::kKOLLEKTORSCHUTZFUNKTION: std::strcpy(buffer,"KOLLEKTORSCHUTZFUNKTION"); break;
-        case Property::kKOLLEKTORMAXTEMP: std::strcpy(buffer,"KOLLEKTORMAXTEMP"); break;
-        case Property::kSOLARSPEICHER_ZUORDNUNG: std::strcpy(buffer,"SOLARSPEICHER_ZUORDNUNG"); break;
-        case Property::kDURCHFLUSSMENGE_SOLAR: std::strcpy(buffer,"DURCHFLUSSMENGE_SOLAR"); break;
-        case Property::kSOLARPUMPENBETRIEBSSTUNDEN1: std::strcpy(buffer,"SOLARPUMPENBETRIEBSSTUNDEN1"); break;
-        case Property::kSOLARPUMPENBETRIEBSSTUNDEN2: std::strcpy(buffer,"SOLARPUMPENBETRIEBSSTUNDEN2"); break;
-        case Property::kSOLARRUECKLAUFTEMP: std::strcpy(buffer,"SOLARRUECKLAUFTEMP"); break;
-        case Property::kSOLAR_MONATRSERTRAG_W_1: std::strcpy(buffer,"SOLAR_MONATRSERTRAG_W_1"); break;
-        case Property::kSOLAR_MONATRSERTRAG_W_2: std::strcpy(buffer,"SOLAR_MONATRSERTRAG_W_2"); break;
-        case Property::kSOLAR_MONATRSERTRAG_W_3: std::strcpy(buffer,"SOLAR_MONATRSERTRAG_W_3"); break;
-        case Property::kSOLAR_MONATRSERTRAG_W_4: std::strcpy(buffer,"SOLAR_MONATRSERTRAG_W_4"); break;
-        case Property::kSOLAR_MONATRSERTRAG_W_5: std::strcpy(buffer,"SOLAR_MONATRSERTRAG_W_5"); break;
-        case Property::kSOLAR_MONATRSERTRAG_W_6: std::strcpy(buffer,"SOLAR_MONATRSERTRAG_W_6"); break;
-        case Property::kSOLAR_MONATRSERTRAG_W_7: std::strcpy(buffer,"SOLAR_MONATRSERTRAG_W_7"); break;
-        case Property::kSOLAR_MONATRSERTRAG_W_8: std::strcpy(buffer,"SOLAR_MONATRSERTRAG_W_8"); break;
-        case Property::kSOLAR_MONATRSERTRAG_W_9: std::strcpy(buffer,"SOLAR_MONATRSERTRAG_W_9"); break;
-        case Property::kSOLAR_MONATRSERTRAG_W_10: std::strcpy(buffer,"SOLAR_MONATRSERTRAG_W_10"); break;
-        case Property::kSOLAR_MONATRSERTRAG_W_11: std::strcpy(buffer,"SOLAR_MONATRSERTRAG_W_11"); break;
-        case Property::kSOLAR_MONATRSERTRAG_W_12: std::strcpy(buffer,"SOLAR_MONATRSERTRAG_W_12"); break;
-        case Property::kSOLAR_MONATRSERTRAG_KW_1: std::strcpy(buffer,"SOLAR_MONATRSERTRAG_KW_1"); break;
-        case Property::kSOLAR_MONATRSERTRAG_KW_2: std::strcpy(buffer,"SOLAR_MONATRSERTRAG_KW_2"); break;
-        case Property::kSOLAR_MONATRSERTRAG_KW_3: std::strcpy(buffer,"SOLAR_MONATRSERTRAG_KW_3"); break;
-        case Property::kSOLAR_MONATRSERTRAG_KW_4: std::strcpy(buffer,"SOLAR_MONATRSERTRAG_KW_4"); break;
-        case Property::kSOLAR_MONATRSERTRAG_KW_5: std::strcpy(buffer,"SOLAR_MONATRSERTRAG_KW_5"); break;
-        case Property::kSOLAR_MONATRSERTRAG_KW_6: std::strcpy(buffer,"SOLAR_MONATRSERTRAG_KW_6"); break;
-        case Property::kSOLAR_MONATRSERTRAG_KW_7: std::strcpy(buffer,"SOLAR_MONATRSERTRAG_KW_7"); break;
-        case Property::kSOLAR_MONATRSERTRAG_KW_8: std::strcpy(buffer,"SOLAR_MONATRSERTRAG_KW_8"); break;
-        case Property::kSOLAR_MONATRSERTRAG_KW_9: std::strcpy(buffer,"SOLAR_MONATRSERTRAG_KW_9"); break;
-        case Property::kSOLAR_MONATRSERTRAG_KW_10: std::strcpy(buffer,"SOLAR_MONATRSERTRAG_KW_10"); break;
-        case Property::kSOLAR_MONATRSERTRAG_KW_11: std::strcpy(buffer,"SOLAR_MONATRSERTRAG_KW_11"); break;
-        case Property::kSOLAR_MONATRSERTRAG_KW_12: std::strcpy(buffer,"SOLAR_MONATRSERTRAG_KW_12"); break;
-        case Property::kSOLAR_MONATRSERTRAG_MW_1: std::strcpy(buffer,"SOLAR_MONATRSERTRAG_MW_1"); break;
-        case Property::kSOLAR_MONATRSERTRAG_MW_2: std::strcpy(buffer,"SOLAR_MONATRSERTRAG_MW_2"); break;
-        case Property::kSOLAR_MONATRSERTRAG_MW_3: std::strcpy(buffer,"SOLAR_MONATRSERTRAG_MW_3"); break;
-        case Property::kSOLAR_MONATRSERTRAG_MW_4: std::strcpy(buffer,"SOLAR_MONATRSERTRAG_MW_4"); break;
-        case Property::kSOLAR_MONATRSERTRAG_MW_5: std::strcpy(buffer,"SOLAR_MONATRSERTRAG_MW_5"); break;
-        case Property::kSOLAR_MONATRSERTRAG_MW_6: std::strcpy(buffer,"SOLAR_MONATRSERTRAG_MW_6"); break;
-        case Property::kSOLAR_MONATRSERTRAG_MW_7: std::strcpy(buffer,"SOLAR_MONATRSERTRAG_MW_7"); break;
-        case Property::kSOLAR_MONATRSERTRAG_MW_8: std::strcpy(buffer,"SOLAR_MONATRSERTRAG_MW_8"); break;
-        case Property::kSOLAR_MONATRSERTRAG_MW_9: std::strcpy(buffer,"SOLAR_MONATRSERTRAG_MW_9"); break;
-        case Property::kSOLAR_MONATRSERTRAG_MW_10: std::strcpy(buffer,"SOLAR_MONATRSERTRAG_MW_10"); break;
-        case Property::kSOLAR_MONATRSERTRAG_MW_11: std::strcpy(buffer,"SOLAR_MONATRSERTRAG_MW_11"); break;
-        case Property::kSOLAR_MONATRSERTRAG_MW_12: std::strcpy(buffer,"SOLAR_MONATRSERTRAG_MW_12"); break;
-        case Property::kSOLAR_JAHRESERTRAG_W_1: std::strcpy(buffer,"SOLAR_JAHRESERTRAG_W_1"); break;
-        case Property::kSOLAR_JAHRESERTRAG_W_2: std::strcpy(buffer,"SOLAR_JAHRESERTRAG_W_2"); break;
-        case Property::kSOLAR_JAHRESERTRAG_W_3: std::strcpy(buffer,"SOLAR_JAHRESERTRAG_W_3"); break;
-        case Property::kSOLAR_JAHRESERTRAG_W_4: std::strcpy(buffer,"SOLAR_JAHRESERTRAG_W_4"); break;
-        case Property::kSOLAR_JAHRESERTRAG_W_5: std::strcpy(buffer,"SOLAR_JAHRESERTRAG_W_5"); break;
-        case Property::kSOLAR_JAHRESERTRAG_KW_1: std::strcpy(buffer,"SOLAR_JAHRESERTRAG_KW_1"); break;
-        case Property::kSOLAR_JAHRESERTRAG_KW_2: std::strcpy(buffer,"SOLAR_JAHRESERTRAG_KW_2"); break;
-        case Property::kSOLAR_JAHRESERTRAG_KW_3: std::strcpy(buffer,"SOLAR_JAHRESERTRAG_KW_3"); break;
-        case Property::kSOLAR_JAHRESERTRAG_KW_4: std::strcpy(buffer,"SOLAR_JAHRESERTRAG_KW_4"); break;
-        case Property::kSOLAR_JAHRESERTRAG_KW_5: std::strcpy(buffer,"SOLAR_JAHRESERTRAG_KW_5"); break;
-        case Property::kSOLAR_JAHRESERTRAG_MW_1: std::strcpy(buffer,"SOLAR_JAHRESERTRAG_MW_1"); break;
-        case Property::kSOLAR_JAHRESERTRAG_MW_2: std::strcpy(buffer,"SOLAR_JAHRESERTRAG_MW_2"); break;
-        case Property::kSOLAR_JAHRESERTRAG_MW_3: std::strcpy(buffer,"SOLAR_JAHRESERTRAG_MW_3"); break;
-        case Property::kSOLAR_JAHRESERTRAG_MW_4: std::strcpy(buffer,"SOLAR_JAHRESERTRAG_MW_4"); break;
-        case Property::kSOLAR_JAHRESERTRAG_MW_5: std::strcpy(buffer,"SOLAR_JAHRESERTRAG_MW_5"); break;
-        case Property::kSPARBETRIEB_BIVALENZ: std::strcpy(buffer,"SPARBETRIEB_BIVALENZ"); break;
-        case Property::kWARTEZEIT_DHC: std::strcpy(buffer,"WARTEZEIT_DHC"); break;
-        case Property::kSTUFEN_DHC: std::strcpy(buffer,"STUFEN_DHC"); break;
-        case Property::kFREIGEGEBENE_DHC_STUFEN: std::strcpy(buffer,"FREIGEGEBENE_DHC_STUFEN"); break;
-        case Property::kVERDAMPFERTEMP_LUEFTUNG: std::strcpy(buffer,"VERDAMPFERTEMP_LUEFTUNG"); break;
-        case Property::kFROSTSCHUTZTEMP_LUEFTUNG: std::strcpy(buffer,"FROSTSCHUTZTEMP_LUEFTUNG"); break;
-        case Property::kMINDESTVOLUMENSTROM_LUEFTUNG: std::strcpy(buffer,"MINDESTVOLUMENSTROM_LUEFTUNG"); break;
-        case Property::kABSENKVOLUMENSTROM_LUEFTUNG: std::strcpy(buffer,"ABSENKVOLUMENSTROM_LUEFTUNG"); break;
-        case Property::kNORMALVOLUMENSTROM_LUEFTUNG: std::strcpy(buffer,"NORMALVOLUMENSTROM_LUEFTUNG"); break;
-        case Property::kPARTYVOLUMENSTROM_LUEFTUNG: std::strcpy(buffer,"PARTYVOLUMENSTROM_LUEFTUNG"); break;
-        case Property::kNACHTKUEHLUNG_LUEFTUNG: std::strcpy(buffer,"NACHTKUEHLUNG_LUEFTUNG"); break;
-        case Property::kSOMMERBETRIEB_LUEFTUNG: std::strcpy(buffer,"SOMMERBETRIEB_LUEFTUNG"); break;
-        case Property::kFILTER_RESET_NACH_LAUFZEIT: std::strcpy(buffer,"FILTER_RESET_NACH_LAUFZEIT"); break;
-        case Property::kINTEGRAL_REGELABWEICHUNG: std::strcpy(buffer,"INTEGRAL_REGELABWEICHUNG"); break;
-        case Property::kREGELABWEICHUNG: std::strcpy(buffer,"REGELABWEICHUNG"); break;
-        case Property::kPROGRAMMSCHALTER_LUEFTUNG: std::strcpy(buffer,"PROGRAMMSCHALTER_LUEFTUNG"); break;
-        case Property::kABLUFTTEMPERATUR_SOLL: std::strcpy(buffer,"ABLUFTTEMPERATUR_SOLL"); break;
-        case Property::kLAUFZEIT_DHC3: std::strcpy(buffer,"LAUFZEIT_DHC3"); break;
-        case Property::kLAUFZEIT_FILTER: std::strcpy(buffer,"LAUFZEIT_FILTER"); break;
-        case Property::kEINSCHALTTEMPERATUR_DIFFERENZ2: std::strcpy(buffer,"EINSCHALTTEMPERATUR_DIFFERENZ2"); break;
-        case Property::kAUSSCHALTTEMPERATUR_DIFFERENZ2: std::strcpy(buffer,"AUSSCHALTTEMPERATUR_DIFFERENZ2"); break;
-        case Property::kSOLARSPEICHER_ZUORDNUNG2: std::strcpy(buffer,"SOLARSPEICHER_ZUORDNUNG2"); break;
-        case Property::kDREHZAHLREGELUNG_SOLARPUMPE1: std::strcpy(buffer,"DREHZAHLREGELUNG_SOLARPUMPE1"); break;
-        case Property::kDREHZAHLREGELUNG_SOLARPUMPE2: std::strcpy(buffer,"DREHZAHLREGELUNG_SOLARPUMPE2"); break;
-        case Property::kBRENNERSPERRZEIT_BEI_RUECKLAUFANHEBUNG_SOLAR: std::strcpy(buffer,"BRENNERSPERRZEIT_BEI_RUECKLAUFANHEBUNG_SOLAR"); break;
-        case Property::kEINSCHALTDIFFERENZ_RUECKLAUFANHEBUNG_SOLAR: std::strcpy(buffer,"EINSCHALTDIFFERENZ_RUECKLAUFANHEBUNG_SOLAR"); break;
-        case Property::kAUSSCHALTDIFFERENZ_RUECKLAUFANHEBUNG_SOLAR: std::strcpy(buffer,"AUSSCHALTDIFFERENZ_RUECKLAUFANHEBUNG_SOLAR"); break;
-        case Property::kSPEICHERVORRANG_FUER_2_SPEICHER_SOLARANLAGEN: std::strcpy(buffer,"SPEICHERVORRANG_FUER_2_SPEICHER_SOLARANLAGEN"); break;
-        case Property::kSP_PARALLELBETR_TEMP_DIFF_SOLAR: std::strcpy(buffer,"SP_PARALLELBETR_TEMP_DIFF_SOLAR"); break;
-        case Property::kEINSCHALT_KOLLEKTEMP_BEI_SOLBYPASS_SCHALT: std::strcpy(buffer,"EINSCHALT_KOLLEKTEMP_BEI_SOLBYPASS_SCHALT"); break;
-        case Property::kSP_UMSCHICHTUNG_BEI_ANTILEG_BETRIEB: std::strcpy(buffer,"SP_UMSCHICHTUNG_BEI_ANTILEG_BETRIEB"); break;
-        case Property::kVERFLUESSIGERTEMP: std::strcpy(buffer,"VERFLUESSIGERTEMP"); break;
-        case Property::kOEL_VERBRAUCH_LOW: std::strcpy(buffer,"OEL_VERBRAUCH_LOW"); break;
-        case Property::kOEL_VERBRAUCH_HIGH: std::strcpy(buffer,"OEL_VERBRAUCH_HIGH"); break;
-        case Property::kMIN_MODULATIONSSTROM_ERDGAS: std::strcpy(buffer,"MIN_MODULATIONSSTROM_ERDGAS"); break;
-        case Property::kMAX_MODULATIONSSTROM_HEIZUNG_ERDGAS: std::strcpy(buffer,"MAX_MODULATIONSSTROM_HEIZUNG_ERDGAS"); break;
-        case Property::kMAX_MODULATIONSSTROM_WW_ERDGAS: std::strcpy(buffer,"MAX_MODULATIONSSTROM_WW_ERDGAS"); break;
-        case Property::kMIN_MODULATIONSSTROM_FLUESSIGGAS: std::strcpy(buffer,"MIN_MODULATIONSSTROM_FLUESSIGGAS"); break;
-        case Property::kMAX_MODULATIONSSTROM_HEIZUNG_FLUESSIGGAS: std::strcpy(buffer,"MAX_MODULATIONSSTROM_HEIZUNG_FLUESSIGGAS"); break;
-        case Property::kMAX_MODULATIONSSTROM_WW_FLUESSIGGAS: std::strcpy(buffer,"MAX_MODULATIONSSTROM_WW_FLUESSIGGAS"); break;
-        case Property::kPRUEFSTATUS: std::strcpy(buffer,"PRUEFSTATUS"); break;
-        case Property::kHARDWARE_NUMMER: std::strcpy(buffer,"HARDWARE_NUMMER"); break;
-        case Property::kGERAETEKONFIGURATION_3: std::strcpy(buffer,"GERAETEKONFIGURATION_3"); break;
-        case Property::kAFB_PROGRAMMSCHALTER: std::strcpy(buffer,"AFB_PROGRAMMSCHALTER"); break;
-        case Property::kAFB_VORHANDEN: std::strcpy(buffer,"AFB_VORHANDEN"); break;
-        case Property::kAFB_SOLLWERTVERSTELLUNG: std::strcpy(buffer,"AFB_SOLLWERTVERSTELLUNG"); break;
-        case Property::kAFB_TELEFONKONTAKT: std::strcpy(buffer,"AFB_TELEFONKONTAKT"); break;
-        case Property::kAFB_RAUMISTTEMPERATUR: std::strcpy(buffer,"AFB_RAUMISTTEMPERATUR"); break;
-        case Property::kK_OS_WEICHENREGLER_I_ANTEIL: std::strcpy(buffer,"K_OS_WEICHENREGLER_I_ANTEIL"); break;
-        case Property::kK_OS_WEICHENREGLER_P_ANTEIL: std::strcpy(buffer,"K_OS_WEICHENREGLER_P_ANTEIL"); break;
-        case Property::kK_OS_WARTEZEIT_NACH_VORSPUELEN: std::strcpy(buffer,"K_OS_WARTEZEIT_NACH_VORSPUELEN"); break;
-        case Property::kK_OS_KESSELLEISTUNG_PUMPENLEISTUNG_MAX: std::strcpy(buffer,"K_OS_KESSELLEISTUNG_PUMPENLEISTUNG_MAX"); break;
-        case Property::kK_OS_GEBLAESE_ABTASTRATE: std::strcpy(buffer,"K_OS_GEBLAESE_ABTASTRATE"); break;
-        case Property::kK_OS_ZUENDSTELLUNG: std::strcpy(buffer,"K_OS_ZUENDSTELLUNG"); break;
-        case Property::kK_FEHLERZAEHLER_01: std::strcpy(buffer,"K_FEHLERZAEHLER_01"); break;
-        case Property::kK_FEHLERZAEHLER_02: std::strcpy(buffer,"K_FEHLERZAEHLER_02"); break;
-        case Property::kK_FEHLERZAEHLER_03: std::strcpy(buffer,"K_FEHLERZAEHLER_03"); break;
-        case Property::kK_FEHLERZAEHLER_04: std::strcpy(buffer,"K_FEHLERZAEHLER_04"); break;
-        case Property::kK_FEHLERZAEHLER_05: std::strcpy(buffer,"K_FEHLERZAEHLER_05"); break;
-        case Property::kK_FEHLERZAEHLER_06: std::strcpy(buffer,"K_FEHLERZAEHLER_06"); break;
-        case Property::kK_FEHLERZAEHLER_07: std::strcpy(buffer,"K_FEHLERZAEHLER_07"); break;
-        case Property::kK_FEHLERZAEHLER_08: std::strcpy(buffer,"K_FEHLERZAEHLER_08"); break;
-        case Property::kK_FEHLERZAEHLER_09: std::strcpy(buffer,"K_FEHLERZAEHLER_09"); break;
-        case Property::kK_FEHLERZAEHLER_10: std::strcpy(buffer,"K_FEHLERZAEHLER_10"); break;
-        case Property::kK_FEHLERZAEHLER_11: std::strcpy(buffer,"K_FEHLERZAEHLER_11"); break;
-        case Property::kK_FEHLERZAEHLER_12: std::strcpy(buffer,"K_FEHLERZAEHLER_12"); break;
-        case Property::kK_FEHLERZAEHLER_13: std::strcpy(buffer,"K_FEHLERZAEHLER_13"); break;
-        case Property::kK_FEHLERZAEHLER_14: std::strcpy(buffer,"K_FEHLERZAEHLER_14"); break;
-        case Property::kK_FEHLERZAEHLER_15: std::strcpy(buffer,"K_FEHLERZAEHLER_15"); break;
-        case Property::kK_FEHLERZAEHLER_16: std::strcpy(buffer,"K_FEHLERZAEHLER_16"); break;
-        case Property::kK_FEHLERZAEHLER_17: std::strcpy(buffer,"K_FEHLERZAEHLER_17"); break;
-        case Property::kK_FEHLERZAEHLER_18: std::strcpy(buffer,"K_FEHLERZAEHLER_18"); break;
-        case Property::kK_FEHLERZAEHLER_19: std::strcpy(buffer,"K_FEHLERZAEHLER_19"); break;
-        case Property::kK_FEHLERZAEHLER_20: std::strcpy(buffer,"K_FEHLERZAEHLER_20"); break;
-        case Property::kK_FEHLERZAEHLER_21: std::strcpy(buffer,"K_FEHLERZAEHLER_21"); break;
-        case Property::kK_FEHLERZAEHLER_22: std::strcpy(buffer,"K_FEHLERZAEHLER_22"); break;
-        case Property::kK_FEHLERZAEHLER_23: std::strcpy(buffer,"K_FEHLERZAEHLER_23"); break;
-        case Property::kK_FEHLERZAEHLER_24: std::strcpy(buffer,"K_FEHLERZAEHLER_24"); break;
-        case Property::kK_FEHLERZAEHLER_25: std::strcpy(buffer,"K_FEHLERZAEHLER_25"); break;
-        case Property::kK_OS_STOERMELDUNG_POINTER: std::strcpy(buffer,"K_OS_STOERMELDUNG_POINTER"); break;
-        case Property::kK_OS_STOERMELDUNG_11: std::strcpy(buffer,"K_OS_STOERMELDUNG_11"); break;
-        case Property::kK_OS_STOERMELDUNG_12: std::strcpy(buffer,"K_OS_STOERMELDUNG_12"); break;
-        case Property::kK_OS_STOERMELDUNG_13: std::strcpy(buffer,"K_OS_STOERMELDUNG_13"); break;
-        case Property::kK_OS_STOERMELDUNG_14: std::strcpy(buffer,"K_OS_STOERMELDUNG_14"); break;
-        case Property::kK_OS_STOERMELDUNG_15: std::strcpy(buffer,"K_OS_STOERMELDUNG_15"); break;
-        case Property::kK_OS_STOERMELDUNG_16: std::strcpy(buffer,"K_OS_STOERMELDUNG_16"); break;
-        case Property::kK_OS_STOERMELDUNG_17: std::strcpy(buffer,"K_OS_STOERMELDUNG_17"); break;
-        case Property::kK_OS_STOERMELDUNG_18: std::strcpy(buffer,"K_OS_STOERMELDUNG_18"); break;
-        case Property::kK_OS_STOERMELDUNG_19: std::strcpy(buffer,"K_OS_STOERMELDUNG_19"); break;
-        case Property::kK_OS_STOERMELDUNG_20: std::strcpy(buffer,"K_OS_STOERMELDUNG_20"); break;
-        case Property::kK_OS_DUMMY: std::strcpy(buffer,"K_OS_DUMMY"); break;
-        case Property::kK_OS_STARTBEDINGUNGEN_1: std::strcpy(buffer,"K_OS_STARTBEDINGUNGEN_1"); break;
-        case Property::kK_OS_STARTBEDINGUNGEN_2: std::strcpy(buffer,"K_OS_STARTBEDINGUNGEN_2"); break;
-        case Property::kK_OS_STARTBEDINGUNGEN_3: std::strcpy(buffer,"K_OS_STARTBEDINGUNGEN_3"); break;
-        case Property::kK_OS_SAMLERIST_FUEHLER: std::strcpy(buffer,"K_OS_SAMLERIST_FUEHLER"); break;
-        case Property::kKESSELISTTEMP_2: std::strcpy(buffer,"KESSELISTTEMP_2"); break;
-        case Property::kWW_AUSLAUFTEMPERATUR: std::strcpy(buffer,"WW_AUSLAUFTEMPERATUR"); break;
-        case Property::kMODULATIONSSTROM_GASVENTIL: std::strcpy(buffer,"MODULATIONSSTROM_GASVENTIL"); break;
-        case Property::kMAX_VORVERLEGUNG_MIN: std::strcpy(buffer,"MAX_VORVERLEGUNG_MIN"); break;
-        case Property::kWE1_GRADIENTENUEBERWACHUNG: std::strcpy(buffer,"WE1_GRADIENTENUEBERWACHUNG"); break;
-        case Property::kWE2_GRADIENTENUEBERWACHUNG: std::strcpy(buffer,"WE2_GRADIENTENUEBERWACHUNG"); break;
-        case Property::kBUSKENNUNG_2: std::strcpy(buffer,"BUSKENNUNG_2"); break;
-        case Property::kBUSKENNUNG_3: std::strcpy(buffer,"BUSKENNUNG_3"); break;
-        case Property::kZIRKULATIONSTEMP: std::strcpy(buffer,"ZIRKULATIONSTEMP"); break;
-        case Property::kZUSCHALTSPERRE_KASKADE_PAR: std::strcpy(buffer,"ZUSCHALTSPERRE_KASKADE_PAR"); break;
-        case Property::kHYSTERESE_ZUSCHALTSPERRE: std::strcpy(buffer,"HYSTERESE_ZUSCHALTSPERRE"); break;
-        case Property::kKSOLL_RUECKLANHEB_HOLZKESSEL1: std::strcpy(buffer,"KSOLL_RUECKLANHEB_HOLZKESSEL1"); break;
-        case Property::kKSOLL_RUECKLANHEB_HYST1: std::strcpy(buffer,"KSOLL_RUECKLANHEB_HYST1"); break;
-        case Property::kKSOLL_RUECKLANHEB_HOLZKESSEL2: std::strcpy(buffer,"KSOLL_RUECKLANHEB_HOLZKESSEL2"); break;
-        case Property::kKSOLL_RUECKLANHEB_HYST2: std::strcpy(buffer,"KSOLL_RUECKLANHEB_HYST2"); break;
-        case Property::kLADEPUMPE_PUFFER_DREHZAL_1: std::strcpy(buffer,"LADEPUMPE_PUFFER_DREHZAL_1"); break;
-        case Property::kLADEPUMPE_PUFFER_DREHZAL_2: std::strcpy(buffer,"LADEPUMPE_PUFFER_DREHZAL_2"); break;
-        case Property::kLADEPUMPE_PUFFER_DREHZAL_3: std::strcpy(buffer,"LADEPUMPE_PUFFER_DREHZAL_3"); break;
-        case Property::kMISCHER_ABTASTZEIT: std::strcpy(buffer,"MISCHER_ABTASTZEIT"); break;
-        case Property::kMISCHER_BETRIEBSART: std::strcpy(buffer,"MISCHER_BETRIEBSART"); break;
-        case Property::kHD_EVE_GRENZWERT_VND: std::strcpy(buffer,"HD_EVE_GRENZWERT_VND"); break;
-        case Property::kANZAHL_KUEHLUNGSSTUFEN: std::strcpy(buffer,"ANZAHL_KUEHLUNGSSTUFEN"); break;
-        case Property::kKONFIGURATION_KUEHLUNG: std::strcpy(buffer,"KONFIGURATION_KUEHLUNG"); break;
-        case Property::kMISCHER_KP: std::strcpy(buffer,"MISCHER_KP"); break;
-        case Property::kMISCHER_TN: std::strcpy(buffer,"MISCHER_TN"); break;
-        case Property::kMISCHER_TV: std::strcpy(buffer,"MISCHER_TV"); break;
-        case Property::kPERIODENDAUER_ABTAUEN: std::strcpy(buffer,"PERIODENDAUER_ABTAUEN"); break;
-        case Property::kRELATIVE_ABTAUDAUER1: std::strcpy(buffer,"RELATIVE_ABTAUDAUER1"); break;
-        case Property::kRELATIVE_ABTAUDAUER2: std::strcpy(buffer,"RELATIVE_ABTAUDAUER2"); break;
-        case Property::kMAX_ABTAUDAUER_VERDAMPFER: std::strcpy(buffer,"MAX_ABTAUDAUER_VERDAMPFER"); break;
-        case Property::kWE1_TYP_NEU: std::strcpy(buffer,"WE1_TYP_NEU"); break;
-        case Property::kBUSSYSTEM: std::strcpy(buffer,"BUSSYSTEM"); break;
-        case Property::kWAERMEERTRAG_RUECKGE_TAG_WH: std::strcpy(buffer,"WAERMEERTRAG_RUECKGE_TAG_WH"); break;
-        case Property::kWAERMEERTRAG_RUECKGE_TAG_KWH: std::strcpy(buffer,"WAERMEERTRAG_RUECKGE_TAG_KWH"); break;
-        case Property::kWAERMEERTRAG_RUECKGE_SUMME_KWH: std::strcpy(buffer,"WAERMEERTRAG_RUECKGE_SUMME_KWH"); break;
-        case Property::kWAERMEERTRAG_RUECKGE_SUMME_MWH: std::strcpy(buffer,"WAERMEERTRAG_RUECKGE_SUMME_MWH"); break;
-        case Property::kSOLAR_MAX_DREHZAHL_TEMP: std::strcpy(buffer,"SOLAR_MAX_DREHZAHL_TEMP"); break;
-        case Property::kSOLAR_KOLLEKTOR_FREIGABETEMP: std::strcpy(buffer,"SOLAR_KOLLEKTOR_FREIGABETEMP"); break;
-        case Property::kSOLAR_KOLLEKTOR_SPERRTEMP: std::strcpy(buffer,"SOLAR_KOLLEKTOR_SPERRTEMP"); break;
-        case Property::kSOLAR_FREIGABETEMP_2WE: std::strcpy(buffer,"SOLAR_FREIGABETEMP_2WE"); break;
-        case Property::kSOLAR_MAX_TEMP_2WE: std::strcpy(buffer,"SOLAR_MAX_TEMP_2WE"); break;
-        case Property::kSOLAR_KOLLEKTORSCHUTZTEMP: std::strcpy(buffer,"SOLAR_KOLLEKTORSCHUTZTEMP"); break;
-        case Property::kSOLAR_SCHALTSCHWELLE_RUECKKUEHLUNG: std::strcpy(buffer,"SOLAR_SCHALTSCHWELLE_RUECKKUEHLUNG"); break;
-        case Property::kSOLAR_ZIRKPUMPE_EINSCHALTZEIT: std::strcpy(buffer,"SOLAR_ZIRKPUMPE_EINSCHALTZEIT"); break;
-        case Property::kSOLAR_ZIRKPUMPE_AUSSCHALTZEIT: std::strcpy(buffer,"SOLAR_ZIRKPUMPE_AUSSCHALTZEIT"); break;
-        case Property::kSOLAR_NACHHEIZEN_EINSCHALTZEIT: std::strcpy(buffer,"SOLAR_NACHHEIZEN_EINSCHALTZEIT"); break;
-        case Property::kSOLAR_NACHHEIZEN_AUSSCHALTZEIT: std::strcpy(buffer,"SOLAR_NACHHEIZEN_AUSSCHALTZEIT"); break;
-        case Property::kSOLAR_ANLAGENAUSWAHL: std::strcpy(buffer,"SOLAR_ANLAGENAUSWAHL"); break;
-        case Property::kSOLAR_TOLERANZ_SOLARERTRAG: std::strcpy(buffer,"SOLAR_TOLERANZ_SOLARERTRAG"); break;
-        case Property::kSOLAR_MIN_RUECKLAUFTEMP: std::strcpy(buffer,"SOLAR_MIN_RUECKLAUFTEMP"); break;
-        case Property::kSOLAR_VOLUMENSTROMVERTEILUNG_WMZ: std::strcpy(buffer,"SOLAR_VOLUMENSTROMVERTEILUNG_WMZ"); break;
-        case Property::kSOLAR_IMPULSRATE_EINHEIT_WMZ: std::strcpy(buffer,"SOLAR_IMPULSRATE_EINHEIT_WMZ"); break;
-        case Property::kSOLAR_ZUSATZRELAISFUNKTION2: std::strcpy(buffer,"SOLAR_ZUSATZRELAISFUNKTION2"); break;
-        case Property::kSOLAR_ZUSATZRELAISFUNKTION: std::strcpy(buffer,"SOLAR_ZUSATZRELAISFUNKTION"); break;
-        case Property::kSOLAR_MAX_DREHZAHL: std::strcpy(buffer,"SOLAR_MAX_DREHZAHL"); break;
-        case Property::kSOLAR_MIN_DREHZAHL: std::strcpy(buffer,"SOLAR_MIN_DREHZAHL"); break;
-        case Property::kSOLAR_HAND_DREHZAHLSOLL: std::strcpy(buffer,"SOLAR_HAND_DREHZAHLSOLL"); break;
-        case Property::kSOLAR_BETRIEBSART_DREHZAHL: std::strcpy(buffer,"SOLAR_BETRIEBSART_DREHZAHL"); break;
-        case Property::kSOLAR_THERMOSTATFUNKTION_EINSCHALTTEMP: std::strcpy(buffer,"SOLAR_THERMOSTATFUNKTION_EINSCHALTTEMP"); break;
-        case Property::kSOLAR_THERMOSTATFUNKTION_AUSSCHALTDIFFERENZ: std::strcpy(buffer,"SOLAR_THERMOSTATFUNKTION_AUSSCHALTDIFFERENZ"); break;
-        case Property::kSOLAR_ROEHRENKOLLEKTORFUNKTION: std::strcpy(buffer,"SOLAR_ROEHRENKOLLEKTORFUNKTION"); break;
-        case Property::kSOLAR_FROSTSCHUTZFUNKTION: std::strcpy(buffer,"SOLAR_FROSTSCHUTZFUNKTION"); break;
-        case Property::kSOLAR_SPEICHERLADUNG_ERFOLGREICH: std::strcpy(buffer,"SOLAR_SPEICHERLADUNG_ERFOLGREICH"); break;
-        case Property::kEINSCHALTTEMPERATUR_DIFFERENZ3: std::strcpy(buffer,"EINSCHALTTEMPERATUR_DIFFERENZ3"); break;
-        case Property::kAUSSCHALTTEMPERATUR_DIFFERENZ3: std::strcpy(buffer,"AUSSCHALTTEMPERATUR_DIFFERENZ3"); break;
-        case Property::kMAXTEMP_ERDSONDE: std::strcpy(buffer,"MAXTEMP_ERDSONDE"); break;
-        case Property::kMAXTEMP_ERDSONDE_WIEDEREIN: std::strcpy(buffer,"MAXTEMP_ERDSONDE_WIEDEREIN"); break;
-        case Property::kMAXTEMP_SCHWIMMBAD: std::strcpy(buffer,"MAXTEMP_SCHWIMMBAD"); break;
-        case Property::kMAXTEMP_SCHWIMMBAD_WIEDEREIN: std::strcpy(buffer,"MAXTEMP_SCHWIMMBAD_WIEDEREIN"); break;
-        case Property::kSOLAR_HAND_DREHZAHL2_SOLL: std::strcpy(buffer,"SOLAR_HAND_DREHZAHL2_SOLL"); break;
-        case Property::kDURCHFLUSSMENGE_SOLAR_SOLL: std::strcpy(buffer,"DURCHFLUSSMENGE_SOLAR_SOLL"); break;
-        case Property::kDURCHFLUSSMENGE_SOLAR2: std::strcpy(buffer,"DURCHFLUSSMENGE_SOLAR2"); break;
-        case Property::kDURCHFLUSSMENGE_SOLAR2_SOLL: std::strcpy(buffer,"DURCHFLUSSMENGE_SOLAR2_SOLL"); break;
-        case Property::kKUEHL_FREIGABE_TEMPERATUR: std::strcpy(buffer,"KUEHL_FREIGABE_TEMPERATUR"); break;
-        case Property::kKUEHL_VORLAUFSOLLTEMP: std::strcpy(buffer,"KUEHL_VORLAUFSOLLTEMP"); break;
-        case Property::kKUEHL_RUECKLAUFSOLLTEMP: std::strcpy(buffer,"KUEHL_RUECKLAUFSOLLTEMP"); break;
-        case Property::kSOLAR_HYSTERESE_NACHHEIZUNG: std::strcpy(buffer,"SOLAR_HYSTERESE_NACHHEIZUNG"); break;
-        case Property::kUMLADUNG_PUMPEMSTATUS1: std::strcpy(buffer,"UMLADUNG_PUMPEMSTATUS1"); break;
-        case Property::kUMLADUNG_PUMPEMSTATUS2: std::strcpy(buffer,"UMLADUNG_PUMPEMSTATUS2"); break;
-        case Property::kHF_FELDSTAERKE: std::strcpy(buffer,"HF_FELDSTAERKE"); break;
-        case Property::kKUEHLDYNAMIK_FLAECHE_PASSIV: std::strcpy(buffer,"KUEHLDYNAMIK_FLAECHE_PASSIV"); break;
-        case Property::kKUEHLDYNAMIK_GEBLAESE_PASSIV: std::strcpy(buffer,"KUEHLDYNAMIK_GEBLAESE_PASSIV"); break;
-        case Property::kMANAGER_SYSTEM_INFOS: std::strcpy(buffer,"MANAGER_SYSTEM_INFOS"); break;
-        case Property::kQUELLENPUMPEN_STATUS: std::strcpy(buffer,"QUELLENPUMPEN_STATUS"); break;
-        case Property::kKUEHL_AUSGANG: std::strcpy(buffer,"KUEHL_AUSGANG"); break;
-        case Property::kWERKSTEST_BESTANDEN: std::strcpy(buffer,"WERKSTEST_BESTANDEN"); break;
-        case Property::kKESSEL_1_STUFE_1_LEISTUNG: std::strcpy(buffer,"KESSEL_1_STUFE_1_LEISTUNG"); break;
-        case Property::kKESSEL_2_STUFE_1_LEISTUNG: std::strcpy(buffer,"KESSEL_2_STUFE_1_LEISTUNG"); break;
-        case Property::kKESSEL_3_STUFE_1_LEISTUNG: std::strcpy(buffer,"KESSEL_3_STUFE_1_LEISTUNG"); break;
-        case Property::kKESSEL_4_STUFE_1_LEISTUNG: std::strcpy(buffer,"KESSEL_4_STUFE_1_LEISTUNG"); break;
-        case Property::kKESSEL_5_STUFE_1_LEISTUNG: std::strcpy(buffer,"KESSEL_5_STUFE_1_LEISTUNG"); break;
-        case Property::kKESSEL_6_STUFE_1_LEISTUNG: std::strcpy(buffer,"KESSEL_6_STUFE_1_LEISTUNG"); break;
-        case Property::kKESSEL_7_STUFE_1_LEISTUNG: std::strcpy(buffer,"KESSEL_7_STUFE_1_LEISTUNG"); break;
-        case Property::kKESSEL_8_STUFE_1_LEISTUNG: std::strcpy(buffer,"KESSEL_8_STUFE_1_LEISTUNG"); break;
-        case Property::kKESSEL_9_STUFE_1_LEISTUNG: std::strcpy(buffer,"KESSEL_9_STUFE_1_LEISTUNG"); break;
-        case Property::kKESSEL_10_STUFE_1_LEISTUNG: std::strcpy(buffer,"KESSEL_10_STUFE_1_LEISTUNG"); break;
-        case Property::kKESSEL_11_STUFE_1_LEISTUNG: std::strcpy(buffer,"KESSEL_11_STUFE_1_LEISTUNG"); break;
-        case Property::kKESSEL_12_STUFE_1_LEISTUNG: std::strcpy(buffer,"KESSEL_12_STUFE_1_LEISTUNG"); break;
-        case Property::kKESSEL_13_STUFE_1_LEISTUNG: std::strcpy(buffer,"KESSEL_13_STUFE_1_LEISTUNG"); break;
-        case Property::kKESSEL_14_STUFE_1_LEISTUNG: std::strcpy(buffer,"KESSEL_14_STUFE_1_LEISTUNG"); break;
-        case Property::kKESSEL_15_STUFE_1_LEISTUNG: std::strcpy(buffer,"KESSEL_15_STUFE_1_LEISTUNG"); break;
-        case Property::kKESSEL_16_STUFE_1_LEISTUNG: std::strcpy(buffer,"KESSEL_16_STUFE_1_LEISTUNG"); break;
-        case Property::kKESSEL_1_STUFE_2_LEISTUNG: std::strcpy(buffer,"KESSEL_1_STUFE_2_LEISTUNG"); break;
-        case Property::kKESSEL_2_STUFE_2_LEISTUNG: std::strcpy(buffer,"KESSEL_2_STUFE_2_LEISTUNG"); break;
-        case Property::kKESSEL_3_STUFE_2_LEISTUNG: std::strcpy(buffer,"KESSEL_3_STUFE_2_LEISTUNG"); break;
-        case Property::kKESSEL_4_STUFE_2_LEISTUNG: std::strcpy(buffer,"KESSEL_4_STUFE_2_LEISTUNG"); break;
-        case Property::kKESSEL_5_STUFE_2_LEISTUNG: std::strcpy(buffer,"KESSEL_5_STUFE_2_LEISTUNG"); break;
-        case Property::kKESSEL_6_STUFE_2_LEISTUNG: std::strcpy(buffer,"KESSEL_6_STUFE_2_LEISTUNG"); break;
-        case Property::kKESSEL_7_STUFE_2_LEISTUNG: std::strcpy(buffer,"KESSEL_7_STUFE_2_LEISTUNG"); break;
-        case Property::kKESSEL_8_STUFE_2_LEISTUNG: std::strcpy(buffer,"KESSEL_8_STUFE_2_LEISTUNG"); break;
-        case Property::kKESSEL_9_STUFE_2_LEISTUNG: std::strcpy(buffer,"KESSEL_9_STUFE_2_LEISTUNG"); break;
-        case Property::kKESSEL_10_STUFE_2_LEISTUNG: std::strcpy(buffer,"KESSEL_10_STUFE_2_LEISTUNG"); break;
-        case Property::kKESSEL_11_STUFE_2_LEISTUNG: std::strcpy(buffer,"KESSEL_11_STUFE_2_LEISTUNG"); break;
-        case Property::kKESSEL_12_STUFE_2_LEISTUNG: std::strcpy(buffer,"KESSEL_12_STUFE_2_LEISTUNG"); break;
-        case Property::kKESSEL_13_STUFE_2_LEISTUNG: std::strcpy(buffer,"KESSEL_13_STUFE_2_LEISTUNG"); break;
-        case Property::kKESSEL_14_STUFE_2_LEISTUNG: std::strcpy(buffer,"KESSEL_14_STUFE_2_LEISTUNG"); break;
-        case Property::kKESSEL_15_STUFE_2_LEISTUNG: std::strcpy(buffer,"KESSEL_15_STUFE_2_LEISTUNG"); break;
-        case Property::kKESSEL_16_STUFE_2_LEISTUNG: std::strcpy(buffer,"KESSEL_16_STUFE_2_LEISTUNG"); break;
-        case Property::kKESSEL_1_STUFE_1_STARTS: std::strcpy(buffer,"KESSEL_1_STUFE_1_STARTS"); break;
-        case Property::kKESSEL_2_STUFE_1_STARTS: std::strcpy(buffer,"KESSEL_2_STUFE_1_STARTS"); break;
-        case Property::kKESSEL_3_STUFE_1_STARTS: std::strcpy(buffer,"KESSEL_3_STUFE_1_STARTS"); break;
-        case Property::kKESSEL_4_STUFE_1_STARTS: std::strcpy(buffer,"KESSEL_4_STUFE_1_STARTS"); break;
-        case Property::kKESSEL_5_STUFE_1_STARTS: std::strcpy(buffer,"KESSEL_5_STUFE_1_STARTS"); break;
-        case Property::kKESSEL_6_STUFE_1_STARTS: std::strcpy(buffer,"KESSEL_6_STUFE_1_STARTS"); break;
-        case Property::kKESSEL_7_STUFE_1_STARTS: std::strcpy(buffer,"KESSEL_7_STUFE_1_STARTS"); break;
-        case Property::kKESSEL_8_STUFE_1_STARTS: std::strcpy(buffer,"KESSEL_8_STUFE_1_STARTS"); break;
-        case Property::kKESSEL_9_STUFE_1_STARTS: std::strcpy(buffer,"KESSEL_9_STUFE_1_STARTS"); break;
-        case Property::kKESSEL_10_STUFE_1_STARTS: std::strcpy(buffer,"KESSEL_10_STUFE_1_STARTS"); break;
-        case Property::kKESSEL_11_STUFE_1_STARTS: std::strcpy(buffer,"KESSEL_11_STUFE_1_STARTS"); break;
-        case Property::kKESSEL_12_STUFE_1_STARTS: std::strcpy(buffer,"KESSEL_12_STUFE_1_STARTS"); break;
-        case Property::kKESSEL_13_STUFE_1_STARTS: std::strcpy(buffer,"KESSEL_13_STUFE_1_STARTS"); break;
-        case Property::kKESSEL_14_STUFE_1_STARTS: std::strcpy(buffer,"KESSEL_14_STUFE_1_STARTS"); break;
-        case Property::kKESSEL_15_STUFE_1_STARTS: std::strcpy(buffer,"KESSEL_15_STUFE_1_STARTS"); break;
-        case Property::kKESSEL_16_STUFE_1_STARTS: std::strcpy(buffer,"KESSEL_16_STUFE_1_STARTS"); break;
-        case Property::kKESSEL_1_STUFE_2_STARTS: std::strcpy(buffer,"KESSEL_1_STUFE_2_STARTS"); break;
-        case Property::kKESSEL_2_STUFE_2_STARTS: std::strcpy(buffer,"KESSEL_2_STUFE_2_STARTS"); break;
-        case Property::kKESSEL_3_STUFE_2_STARTS: std::strcpy(buffer,"KESSEL_3_STUFE_2_STARTS"); break;
-        case Property::kKESSEL_4_STUFE_2_STARTS: std::strcpy(buffer,"KESSEL_4_STUFE_2_STARTS"); break;
-        case Property::kKESSEL_5_STUFE_2_STARTS: std::strcpy(buffer,"KESSEL_5_STUFE_2_STARTS"); break;
-        case Property::kKESSEL_6_STUFE_2_STARTS: std::strcpy(buffer,"KESSEL_6_STUFE_2_STARTS"); break;
-        case Property::kKESSEL_7_STUFE_2_STARTS: std::strcpy(buffer,"KESSEL_7_STUFE_2_STARTS"); break;
-        case Property::kKESSEL_8_STUFE_2_STARTS: std::strcpy(buffer,"KESSEL_8_STUFE_2_STARTS"); break;
-        case Property::kKESSEL_9_STUFE_2_STARTS: std::strcpy(buffer,"KESSEL_9_STUFE_2_STARTS"); break;
-        case Property::kKESSEL_10_STUFE_2_STARTS: std::strcpy(buffer,"KESSEL_10_STUFE_2_STARTS"); break;
-        case Property::kKESSEL_11_STUFE_2_STARTS: std::strcpy(buffer,"KESSEL_11_STUFE_2_STARTS"); break;
-        case Property::kKESSEL_12_STUFE_2_STARTS: std::strcpy(buffer,"KESSEL_12_STUFE_2_STARTS"); break;
-        case Property::kKESSEL_13_STUFE_2_STARTS: std::strcpy(buffer,"KESSEL_13_STUFE_2_STARTS"); break;
-        case Property::kKESSEL_14_STUFE_2_STARTS: std::strcpy(buffer,"KESSEL_14_STUFE_2_STARTS"); break;
-        case Property::kKESSEL_15_STUFE_2_STARTS: std::strcpy(buffer,"KESSEL_15_STUFE_2_STARTS"); break;
-        case Property::kKESSEL_16_STUFE_2_STARTS: std::strcpy(buffer,"KESSEL_16_STUFE_2_STARTS"); break;
-        case Property::kKESSEL_1_STUFEN_1_STARTS_UEBERLAUF: std::strcpy(buffer,"KESSEL_1_STUFEN_1_STARTS_UEBERLAUF"); break;
-        case Property::kKESSEL_2_STUFEN_1_STARTS_UEBERLAUF: std::strcpy(buffer,"KESSEL_2_STUFEN_1_STARTS_UEBERLAUF"); break;
-        case Property::kKESSEL_3_STUFEN_1_STARTS_UEBERLAUF: std::strcpy(buffer,"KESSEL_3_STUFEN_1_STARTS_UEBERLAUF"); break;
-        case Property::kKESSEL_4_STUFEN_1_STARTS_UEBERLAUF: std::strcpy(buffer,"KESSEL_4_STUFEN_1_STARTS_UEBERLAUF"); break;
-        case Property::kKESSEL_5_STUFEN_1_STARTS_UEBERLAUF: std::strcpy(buffer,"KESSEL_5_STUFEN_1_STARTS_UEBERLAUF"); break;
-        case Property::kKESSEL_6_STUFEN_1_STARTS_UEBERLAUF: std::strcpy(buffer,"KESSEL_6_STUFEN_1_STARTS_UEBERLAUF"); break;
-        case Property::kKESSEL_7_STUFEN_1_STARTS_UEBERLAUF: std::strcpy(buffer,"KESSEL_7_STUFEN_1_STARTS_UEBERLAUF"); break;
-        case Property::kKESSEL_8_STUFEN_1_STARTS_UEBERLAUF: std::strcpy(buffer,"KESSEL_8_STUFEN_1_STARTS_UEBERLAUF"); break;
-        case Property::kKESSEL_9_STUFEN_1_STARTS_UEBERLAUF: std::strcpy(buffer,"KESSEL_9_STUFEN_1_STARTS_UEBERLAUF"); break;
-        case Property::kKESSEL_10_STUFEN_1_STARTS_UEBERLAUF: std::strcpy(buffer,"KESSEL_10_STUFEN_1_STARTS_UEBERLAUF"); break;
-        case Property::kKESSEL_11_STUFEN_1_STARTS_UEBERLAUF: std::strcpy(buffer,"KESSEL_11_STUFEN_1_STARTS_UEBERLAUF"); break;
-        case Property::kKESSEL_12_STUFEN_1_STARTS_UEBERLAUF: std::strcpy(buffer,"KESSEL_12_STUFEN_1_STARTS_UEBERLAUF"); break;
-        case Property::kKESSEL_13_STUFEN_1_STARTS_UEBERLAUF: std::strcpy(buffer,"KESSEL_13_STUFEN_1_STARTS_UEBERLAUF"); break;
-        case Property::kKESSEL_14_STUFEN_1_STARTS_UEBERLAUF: std::strcpy(buffer,"KESSEL_14_STUFEN_1_STARTS_UEBERLAUF"); break;
-        case Property::kKESSEL_15_STUFEN_1_STARTS_UEBERLAUF: std::strcpy(buffer,"KESSEL_15_STUFEN_1_STARTS_UEBERLAUF"); break;
-        case Property::kKESSEL_16_STUFEN_1_STARTS_UEBERLAUF: std::strcpy(buffer,"KESSEL_16_STUFEN_1_STARTS_UEBERLAUF"); break;
-        case Property::kKESSEL_1_STUFEN_2_STARTS_UEBERLAUF: std::strcpy(buffer,"KESSEL_1_STUFEN_2_STARTS_UEBERLAUF"); break;
-        case Property::kKESSEL_2_STUFEN_2_STARTS_UEBERLAUF: std::strcpy(buffer,"KESSEL_2_STUFEN_2_STARTS_UEBERLAUF"); break;
-        case Property::kKESSEL_3_STUFEN_2_STARTS_UEBERLAUF: std::strcpy(buffer,"KESSEL_3_STUFEN_2_STARTS_UEBERLAUF"); break;
-        case Property::kKESSEL_4_STUFEN_2_STARTS_UEBERLAUF: std::strcpy(buffer,"KESSEL_4_STUFEN_2_STARTS_UEBERLAUF"); break;
-        case Property::kKESSEL_5_STUFEN_2_STARTS_UEBERLAUF: std::strcpy(buffer,"KESSEL_5_STUFEN_2_STARTS_UEBERLAUF"); break;
-        case Property::kKESSEL_6_STUFEN_2_STARTS_UEBERLAUF: std::strcpy(buffer,"KESSEL_6_STUFEN_2_STARTS_UEBERLAUF"); break;
-        case Property::kKESSEL_7_STUFEN_2_STARTS_UEBERLAUF: std::strcpy(buffer,"KESSEL_7_STUFEN_2_STARTS_UEBERLAUF"); break;
-        case Property::kKESSEL_8_STUFEN_2_STARTS_UEBERLAUF: std::strcpy(buffer,"KESSEL_8_STUFEN_2_STARTS_UEBERLAUF"); break;
-        case Property::kKESSEL_9_STUFEN_2_STARTS_UEBERLAUF: std::strcpy(buffer,"KESSEL_9_STUFEN_2_STARTS_UEBERLAUF"); break;
-        case Property::kKESSEL_10_STUFEN_2_STARTS_UEBERLAUF: std::strcpy(buffer,"KESSEL_10_STUFEN_2_STARTS_UEBERLAUF"); break;
-        case Property::kKESSEL_11_STUFEN_2_STARTS_UEBERLAUF: std::strcpy(buffer,"KESSEL_11_STUFEN_2_STARTS_UEBERLAUF"); break;
-        case Property::kKESSEL_12_STUFEN_2_STARTS_UEBERLAUF: std::strcpy(buffer,"KESSEL_12_STUFEN_2_STARTS_UEBERLAUF"); break;
-        case Property::kKESSEL_13_STUFEN_2_STARTS_UEBERLAUF: std::strcpy(buffer,"KESSEL_13_STUFEN_2_STARTS_UEBERLAUF"); break;
-        case Property::kKESSEL_14_STUFEN_2_STARTS_UEBERLAUF: std::strcpy(buffer,"KESSEL_14_STUFEN_2_STARTS_UEBERLAUF"); break;
-        case Property::kKESSEL_15_STUFEN_2_STARTS_UEBERLAUF: std::strcpy(buffer,"KESSEL_15_STUFEN_2_STARTS_UEBERLAUF"); break;
-        case Property::kKESSEL_16_STUFEN_2_STARTS_UEBERLAUF: std::strcpy(buffer,"KESSEL_16_STUFEN_2_STARTS_UEBERLAUF"); break;
-        case Property::kKESSEL_1_STUFE_1_LAUFZEIT: std::strcpy(buffer,"KESSEL_1_STUFE_1_LAUFZEIT"); break;
-        case Property::kKESSEL_2_STUFE_1_LAUFZEIT: std::strcpy(buffer,"KESSEL_2_STUFE_1_LAUFZEIT"); break;
-        case Property::kKESSEL_3_STUFE_1_LAUFZEIT: std::strcpy(buffer,"KESSEL_3_STUFE_1_LAUFZEIT"); break;
-        case Property::kKESSEL_4_STUFE_1_LAUFZEIT: std::strcpy(buffer,"KESSEL_4_STUFE_1_LAUFZEIT"); break;
-        case Property::kKESSEL_5_STUFE_1_LAUFZEIT: std::strcpy(buffer,"KESSEL_5_STUFE_1_LAUFZEIT"); break;
-        case Property::kKESSEL_6_STUFE_1_LAUFZEIT: std::strcpy(buffer,"KESSEL_6_STUFE_1_LAUFZEIT"); break;
-        case Property::kKESSEL_7_STUFE_1_LAUFZEIT: std::strcpy(buffer,"KESSEL_7_STUFE_1_LAUFZEIT"); break;
-        case Property::kKESSEL_8_STUFE_1_LAUFZEIT: std::strcpy(buffer,"KESSEL_8_STUFE_1_LAUFZEIT"); break;
-        case Property::kKESSEL_9_STUFE_1_LAUFZEIT: std::strcpy(buffer,"KESSEL_9_STUFE_1_LAUFZEIT"); break;
-        case Property::kKESSEL_10_STUFE_1_LAUFZEIT: std::strcpy(buffer,"KESSEL_10_STUFE_1_LAUFZEIT"); break;
-        case Property::kKESSEL_11_STUFE_1_LAUFZEIT: std::strcpy(buffer,"KESSEL_11_STUFE_1_LAUFZEIT"); break;
-        case Property::kKESSEL_12_STUFE_1_LAUFZEIT: std::strcpy(buffer,"KESSEL_12_STUFE_1_LAUFZEIT"); break;
-        case Property::kKESSEL_13_STUFE_1_LAUFZEIT: std::strcpy(buffer,"KESSEL_13_STUFE_1_LAUFZEIT"); break;
-        case Property::kKESSEL_14_STUFE_1_LAUFZEIT: std::strcpy(buffer,"KESSEL_14_STUFE_1_LAUFZEIT"); break;
-        case Property::kKESSEL_15_STUFE_1_LAUFZEIT: std::strcpy(buffer,"KESSEL_15_STUFE_1_LAUFZEIT"); break;
-        case Property::kKESSEL_16_STUFE_1_LAUFZEIT: std::strcpy(buffer,"KESSEL_16_STUFE_1_LAUFZEIT"); break;
-        case Property::kKESSEL_1_STUFE_2_LAUFZEIT: std::strcpy(buffer,"KESSEL_1_STUFE_2_LAUFZEIT"); break;
-        case Property::kKESSEL_2_STUFE_2_LAUFZEIT: std::strcpy(buffer,"KESSEL_2_STUFE_2_LAUFZEIT"); break;
-        case Property::kKESSEL_3_STUFE_2_LAUFZEIT: std::strcpy(buffer,"KESSEL_3_STUFE_2_LAUFZEIT"); break;
-        case Property::kKESSEL_4_STUFE_2_LAUFZEIT: std::strcpy(buffer,"KESSEL_4_STUFE_2_LAUFZEIT"); break;
-        case Property::kKESSEL_5_STUFE_2_LAUFZEIT: std::strcpy(buffer,"KESSEL_5_STUFE_2_LAUFZEIT"); break;
-        case Property::kKESSEL_6_STUFE_2_LAUFZEIT: std::strcpy(buffer,"KESSEL_6_STUFE_2_LAUFZEIT"); break;
-        case Property::kKESSEL_7_STUFE_2_LAUFZEIT: std::strcpy(buffer,"KESSEL_7_STUFE_2_LAUFZEIT"); break;
-        case Property::kKESSEL_8_STUFE_2_LAUFZEIT: std::strcpy(buffer,"KESSEL_8_STUFE_2_LAUFZEIT"); break;
-        case Property::kKESSEL_9_STUFE_2_LAUFZEIT: std::strcpy(buffer,"KESSEL_9_STUFE_2_LAUFZEIT"); break;
-        case Property::kKESSEL_10_STUFE_2_LAUFZEIT: std::strcpy(buffer,"KESSEL_10_STUFE_2_LAUFZEIT"); break;
-        case Property::kKESSEL_11_STUFE_2_LAUFZEIT: std::strcpy(buffer,"KESSEL_11_STUFE_2_LAUFZEIT"); break;
-        case Property::kKESSEL_12_STUFE_2_LAUFZEIT: std::strcpy(buffer,"KESSEL_12_STUFE_2_LAUFZEIT"); break;
-        case Property::kKESSEL_13_STUFE_2_LAUFZEIT: std::strcpy(buffer,"KESSEL_13_STUFE_2_LAUFZEIT"); break;
-        case Property::kKESSEL_14_STUFE_2_LAUFZEIT: std::strcpy(buffer,"KESSEL_14_STUFE_2_LAUFZEIT"); break;
-        case Property::kKESSEL_15_STUFE_2_LAUFZEIT: std::strcpy(buffer,"KESSEL_15_STUFE_2_LAUFZEIT"); break;
-        case Property::kKESSEL_16_STUFE_2_LAUFZEIT: std::strcpy(buffer,"KESSEL_16_STUFE_2_LAUFZEIT"); break;
-        case Property::kKESSEL_1_STUFE_1_LAUFZEIT_UEBERLAUF: std::strcpy(buffer,"KESSEL_1_STUFE_1_LAUFZEIT_UEBERLAUF"); break;
-        case Property::kKESSEL_2_STUFE_1_LAUFZEIT_UEBERLAUF: std::strcpy(buffer,"KESSEL_2_STUFE_1_LAUFZEIT_UEBERLAUF"); break;
-        case Property::kKESSEL_3_STUFE_1_LAUFZEIT_UEBERLAUF: std::strcpy(buffer,"KESSEL_3_STUFE_1_LAUFZEIT_UEBERLAUF"); break;
-        case Property::kKESSEL_4_STUFE_1_LAUFZEIT_UEBERLAUF: std::strcpy(buffer,"KESSEL_4_STUFE_1_LAUFZEIT_UEBERLAUF"); break;
-        case Property::kKESSEL_5_STUFE_1_LAUFZEIT_UEBERLAUF: std::strcpy(buffer,"KESSEL_5_STUFE_1_LAUFZEIT_UEBERLAUF"); break;
-        case Property::kKESSEL_6_STUFE_1_LAUFZEIT_UEBERLAUF: std::strcpy(buffer,"KESSEL_6_STUFE_1_LAUFZEIT_UEBERLAUF"); break;
-        case Property::kKESSEL_7_STUFE_1_LAUFZEIT_UEBERLAUF: std::strcpy(buffer,"KESSEL_7_STUFE_1_LAUFZEIT_UEBERLAUF"); break;
-        case Property::kKESSEL_8_STUFE_1_LAUFZEIT_UEBERLAUF: std::strcpy(buffer,"KESSEL_8_STUFE_1_LAUFZEIT_UEBERLAUF"); break;
-        case Property::kKESSEL_9_STUFE_1_LAUFZEIT_UEBERLAUF: std::strcpy(buffer,"KESSEL_9_STUFE_1_LAUFZEIT_UEBERLAUF"); break;
-        case Property::kKESSEL_10_STUFE_1_LAUFZEIT_UEBERLAUF: std::strcpy(buffer,"KESSEL_10_STUFE_1_LAUFZEIT_UEBERLAUF"); break;
-        case Property::kKESSEL_11_STUFE_1_LAUFZEIT_UEBERLAUF: std::strcpy(buffer,"KESSEL_11_STUFE_1_LAUFZEIT_UEBERLAUF"); break;
-        case Property::kKESSEL_12_STUFE_1_LAUFZEIT_UEBERLAUF: std::strcpy(buffer,"KESSEL_12_STUFE_1_LAUFZEIT_UEBERLAUF"); break;
-        case Property::kKESSEL_13_STUFE_1_LAUFZEIT_UEBERLAUF: std::strcpy(buffer,"KESSEL_13_STUFE_1_LAUFZEIT_UEBERLAUF"); break;
-        case Property::kKESSEL_14_STUFE_1_LAUFZEIT_UEBERLAUF: std::strcpy(buffer,"KESSEL_14_STUFE_1_LAUFZEIT_UEBERLAUF"); break;
-        case Property::kKESSEL_15_STUFE_1_LAUFZEIT_UEBERLAUF: std::strcpy(buffer,"KESSEL_15_STUFE_1_LAUFZEIT_UEBERLAUF"); break;
-        case Property::kKESSEL_16_STUFE_1_LAUFZEIT_UEBERLAUF: std::strcpy(buffer,"KESSEL_16_STUFE_1_LAUFZEIT_UEBERLAUF"); break;
-        case Property::kKESSEL_1_STUFE_2_LAUFZEIT_UEBERLAUF: std::strcpy(buffer,"KESSEL_1_STUFE_2_LAUFZEIT_UEBERLAUF"); break;
-        case Property::kKESSEL_2_STUFE_2_LAUFZEIT_UEBERLAUF: std::strcpy(buffer,"KESSEL_2_STUFE_2_LAUFZEIT_UEBERLAUF"); break;
-        case Property::kKESSEL_3_STUFE_2_LAUFZEIT_UEBERLAUF: std::strcpy(buffer,"KESSEL_3_STUFE_2_LAUFZEIT_UEBERLAUF"); break;
-        case Property::kKESSEL_4_STUFE_2_LAUFZEIT_UEBERLAUF: std::strcpy(buffer,"KESSEL_4_STUFE_2_LAUFZEIT_UEBERLAUF"); break;
-        case Property::kKESSEL_5_STUFE_2_LAUFZEIT_UEBERLAUF: std::strcpy(buffer,"KESSEL_5_STUFE_2_LAUFZEIT_UEBERLAUF"); break;
-        case Property::kKESSEL_6_STUFE_2_LAUFZEIT_UEBERLAUF: std::strcpy(buffer,"KESSEL_6_STUFE_2_LAUFZEIT_UEBERLAUF"); break;
-        case Property::kKESSEL_7_STUFE_2_LAUFZEIT_UEBERLAUF: std::strcpy(buffer,"KESSEL_7_STUFE_2_LAUFZEIT_UEBERLAUF"); break;
-        case Property::kKESSEL_8_STUFE_2_LAUFZEIT_UEBERLAUF: std::strcpy(buffer,"KESSEL_8_STUFE_2_LAUFZEIT_UEBERLAUF"); break;
-        case Property::kKESSEL_9_STUFE_2_LAUFZEIT_UEBERLAUF: std::strcpy(buffer,"KESSEL_9_STUFE_2_LAUFZEIT_UEBERLAUF"); break;
-        case Property::kKESSEL_10_STUFE_2_LAUFZEIT_UEBERLAUF: std::strcpy(buffer,"KESSEL_10_STUFE_2_LAUFZEIT_UEBERLAUF"); break;
-        case Property::kKESSEL_11_STUFE_2_LAUFZEIT_UEBERLAUF: std::strcpy(buffer,"KESSEL_11_STUFE_2_LAUFZEIT_UEBERLAUF"); break;
-        case Property::kKESSEL_12_STUFE_2_LAUFZEIT_UEBERLAUF: std::strcpy(buffer,"KESSEL_12_STUFE_2_LAUFZEIT_UEBERLAUF"); break;
-        case Property::kKESSEL_13_STUFE_2_LAUFZEIT_UEBERLAUF: std::strcpy(buffer,"KESSEL_13_STUFE_2_LAUFZEIT_UEBERLAUF"); break;
-        case Property::kKESSEL_14_STUFE_2_LAUFZEIT_UEBERLAUF: std::strcpy(buffer,"KESSEL_14_STUFE_2_LAUFZEIT_UEBERLAUF"); break;
-        case Property::kKESSEL_15_STUFE_2_LAUFZEIT_UEBERLAUF: std::strcpy(buffer,"KESSEL_15_STUFE_2_LAUFZEIT_UEBERLAUF"); break;
-        case Property::kKESSEL_16_STUFE_2_LAUFZEIT_UEBERLAUF: std::strcpy(buffer,"KESSEL_16_STUFE_2_LAUFZEIT_UEBERLAUF"); break;
-        case Property::kMFR_FUNKTION_1: std::strcpy(buffer,"MFR_FUNKTION_1"); break;
-        case Property::kMFR_FUNKTION_2: std::strcpy(buffer,"MFR_FUNKTION_2"); break;
-        case Property::kMFR_FUNKTION_3: std::strcpy(buffer,"MFR_FUNKTION_3"); break;
-        case Property::kMFR_FUNKTION_4: std::strcpy(buffer,"MFR_FUNKTION_4"); break;
-        case Property::kMFR_FUNKTION_5: std::strcpy(buffer,"MFR_FUNKTION_5"); break;
-        case Property::kMFR_FUNKTION_6: std::strcpy(buffer,"MFR_FUNKTION_6"); break;
-        case Property::kMFR_FUNKTION_7: std::strcpy(buffer,"MFR_FUNKTION_7"); break;
-        case Property::kMFR_FUNKTION_8: std::strcpy(buffer,"MFR_FUNKTION_8"); break;
-        case Property::kMFR_FUNKTION_9: std::strcpy(buffer,"MFR_FUNKTION_9"); break;
-        case Property::kMFR_FUNKTION_10: std::strcpy(buffer,"MFR_FUNKTION_10"); break;
-        case Property::kMFR_FUNKTION_11: std::strcpy(buffer,"MFR_FUNKTION_11"); break;
-        case Property::kMFR_FUNKTION_12: std::strcpy(buffer,"MFR_FUNKTION_12"); break;
-        case Property::kMFR_FUNKTION_13: std::strcpy(buffer,"MFR_FUNKTION_13"); break;
-        case Property::kMFR_FUNKTION_14: std::strcpy(buffer,"MFR_FUNKTION_14"); break;
-        case Property::kMFR_FUNKTION_15: std::strcpy(buffer,"MFR_FUNKTION_15"); break;
-        case Property::kMFR_FUNKTION_16: std::strcpy(buffer,"MFR_FUNKTION_16"); break;
-        case Property::kMFR_FUNKTION_17: std::strcpy(buffer,"MFR_FUNKTION_17"); break;
-        case Property::kMFR_FUNKTION_18: std::strcpy(buffer,"MFR_FUNKTION_18"); break;
-        case Property::kMFR_FUNKTION_19: std::strcpy(buffer,"MFR_FUNKTION_19"); break;
-        case Property::kMFR_FUNKTION_20: std::strcpy(buffer,"MFR_FUNKTION_20"); break;
-        case Property::kMFR_FUNKTION_21: std::strcpy(buffer,"MFR_FUNKTION_21"); break;
-        case Property::kMFR_FUNKTION_22: std::strcpy(buffer,"MFR_FUNKTION_22"); break;
-        case Property::kMFR_FUNKTION_23: std::strcpy(buffer,"MFR_FUNKTION_23"); break;
-        case Property::kMFR_FUNKTION_24: std::strcpy(buffer,"MFR_FUNKTION_24"); break;
-        case Property::kMFR_FUNKTION_25: std::strcpy(buffer,"MFR_FUNKTION_25"); break;
-        case Property::kMFR_FUNKTION_26: std::strcpy(buffer,"MFR_FUNKTION_26"); break;
-        case Property::kMFR_FUNKTION_27: std::strcpy(buffer,"MFR_FUNKTION_27"); break;
-        case Property::kMFR_FUNKTION_28: std::strcpy(buffer,"MFR_FUNKTION_28"); break;
-        case Property::kMFR_FUNKTION_29: std::strcpy(buffer,"MFR_FUNKTION_29"); break;
-        case Property::kMFR_FUNKTION_30: std::strcpy(buffer,"MFR_FUNKTION_30"); break;
-        case Property::kMFR_FUNKTION_31: std::strcpy(buffer,"MFR_FUNKTION_31"); break;
-        case Property::kMFR_FUNKTION_32: std::strcpy(buffer,"MFR_FUNKTION_32"); break;
-        case Property::kMFR_SCHALTTEMP_1: std::strcpy(buffer,"MFR_SCHALTTEMP_1"); break;
-        case Property::kMFR_SCHALTTEMP_2: std::strcpy(buffer,"MFR_SCHALTTEMP_2"); break;
-        case Property::kMFR_SCHALTTEMP_3: std::strcpy(buffer,"MFR_SCHALTTEMP_3"); break;
-        case Property::kMFR_SCHALTTEMP_4: std::strcpy(buffer,"MFR_SCHALTTEMP_4"); break;
-        case Property::kMFR_SCHALTTEMP_5: std::strcpy(buffer,"MFR_SCHALTTEMP_5"); break;
-        case Property::kMFR_SCHALTTEMP_6: std::strcpy(buffer,"MFR_SCHALTTEMP_6"); break;
-        case Property::kMFR_SCHALTTEMP_7: std::strcpy(buffer,"MFR_SCHALTTEMP_7"); break;
-        case Property::kMFR_SCHALTTEMP_8: std::strcpy(buffer,"MFR_SCHALTTEMP_8"); break;
-        case Property::kMFR_SCHALTTEMP_9: std::strcpy(buffer,"MFR_SCHALTTEMP_9"); break;
-        case Property::kMFR_SCHALTTEMP_10: std::strcpy(buffer,"MFR_SCHALTTEMP_10"); break;
-        case Property::kMFR_SCHALTTEMP_11: std::strcpy(buffer,"MFR_SCHALTTEMP_11"); break;
-        case Property::kMFR_SCHALTTEMP_12: std::strcpy(buffer,"MFR_SCHALTTEMP_12"); break;
-        case Property::kMFR_SCHALTTEMP_13: std::strcpy(buffer,"MFR_SCHALTTEMP_13"); break;
-        case Property::kMFR_SCHALTTEMP_14: std::strcpy(buffer,"MFR_SCHALTTEMP_14"); break;
-        case Property::kMFR_SCHALTTEMP_15: std::strcpy(buffer,"MFR_SCHALTTEMP_15"); break;
-        case Property::kMFR_SCHALTTEMP_16: std::strcpy(buffer,"MFR_SCHALTTEMP_16"); break;
-        case Property::kMFR_SCHALTTEMP_17: std::strcpy(buffer,"MFR_SCHALTTEMP_17"); break;
-        case Property::kMFR_SCHALTTEMP_18: std::strcpy(buffer,"MFR_SCHALTTEMP_18"); break;
-        case Property::kMFR_SCHALTTEMP_19: std::strcpy(buffer,"MFR_SCHALTTEMP_19"); break;
-        case Property::kMFR_SCHALTTEMP_20: std::strcpy(buffer,"MFR_SCHALTTEMP_20"); break;
-        case Property::kMFR_SCHALTTEMP_21: std::strcpy(buffer,"MFR_SCHALTTEMP_21"); break;
-        case Property::kMFR_SCHALTTEMP_22: std::strcpy(buffer,"MFR_SCHALTTEMP_22"); break;
-        case Property::kMFR_SCHALTTEMP_23: std::strcpy(buffer,"MFR_SCHALTTEMP_23"); break;
-        case Property::kMFR_SCHALTTEMP_24: std::strcpy(buffer,"MFR_SCHALTTEMP_24"); break;
-        case Property::kMFR_SCHALTTEMP_25: std::strcpy(buffer,"MFR_SCHALTTEMP_25"); break;
-        case Property::kMFR_SCHALTTEMP_26: std::strcpy(buffer,"MFR_SCHALTTEMP_26"); break;
-        case Property::kMFR_SCHALTTEMP_27: std::strcpy(buffer,"MFR_SCHALTTEMP_27"); break;
-        case Property::kMFR_SCHALTTEMP_28: std::strcpy(buffer,"MFR_SCHALTTEMP_28"); break;
-        case Property::kMFR_SCHALTTEMP_29: std::strcpy(buffer,"MFR_SCHALTTEMP_29"); break;
-        case Property::kMFR_SCHALTTEMP_30: std::strcpy(buffer,"MFR_SCHALTTEMP_30"); break;
-        case Property::kMFR_SCHALTTEMP_31: std::strcpy(buffer,"MFR_SCHALTTEMP_31"); break;
-        case Property::kMFR_SCHALTTEMP_32: std::strcpy(buffer,"MFR_SCHALTTEMP_32"); break;
-        case Property::kMFR_HYSTERESE_1: std::strcpy(buffer,"MFR_HYSTERESE_1"); break;
-        case Property::kMFR_HYSTERESE_2: std::strcpy(buffer,"MFR_HYSTERESE_2"); break;
-        case Property::kMFR_HYSTERESE_3: std::strcpy(buffer,"MFR_HYSTERESE_3"); break;
-        case Property::kMFR_HYSTERESE_4: std::strcpy(buffer,"MFR_HYSTERESE_4"); break;
-        case Property::kMFR_HYSTERESE_5: std::strcpy(buffer,"MFR_HYSTERESE_5"); break;
-        case Property::kMFR_HYSTERESE_6: std::strcpy(buffer,"MFR_HYSTERESE_6"); break;
-        case Property::kMFR_HYSTERESE_7: std::strcpy(buffer,"MFR_HYSTERESE_7"); break;
-        case Property::kMFR_HYSTERESE_8: std::strcpy(buffer,"MFR_HYSTERESE_8"); break;
-        case Property::kMFR_HYSTERESE_9: std::strcpy(buffer,"MFR_HYSTERESE_9"); break;
-        case Property::kMFR_HYSTERESE_10: std::strcpy(buffer,"MFR_HYSTERESE_10"); break;
-        case Property::kMFR_HYSTERESE_11: std::strcpy(buffer,"MFR_HYSTERESE_11"); break;
-        case Property::kMFR_HYSTERESE_12: std::strcpy(buffer,"MFR_HYSTERESE_12"); break;
-        case Property::kMFR_HYSTERESE_13: std::strcpy(buffer,"MFR_HYSTERESE_13"); break;
-        case Property::kMFR_HYSTERESE_14: std::strcpy(buffer,"MFR_HYSTERESE_14"); break;
-        case Property::kMFR_HYSTERESE_15: std::strcpy(buffer,"MFR_HYSTERESE_15"); break;
-        case Property::kMFR_HYSTERESE_16: std::strcpy(buffer,"MFR_HYSTERESE_16"); break;
-        case Property::kMFR_HYSTERESE_17: std::strcpy(buffer,"MFR_HYSTERESE_17"); break;
-        case Property::kMFR_HYSTERESE_18: std::strcpy(buffer,"MFR_HYSTERESE_18"); break;
-        case Property::kMFR_HYSTERESE_19: std::strcpy(buffer,"MFR_HYSTERESE_19"); break;
-        case Property::kMFR_HYSTERESE_20: std::strcpy(buffer,"MFR_HYSTERESE_20"); break;
-        case Property::kMFR_HYSTERESE_21: std::strcpy(buffer,"MFR_HYSTERESE_21"); break;
-        case Property::kMFR_HYSTERESE_22: std::strcpy(buffer,"MFR_HYSTERESE_22"); break;
-        case Property::kMFR_HYSTERESE_23: std::strcpy(buffer,"MFR_HYSTERESE_23"); break;
-        case Property::kMFR_HYSTERESE_24: std::strcpy(buffer,"MFR_HYSTERESE_24"); break;
-        case Property::kMFR_HYSTERESE_25: std::strcpy(buffer,"MFR_HYSTERESE_25"); break;
-        case Property::kMFR_HYSTERESE_26: std::strcpy(buffer,"MFR_HYSTERESE_26"); break;
-        case Property::kMFR_HYSTERESE_27: std::strcpy(buffer,"MFR_HYSTERESE_27"); break;
-        case Property::kMFR_HYSTERESE_28: std::strcpy(buffer,"MFR_HYSTERESE_28"); break;
-        case Property::kMFR_HYSTERESE_29: std::strcpy(buffer,"MFR_HYSTERESE_29"); break;
-        case Property::kMFR_HYSTERESE_30: std::strcpy(buffer,"MFR_HYSTERESE_30"); break;
-        case Property::kMFR_HYSTERESE_31: std::strcpy(buffer,"MFR_HYSTERESE_31"); break;
-        case Property::kMFR_HYSTERESE_32: std::strcpy(buffer,"MFR_HYSTERESE_32"); break;
-        case Property::kMFR_ISTTEMP1_1: std::strcpy(buffer,"MFR_ISTTEMP1_1"); break;
-        case Property::kMFR_ISTTEMP1_2: std::strcpy(buffer,"MFR_ISTTEMP1_2"); break;
-        case Property::kMFR_ISTTEMP1_3: std::strcpy(buffer,"MFR_ISTTEMP1_3"); break;
-        case Property::kMFR_ISTTEMP1_4: std::strcpy(buffer,"MFR_ISTTEMP1_4"); break;
-        case Property::kMFR_ISTTEMP1_5: std::strcpy(buffer,"MFR_ISTTEMP1_5"); break;
-        case Property::kMFR_ISTTEMP1_6: std::strcpy(buffer,"MFR_ISTTEMP1_6"); break;
-        case Property::kMFR_ISTTEMP1_7: std::strcpy(buffer,"MFR_ISTTEMP1_7"); break;
-        case Property::kMFR_ISTTEMP1_8: std::strcpy(buffer,"MFR_ISTTEMP1_8"); break;
-        case Property::kMFR_ISTTEMP1_9: std::strcpy(buffer,"MFR_ISTTEMP1_9"); break;
-        case Property::kMFR_ISTTEMP1_10: std::strcpy(buffer,"MFR_ISTTEMP1_10"); break;
-        case Property::kMFR_ISTTEMP1_11: std::strcpy(buffer,"MFR_ISTTEMP1_11"); break;
-        case Property::kMFR_ISTTEMP1_12: std::strcpy(buffer,"MFR_ISTTEMP1_12"); break;
-        case Property::kMFR_ISTTEMP1_13: std::strcpy(buffer,"MFR_ISTTEMP1_13"); break;
-        case Property::kMFR_ISTTEMP1_14: std::strcpy(buffer,"MFR_ISTTEMP1_14"); break;
-        case Property::kMFR_ISTTEMP1_15: std::strcpy(buffer,"MFR_ISTTEMP1_15"); break;
-        case Property::kMFR_ISTTEMP1_16: std::strcpy(buffer,"MFR_ISTTEMP1_16"); break;
-        case Property::kMFR_ISTTEMP1_17: std::strcpy(buffer,"MFR_ISTTEMP1_17"); break;
-        case Property::kMFR_ISTTEMP1_18: std::strcpy(buffer,"MFR_ISTTEMP1_18"); break;
-        case Property::kMFR_ISTTEMP1_19: std::strcpy(buffer,"MFR_ISTTEMP1_19"); break;
-        case Property::kMFR_ISTTEMP1_20: std::strcpy(buffer,"MFR_ISTTEMP1_20"); break;
-        case Property::kMFR_ISTTEMP1_21: std::strcpy(buffer,"MFR_ISTTEMP1_21"); break;
-        case Property::kMFR_ISTTEMP1_22: std::strcpy(buffer,"MFR_ISTTEMP1_22"); break;
-        case Property::kMFR_ISTTEMP1_23: std::strcpy(buffer,"MFR_ISTTEMP1_23"); break;
-        case Property::kMFR_ISTTEMP1_24: std::strcpy(buffer,"MFR_ISTTEMP1_24"); break;
-        case Property::kMFR_ISTTEMP1_25: std::strcpy(buffer,"MFR_ISTTEMP1_25"); break;
-        case Property::kMFR_ISTTEMP1_26: std::strcpy(buffer,"MFR_ISTTEMP1_26"); break;
-        case Property::kMFR_ISTTEMP1_27: std::strcpy(buffer,"MFR_ISTTEMP1_27"); break;
-        case Property::kMFR_ISTTEMP1_28: std::strcpy(buffer,"MFR_ISTTEMP1_28"); break;
-        case Property::kMFR_ISTTEMP1_29: std::strcpy(buffer,"MFR_ISTTEMP1_29"); break;
-        case Property::kMFR_ISTTEMP1_30: std::strcpy(buffer,"MFR_ISTTEMP1_30"); break;
-        case Property::kMFR_ISTTEMP1_31: std::strcpy(buffer,"MFR_ISTTEMP1_31"); break;
-        case Property::kMFR_ISTTEMP1_32: std::strcpy(buffer,"MFR_ISTTEMP1_32"); break;
-        case Property::kMFR_ISTTEMP2_1: std::strcpy(buffer,"MFR_ISTTEMP2_1"); break;
-        case Property::kMFR_ISTTEMP2_2: std::strcpy(buffer,"MFR_ISTTEMP2_2"); break;
-        case Property::kMFR_ISTTEMP2_3: std::strcpy(buffer,"MFR_ISTTEMP2_3"); break;
-        case Property::kMFR_ISTTEMP2_4: std::strcpy(buffer,"MFR_ISTTEMP2_4"); break;
-        case Property::kMFR_ISTTEMP2_5: std::strcpy(buffer,"MFR_ISTTEMP2_5"); break;
-        case Property::kMFR_ISTTEMP2_6: std::strcpy(buffer,"MFR_ISTTEMP2_6"); break;
-        case Property::kMFR_ISTTEMP2_7: std::strcpy(buffer,"MFR_ISTTEMP2_7"); break;
-        case Property::kMFR_ISTTEMP2_8: std::strcpy(buffer,"MFR_ISTTEMP2_8"); break;
-        case Property::kMFR_ISTTEMP2_9: std::strcpy(buffer,"MFR_ISTTEMP2_9"); break;
-        case Property::kMFR_ISTTEMP2_10: std::strcpy(buffer,"MFR_ISTTEMP2_10"); break;
-        case Property::kMFR_ISTTEMP2_11: std::strcpy(buffer,"MFR_ISTTEMP2_11"); break;
-        case Property::kMFR_ISTTEMP2_12: std::strcpy(buffer,"MFR_ISTTEMP2_12"); break;
-        case Property::kMFR_ISTTEMP2_13: std::strcpy(buffer,"MFR_ISTTEMP2_13"); break;
-        case Property::kMFR_ISTTEMP2_14: std::strcpy(buffer,"MFR_ISTTEMP2_14"); break;
-        case Property::kMFR_ISTTEMP2_15: std::strcpy(buffer,"MFR_ISTTEMP2_15"); break;
-        case Property::kMFR_ISTTEMP2_16: std::strcpy(buffer,"MFR_ISTTEMP2_16"); break;
-        case Property::kMFR_ISTTEMP2_17: std::strcpy(buffer,"MFR_ISTTEMP2_17"); break;
-        case Property::kMFR_ISTTEMP2_18: std::strcpy(buffer,"MFR_ISTTEMP2_18"); break;
-        case Property::kMFR_ISTTEMP2_19: std::strcpy(buffer,"MFR_ISTTEMP2_19"); break;
-        case Property::kMFR_ISTTEMP2_20: std::strcpy(buffer,"MFR_ISTTEMP2_20"); break;
-        case Property::kMFR_ISTTEMP2_21: std::strcpy(buffer,"MFR_ISTTEMP2_21"); break;
-        case Property::kMFR_ISTTEMP2_22: std::strcpy(buffer,"MFR_ISTTEMP2_22"); break;
-        case Property::kMFR_ISTTEMP2_23: std::strcpy(buffer,"MFR_ISTTEMP2_23"); break;
-        case Property::kMFR_ISTTEMP2_24: std::strcpy(buffer,"MFR_ISTTEMP2_24"); break;
-        case Property::kMFR_ISTTEMP2_25: std::strcpy(buffer,"MFR_ISTTEMP2_25"); break;
-        case Property::kMFR_ISTTEMP2_26: std::strcpy(buffer,"MFR_ISTTEMP2_26"); break;
-        case Property::kMFR_ISTTEMP2_27: std::strcpy(buffer,"MFR_ISTTEMP2_27"); break;
-        case Property::kMFR_ISTTEMP2_28: std::strcpy(buffer,"MFR_ISTTEMP2_28"); break;
-        case Property::kMFR_ISTTEMP2_29: std::strcpy(buffer,"MFR_ISTTEMP2_29"); break;
-        case Property::kMFR_ISTTEMP2_30: std::strcpy(buffer,"MFR_ISTTEMP2_30"); break;
-        case Property::kMFR_ISTTEMP2_31: std::strcpy(buffer,"MFR_ISTTEMP2_31"); break;
-        case Property::kMFR_ISTTEMP2_32: std::strcpy(buffer,"MFR_ISTTEMP2_32"); break;
-        case Property::kMFR_STATUS_1: std::strcpy(buffer,"MFR_STATUS_1"); break;
-        case Property::kMFR_STATUS_2: std::strcpy(buffer,"MFR_STATUS_2"); break;
-        case Property::kMFR_STATUS_3: std::strcpy(buffer,"MFR_STATUS_3"); break;
-        case Property::kMFR_STATUS_4: std::strcpy(buffer,"MFR_STATUS_4"); break;
-        case Property::kMFR_STATUS_5: std::strcpy(buffer,"MFR_STATUS_5"); break;
-        case Property::kMFR_STATUS_6: std::strcpy(buffer,"MFR_STATUS_6"); break;
-        case Property::kMFR_STATUS_7: std::strcpy(buffer,"MFR_STATUS_7"); break;
-        case Property::kMFR_STATUS_8: std::strcpy(buffer,"MFR_STATUS_8"); break;
-        case Property::kMFR_STATUS_9: std::strcpy(buffer,"MFR_STATUS_9"); break;
-        case Property::kMFR_STATUS_10: std::strcpy(buffer,"MFR_STATUS_10"); break;
-        case Property::kMFR_STATUS_11: std::strcpy(buffer,"MFR_STATUS_11"); break;
-        case Property::kMFR_STATUS_12: std::strcpy(buffer,"MFR_STATUS_12"); break;
-        case Property::kMFR_STATUS_13: std::strcpy(buffer,"MFR_STATUS_13"); break;
-        case Property::kMFR_STATUS_14: std::strcpy(buffer,"MFR_STATUS_14"); break;
-        case Property::kMFR_STATUS_15: std::strcpy(buffer,"MFR_STATUS_15"); break;
-        case Property::kMFR_STATUS_16: std::strcpy(buffer,"MFR_STATUS_16"); break;
-        case Property::kMFR_STATUS_17: std::strcpy(buffer,"MFR_STATUS_17"); break;
-        case Property::kMFR_STATUS_18: std::strcpy(buffer,"MFR_STATUS_18"); break;
-        case Property::kMFR_STATUS_19: std::strcpy(buffer,"MFR_STATUS_19"); break;
-        case Property::kMFR_STATUS_20: std::strcpy(buffer,"MFR_STATUS_20"); break;
-        case Property::kMFR_STATUS_21: std::strcpy(buffer,"MFR_STATUS_21"); break;
-        case Property::kMFR_STATUS_22: std::strcpy(buffer,"MFR_STATUS_22"); break;
-        case Property::kMFR_STATUS_23: std::strcpy(buffer,"MFR_STATUS_23"); break;
-        case Property::kMFR_STATUS_24: std::strcpy(buffer,"MFR_STATUS_24"); break;
-        case Property::kMFR_STATUS_25: std::strcpy(buffer,"MFR_STATUS_25"); break;
-        case Property::kMFR_STATUS_26: std::strcpy(buffer,"MFR_STATUS_26"); break;
-        case Property::kMFR_STATUS_27: std::strcpy(buffer,"MFR_STATUS_27"); break;
-        case Property::kMFR_STATUS_28: std::strcpy(buffer,"MFR_STATUS_28"); break;
-        case Property::kMFR_STATUS_29: std::strcpy(buffer,"MFR_STATUS_29"); break;
-        case Property::kMFR_STATUS_30: std::strcpy(buffer,"MFR_STATUS_30"); break;
-        case Property::kMFR_STATUS_31: std::strcpy(buffer,"MFR_STATUS_31"); break;
-        case Property::kMFR_STATUS_32: std::strcpy(buffer,"MFR_STATUS_32"); break;
-        case Property::kWE_TEMPERATUR_1: std::strcpy(buffer,"WE_TEMPERATUR_1"); break;
-        case Property::kWE_TEMPERATUR_2: std::strcpy(buffer,"WE_TEMPERATUR_2"); break;
-        case Property::kWE_TEMPERATUR_3: std::strcpy(buffer,"WE_TEMPERATUR_3"); break;
-        case Property::kWE_TEMPERATUR_4: std::strcpy(buffer,"WE_TEMPERATUR_4"); break;
-        case Property::kWE_TEMPERATUR_5: std::strcpy(buffer,"WE_TEMPERATUR_5"); break;
-        case Property::kWE_TEMPERATUR_6: std::strcpy(buffer,"WE_TEMPERATUR_6"); break;
-        case Property::kWE_TEMPERATUR_7: std::strcpy(buffer,"WE_TEMPERATUR_7"); break;
-        case Property::kWE_TEMPERATUR_8: std::strcpy(buffer,"WE_TEMPERATUR_8"); break;
-        case Property::kWE_TEMPERATUR_9: std::strcpy(buffer,"WE_TEMPERATUR_9"); break;
-        case Property::kWE_TEMPERATUR_10: std::strcpy(buffer,"WE_TEMPERATUR_10"); break;
-        case Property::kWE_TEMPERATUR_11: std::strcpy(buffer,"WE_TEMPERATUR_11"); break;
-        case Property::kWE_TEMPERATUR_12: std::strcpy(buffer,"WE_TEMPERATUR_12"); break;
-        case Property::kWE_TEMPERATUR_13: std::strcpy(buffer,"WE_TEMPERATUR_13"); break;
-        case Property::kWE_TEMPERATUR_14: std::strcpy(buffer,"WE_TEMPERATUR_14"); break;
-        case Property::kWE_TEMPERATUR_15: std::strcpy(buffer,"WE_TEMPERATUR_15"); break;
-        case Property::kWE_TEMPERATUR_16: std::strcpy(buffer,"WE_TEMPERATUR_16"); break;
-        case Property::kWE_MODGRAD_IST_1: std::strcpy(buffer,"WE_MODGRAD_IST_1"); break;
-        case Property::kWE_MODGRAD_IST_2: std::strcpy(buffer,"WE_MODGRAD_IST_2"); break;
-        case Property::kWE_MODGRAD_IST_3: std::strcpy(buffer,"WE_MODGRAD_IST_3"); break;
-        case Property::kWE_MODGRAD_IST_4: std::strcpy(buffer,"WE_MODGRAD_IST_4"); break;
-        case Property::kWE_MODGRAD_IST_5: std::strcpy(buffer,"WE_MODGRAD_IST_5"); break;
-        case Property::kWE_MODGRAD_IST_6: std::strcpy(buffer,"WE_MODGRAD_IST_6"); break;
-        case Property::kWE_MODGRAD_IST_7: std::strcpy(buffer,"WE_MODGRAD_IST_7"); break;
-        case Property::kWE_MODGRAD_IST_8: std::strcpy(buffer,"WE_MODGRAD_IST_8"); break;
-        case Property::kWE_MODGRAD_IST_9: std::strcpy(buffer,"WE_MODGRAD_IST_9"); break;
-        case Property::kWE_MODGRAD_IST_10: std::strcpy(buffer,"WE_MODGRAD_IST_10"); break;
-        case Property::kWE_MODGRAD_IST_11: std::strcpy(buffer,"WE_MODGRAD_IST_11"); break;
-        case Property::kWE_MODGRAD_IST_12: std::strcpy(buffer,"WE_MODGRAD_IST_12"); break;
-        case Property::kWE_MODGRAD_IST_13: std::strcpy(buffer,"WE_MODGRAD_IST_13"); break;
-        case Property::kWE_MODGRAD_IST_14: std::strcpy(buffer,"WE_MODGRAD_IST_14"); break;
-        case Property::kWE_MODGRAD_IST_15: std::strcpy(buffer,"WE_MODGRAD_IST_15"); break;
-        case Property::kWE_MODGRAD_IST_16: std::strcpy(buffer,"WE_MODGRAD_IST_16"); break;
-        case Property::kKUEHL_RAUMSOLL_TAG: std::strcpy(buffer,"KUEHL_RAUMSOLL_TAG"); break;
-        case Property::kKUEHL_RAUMSOLL_ABWESEND: std::strcpy(buffer,"KUEHL_RAUMSOLL_ABWESEND"); break;
-       // case Property::kKUEHL_RAUMSOLL_NACHT: std::strcpy(buffer,"KUEHL_RAUMSOLL_NACHT"); break;
-        case Property::kLUEFT_STUFE_TAG: std::strcpy(buffer,"LUEFT_STUFE_TAG"); break;
-        case Property::kLUEFT_STUFE_NACHT: std::strcpy(buffer,"LUEFT_STUFE_NACHT"); break;
-        case Property::kLUEFT_STUFE_ABWESEND: std::strcpy(buffer,"LUEFT_STUFE_ABWESEND"); break;
-        case Property::kLUEFT_STUFE_PARTY: std::strcpy(buffer,"LUEFT_STUFE_PARTY"); break;
-        case Property::kLUEFT_ZEIT_AUSSERPLAN_STUFE0: std::strcpy(buffer,"LUEFT_ZEIT_AUSSERPLAN_STUFE0"); break;
-        case Property::kLUEFT_ZEIT_AUSSERPLAN_STUFE1: std::strcpy(buffer,"LUEFT_ZEIT_AUSSERPLAN_STUFE1"); break;
-        case Property::kLUEFT_ZEIT_AUSSERPLAN_STUFE2: std::strcpy(buffer,"LUEFT_ZEIT_AUSSERPLAN_STUFE2"); break;
-        case Property::kLUEFT_ZEIT_AUSSERPLAN_STUFE3: std::strcpy(buffer,"LUEFT_ZEIT_AUSSERPLAN_STUFE3"); break;
-        case Property::kLUEFT_PASSIVKUEHLUNG: std::strcpy(buffer,"LUEFT_PASSIVKUEHLUNG"); break;
-        case Property::kLUEFT_ZULUFT_STUFE1: std::strcpy(buffer,"LUEFT_ZULUFT_STUFE1"); break;
-        case Property::kLUEFT_ZULUFT_STUFE2: std::strcpy(buffer,"LUEFT_ZULUFT_STUFE2"); break;
-        case Property::kLUEFT_ZULUFT_STUFE3: std::strcpy(buffer,"LUEFT_ZULUFT_STUFE3"); break;
-        case Property::kLUEFT_ABLUFT_STUFE1: std::strcpy(buffer,"LUEFT_ABLUFT_STUFE1"); break;
-        case Property::kLUEFT_ABLUFT_STUFE2: std::strcpy(buffer,"LUEFT_ABLUFT_STUFE2"); break;
-        case Property::kLUEFT_ABLUFT_STUFE3: std::strcpy(buffer,"LUEFT_ABLUFT_STUFE3"); break;
-        case Property::kOFEN_FUNKTION: std::strcpy(buffer,"OFEN_FUNKTION"); break;
-        case Property::kMAX_ABTAUDAUER: std::strcpy(buffer,"MAX_ABTAUDAUER"); break;
-        case Property::kABTAUBEGINNSCHWELLE: std::strcpy(buffer,"ABTAUBEGINNSCHWELLE"); break;
-        case Property::kDREHZAHL_FILTERWECHSEL: std::strcpy(buffer,"DREHZAHL_FILTERWECHSEL"); break;
-        case Property::kEINSTELLSPEICHER_HAND: std::strcpy(buffer,"EINSTELLSPEICHER_HAND"); break;
-        case Property::kEINSTELLSPEICHER_ABWESEND: std::strcpy(buffer,"EINSTELLSPEICHER_ABWESEND"); break;
-        case Property::kKUEL_VORLAUFSOLLTEMP: std::strcpy(buffer,"KUEL_VORLAUFSOLLTEMP"); break;
-        case Property::kKUEHL_HYST_SOLLTEMP: std::strcpy(buffer,"KUEHL_HYST_SOLLTEMP"); break;
-        case Property::kKUEHL_HYST_RAUMTEMP: std::strcpy(buffer,"KUEHL_HYST_RAUMTEMP"); break;
-        case Property::kMAX_ABTAUDAUER_LUFT: std::strcpy(buffer,"MAX_ABTAUDAUER_LUFT"); break;
-        case Property::kANTILEG_INTERVALL_TAGE: std::strcpy(buffer,"ANTILEG_INTERVALL_TAGE"); break;
-        case Property::kANTILEG_TEMP: std::strcpy(buffer,"ANTILEG_TEMP"); break;
-        case Property::kNHZ_VERZOEGERUNG_WW: std::strcpy(buffer,"NHZ_VERZOEGERUNG_WW"); break;
-        case Property::kNHZ_AUSSENTEMP_SOFORT_WW: std::strcpy(buffer,"NHZ_AUSSENTEMP_SOFORT_WW"); break;
-        case Property::kNHZ_ANZAHL_STUFEN_WW: std::strcpy(buffer,"NHZ_ANZAHL_STUFEN_WW"); break;
-        case Property::kWW_SPEICHER_ALS_PUFFER: std::strcpy(buffer,"WW_SPEICHER_ALS_PUFFER"); break;
-        case Property::kMAX_VORLAUFTEMP_BEI_WW: std::strcpy(buffer,"MAX_VORLAUFTEMP_BEI_WW"); break;
-        case Property::kABSCHALTUNG_VERDICHTER_WW: std::strcpy(buffer,"ABSCHALTUNG_VERDICHTER_WW"); break;
-        case Property::kVERZOEGERUNG_VERDICHTER_WW: std::strcpy(buffer,"VERZOEGERUNG_VERDICHTER_WW"); break;
-        case Property::kSOLAR_HYSTERESE: std::strcpy(buffer,"SOLAR_HYSTERESE"); break;
-        case Property::kPARTY_ANFANG_TAG: std::strcpy(buffer,"PARTY_ANFANG_TAG"); break;
-        case Property::kPARTY_ANFANG_MONAT: std::strcpy(buffer,"PARTY_ANFANG_MONAT"); break;
-        case Property::kPARTY_ANFANG_JAHR: std::strcpy(buffer,"PARTY_ANFANG_JAHR"); break;
-        case Property::kPARTY_ENDE_TAG: std::strcpy(buffer,"PARTY_ENDE_TAG"); break;
-        case Property::kPARTY_ENDE_MONAT: std::strcpy(buffer,"PARTY_ENDE_MONAT"); break;
-    //    case Property::kPARTY_ENDE_JAHR: std::strcpy(buffer,"PARTY_ENDE_JAHR"); break;
-        case Property::kZULUFT_SOLL: std::strcpy(buffer,"ZULUFT_SOLL"); break;
-        case Property::kZULUFT_IST: std::strcpy(buffer,"ZULUFT_IST"); break;
-        case Property::kABLUFT_SOLL: std::strcpy(buffer,"ABLUFT_SOLL"); break;
-        case Property::kABLUFT_IST: std::strcpy(buffer,"ABLUFT_IST"); break;
-        case Property::kFORTLUFT_SOLL: std::strcpy(buffer,"FORTLUFT_SOLL"); break;
-        case Property::kFORTLUFT_IST: std::strcpy(buffer,"FORTLUFT_IST"); break;
-        case Property::kVERFLUESSIGER_TEMP: std::strcpy(buffer,"VERFLUESSIGER_TEMP"); break;
-        case Property::kANTEIL_VORLAUF: std::strcpy(buffer,"ANTEIL_VORLAUF"); break;
-        case Property::kFUSSPUNKT_HEIZKURVE: std::strcpy(buffer,"FUSSPUNKT_HEIZKURVE"); break;
-        case Property::kNHZ_ANZAHL_STUFEN: std::strcpy(buffer,"NHZ_ANZAHL_STUFEN"); break;
-        case Property::kNHZ_VERZOEGERUNG: std::strcpy(buffer,"NHZ_VERZOEGERUNG"); break;
-        case Property::kNHZ_LEISTUNG1: std::strcpy(buffer,"NHZ_LEISTUNG1"); break;
-        case Property::kHEIZGRENZE_HYST: std::strcpy(buffer,"HEIZGRENZE_HYST"); break;
-        case Property::kAUSSENTEMP_KORREKTUR: std::strcpy(buffer,"AUSSENTEMP_KORREKTUR"); break;
-        case Property::kLAUFZEIT_VERDICHTER_HEIZEN: std::strcpy(buffer,"LAUFZEIT_VERDICHTER_HEIZEN"); break;
-        case Property::kLAUFZEIT_VERDICHTER_KUEHLEN: std::strcpy(buffer,"LAUFZEIT_VERDICHTER_KUEHLEN"); break;
-        case Property::kLAUFZEIT_VERDICHTER_WW: std::strcpy(buffer,"LAUFZEIT_VERDICHTER_WW"); break;
-        case Property::kLAUFZEIT_NHZ_WW: std::strcpy(buffer,"LAUFZEIT_NHZ_WW"); break;
-        case Property::kLAUFZEIT_NHZ_HEIZEN: std::strcpy(buffer,"LAUFZEIT_NHZ_HEIZEN"); break;
-        case Property::kMANUELL_VERDICHTER: std::strcpy(buffer,"MANUELL_VERDICHTER"); break;
-        case Property::kMANUELL_NHZ_STUFE: std::strcpy(buffer,"MANUELL_NHZ_STUFE"); break;
-        case Property::kMANUELL_DREHZAHL_ABLUEFTER: std::strcpy(buffer,"MANUELL_DREHZAHL_ABLUEFTER"); break;
-        case Property::kMANUELL_DREHZAHL_ZULUEFTER: std::strcpy(buffer,"MANUELL_DREHZAHL_ZULUEFTER"); break;
-        case Property::kMANUELL_LUEFT_PARTY: std::strcpy(buffer,"MANUELL_LUEFT_PARTY"); break;
-        case Property::kMANUELL_LUEFT_NACHT: std::strcpy(buffer,"MANUELL_LUEFT_NACHT"); break;
-        case Property::kMANUELL_FENSTERKONTAKT: std::strcpy(buffer,"MANUELL_FENSTERKONTAKT"); break;
-        case Property::kMANUELL_HEAT_PIPE_VENTIL: std::strcpy(buffer,"MANUELL_HEAT_PIPE_VENTIL"); break;
-        case Property::kMANUELL_UMSCHALTVENTIL: std::strcpy(buffer,"MANUELL_UMSCHALTVENTIL"); break;
-        case Property::kABTAUENDE_TEMP: std::strcpy(buffer,"ABTAUENDE_TEMP"); break;
-        case Property::kNHZ_FROSTSCHUTZ: std::strcpy(buffer,"NHZ_FROSTSCHUTZ"); break;
-        case Property::kABTAU_FROSTSCHUTZ: std::strcpy(buffer,"ABTAU_FROSTSCHUTZ"); break;
-        case Property::kVERDICHTER_EINSCHALT_VERZ: std::strcpy(buffer,"VERDICHTER_EINSCHALT_VERZ"); break;
-        case Property::kFORTLUFT_LUEFTER_DREHZAHL: std::strcpy(buffer,"FORTLUFT_LUEFTER_DREHZAHL"); break;
-        case Property::kPUMPENZYKLEN_MAX: std::strcpy(buffer,"PUMPENZYKLEN_MAX"); break;
-        case Property::kPUMPENZYKLEN_MIN: std::strcpy(buffer,"PUMPENZYKLEN_MIN"); break;
-        case Property::kPUMPENZYKLEN_MAX_AUSSENT: std::strcpy(buffer,"PUMPENZYKLEN_MAX_AUSSENT"); break;
-        case Property::kPUMPENZYKLEN_MIN_AUSSENT: std::strcpy(buffer,"PUMPENZYKLEN_MIN_AUSSENT"); break;
-        case Property::kAKTIVE_HEIZSTUFEN: std::strcpy(buffer,"AKTIVE_HEIZSTUFEN"); break;
-        case Property::kABTAUEN_LL_WT_AKTIV: std::strcpy(buffer,"ABTAUEN_LL_WT_AKTIV"); break;
-        case Property::kRAUMTEMP_ERFASSUNG: std::strcpy(buffer,"RAUMTEMP_ERFASSUNG"); break;
-        case Property::kSOLAR_EINSTELLSPEICHERSOLLT: std::strcpy(buffer,"SOLAR_EINSTELLSPEICHERSOLLT"); break;
-        case Property::kEINSTELLSPEICHER_NACHT: std::strcpy(buffer,"EINSTELLSPEICHER_NACHT"); break;
-        case Property::kHYST_HEIZSTUFE1: std::strcpy(buffer,"HYST_HEIZSTUFE1"); break;
-        case Property::kHYST_HEIZSTUFE2: std::strcpy(buffer,"HYST_HEIZSTUFE2"); break;
-        case Property::kHYST_HEIZSTUFE3: std::strcpy(buffer,"HYST_HEIZSTUFE3"); break;
-        case Property::kHYST_HEIZSTUFE4: std::strcpy(buffer,"HYST_HEIZSTUFE4"); break;
-        case Property::kHYST_HEIZSTUFE5: std::strcpy(buffer,"HYST_HEIZSTUFE5"); break;
-        case Property::kASYMETRIE_HEIZSTUFEN: std::strcpy(buffer,"ASYMETRIE_HEIZSTUFEN"); break;
-        case Property::kVOLUMENSTROMMESSUNG: std::strcpy(buffer,"VOLUMENSTROMMESSUNG"); break;
-        case Property::kFEHLERAUFZEICHNUNG_STOP: std::strcpy(buffer,"FEHLERAUFZEICHNUNG_STOP"); break;
-        case Property::kHEIZEITVORVERLEGUNG_VERDICHTER: std::strcpy(buffer,"HEIZEITVORVERLEGUNG_VERDICHTER"); break;
-        case Property::kSOLAR_SPEERZEIT_VERDICHTER: std::strcpy(buffer,"SOLAR_SPEERZEIT_VERDICHTER"); break;
-        case Property::kPUMPSTEUER_FUEHRUNGSKESSEL: std::strcpy(buffer,"PUMPSTEUER_FUEHRUNGSKESSEL"); break;
-        case Property::kAKTIVIERUNG_LEISTUNGSZWANG_WW: std::strcpy(buffer,"AKTIVIERUNG_LEISTUNGSZWANG_WW"); break;
-        case Property::kHYSTERESE_LEISTUNGSZWANG_WW: std::strcpy(buffer,"HYSTERESE_LEISTUNGSZWANG_WW"); break;
-        case Property::kMIN_TEMP_DREHZAHLREGELUNG: std::strcpy(buffer,"MIN_TEMP_DREHZAHLREGELUNG"); break;
-        case Property::kMAX_SPREIZUNG_DREHZAHLREGELUNG: std::strcpy(buffer,"MAX_SPREIZUNG_DREHZAHLREGELUNG"); break;
-        case Property::kP_BEREICH_DREHZAHLPUMPE: std::strcpy(buffer,"P_BEREICH_DREHZAHLPUMPE"); break;
-        case Property::kHF_NETZWERK_ID: std::strcpy(buffer,"HF_NETZWERK_ID"); break;
-        case Property::kPARTY_ANFANG_UHRZEIT: std::strcpy(buffer,"PARTY_ANFANG_UHRZEIT"); break;
-        case Property::kPARTY_ENDE_UHRZEIT: std::strcpy(buffer,"PARTY_ENDE_UHRZEIT"); break;
-        case Property::kFERIEN_ANFANG_UHRZEIT: std::strcpy(buffer,"FERIEN_ANFANG_UHRZEIT"); break;
-        case Property::kFERIEN_ENDE_UHRZEIT: std::strcpy(buffer,"FERIEN_ENDE_UHRZEIT"); break;
-        case Property::kFABRIKTEST_START: std::strcpy(buffer,"FABRIKTEST_START"); break;
-        case Property::kLEISTUNGSREDUZIERUNG_KUEHLEN: std::strcpy(buffer,"LEISTUNGSREDUZIERUNG_KUEHLEN"); break;
-        case Property::kZWISCHENEINSPRITZUNG_ISTTEMP: std::strcpy(buffer,"ZWISCHENEINSPRITZUNG_ISTTEMP"); break;
-        case Property::kBETRIEBSART_QUELLENPUMPE: std::strcpy(buffer,"BETRIEBSART_QUELLENPUMPE"); break;
-        case Property::kGASVENTIL1: std::strcpy(buffer,"GASVENTIL1"); break;
-        case Property::kGASVENTIL2: std::strcpy(buffer,"GASVENTIL2"); break;
-        case Property::kLUEFT_PASSIVKUEHLUNG_UEBER_FORTLUEFTER: std::strcpy(buffer,"LUEFT_PASSIVKUEHLUNG_UEBER_FORTLUEFTER"); break;
-        case Property::kKUEHLZUSTAND: std::strcpy(buffer,"KUEHLZUSTAND"); break;
-        case Property::kTEMPORALE_LUEFTUNGSSTUFE_STUFE: std::strcpy(buffer,"TEMPORALE_LUEFTUNGSSTUFE_STUFE"); break;
-        case Property::kTEMPORALE_LUEFTUNGSSTUFE_DAUER: std::strcpy(buffer,"TEMPORALE_LUEFTUNGSSTUFE_DAUER"); break;
-        case Property::kSCHALTFKT_QUELLE_IWS: std::strcpy(buffer,"SCHALTFKT_QUELLE_IWS"); break;
-        case Property::kBITSCHALTER_1: std::strcpy(buffer,"BITSCHALTER_1"); break;
-        case Property::kWE_STATUS_1: std::strcpy(buffer,"WE_STATUS_1"); break;
-        case Property::kWE_STATUS_2: std::strcpy(buffer,"WE_STATUS_2"); break;
-        case Property::kWE_STATUS_3: std::strcpy(buffer,"WE_STATUS_3"); break;
-        case Property::kWE_STATUS_4: std::strcpy(buffer,"WE_STATUS_4"); break;
-        case Property::kWE_STATUS_5: std::strcpy(buffer,"WE_STATUS_5"); break;
-        case Property::kWE_STATUS_6: std::strcpy(buffer,"WE_STATUS_6"); break;
-        case Property::kWE_STATUS_7: std::strcpy(buffer,"WE_STATUS_7"); break;
-        case Property::kWE_STATUS_8: std::strcpy(buffer,"WE_STATUS_8"); break;
-        case Property::kWE_STATUS_9: std::strcpy(buffer,"WE_STATUS_9"); break;
-        case Property::kWE_STATUS_10: std::strcpy(buffer,"WE_STATUS_10"); break;
-        case Property::kWE_STATUS_11: std::strcpy(buffer,"WE_STATUS_11"); break;
-        case Property::kWE_STATUS_12: std::strcpy(buffer,"WE_STATUS_12"); break;
-        case Property::kWE_STATUS_13: std::strcpy(buffer,"WE_STATUS_13"); break;
-        case Property::kWE_STATUS_14: std::strcpy(buffer,"WE_STATUS_14"); break;
-        case Property::kWE_STATUS_15: std::strcpy(buffer,"WE_STATUS_15"); break;
-        case Property::kWE_STATUS_16: std::strcpy(buffer,"WE_STATUS_16"); break;
-        case Property::kWE_MODGRAD_VORGABE_1: std::strcpy(buffer,"WE_MODGRAD_VORGABE_1"); break;
-        case Property::kWE_MODGRAD_VORGABE_2: std::strcpy(buffer,"WE_MODGRAD_VORGABE_2"); break;
-        case Property::kWE_MODGRAD_VORGABE_3: std::strcpy(buffer,"WE_MODGRAD_VORGABE_3"); break;
-        case Property::kWE_MODGRAD_VORGABE_4: std::strcpy(buffer,"WE_MODGRAD_VORGABE_4"); break;
-        case Property::kWE_MODGRAD_VORGABE_5: std::strcpy(buffer,"WE_MODGRAD_VORGABE_5"); break;
-        case Property::kWE_MODGRAD_VORGABE_6: std::strcpy(buffer,"WE_MODGRAD_VORGABE_6"); break;
-        case Property::kWE_MODGRAD_VORGABE_7: std::strcpy(buffer,"WE_MODGRAD_VORGABE_7"); break;
-        case Property::kWE_MODGRAD_VORGABE_8: std::strcpy(buffer,"WE_MODGRAD_VORGABE_8"); break;
-        case Property::kWE_MODGRAD_VORGABE_9: std::strcpy(buffer,"WE_MODGRAD_VORGABE_9"); break;
-        case Property::kWE_MODGRAD_VORGABE_10: std::strcpy(buffer,"WE_MODGRAD_VORGABE_10"); break;
-        case Property::kWE_MODGRAD_VORGABE_11: std::strcpy(buffer,"WE_MODGRAD_VORGABE_11"); break;
-        case Property::kWE_MODGRAD_VORGABE_12: std::strcpy(buffer,"WE_MODGRAD_VORGABE_12"); break;
-        case Property::kWE_MODGRAD_VORGABE_13: std::strcpy(buffer,"WE_MODGRAD_VORGABE_13"); break;
-        case Property::kWE_MODGRAD_VORGABE_14: std::strcpy(buffer,"WE_MODGRAD_VORGABE_14"); break;
-        case Property::kWE_MODGRAD_VORGABE_15: std::strcpy(buffer,"WE_MODGRAD_VORGABE_15"); break;
-        case Property::kWE_MODGRAD_VORGABE_16: std::strcpy(buffer,"WE_MODGRAD_VORGABE_16"); break;
-        case Property::kWE_STB_TESTFUNKTION_1: std::strcpy(buffer,"WE_STB_TESTFUNKTION_1"); break;
-        case Property::kWE_STB_TESTFUNKTION_2: std::strcpy(buffer,"WE_STB_TESTFUNKTION_2"); break;
-        case Property::kWE_STB_TESTFUNKTION_3: std::strcpy(buffer,"WE_STB_TESTFUNKTION_3"); break;
-        case Property::kWE_STB_TESTFUNKTION_4: std::strcpy(buffer,"WE_STB_TESTFUNKTION_4"); break;
-        case Property::kWE_STB_TESTFUNKTION_5: std::strcpy(buffer,"WE_STB_TESTFUNKTION_5"); break;
-        case Property::kWE_STB_TESTFUNKTION_6: std::strcpy(buffer,"WE_STB_TESTFUNKTION_6"); break;
-        case Property::kWE_STB_TESTFUNKTION_7: std::strcpy(buffer,"WE_STB_TESTFUNKTION_7"); break;
-        case Property::kWE_STB_TESTFUNKTION_8: std::strcpy(buffer,"WE_STB_TESTFUNKTION_8"); break;
-        case Property::kWE_STB_TESTFUNKTION_9: std::strcpy(buffer,"WE_STB_TESTFUNKTION_9"); break;
-        case Property::kWE_STB_TESTFUNKTION_10: std::strcpy(buffer,"WE_STB_TESTFUNKTION_10"); break;
-        case Property::kWE_STB_TESTFUNKTION_11: std::strcpy(buffer,"WE_STB_TESTFUNKTION_11"); break;
-        case Property::kWE_STB_TESTFUNKTION_12: std::strcpy(buffer,"WE_STB_TESTFUNKTION_12"); break;
-        case Property::kWE_STB_TESTFUNKTION_13: std::strcpy(buffer,"WE_STB_TESTFUNKTION_13"); break;
-        case Property::kWE_STB_TESTFUNKTION_14: std::strcpy(buffer,"WE_STB_TESTFUNKTION_14"); break;
-        case Property::kWE_STB_TESTFUNKTION_15: std::strcpy(buffer,"WE_STB_TESTFUNKTION_15"); break;
-        case Property::kWE_STB_TESTFUNKTION_16: std::strcpy(buffer,"WE_STB_TESTFUNKTION_16"); break;
-        //case Property::kUNTERD_TEMPM_PUMPENANL: std::strcpy(buffer,"UNTERD_TEMPM_PUMPENANL"); break;
-        case Property::kLUEFT_STUFE_HAND: std::strcpy(buffer,"LUEFT_STUFE_HAND"); break;
-        case Property::kKUEHLSYSTEM: std::strcpy(buffer,"KUEHLSYSTEM"); break;
-        case Property::kKESSEL_STARTVERZOEGERUNG: std::strcpy(buffer,"KESSEL_STARTVERZOEGERUNG"); break;
-        case Property::kMFR_HYSTERESE2_1: std::strcpy(buffer,"MFR_HYSTERESE2_1"); break;
-        case Property::kMFR_HYSTERESE2_2: std::strcpy(buffer,"MFR_HYSTERESE2_2"); break;
-        case Property::kMFR_HYSTERESE2_3: std::strcpy(buffer,"MFR_HYSTERESE2_3"); break;
-        case Property::kMFR_HYSTERESE2_4: std::strcpy(buffer,"MFR_HYSTERESE2_4"); break;
-        case Property::kMFR_HYSTERESE2_5: std::strcpy(buffer,"MFR_HYSTERESE2_5"); break;
-        case Property::kMFR_HYSTERESE2_6: std::strcpy(buffer,"MFR_HYSTERESE2_6"); break;
-        case Property::kMFR_HYSTERESE2_7: std::strcpy(buffer,"MFR_HYSTERESE2_7"); break;
-        case Property::kMFR_HYSTERESE2_8: std::strcpy(buffer,"MFR_HYSTERESE2_8"); break;
-        case Property::kMFR_HYSTERESE2_9: std::strcpy(buffer,"MFR_HYSTERESE2_9"); break;
-        case Property::kMFR_HYSTERESE2_10: std::strcpy(buffer,"MFR_HYSTERESE2_10"); break;
-        case Property::kMFR_HYSTERESE2_11: std::strcpy(buffer,"MFR_HYSTERESE2_11"); break;
-        case Property::kMFR_HYSTERESE2_12: std::strcpy(buffer,"MFR_HYSTERESE2_12"); break;
-        case Property::kMFR_HYSTERESE2_13: std::strcpy(buffer,"MFR_HYSTERESE2_13"); break;
-        case Property::kMFR_HYSTERESE2_14: std::strcpy(buffer,"MFR_HYSTERESE2_14"); break;
-        case Property::kMFR_HYSTERESE2_15: std::strcpy(buffer,"MFR_HYSTERESE2_15"); break;
-        case Property::kMFR_HYSTERESE2_16: std::strcpy(buffer,"MFR_HYSTERESE2_16"); break;
-        case Property::kMFR_HYSTERESE2_17: std::strcpy(buffer,"MFR_HYSTERESE2_17"); break;
-        case Property::kMFR_HYSTERESE2_18: std::strcpy(buffer,"MFR_HYSTERESE2_18"); break;
-        case Property::kMFR_HYSTERESE2_19: std::strcpy(buffer,"MFR_HYSTERESE2_19"); break;
-        case Property::kMFR_HYSTERESE2_20: std::strcpy(buffer,"MFR_HYSTERESE2_20"); break;
-        case Property::kMFR_HYSTERESE2_21: std::strcpy(buffer,"MFR_HYSTERESE2_21"); break;
-        case Property::kMFR_HYSTERESE2_22: std::strcpy(buffer,"MFR_HYSTERESE2_22"); break;
-        case Property::kMFR_HYSTERESE2_23: std::strcpy(buffer,"MFR_HYSTERESE2_23"); break;
-        case Property::kMFR_HYSTERESE2_24: std::strcpy(buffer,"MFR_HYSTERESE2_24"); break;
-        case Property::kMFR_HYSTERESE2_25: std::strcpy(buffer,"MFR_HYSTERESE2_25"); break;
-        case Property::kMFR_HYSTERESE2_26: std::strcpy(buffer,"MFR_HYSTERESE2_26"); break;
-        case Property::kMFR_HYSTERESE2_27: std::strcpy(buffer,"MFR_HYSTERESE2_27"); break;
-        case Property::kMFR_HYSTERESE2_28: std::strcpy(buffer,"MFR_HYSTERESE2_28"); break;
-        case Property::kMFR_HYSTERESE2_29: std::strcpy(buffer,"MFR_HYSTERESE2_29"); break;
-        case Property::kMFR_HYSTERESE2_30: std::strcpy(buffer,"MFR_HYSTERESE2_30"); break;
-        case Property::kMFR_HYSTERESE2_31: std::strcpy(buffer,"MFR_HYSTERESE2_31"); break;
-        case Property::kMFR_HYSTERESE2_32: std::strcpy(buffer,"MFR_HYSTERESE2_32"); break;
-        case Property::kK_OS_START_DREHZAHLAENDERUNG: std::strcpy(buffer,"K_OS_START_DREHZAHLAENDERUNG"); break;
-        case Property::kK_OS_RMX_RESERVE_INFO1: std::strcpy(buffer,"K_OS_RMX_RESERVE_INFO1"); break;
-        case Property::kK_OS_RMX_RESERVE_INFO2: std::strcpy(buffer,"K_OS_RMX_RESERVE_INFO2"); break;
-        case Property::kK_OS_RMX_RESERVE_INFO3: std::strcpy(buffer,"K_OS_RMX_RESERVE_INFO3"); break;
-        case Property::kHW_BITSCHALTER: std::strcpy(buffer,"HW_BITSCHALTER"); break;
-        case Property::kKUEHLFUNKTION: std::strcpy(buffer,"KUEHLFUNKTION"); break;
-        case Property::kSOLLDREHZAHL_VERDICHTER_1: std::strcpy(buffer,"SOLLDREHZAHL_VERDICHTER_1"); break;
-        case Property::kSOLLDREHZAHL_VERDICHTER_2: std::strcpy(buffer,"SOLLDREHZAHL_VERDICHTER_2"); break;
-        case Property::kISTDREHZAHL_VERDICHTER_1: std::strcpy(buffer,"ISTDREHZAHL_VERDICHTER_1"); break;
-        case Property::kISTDREHZAHL_VERDICHTER_2: std::strcpy(buffer,"ISTDREHZAHL_VERDICHTER_2"); break;
-        case Property::kZWISCHENEINSPRITZUNG_ISTTEMP_VND: std::strcpy(buffer,"ZWISCHENEINSPRITZUNG_ISTTEMP_VND"); break;
-        case Property::kDRUCK_HEIZKREIS: std::strcpy(buffer,"DRUCK_HEIZKREIS"); break;
-      //  case Property::kTEST_OBJEKT_249: std::strcpy(buffer,"TEST_OBJEKT_249"); break; // duplicate
-        case Property::kKALIBRIERWERT_1_1: std::strcpy(buffer,"KALIBRIERWERT_1_1"); break;
-        case Property::kKALIBRIERWERT_1_2: std::strcpy(buffer,"KALIBRIERWERT_1_2"); break;
-        case Property::kKALIBRIERWERT_1_3: std::strcpy(buffer,"KALIBRIERWERT_1_3"); break;
-        case Property::kKALIBRIERWERT_1_4: std::strcpy(buffer,"KALIBRIERWERT_1_4"); break;
-        case Property::kKALIBRIERWERT_1_5: std::strcpy(buffer,"KALIBRIERWERT_1_5"); break;
-        case Property::kKALIBRIERWERT_1_6: std::strcpy(buffer,"KALIBRIERWERT_1_6"); break;
-        case Property::kKALIBRIERWERT_1_7: std::strcpy(buffer,"KALIBRIERWERT_1_7"); break;
-        case Property::kKALIBRIERWERT_1_8: std::strcpy(buffer,"KALIBRIERWERT_1_8"); break;
-        case Property::kKALIBRIERWERT_1_9: std::strcpy(buffer,"KALIBRIERWERT_1_9"); break;
-        case Property::kKALIBRIERWERT_1_10: std::strcpy(buffer,"KALIBRIERWERT_1_10"); break;
-        case Property::kKALIBRIERWERT_2_1: std::strcpy(buffer,"KALIBRIERWERT_2_1"); break;
-        case Property::kKALIBRIERWERT_2_2: std::strcpy(buffer,"KALIBRIERWERT_2_2"); break;
-        case Property::kKALIBRIERWERT_2_3: std::strcpy(buffer,"KALIBRIERWERT_2_3"); break;
-        case Property::kKALIBRIERWERT_2_4: std::strcpy(buffer,"KALIBRIERWERT_2_4"); break;
-        case Property::kKALIBRIERWERT_2_5: std::strcpy(buffer,"KALIBRIERWERT_2_5"); break;
-        case Property::kKALIBRIERWERT_2_6: std::strcpy(buffer,"KALIBRIERWERT_2_6"); break;
-        case Property::kKALIBRIERWERT_2_7: std::strcpy(buffer,"KALIBRIERWERT_2_7"); break;
-        case Property::kKALIBRIERWERT_2_8: std::strcpy(buffer,"KALIBRIERWERT_2_8"); break;
-        case Property::kKALIBRIERWERT_2_9: std::strcpy(buffer,"KALIBRIERWERT_2_9"); break;
-        case Property::kKALIBRIERWERT_2_10: std::strcpy(buffer,"KALIBRIERWERT_2_10"); break;
-        case Property::kKALIBRIERWERT_3_1: std::strcpy(buffer,"KALIBRIERWERT_3_1"); break;
-        case Property::kKALIBRIERWERT_3_2: std::strcpy(buffer,"KALIBRIERWERT_3_2"); break;
-        case Property::kKALIBRIERWERT_3_3: std::strcpy(buffer,"KALIBRIERWERT_3_3"); break;
-        case Property::kKALIBRIERWERT_3_4: std::strcpy(buffer,"KALIBRIERWERT_3_4"); break;
-        case Property::kKALIBRIERWERT_3_5: std::strcpy(buffer,"KALIBRIERWERT_3_5"); break;
-        case Property::kKALIBRIERWERT_3_6: std::strcpy(buffer,"KALIBRIERWERT_3_6"); break;
-        case Property::kKALIBRIERWERT_3_7: std::strcpy(buffer,"KALIBRIERWERT_3_7"); break;
-        case Property::kKALIBRIERWERT_3_8: std::strcpy(buffer,"KALIBRIERWERT_3_8"); break;
-        case Property::kKALIBRIERWERT_3_9: std::strcpy(buffer,"KALIBRIERWERT_3_9"); break;
-        case Property::kKALIBRIERWERT_3_10: std::strcpy(buffer,"KALIBRIERWERT_3_10"); break;
-        case Property::kKALIBRIERWERT_4_1: std::strcpy(buffer,"KALIBRIERWERT_4_1"); break;
-        case Property::kKALIBRIERWERT_4_2: std::strcpy(buffer,"KALIBRIERWERT_4_2"); break;
-        case Property::kKALIBRIERWERT_4_3: std::strcpy(buffer,"KALIBRIERWERT_4_3"); break;
-        case Property::kKALIBRIERWERT_4_4: std::strcpy(buffer,"KALIBRIERWERT_4_4"); break;
-        case Property::kKALIBRIERWERT_4_5: std::strcpy(buffer,"KALIBRIERWERT_4_5"); break;
-        case Property::kKALIBRIERWERT_4_6: std::strcpy(buffer,"KALIBRIERWERT_4_6"); break;
-        case Property::kKALIBRIERWERT_4_7: std::strcpy(buffer,"KALIBRIERWERT_4_7"); break;
-        case Property::kKALIBRIERWERT_4_8: std::strcpy(buffer,"KALIBRIERWERT_4_8"); break;
-        case Property::kKALIBRIERWERT_4_9: std::strcpy(buffer,"KALIBRIERWERT_4_9"); break;
-        case Property::kKALIBRIERWERT_4_10: std::strcpy(buffer,"KALIBRIERWERT_4_10"); break;
-        case Property::kKALIBRIERWERT_5_1: std::strcpy(buffer,"KALIBRIERWERT_5_1"); break;
-        case Property::kKALIBRIERWERT_5_2: std::strcpy(buffer,"KALIBRIERWERT_5_2"); break;
-        case Property::kKALIBRIERWERT_5_3: std::strcpy(buffer,"KALIBRIERWERT_5_3"); break;
-        case Property::kKALIBRIERWERT_5_4: std::strcpy(buffer,"KALIBRIERWERT_5_4"); break;
-        case Property::kKALIBRIERWERT_5_5: std::strcpy(buffer,"KALIBRIERWERT_5_5"); break;
-        case Property::kKALIBRIERWERT_5_6: std::strcpy(buffer,"KALIBRIERWERT_5_6"); break;
-        case Property::kKALIBRIERWERT_5_7: std::strcpy(buffer,"KALIBRIERWERT_5_7"); break;
-        case Property::kKALIBRIERWERT_5_8: std::strcpy(buffer,"KALIBRIERWERT_5_8"); break;
-        case Property::kKALIBRIERWERT_5_9: std::strcpy(buffer,"KALIBRIERWERT_5_9"); break;
-        case Property::kKALIBRIERWERT_5_10: std::strcpy(buffer,"KALIBRIERWERT_5_10"); break;
-        case Property::kKALIBRIERWERT_6_1: std::strcpy(buffer,"KALIBRIERWERT_6_1"); break;
-        case Property::kKALIBRIERWERT_6_2: std::strcpy(buffer,"KALIBRIERWERT_6_2"); break;
-        case Property::kKALIBRIERWERT_6_3: std::strcpy(buffer,"KALIBRIERWERT_6_3"); break;
-        case Property::kKALIBRIERWERT_6_4: std::strcpy(buffer,"KALIBRIERWERT_6_4"); break;
-        case Property::kKALIBRIERWERT_6_5: std::strcpy(buffer,"KALIBRIERWERT_6_5"); break;
-        case Property::kKALIBRIERWERT_6_6: std::strcpy(buffer,"KALIBRIERWERT_6_6"); break;
-        case Property::kKALIBRIERWERT_6_7: std::strcpy(buffer,"KALIBRIERWERT_6_7"); break;
-        case Property::kKALIBRIERWERT_6_8: std::strcpy(buffer,"KALIBRIERWERT_6_8"); break;
-        case Property::kKALIBRIERWERT_6_9: std::strcpy(buffer,"KALIBRIERWERT_6_9"); break;
-        case Property::kKALIBRIERWERT_6_10: std::strcpy(buffer,"KALIBRIERWERT_6_10"); break;
-        case Property::kKALIBRIERWERT_7_1: std::strcpy(buffer,"KALIBRIERWERT_7_1"); break;
-        case Property::kKALIBRIERWERT_7_2: std::strcpy(buffer,"KALIBRIERWERT_7_2"); break;
-        case Property::kKALIBRIERWERT_7_3: std::strcpy(buffer,"KALIBRIERWERT_7_3"); break;
-        case Property::kKALIBRIERWERT_7_4: std::strcpy(buffer,"KALIBRIERWERT_7_4"); break;
-        case Property::kKALIBRIERWERT_7_5: std::strcpy(buffer,"KALIBRIERWERT_7_5"); break;
-        case Property::kKALIBRIERWERT_7_6: std::strcpy(buffer,"KALIBRIERWERT_7_6"); break;
-        case Property::kKALIBRIERWERT_7_7: std::strcpy(buffer,"KALIBRIERWERT_7_7"); break;
-        case Property::kKALIBRIERWERT_7_8: std::strcpy(buffer,"KALIBRIERWERT_7_8"); break;
-        case Property::kKALIBRIERWERT_7_9: std::strcpy(buffer,"KALIBRIERWERT_7_9"); break;
-        case Property::kKALIBRIERWERT_7_10: std::strcpy(buffer,"KALIBRIERWERT_7_10"); break;
-        case Property::kKALIBRIERWERT_8_1: std::strcpy(buffer,"KALIBRIERWERT_8_1"); break;
-        case Property::kKALIBRIERWERT_8_2: std::strcpy(buffer,"KALIBRIERWERT_8_2"); break;
-        case Property::kKALIBRIERWERT_8_3: std::strcpy(buffer,"KALIBRIERWERT_8_3"); break;
-        case Property::kKALIBRIERWERT_8_4: std::strcpy(buffer,"KALIBRIERWERT_8_4"); break;
-        case Property::kKALIBRIERWERT_8_5: std::strcpy(buffer,"KALIBRIERWERT_8_5"); break;
-        case Property::kKALIBRIERWERT_8_6: std::strcpy(buffer,"KALIBRIERWERT_8_6"); break;
-        case Property::kKALIBRIERWERT_8_7: std::strcpy(buffer,"KALIBRIERWERT_8_7"); break;
-        case Property::kKALIBRIERWERT_8_8: std::strcpy(buffer,"KALIBRIERWERT_8_8"); break;
-        case Property::kKALIBRIERWERT_8_9: std::strcpy(buffer,"KALIBRIERWERT_8_9"); break;
-        case Property::kKALIBRIERWERT_8_10: std::strcpy(buffer,"KALIBRIERWERT_8_10"); break;
-        case Property::kKALIBRIERWERT_9_1: std::strcpy(buffer,"KALIBRIERWERT_9_1"); break;
-        case Property::kKALIBRIERWERT_9_2: std::strcpy(buffer,"KALIBRIERWERT_9_2"); break;
-        case Property::kKALIBRIERWERT_9_3: std::strcpy(buffer,"KALIBRIERWERT_9_3"); break;
-        case Property::kKALIBRIERWERT_9_4: std::strcpy(buffer,"KALIBRIERWERT_9_4"); break;
-        case Property::kKALIBRIERWERT_9_5: std::strcpy(buffer,"KALIBRIERWERT_9_5"); break;
-        case Property::kKALIBRIERWERT_9_6: std::strcpy(buffer,"KALIBRIERWERT_9_6"); break;
-        case Property::kKALIBRIERWERT_9_7: std::strcpy(buffer,"KALIBRIERWERT_9_7"); break;
-        case Property::kKALIBRIERWERT_9_8: std::strcpy(buffer,"KALIBRIERWERT_9_8"); break;
-        case Property::kKALIBRIERWERT_9_9: std::strcpy(buffer,"KALIBRIERWERT_9_9"); break;
-        case Property::kKALIBRIERWERT_9_10: std::strcpy(buffer,"KALIBRIERWERT_9_10"); break;
-        case Property::kKALIBRIERWERT_10_1: std::strcpy(buffer,"KALIBRIERWERT_10_1"); break;
-        case Property::kKALIBRIERWERT_10_2: std::strcpy(buffer,"KALIBRIERWERT_10_2"); break;
-        case Property::kKALIBRIERWERT_10_3: std::strcpy(buffer,"KALIBRIERWERT_10_3"); break;
-        case Property::kKALIBRIERWERT_10_4: std::strcpy(buffer,"KALIBRIERWERT_10_4"); break;
-        case Property::kKALIBRIERWERT_10_5: std::strcpy(buffer,"KALIBRIERWERT_10_5"); break;
-        case Property::kKALIBRIERWERT_10_6: std::strcpy(buffer,"KALIBRIERWERT_10_6"); break;
-        case Property::kKALIBRIERWERT_10_7: std::strcpy(buffer,"KALIBRIERWERT_10_7"); break;
-        case Property::kKALIBRIERWERT_10_8: std::strcpy(buffer,"KALIBRIERWERT_10_8"); break;
-        case Property::kKALIBRIERWERT_10_9: std::strcpy(buffer,"KALIBRIERWERT_10_9"); break;
-        case Property::kKALIBRIERWERT_10_10: std::strcpy(buffer,"KALIBRIERWERT_10_10"); break;
-        case Property::kSTUETZSTELLE_ND1: std::strcpy(buffer,"STUETZSTELLE_ND1"); break;
-        case Property::kSTUETZSTELLE_ND2: std::strcpy(buffer,"STUETZSTELLE_ND2"); break;
-        case Property::kSTUETZSTELLE_HD1: std::strcpy(buffer,"STUETZSTELLE_HD1"); break;
-        case Property::kSTUETZSTELLE_HD2: std::strcpy(buffer,"STUETZSTELLE_HD2"); break;
-        case Property::kREKUPERATORISTTEMP: std::strcpy(buffer,"REKUPERATORISTTEMP"); break;
-        case Property::kMESSSTROM_HOCHDRUCK: std::strcpy(buffer,"MESSSTROM_HOCHDRUCK"); break;
-        case Property::kMESSSTROM_NIEDERDRUCK: std::strcpy(buffer,"MESSSTROM_NIEDERDRUCK"); break;
-        case Property::kANZEIGE_HOCHDRUCK: std::strcpy(buffer,"ANZEIGE_HOCHDRUCK"); break;
-        case Property::kANZEIGE_NIEDERDRUCK: std::strcpy(buffer,"ANZEIGE_NIEDERDRUCK"); break;
-        case Property::kVERDICHTER: std::strcpy(buffer,"VERDICHTER"); break;
-        case Property::kVERDAMPFERISTTEMP_KOMPENSIERT: std::strcpy(buffer,"VERDAMPFERISTTEMP_KOMPENSIERT"); break;
-        case Property::kTAU_PENDEL_ERKENNUNGSZEIT: std::strcpy(buffer,"TAU_PENDEL_ERKENNUNGSZEIT"); break;
-        case Property::kVERZOEGERUNG_PENDELERKENNUNG: std::strcpy(buffer,"VERZOEGERUNG_PENDELERKENNUNG"); break;
-        case Property::kUEBERHITZUNG_VERDAMPFER_LOW: std::strcpy(buffer,"UEBERHITZUNG_VERDAMPFER_LOW"); break;
-        case Property::kUEBERHITZUNG_VERDAMPFER_MID: std::strcpy(buffer,"UEBERHITZUNG_VERDAMPFER_MID"); break;
-        case Property::kUEBERHITZUNG_VERDAMPFER_HIGH: std::strcpy(buffer,"UEBERHITZUNG_VERDAMPFER_HIGH"); break;
-        case Property::kUEBERHITZUNG_REKUPERATOR: std::strcpy(buffer,"UEBERHITZUNG_REKUPERATOR"); break;
-        case Property::kUEBERHITZUNG_BEI_KUEHLBETRIEB: std::strcpy(buffer,"UEBERHITZUNG_BEI_KUEHLBETRIEB"); break;
-        case Property::kANFAHRFAKTOR_UEBERHITZUNG: std::strcpy(buffer,"ANFAHRFAKTOR_UEBERHITZUNG"); break;
-        case Property::kANFAHRZEIT_UEBERHITZUNG: std::strcpy(buffer,"ANFAHRZEIT_UEBERHITZUNG"); break;
-        case Property::kGRENZE_PENDELN_VERDAMPFER: std::strcpy(buffer,"GRENZE_PENDELN_VERDAMPFER"); break;
-        case Property::kGRENZE_PENDELN_REKUPERATOR: std::strcpy(buffer,"GRENZE_PENDELN_REKUPERATOR"); break;
-        case Property::kTAU_UEBERHITZUNG_VERKLEINERN: std::strcpy(buffer,"TAU_UEBERHITZUNG_VERKLEINERN"); break;
-        case Property::kTAU_UEBERHITZUNG_VERGROESSERN: std::strcpy(buffer,"TAU_UEBERHITZUNG_VERGROESSERN"); break;
-        case Property::kVARIATION_UEBERHITZUNG: std::strcpy(buffer,"VARIATION_UEBERHITZUNG"); break;
-        case Property::kV_H_EXPONENT_VSKL: std::strcpy(buffer,"V_H_EXPONENT_VSKL"); break;
-        case Property::kV_H_FAKTOR_VSKL: std::strcpy(buffer,"V_H_FAKTOR_VSKL"); break;
-        case Property::kV_H_OFFSET_VSKL: std::strcpy(buffer,"V_H_OFFSET_VSKL"); break;
-        case Property::kV_K_EXPONENT_VSKL: std::strcpy(buffer,"V_K_EXPONENT_VSKL"); break;
-        case Property::kV_K_FAKTOR_VSKL: std::strcpy(buffer,"V_K_FAKTOR_VSKL"); break;
-        case Property::kV_K_OFFSET_VSKL: std::strcpy(buffer,"V_K_OFFSET_VSKL"); break;
-        case Property::kWICHTUNG_REGELABWEICHUNG: std::strcpy(buffer,"WICHTUNG_REGELABWEICHUNG"); break;
-        case Property::kP_VERDAMPFER: std::strcpy(buffer,"P_VERDAMPFER"); break;
-        case Property::kI_VERDAMPFER: std::strcpy(buffer,"I_VERDAMPFER"); break;
-        case Property::kD_VERDAMPFER: std::strcpy(buffer,"D_VERDAMPFER"); break;
-        case Property::kP_REKUPERATOR: std::strcpy(buffer,"P_REKUPERATOR"); break;
-        case Property::kI_REKUPERATOR: std::strcpy(buffer,"I_REKUPERATOR"); break;
-        case Property::kD_REKUPERATOR: std::strcpy(buffer,"D_REKUPERATOR"); break;
-        case Property::kMIN_REGELDYNAMIK: std::strcpy(buffer,"MIN_REGELDYNAMIK"); break;
-        case Property::kTAU_REGELDYNAMIK: std::strcpy(buffer,"TAU_REGELDYNAMIK"); break;
-        case Property::kEXV_OEFFNUNGSGRAD_MIN: std::strcpy(buffer,"EXV_OEFFNUNGSGRAD_MIN"); break;
-        case Property::kEXV_OEFFNUNGSGRAD_MAX: std::strcpy(buffer,"EXV_OEFFNUNGSGRAD_MAX"); break;
-        case Property::kEXV_TOTZONE: std::strcpy(buffer,"EXV_TOTZONE"); break;
-        case Property::kEXV_OEFFNUNGSGRAD: std::strcpy(buffer,"EXV_OEFFNUNGSGRAD"); break;
-        case Property::kPARAMETERSATZ: std::strcpy(buffer,"PARAMETERSATZ"); break;
-        case Property::kTIEFPASS_ND: std::strcpy(buffer,"TIEFPASS_ND"); break;
-        case Property::kELEKTRONISCHE_ABTAUBEDARFSERKENNUNG: std::strcpy(buffer,"ELEKTRONISCHE_ABTAUBEDARFSERKENNUNG"); break;
-        case Property::kELEKTRONISCHE_ABTAUENDEERKENNUNG: std::strcpy(buffer,"ELEKTRONISCHE_ABTAUENDEERKENNUNG"); break;
-        case Property::kOEFFNUNGSGRAD_ABTAUEN: std::strcpy(buffer,"OEFFNUNGSGRAD_ABTAUEN"); break;
-        case Property::kDRUCKDIFFERENZ_ABTAUEN: std::strcpy(buffer,"DRUCKDIFFERENZ_ABTAUEN"); break;
-        case Property::kOEFFNUNGSGRAD_HANDBETRIEB: std::strcpy(buffer,"OEFFNUNGSGRAD_HANDBETRIEB"); break;
-        case Property::kGRENZDRUCK_PUMPDOWN: std::strcpy(buffer,"GRENZDRUCK_PUMPDOWN"); break;
-        case Property::kINJEKTION_PUMPDOWN: std::strcpy(buffer,"INJEKTION_PUMPDOWN"); break;
-        case Property::kUMSCHALTUNG_VERFLUESSIGERTEMP: std::strcpy(buffer,"UMSCHALTUNG_VERFLUESSIGERTEMP"); break;
-        case Property::kUMSCHALTUNG_TAUPUNKTTEMP: std::strcpy(buffer,"UMSCHALTUNG_TAUPUNKTTEMP"); break;
-        case Property::kKALIBRIERUNG_ON_OFF: std::strcpy(buffer,"KALIBRIERUNG_ON_OFF"); break;
-        case Property::kSTARTZAHL_BIS_KALIBRIERUNG: std::strcpy(buffer,"STARTZAHL_BIS_KALIBRIERUNG"); break;
-        case Property::kLAUFZEIT_BIS_KALIBRIERUNG: std::strcpy(buffer,"LAUFZEIT_BIS_KALIBRIERUNG"); break;
-        case Property::kARBEITSPUNKT_KALIBRIERUNG: std::strcpy(buffer,"ARBEITSPUNKT_KALIBRIERUNG"); break;
-        case Property::kOEG_KALIBRIERUNG_FAKTOR: std::strcpy(buffer,"OEG_KALIBRIERUNG_FAKTOR"); break;
-        case Property::kKALIBRIERDAUER: std::strcpy(buffer,"KALIBRIERDAUER"); break;
-        case Property::kKALIBRIERABWEICHUNG_GRENZ: std::strcpy(buffer,"KALIBRIERABWEICHUNG_GRENZ"); break;
-        case Property::kKALIBRIERABWEICHUNG_ABSCHALTUNG: std::strcpy(buffer,"KALIBRIERABWEICHUNG_ABSCHALTUNG"); break;
-        case Property::kFREIGABE_AUSSENTEMP_ZWISCHENEINSPRITZUNG: std::strcpy(buffer,"FREIGABE_AUSSENTEMP_ZWISCHENEINSPRITZUNG"); break;
-        case Property::kNIEDERDRUCK_MOP_ND: std::strcpy(buffer,"NIEDERDRUCK_MOP_ND"); break;
-        case Property::kABTAUVERFAHREN: std::strcpy(buffer,"ABTAUVERFAHREN"); break;
-        case Property::kGRENZDRUCK_ABTAUENDE: std::strcpy(buffer,"GRENZDRUCK_ABTAUENDE"); break;
-        case Property::kDAEMPFUNG_TAUTEMP_ABTAUAUSLOESUNG: std::strcpy(buffer,"DAEMPFUNG_TAUTEMP_ABTAUAUSLOESUNG"); break;
-        case Property::kTEMPERATURDIFFERENZ_ABTAUAUSLOESUNG: std::strcpy(buffer,"TEMPERATURDIFFERENZ_ABTAUAUSLOESUNG"); break;
-        case Property::kFREIGABE_ABTAUERKENNUNG: std::strcpy(buffer,"FREIGABE_ABTAUERKENNUNG"); break;
-        case Property::kBEGRENZUNG_HEISSGASTEMPERATUR: std::strcpy(buffer,"BEGRENZUNG_HEISSGASTEMPERATUR"); break;
-        case Property::kP_FAKTOR_BEGRENZUNG_HEISSGASTEMPERATUR: std::strcpy(buffer,"P_FAKTOR_BEGRENZUNG_HEISSGASTEMPERATUR"); break;
-        case Property::kLUEFTERLEISTUNG_AT_MIN: std::strcpy(buffer,"LUEFTERLEISTUNG_AT_MIN"); break;
-        case Property::kLUEFTERLEISTUNG_AT_MAX: std::strcpy(buffer,"LUEFTERLEISTUNG_AT_MAX"); break;
-        case Property::kGRENZWERT_ABWEICHUNG_V_KENNLINIE: std::strcpy(buffer,"GRENZWERT_ABWEICHUNG_V_KENNLINIE"); break;
-        case Property::kZEIT_WAECHTER_ABWEICHUNG_V_KENNLINIE: std::strcpy(buffer,"ZEIT_WAECHTER_ABWEICHUNG_V_KENNLINIE"); break;
-        case Property::kMINIMALER_GRENZWERT_UEBERHITZUNG: std::strcpy(buffer,"MINIMALER_GRENZWERT_UEBERHITZUNG"); break;
-        case Property::kZEIT_WAECHTER_UEBERHITZUNG: std::strcpy(buffer,"ZEIT_WAECHTER_UEBERHITZUNG"); break;
-        case Property::kND_EVE_FUNKTION: std::strcpy(buffer,"ND_EVE_FUNKTION"); break;
-        case Property::kND_EVE_GRENZWERT: std::strcpy(buffer,"ND_EVE_GRENZWERT"); break;
-        case Property::kND_MASKIERZEIT: std::strcpy(buffer,"ND_MASKIERZEIT"); break;
-        case Property::kHD_EVE_FUNKTION: std::strcpy(buffer,"HD_EVE_FUNKTION"); break;
-        case Property::kHD_EVE_GRENZWERT_VHD: std::strcpy(buffer,"HD_EVE_GRENZWERT_VHD"); break;
-        case Property::kBETRIEBSART_WP: std::strcpy(buffer,"BETRIEBSART_WP"); break;
-        case Property::kSOLLWERT_UEBERHITZUNG: std::strcpy(buffer,"SOLLWERT_UEBERHITZUNG"); break;
-        case Property::kISTWERT_UEBERHITZUNG_VERDAMPFER: std::strcpy(buffer,"ISTWERT_UEBERHITZUNG_VERDAMPFER"); break;
-        case Property::kISTWERT_UEBERHITZUNG_REKUPERATOR_KUEHLEN: std::strcpy(buffer,"ISTWERT_UEBERHITZUNG_REKUPERATOR_KUEHLEN"); break;
-        case Property::kVORSTEUER_OEFFNUNGSGRAD: std::strcpy(buffer,"VORSTEUER_OEFFNUNGSGRAD"); break;
-        case Property::kP_ANTEIL_EXV: std::strcpy(buffer,"P_ANTEIL_EXV"); break;
-        case Property::kI_ANTEIL_EXV: std::strcpy(buffer,"I_ANTEIL_EXV"); break;
-        case Property::kD_ANTEIL_EXV: std::strcpy(buffer,"D_ANTEIL_EXV"); break;
-        case Property::kPENDELN_RELATIV: std::strcpy(buffer,"PENDELN_RELATIV"); break;
-        case Property::kFAKTOR_REGELDYNAMIK: std::strcpy(buffer,"FAKTOR_REGELDYNAMIK"); break;
-        case Property::kLZ_VERD_1_HEIZBETRIEB: std::strcpy(buffer,"LZ_VERD_1_HEIZBETRIEB"); break;
-        case Property::kLZ_VERD_2_HEIZBETRIEB: std::strcpy(buffer,"LZ_VERD_2_HEIZBETRIEB"); break;
-        case Property::kLZ_VERD_1_2_HEIZBETRIEB: std::strcpy(buffer,"LZ_VERD_1_2_HEIZBETRIEB"); break;
-        case Property::kLZ_VERD_1_KUEHLBETRIEB: std::strcpy(buffer,"LZ_VERD_1_KUEHLBETRIEB"); break;
-        case Property::kLZ_VERD_2_KUEHLBETRIEB: std::strcpy(buffer,"LZ_VERD_2_KUEHLBETRIEB"); break;
-        case Property::kLZ_VERD_1_2_KUEHLBETRIEB: std::strcpy(buffer,"LZ_VERD_1_2_KUEHLBETRIEB"); break;
-        case Property::kLZ_VERD_1_WW_BETRIEB: std::strcpy(buffer,"LZ_VERD_1_WW_BETRIEB"); break;
-        case Property::kLZ_VERD_2_WW_BETRIEB: std::strcpy(buffer,"LZ_VERD_2_WW_BETRIEB"); break;
-        case Property::kLZ_VERD_1_2_WW_BETRIEB: std::strcpy(buffer,"LZ_VERD_1_2_WW_BETRIEB"); break;
-        case Property::kLZ_DHC12: std::strcpy(buffer,"LZ_DHC12"); break;
-        case Property::kSTARTS_ABTAUUNG: std::strcpy(buffer,"STARTS_ABTAUUNG"); break;
-        case Property::kZEITDAUER_LETZTE_ABTAUUNG: std::strcpy(buffer,"ZEITDAUER_LETZTE_ABTAUUNG"); break;
-        case Property::kABTAUZEIT_VERD1: std::strcpy(buffer,"ABTAUZEIT_VERD1"); break;
-        case Property::kABTAUZEIT_VERD2: std::strcpy(buffer,"ABTAUZEIT_VERD2"); break;
-        case Property::kTAUPUNKTTEMPERATUR_REFERENZ: std::strcpy(buffer,"TAUPUNKTTEMPERATUR_REFERENZ"); break;
-        case Property::kTAUPUNKTTEMPERATUR_KOMPENSIERT: std::strcpy(buffer,"TAUPUNKTTEMPERATUR_KOMPENSIERT"); break;
-        case Property::kDRUCKREGELUNG_ND: std::strcpy(buffer,"DRUCKREGELUNG_ND"); break;
-        case Property::kDRUCK_VERDAMPFER_GEFILTERT: std::strcpy(buffer,"DRUCK_VERDAMPFER_GEFILTERT"); break;
-        case Property::kFATAL_ERROR: std::strcpy(buffer,"FATAL_ERROR"); break;
-        case Property::kUEBERHITZUNG_ZWISCHENEINSPRITZUNG: std::strcpy(buffer,"UEBERHITZUNG_ZWISCHENEINSPRITZUNG"); break;
-        case Property::kUNSYMMETRIE_DRUCK_ZE: std::strcpy(buffer,"UNSYMMETRIE_DRUCK_ZE"); break;
-        case Property::kVORSTEUER_ZE_FAKTOR: std::strcpy(buffer,"VORSTEUER_ZE_FAKTOR"); break;
-        case Property::kVORSTEUER_ZE_OFFSET: std::strcpy(buffer,"VORSTEUER_ZE_OFFSET"); break;
-        case Property::kEINFLUSS_OG_DRUCK_ZE: std::strcpy(buffer,"EINFLUSS_OG_DRUCK_ZE"); break;
-        case Property::kP_ANTEIL_ZWISCHENEINSPRITZUNG: std::strcpy(buffer,"P_ANTEIL_ZWISCHENEINSPRITZUNG"); break;
-        case Property::kI_ANTEIL_ZWISCHENEINSPRITZUNG: std::strcpy(buffer,"I_ANTEIL_ZWISCHENEINSPRITZUNG"); break;
-        case Property::kVARIATION_OG_ZE: std::strcpy(buffer,"VARIATION_OG_ZE"); break;
-        case Property::kUEBERHITZ_ZU_LEISTUNG_K: std::strcpy(buffer,"UEBERHITZ_ZU_LEISTUNG_K"); break;
-        case Property::kV_OG_ZU_LEISTUNG_K: std::strcpy(buffer,"V_OG_ZU_LEISTUNG_K"); break;
-        case Property::kDRUCK_ZWISCHENEINSPRITZUNG: std::strcpy(buffer,"DRUCK_ZWISCHENEINSPRITZUNG"); break;
-        case Property::kUEBERHITZUNG_IST_ZWISCHENEINSPRITZUNG: std::strcpy(buffer,"UEBERHITZUNG_IST_ZWISCHENEINSPRITZUNG"); break;
-        case Property::kV_OEFFNUNGSGRAD_ZWISCHENEINSPRITZUNG: std::strcpy(buffer,"V_OEFFNUNGSGRAD_ZWISCHENEINSPRITZUNG"); break;
-        case Property::kEXV_OEFFNUNGSGRAD_ZWISCHENEINSPRITZUNG: std::strcpy(buffer,"EXV_OEFFNUNGSGRAD_ZWISCHENEINSPRITZUNG"); break;
-        case Property::kLAUFZEIT_VERD_BEI_SPEICHERBEDARF: std::strcpy(buffer,"LAUFZEIT_VERD_BEI_SPEICHERBEDARF"); break;
-        case Property::kAUSSEN_LUEFTERLEISTUNG_AT_MIN: std::strcpy(buffer,"AUSSEN_LUEFTERLEISTUNG_AT_MIN"); break;
-        case Property::kAUSSEN_LUEFTERLEISTUNG_AT_MAX: std::strcpy(buffer,"AUSSEN_LUEFTERLEISTUNG_AT_MAX"); break;
-        case Property::kVERDAMPFERTEMP_VOR_KOMPENSATION: std::strcpy(buffer,"VERDAMPFERTEMP_VOR_KOMPENSATION"); break;
-        case Property::kVERDAMPFERTEMP_NACH_KOMPENSATION: std::strcpy(buffer,"VERDAMPFERTEMP_NACH_KOMPENSATION"); break;
-        case Property::kVORLAUFISTTEMP_WP_IWS: std::strcpy(buffer,"VORLAUFISTTEMP_WP_IWS"); break;
-        case Property::kRUECKLAUFISTTEMP_WP_IWS: std::strcpy(buffer,"RUECKLAUFISTTEMP_WP_IWS"); break;
-        case Property::kOEFFGRAD_ZE_KUEHLUNG: std::strcpy(buffer,"OEFFGRAD_ZE_KUEHLUNG"); break;
-        case Property::kDATENLOGGER_RING_BETRIEBSART: std::strcpy(buffer,"DATENLOGGER_RING_BETRIEBSART"); break;
-        case Property::kDATENLOGGER_RING_ZYKLUS: std::strcpy(buffer,"DATENLOGGER_RING_ZYKLUS"); break;
-        case Property::kDATENLOGGER_TRIGGER_EREIGNIS: std::strcpy(buffer,"DATENLOGGER_TRIGGER_EREIGNIS"); break;
-        case Property::kFEHLER_PARAMETERSATZ_IWS: std::strcpy(buffer,"FEHLER_PARAMETERSATZ_IWS"); break;
-        case Property::kPARAMETERSATZ_ANGEPASST_IWS: std::strcpy(buffer,"PARAMETERSATZ_ANGEPASST_IWS"); break;
-        case Property::kMIN_VORLAUF_KUEHLBETRIEB: std::strcpy(buffer,"MIN_VORLAUF_KUEHLBETRIEB"); break;
-        case Property::kAKT_KALIBRIERWERT_V: std::strcpy(buffer,"AKT_KALIBRIERWERT_V"); break;
-        case Property::kFUEHLERZEITKONSTANTE: std::strcpy(buffer,"FUEHLERZEITKONSTANTE"); break;
-        case Property::kKONFIG_0_BIS_10V: std::strcpy(buffer,"KONFIG_0_BIS_10V"); break;
-        case Property::kEVE_GRENZWERT_KUEHLBETRIEB: std::strcpy(buffer,"EVE_GRENZWERT_KUEHLBETRIEB"); break;
-        case Property::kMODKLAPPENLAUFZEIT: std::strcpy(buffer,"MODKLAPPENLAUFZEIT"); break;
-        case Property::kKONFIG_0_BIS_5V: std::strcpy(buffer,"KONFIG_0_BIS_5V"); break;
-        case Property::kMESSSTROM_MITTELDRUCK: std::strcpy(buffer,"MESSSTROM_MITTELDRUCK"); break;
-        case Property::kANZEIGE_MITTELDRUCK: std::strcpy(buffer,"ANZEIGE_MITTELDRUCK"); break;
-        case Property::kLUEFTERDREHZAHL: std::strcpy(buffer,"LUEFTERDREHZAHL"); break;
-        case Property::kD_ANTEIL_ZWISCHENEINSPRITZUNG: std::strcpy(buffer,"D_ANTEIL_ZWISCHENEINSPRITZUNG"); break;
-        case Property::kSOLLWERT_UEBERHITZUNG_ZWISCHENEINSPRITZUNG: std::strcpy(buffer,"SOLLWERT_UEBERHITZUNG_ZWISCHENEINSPRITZUNG"); break;
-        case Property::kGESPEICHERTE_MODULE_LETZTER_INDEX: std::strcpy(buffer,"GESPEICHERTE_MODULE_LETZTER_INDEX"); break;
-        case Property::kGESPEICHERTE_MODULE_0: std::strcpy(buffer,"GESPEICHERTE_MODULE_0"); break;
-        case Property::kGESPEICHERTE_MODULE_1: std::strcpy(buffer,"GESPEICHERTE_MODULE_1"); break;
-        case Property::kGESPEICHERTE_MODULE_2: std::strcpy(buffer,"GESPEICHERTE_MODULE_2"); break;
-        case Property::kGESPEICHERTE_MODULE_3: std::strcpy(buffer,"GESPEICHERTE_MODULE_3"); break;
-        case Property::kGESPEICHERTE_MODULE_4: std::strcpy(buffer,"GESPEICHERTE_MODULE_4"); break;
-        case Property::kGESPEICHERTE_MODULE_5: std::strcpy(buffer,"GESPEICHERTE_MODULE_5"); break;
-        case Property::kGESPEICHERTE_MODULE_6: std::strcpy(buffer,"GESPEICHERTE_MODULE_6"); break;
-        case Property::kGESPEICHERTE_MODULE_7: std::strcpy(buffer,"GESPEICHERTE_MODULE_7"); break;
-        case Property::kGESPEICHERTE_MODULE_8: std::strcpy(buffer,"GESPEICHERTE_MODULE_8"); break;
-        case Property::kGESPEICHERTE_MODULE_9: std::strcpy(buffer,"GESPEICHERTE_MODULE_9"); break;
-        case Property::kGESPEICHERTE_MODULE_10: std::strcpy(buffer,"GESPEICHERTE_MODULE_10"); break;
-        case Property::kGESPEICHERTE_MODULE_11: std::strcpy(buffer,"GESPEICHERTE_MODULE_11"); break;
-        case Property::kGESPEICHERTE_MODULE_12: std::strcpy(buffer,"GESPEICHERTE_MODULE_12"); break;
-        case Property::kGESPEICHERTE_MODULE_13: std::strcpy(buffer,"GESPEICHERTE_MODULE_13"); break;
-        case Property::kGESPEICHERTE_MODULE_14: std::strcpy(buffer,"GESPEICHERTE_MODULE_14"); break;
-        case Property::kGESPEICHERTE_MODULE_15: std::strcpy(buffer,"GESPEICHERTE_MODULE_15"); break;
-        case Property::kGESPEICHERTE_MODULE_16: std::strcpy(buffer,"GESPEICHERTE_MODULE_16"); break;
-        case Property::kGESPEICHERTE_MODULE_17: std::strcpy(buffer,"GESPEICHERTE_MODULE_17"); break;
-        case Property::kGESPEICHERTE_MODULE_18: std::strcpy(buffer,"GESPEICHERTE_MODULE_18"); break;
-        case Property::kGESPEICHERTE_MODULE_19: std::strcpy(buffer,"GESPEICHERTE_MODULE_19"); break;
-        case Property::kGESPEICHERTE_MODULE_20: std::strcpy(buffer,"GESPEICHERTE_MODULE_20"); break;
-        case Property::kGESPEICHERTE_MODULE_21: std::strcpy(buffer,"GESPEICHERTE_MODULE_21"); break;
-        case Property::kGESPEICHERTE_MODULE_22: std::strcpy(buffer,"GESPEICHERTE_MODULE_22"); break;
-        case Property::kGESPEICHERTE_MODULE_23: std::strcpy(buffer,"GESPEICHERTE_MODULE_23"); break;
-        case Property::kGESPEICHERTE_MODULE_24: std::strcpy(buffer,"GESPEICHERTE_MODULE_24"); break;
-        case Property::kGESPEICHERTE_MODULE_25: std::strcpy(buffer,"GESPEICHERTE_MODULE_25"); break;
-        case Property::kGESPEICHERTE_MODULE_26: std::strcpy(buffer,"GESPEICHERTE_MODULE_26"); break;
-        case Property::kGESPEICHERTE_MODULE_27: std::strcpy(buffer,"GESPEICHERTE_MODULE_27"); break;
-        case Property::kGESPEICHERTE_MODULE_28: std::strcpy(buffer,"GESPEICHERTE_MODULE_28"); break;
-        case Property::kGESPEICHERTE_MODULE_29: std::strcpy(buffer,"GESPEICHERTE_MODULE_29"); break;
-        case Property::kGESPEICHERTE_MODULE_30: std::strcpy(buffer,"GESPEICHERTE_MODULE_30"); break;
-        case Property::kGESPEICHERTE_MODULE_31: std::strcpy(buffer,"GESPEICHERTE_MODULE_31"); break;
-        case Property::kGESPEICHERTE_MODULE_32: std::strcpy(buffer,"GESPEICHERTE_MODULE_32"); break;
-        case Property::kGESPEICHERTE_MODULE_33: std::strcpy(buffer,"GESPEICHERTE_MODULE_33"); break;
-        case Property::kGESPEICHERTE_MODULE_34: std::strcpy(buffer,"GESPEICHERTE_MODULE_34"); break;
-        case Property::kGESPEICHERTE_MODULE_35: std::strcpy(buffer,"GESPEICHERTE_MODULE_35"); break;
-        case Property::kGESPEICHERTE_MODULE_36: std::strcpy(buffer,"GESPEICHERTE_MODULE_36"); break;
-        case Property::kGESPEICHERTE_MODULE_37: std::strcpy(buffer,"GESPEICHERTE_MODULE_37"); break;
-        case Property::kGESPEICHERTE_MODULE_38: std::strcpy(buffer,"GESPEICHERTE_MODULE_38"); break;
-        case Property::kGESPEICHERTE_MODULE_39: std::strcpy(buffer,"GESPEICHERTE_MODULE_39"); break;
-        case Property::kGESPEICHERTE_MODULE_40: std::strcpy(buffer,"GESPEICHERTE_MODULE_40"); break;
-        case Property::kGESPEICHERTE_MODULE_41: std::strcpy(buffer,"GESPEICHERTE_MODULE_41"); break;
-        case Property::kGESPEICHERTE_MODULE_42: std::strcpy(buffer,"GESPEICHERTE_MODULE_42"); break;
-        case Property::kGESPEICHERTE_MODULE_43: std::strcpy(buffer,"GESPEICHERTE_MODULE_43"); break;
-        case Property::kGESPEICHERTE_MODULE_44: std::strcpy(buffer,"GESPEICHERTE_MODULE_44"); break;
-        case Property::kGESPEICHERTE_MODULE_45: std::strcpy(buffer,"GESPEICHERTE_MODULE_45"); break;
-        case Property::kGESPEICHERTE_MODULE_46: std::strcpy(buffer,"GESPEICHERTE_MODULE_46"); break;
-        case Property::kGESPEICHERTE_MODULE_47: std::strcpy(buffer,"GESPEICHERTE_MODULE_47"); break;
-        case Property::kGESPEICHERTE_MODULE_48: std::strcpy(buffer,"GESPEICHERTE_MODULE_48"); break;
-        case Property::kGESPEICHERTE_MODULE_49: std::strcpy(buffer,"GESPEICHERTE_MODULE_49"); break;
-        case Property::kGESPEICHERTE_MODULE_50: std::strcpy(buffer,"GESPEICHERTE_MODULE_50"); break;
-        case Property::kGESPEICHERTE_MODULE_51: std::strcpy(buffer,"GESPEICHERTE_MODULE_51"); break;
-        case Property::kGESPEICHERTE_MODULE_52: std::strcpy(buffer,"GESPEICHERTE_MODULE_52"); break;
-        case Property::kGESPEICHERTE_MODULE_53: std::strcpy(buffer,"GESPEICHERTE_MODULE_53"); break;
-        case Property::kGESPEICHERTE_MODULE_54: std::strcpy(buffer,"GESPEICHERTE_MODULE_54"); break;
-        case Property::kGESPEICHERTE_MODULE_55: std::strcpy(buffer,"GESPEICHERTE_MODULE_55"); break;
-        case Property::kGESPEICHERTE_MODULE_56: std::strcpy(buffer,"GESPEICHERTE_MODULE_56"); break;
-        case Property::kGESPEICHERTE_MODULE_57: std::strcpy(buffer,"GESPEICHERTE_MODULE_57"); break;
-        case Property::kGESPEICHERTE_MODULE_58: std::strcpy(buffer,"GESPEICHERTE_MODULE_58"); break;
-        case Property::kGESPEICHERTE_MODULE_59: std::strcpy(buffer,"GESPEICHERTE_MODULE_59"); break;
-        case Property::kGESPEICHERTE_MODULE_60: std::strcpy(buffer,"GESPEICHERTE_MODULE_60"); break;
-        case Property::kGESPEICHERTE_MODULE_61: std::strcpy(buffer,"GESPEICHERTE_MODULE_61"); break;
-        case Property::kGESPEICHERTE_MODULE_62: std::strcpy(buffer,"GESPEICHERTE_MODULE_62"); break;
-        case Property::kGESPEICHERTE_MODULE_63: std::strcpy(buffer,"GESPEICHERTE_MODULE_63"); break;
-        case Property::kLUEFTER_IST_DREHZAHL_WE1: std::strcpy(buffer,"LUEFTER_IST_DREHZAHL_WE1"); break;
-        case Property::kLUEFTER_IST_DREHZAHL_WE2: std::strcpy(buffer,"LUEFTER_IST_DREHZAHL_WE2"); break;
-        case Property::kSTROMAUFNAHME_WE1_STUFE_1: std::strcpy(buffer,"STROMAUFNAHME_WE1_STUFE_1"); break;
-        case Property::kSTROMAUFNAHME_WE1_STUFE_2: std::strcpy(buffer,"STROMAUFNAHME_WE1_STUFE_2"); break;
-        case Property::kSTROMAUFNAHME_WE2_STUFE_1: std::strcpy(buffer,"STROMAUFNAHME_WE2_STUFE_1"); break;
-        case Property::kSTROMAUFNAHME_WE2_STUFE_2: std::strcpy(buffer,"STROMAUFNAHME_WE2_STUFE_2"); break;
-        case Property::kSTROMAUFNAHME_WE3_STUFE_1: std::strcpy(buffer,"STROMAUFNAHME_WE3_STUFE_1"); break;
-        case Property::kSTROMAUFNAHME_WE3_STUFE_2: std::strcpy(buffer,"STROMAUFNAHME_WE3_STUFE_2"); break;
-        case Property::kSTROMAUFNAHME_WE4_STUFE_1: std::strcpy(buffer,"STROMAUFNAHME_WE4_STUFE_1"); break;
-        case Property::kSTROMAUFNAHME_WE4_STUFE_2: std::strcpy(buffer,"STROMAUFNAHME_WE4_STUFE_2"); break;
-        case Property::kEXV_SCHRITTWEITE: std::strcpy(buffer,"EXV_SCHRITTWEITE"); break;
-        case Property::kMAX_RUECKLAUFTEMP_WP: std::strcpy(buffer,"MAX_RUECKLAUFTEMP_WP"); break;
-        case Property::kMINDESTLAUFZEIT_WE: std::strcpy(buffer,"MINDESTLAUFZEIT_WE"); break;
-        case Property::kSTUETZSTELLE_MD1: std::strcpy(buffer,"STUETZSTELLE_MD1"); break;
-        case Property::kSTUETZSTELLE_MD2: std::strcpy(buffer,"STUETZSTELLE_MD2"); break;
-        case Property::kINTEGRAL_REGELABWEICHUNG_RELATIV: std::strcpy(buffer,"INTEGRAL_REGELABWEICHUNG_RELATIV"); break;
-        case Property::kNIEDERDRUCK_MOP_HD: std::strcpy(buffer,"NIEDERDRUCK_MOP_HD"); break;
-        case Property::kAUSLEGUNG_WE_LEISTUNG_TA: std::strcpy(buffer,"AUSLEGUNG_WE_LEISTUNG_TA"); break;
-        case Property::kEL_AUFNAHMELEISTUNG_WW_TAG_WH: std::strcpy(buffer,"EL_AUFNAHMELEISTUNG_WW_TAG_WH"); break;
-        case Property::kEL_AUFNAHMELEISTUNG_WW_TAG_KWH: std::strcpy(buffer,"EL_AUFNAHMELEISTUNG_WW_TAG_KWH"); break;
-        case Property::kEL_AUFNAHMELEISTUNG_WW_SUM_KWH: std::strcpy(buffer,"EL_AUFNAHMELEISTUNG_WW_SUM_KWH"); break;
-        case Property::kEL_AUFNAHMELEISTUNG_WW_SUM_MWH: std::strcpy(buffer,"EL_AUFNAHMELEISTUNG_WW_SUM_MWH"); break;
-        case Property::kEL_AUFNAHMELEISTUNG_HEIZ_TAG_WH: std::strcpy(buffer,"EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH"); break;
-        case Property::kEL_AUFNAHMELEISTUNG_HEIZ_TAG_KWH: std::strcpy(buffer,"EL_AUFNAHMELEISTUNG_HEIZ_TAG_KWH"); break;
-        case Property::kEL_AUFNAHMELEISTUNG_HEIZ_SUM_KWH: std::strcpy(buffer,"EL_AUFNAHMELEISTUNG_HEIZ_SUM_KWH"); break;
-        case Property::kEL_AUFNAHMELEISTUNG_HEIZ_SUM_MWH: std::strcpy(buffer,"EL_AUFNAHMELEISTUNG_HEIZ_SUM_MWH"); break;
-        case Property::kWAERMEERTRAG_2WE_WW_TAG_WH: std::strcpy(buffer,"WAERMEERTRAG_2WE_WW_TAG_WH"); break;
-        case Property::kWAERMEERTRAG_2WE_WW_TAG_KWH: std::strcpy(buffer,"WAERMEERTRAG_2WE_WW_TAG_KWH"); break;
-        case Property::kWAERMEERTRAG_2WE_WW_SUM_KWH: std::strcpy(buffer,"WAERMEERTRAG_2WE_WW_SUM_KWH"); break;
-        case Property::kWAERMEERTRAG_2WE_WW_SUM_MWH: std::strcpy(buffer,"WAERMEERTRAG_2WE_WW_SUM_MWH"); break;
-        case Property::kWAERMEERTRAG_2WE_HEIZ_TAG_WH: std::strcpy(buffer,"WAERMEERTRAG_2WE_HEIZ_TAG_WH"); break;
-        case Property::kWAERMEERTRAG_2WE_HEIZ_TAG_KWH: std::strcpy(buffer,"WAERMEERTRAG_2WE_HEIZ_TAG_KWH"); break;
-        case Property::kWAERMEERTRAG_2WE_HEIZ_SUM_KWH: std::strcpy(buffer,"WAERMEERTRAG_2WE_HEIZ_SUM_KWH"); break;
-        case Property::kWAERMEERTRAG_2WE_HEIZ_SUM_MWH: std::strcpy(buffer,"WAERMEERTRAG_2WE_HEIZ_SUM_MWH"); break;
-        case Property::kWAERMEERTRAG_WW_TAG_WH: std::strcpy(buffer,"WAERMEERTRAG_WW_TAG_WH"); break;
-        case Property::kWAERMEERTRAG_WW_TAG_KWH: std::strcpy(buffer,"WAERMEERTRAG_WW_TAG_KWH"); break;
-        case Property::kWAERMEERTRAG_WW_SUM_KWH: std::strcpy(buffer,"WAERMEERTRAG_WW_SUM_KWH"); break;
-        case Property::kWAERMEERTRAG_WW_SUM_MWH: std::strcpy(buffer,"WAERMEERTRAG_WW_SUM_MWH"); break;
-        case Property::kWAERMEERTRAG_HEIZ_TAG_WH: std::strcpy(buffer,"WAERMEERTRAG_HEIZ_TAG_WH"); break;
-        case Property::kWAERMEERTRAG_HEIZ_TAG_KWH: std::strcpy(buffer,"WAERMEERTRAG_HEIZ_TAG_KWH"); break;
-        case Property::kWAERMEERTRAG_HEIZ_SUM_KWH: std::strcpy(buffer,"WAERMEERTRAG_HEIZ_SUM_KWH"); break;
-        case Property::kWAERMEERTRAG_HEIZ_SUM_MWH: std::strcpy(buffer,"WAERMEERTRAG_HEIZ_SUM_MWH"); break;
-        case Property::kBUSKENNUNG_HEIZMODUL0: std::strcpy(buffer,"BUSKENNUNG_HEIZMODUL0"); break;
-        case Property::kKUEHLEN_AUS_BEI_WW: std::strcpy(buffer,"KUEHLEN_AUS_BEI_WW"); break;
-        case Property::kKUEHL_HYSTERESEZEIT: std::strcpy(buffer,"KUEHL_HYSTERESEZEIT"); break;
-        case Property::kMAX_KUEHL_HYSTERESE: std::strcpy(buffer,"MAX_KUEHL_HYSTERESE"); break;
-        case Property::kKUEHL_HYSTERESE_2: std::strcpy(buffer,"KUEHL_HYSTERESE_2"); break;
-        case Property::kKUEHL_SPERRZEIT: std::strcpy(buffer,"KUEHL_SPERRZEIT"); break;
-        case Property::kMAX_RUECKLAUFSOLLTEMP_WP: std::strcpy(buffer,"MAX_RUECKLAUFSOLLTEMP_WP"); break;
-        case Property::kMIN_RUECKLAUFSOLLTEMP_WP: std::strcpy(buffer,"MIN_RUECKLAUFSOLLTEMP_WP"); break;
-        case Property::kMAX_AUSSENTEMP_WE: std::strcpy(buffer,"MAX_AUSSENTEMP_WE"); break;
-        case Property::kMIN_AUSSENTMEP_WP: std::strcpy(buffer,"MIN_AUSSENTMEP_WP"); break;
-        case Property::kKUEHLEN_MIT_WP: std::strcpy(buffer,"KUEHLEN_MIT_WP"); break;
-        case Property::kPU_NACHTLADUNGPROG_EINSCHALTZEIT: std::strcpy(buffer,"PU_NACHTLADUNGPROG_EINSCHALTZEIT"); break;
-        case Property::kPU_NACHTLADUNGPROG_AUSSCHALTZEIT: std::strcpy(buffer,"PU_NACHTLADUNGPROG_AUSSCHALTZEIT"); break;
-        case Property::kPU_NACHTLADUNG_TEMP: std::strcpy(buffer,"PU_NACHTLADUNG_TEMP"); break;
-        case Property::kMIN_PU_TEMP_WE: std::strcpy(buffer,"MIN_PU_TEMP_WE"); break;
-        case Property::kMIN_WW_TEMP_WE: std::strcpy(buffer,"MIN_WW_TEMP_WE"); break;
-        case Property::kMAX_WE_SPERRZEIT: std::strcpy(buffer,"MAX_WE_SPERRZEIT"); break;
-        case Property::kMIN_RUECKLAUFKUEHLTEMP: std::strcpy(buffer,"MIN_RUECKLAUFKUEHLTEMP"); break;
-        case Property::kSOMMERZEIT_AUTOMATIK: std::strcpy(buffer,"SOMMERZEIT_AUTOMATIK"); break;
-        case Property::kP_ANTEIL_EXV_ZE: std::strcpy(buffer,"P_ANTEIL_EXV_ZE"); break;
-        case Property::kI_ANTEIL_EXV_ZE: std::strcpy(buffer,"I_ANTEIL_EXV_ZE"); break;
-        case Property::kD_ANTEIL_EXV_ZE: std::strcpy(buffer,"D_ANTEIL_EXV_ZE"); break;
-        case Property::kRESET_FEHLERBIT_STATUS_STUFE1: std::strcpy(buffer,"RESET_FEHLERBIT_STATUS_STUFE1"); break;
-        case Property::kRESET_FEHLERBIT_STATUS_STUFE2: std::strcpy(buffer,"RESET_FEHLERBIT_STATUS_STUFE2"); break;
-        case Property::kFEHLERBIT_STATUS_STUFE1: std::strcpy(buffer,"FEHLERBIT_STATUS_STUFE1"); break;
-        case Property::kFEHLERBIT_STATUS_STUFE2: std::strcpy(buffer,"FEHLERBIT_STATUS_STUFE2"); break;
-        case Property::kOT_TSP_0: std::strcpy(buffer,"OT_TSP_0"); break;
-        case Property::kOT_TSP_1: std::strcpy(buffer,"OT_TSP_1"); break;
-        case Property::kOT_TSP_2: std::strcpy(buffer,"OT_TSP_2"); break;
-        case Property::kOT_TSP_3: std::strcpy(buffer,"OT_TSP_3"); break;
-        case Property::kOT_TSP_4: std::strcpy(buffer,"OT_TSP_4"); break;
-        case Property::kOT_TSP_5: std::strcpy(buffer,"OT_TSP_5"); break;
-        case Property::kOT_TSP_6: std::strcpy(buffer,"OT_TSP_6"); break;
-        case Property::kOT_TSP_7: std::strcpy(buffer,"OT_TSP_7"); break;
-        case Property::kOT_TSP_8: std::strcpy(buffer,"OT_TSP_8"); break;
-        case Property::kOT_TSP_9: std::strcpy(buffer,"OT_TSP_9"); break;
-        case Property::kOT_TSP_10: std::strcpy(buffer,"OT_TSP_10"); break;
-        case Property::kOT_TSP_11: std::strcpy(buffer,"OT_TSP_11"); break;
-        case Property::kOT_TSP_12: std::strcpy(buffer,"OT_TSP_12"); break;
-        case Property::kOT_TSP_13: std::strcpy(buffer,"OT_TSP_13"); break;
-        case Property::kOT_TSP_14: std::strcpy(buffer,"OT_TSP_14"); break;
-        case Property::kOT_TSP_15: std::strcpy(buffer,"OT_TSP_15"); break;
-        case Property::kOT_TSP_16: std::strcpy(buffer,"OT_TSP_16"); break;
-        case Property::kOT_TSP_17: std::strcpy(buffer,"OT_TSP_17"); break;
-        case Property::kOT_TSP_18: std::strcpy(buffer,"OT_TSP_18"); break;
-        case Property::kOT_TSP_19: std::strcpy(buffer,"OT_TSP_19"); break;
-        case Property::kOT_TSP_20: std::strcpy(buffer,"OT_TSP_20"); break;
-        case Property::kSAMMEL_RELAISSTATUS_ANZ: std::strcpy(buffer,"SAMMEL_RELAISSTATUS_ANZ"); break;
-        case Property::kFOLGENWECHSEL_MINCOUNTER_LOW: std::strcpy(buffer,"FOLGENWECHSEL_MINCOUNTER_LOW"); break;
-        case Property::kFOLGENWECHSEL_MINCOUNTER_HIGH: std::strcpy(buffer,"FOLGENWECHSEL_MINCOUNTER_HIGH"); break;
-        case Property::kERKANNTE_KASKADENKESSEL: std::strcpy(buffer,"ERKANNTE_KASKADENKESSEL"); break;
-        case Property::kSCHWIMMBADISTTEMP: std::strcpy(buffer,"SCHWIMMBADISTTEMP"); break;
-        case Property::kSCHWIMMBADSOLLTEMP_I: std::strcpy(buffer,"SCHWIMMBADSOLLTEMP_I"); break;
-        case Property::kSCHWIMMBADSOLLTEMP_II: std::strcpy(buffer,"SCHWIMMBADSOLLTEMP_II"); break;
-        case Property::kSCHWIMMBADSOLLTEMP_III: std::strcpy(buffer,"SCHWIMMBADSOLLTEMP_III"); break;
-        case Property::kSTATUSANZEIGE: std::strcpy(buffer,"STATUSANZEIGE"); break;
-        case Property::kKONTRAST: std::strcpy(buffer,"KONTRAST"); break;
-        case Property::kPARAMETER_SPANNUNGSEINGANG: std::strcpy(buffer,"PARAMETER_SPANNUNGSEINGANG"); break;
-        case Property::kPROGRAMMSCHALTER_LEITSTELLE: std::strcpy(buffer,"PROGRAMMSCHALTER_LEITSTELLE"); break;
-        case Property::kBERECHNETE_AUFHEIZOPTIMIERUNGSZEIT: std::strcpy(buffer,"BERECHNETE_AUFHEIZOPTIMIERUNGSZEIT"); break;
-        case Property::kANTILEGIONELLEN_ERFOLGREICH_MIT_SOLAR: std::strcpy(buffer,"ANTILEGIONELLEN_ERFOLGREICH_MIT_SOLAR"); break;
-        case Property::kTEMPORAERE_PROGSTELL: std::strcpy(buffer,"TEMPORAERE_PROGSTELL"); break;
-        case Property::kRAUMREGLER_I_ANTEIL: std::strcpy(buffer,"RAUMREGLER_I_ANTEIL"); break;
-        case Property::kHZK_VORVERLEGUNGSZEIT: std::strcpy(buffer,"HZK_VORVERLEGUNGSZEIT"); break;
-        case Property::kHZK_TYP: std::strcpy(buffer,"HZK_TYP"); break;
-        case Property::kINIT_FUEHLER: std::strcpy(buffer,"INIT_FUEHLER"); break;
-        case Property::kFEHLER_STUNDE: std::strcpy(buffer,"FEHLER_STUNDE"); break;
-        case Property::kFEHLER_MINUTE: std::strcpy(buffer,"FEHLER_MINUTE"); break;
-        case Property::kKOLLEKTORTEMP1_MIN_24H: std::strcpy(buffer,"KOLLEKTORTEMP1_MIN_24H"); break;
-        case Property::kKOLLEKTORTEMP1_MAX_24H: std::strcpy(buffer,"KOLLEKTORTEMP1_MAX_24H"); break;
-        case Property::kKOLLEKTORTEMP2_MIN_24H: std::strcpy(buffer,"KOLLEKTORTEMP2_MIN_24H"); break;
-        case Property::kKOLLEKTORTEMP2_MAX_24H: std::strcpy(buffer,"KOLLEKTORTEMP2_MAX_24H"); break;
-        case Property::kSPEICHER_UNTEN_TEMP1_MIN_24H: std::strcpy(buffer,"SPEICHER_UNTEN_TEMP1_MIN_24H"); break;
-        case Property::kSPEICHER_UNTEN_TEMP1_MAX_24H: std::strcpy(buffer,"SPEICHER_UNTEN_TEMP1_MAX_24H"); break;
-        case Property::kSPEICHER_UNTEN_TEMP2_MIN_24H: std::strcpy(buffer,"SPEICHER_UNTEN_TEMP2_MIN_24H"); break;
-        case Property::kSPEICHER_UNTEN_TEMP2_MAX_24H: std::strcpy(buffer,"SPEICHER_UNTEN_TEMP2_MAX_24H"); break;
-        case Property::kSPEICHER_UNTEN_TEMP3_MIN_24H: std::strcpy(buffer,"SPEICHER_UNTEN_TEMP3_MIN_24H"); break;
-        case Property::kSPEICHER_UNTEN_TEMP3_MAX_24H: std::strcpy(buffer,"SPEICHER_UNTEN_TEMP3_MAX_24H"); break;
-        case Property::kEINSTRAHLUNG_MIN_24H: std::strcpy(buffer,"EINSTRAHLUNG_MIN_24H"); break;
-        case Property::kEINSTRAHLUNG_MAX_24H: std::strcpy(buffer,"EINSTRAHLUNG_MAX_24H"); break;
-        case Property::kFUEHLER_FUER_RLW_FUNKTION: std::strcpy(buffer,"FUEHLER_FUER_RLW_FUNKTION"); break;
-        case Property::kFUEHLER_FUER_TH1_FUNKTION: std::strcpy(buffer,"FUEHLER_FUER_TH1_FUNKTION"); break;
-        case Property::kFUEHLER_FUER_TH2_FUNKTION: std::strcpy(buffer,"FUEHLER_FUER_TH2_FUNKTION"); break;
-        case Property::kFUEHLER_FUER_TH3_FUNKTION: std::strcpy(buffer,"FUEHLER_FUER_TH3_FUNKTION"); break;
-        case Property::kFUEHLER_FUER_TH4_FUNKTION: std::strcpy(buffer,"FUEHLER_FUER_TH4_FUNKTION"); break;
-        case Property::kFUEHLER1_FUER_DT1_FUNKTION: std::strcpy(buffer,"FUEHLER1_FUER_DT1_FUNKTION"); break;
-        case Property::kFUEHLER2_FUER_DT1_FUNKTION: std::strcpy(buffer,"FUEHLER2_FUER_DT1_FUNKTION"); break;
-        case Property::kFUEHLER1_FUER_DT2_FUNKTION: std::strcpy(buffer,"FUEHLER1_FUER_DT2_FUNKTION"); break;
-        case Property::kFUEHLER2_FUER_DT2_FUNKTION: std::strcpy(buffer,"FUEHLER2_FUER_DT2_FUNKTION"); break;
-        case Property::kTEMPERATUR_TH1_FUNKTION_EIN: std::strcpy(buffer,"TEMPERATUR_TH1_FUNKTION_EIN"); break;
-        case Property::kTEMPERATUR_TH1_FUNKTION_AUS: std::strcpy(buffer,"TEMPERATUR_TH1_FUNKTION_AUS"); break;
-        case Property::kTEMPERATUR_TH2_FUNKTION_EIN: std::strcpy(buffer,"TEMPERATUR_TH2_FUNKTION_EIN"); break;
-        case Property::kTEMPERATUR_TH2_FUNKTION_AUS: std::strcpy(buffer,"TEMPERATUR_TH2_FUNKTION_AUS"); break;
-        case Property::kTEMPERATUR_TH3_FUNKTION_EIN: std::strcpy(buffer,"TEMPERATUR_TH3_FUNKTION_EIN"); break;
-        case Property::kTEMPERATUR_TH3_FUNKTION_AUS: std::strcpy(buffer,"TEMPERATUR_TH3_FUNKTION_AUS"); break;
-        case Property::kTEMPERATUR_TH4_FUNKTION_EIN: std::strcpy(buffer,"TEMPERATUR_TH4_FUNKTION_EIN"); break;
-        case Property::kTEMPERATUR_TH4_FUNKTION_AUS: std::strcpy(buffer,"TEMPERATUR_TH4_FUNKTION_AUS"); break;
-        case Property::kTEMPERATUR_DT1_FUNKTION_EIN: std::strcpy(buffer,"TEMPERATUR_DT1_FUNKTION_EIN"); break;
-        case Property::kTEMPERATUR_DT1_FUNKTION_AUS: std::strcpy(buffer,"TEMPERATUR_DT1_FUNKTION_AUS"); break;
-        case Property::kTEMPERATUR_DT2_FUNKTION_EIN: std::strcpy(buffer,"TEMPERATUR_DT2_FUNKTION_EIN"); break;
-        case Property::kTEMPERATUR_DT2_FUNKTION_AUS: std::strcpy(buffer,"TEMPERATUR_DT2_FUNKTION_AUS"); break;
-        case Property::kWARMLUFTKOLLEKTOR_RAUMSOLL_EINSCHALTTEMP: std::strcpy(buffer,"WARMLUFTKOLLEKTOR_RAUMSOLL_EINSCHALTTEMP"); break;
-        case Property::kWARMLUFTKOLLEKTOR_RAUMSOLL_AUSSCHALTTEMP: std::strcpy(buffer,"WARMLUFTKOLLEKTOR_RAUMSOLL_AUSSCHALTTEMP"); break;
-        case Property::kWARMLUFTKOLLEKTOR_DIFFERENZ_EIN: std::strcpy(buffer,"WARMLUFTKOLLEKTOR_DIFFERENZ_EIN"); break;
-        case Property::kWARMLUFTKOLLEKTOR_DIFFERENZ_AUS: std::strcpy(buffer,"WARMLUFTKOLLEKTOR_DIFFERENZ_AUS"); break;
-        case Property::kWARMLUFTKOLLEKTOR_THERMOSTAT_EIN: std::strcpy(buffer,"WARMLUFTKOLLEKTOR_THERMOSTAT_EIN"); break;
-        case Property::kWARMLUFTKOLLEKTOR_THERMOSTAT_AUS: std::strcpy(buffer,"WARMLUFTKOLLEKTOR_THERMOSTAT_AUS"); break;
-        case Property::kWARMLUFTKOLLEKTOR_MAXTEMP: std::strcpy(buffer,"WARMLUFTKOLLEKTOR_MAXTEMP"); break;
-        case Property::kWARMLUFTKOLLEKTOR_WIEDEREIN_NACH_MAXTEMP: std::strcpy(buffer,"WARMLUFTKOLLEKTOR_WIEDEREIN_NACH_MAXTEMP"); break;
-        case Property::kFESTSTOFF_THERMOSTAT: std::strcpy(buffer,"FESTSTOFF_THERMOSTAT"); break;
-        case Property::kFESTSTOFF_THERMOSTAT_AUS: std::strcpy(buffer,"FESTSTOFF_THERMOSTAT_AUS"); break;
-        case Property::kFESTSTOFF_DIFFERENZ: std::strcpy(buffer,"FESTSTOFF_DIFFERENZ"); break;
-        case Property::kFESTSTOFF_DIFFERENZ_AUS: std::strcpy(buffer,"FESTSTOFF_DIFFERENZ_AUS"); break;
-        case Property::kRUECKLAUFW_DIFFERENZ: std::strcpy(buffer,"RUECKLAUFW_DIFFERENZ"); break;
-        case Property::kRUECKLAUFW_DIFFERENZ_AUS: std::strcpy(buffer,"RUECKLAUFW_DIFFERENZ_AUS"); break;
-        case Property::kUMLADUNG_DIFFERENZ: std::strcpy(buffer,"UMLADUNG_DIFFERENZ"); break;
-        case Property::kUMLADUNG_DIFFERENZ_AUS: std::strcpy(buffer,"UMLADUNG_DIFFERENZ_AUS"); break;
-        case Property::kUMLADUNG_ZIELSPEICHER_MAXTEMP: std::strcpy(buffer,"UMLADUNG_ZIELSPEICHER_MAXTEMP"); break;
-        case Property::kUMLADUNG_WIEDEREIN_NACH_ZIELSP_MAXTEMP: std::strcpy(buffer,"UMLADUNG_WIEDEREIN_NACH_ZIELSP_MAXTEMP"); break;
-        case Property::kWW_NACHHEIZUNG_FREIGABE: std::strcpy(buffer,"WW_NACHHEIZUNG_FREIGABE"); break;
-        case Property::kWMZ_IMPULSRATE_SOLAR: std::strcpy(buffer,"WMZ_IMPULSRATE_SOLAR"); break;
-        case Property::kWMZ_SOLARMEDIUM: std::strcpy(buffer,"WMZ_SOLARMEDIUM"); break;
-        case Property::kWMZ_KONZENTRATION_SOLARMEDIUM: std::strcpy(buffer,"WMZ_KONZENTRATION_SOLARMEDIUM"); break;
-        case Property::kWMZ_MESSUNG_IMPULS: std::strcpy(buffer,"WMZ_MESSUNG_IMPULS"); break;
-        case Property::kWMZ_VOLUMENSTROM_FIX_SOLARPUMPE1: std::strcpy(buffer,"WMZ_VOLUMENSTROM_FIX_SOLARPUMPE1"); break;
-        case Property::kWMZ_VOLUMENSTROM_FIX_SOLARPUMPE2: std::strcpy(buffer,"WMZ_VOLUMENSTROM_FIX_SOLARPUMPE2"); break;
-        case Property::kZIRKPUMPE_IMPULS_LAUFZEIT: std::strcpy(buffer,"ZIRKPUMPE_IMPULS_LAUFZEIT"); break;
-        case Property::kZIRKPUMPE_IMPULS_SPERRZEIT: std::strcpy(buffer,"ZIRKPUMPE_IMPULS_SPERRZEIT"); break;
-        case Property::kVORRANG_TEST_ZEIT: std::strcpy(buffer,"VORRANG_TEST_ZEIT"); break;
-        case Property::kVORRANG_TEST_GRADIENT: std::strcpy(buffer,"VORRANG_TEST_GRADIENT"); break;
-        case Property::kSTRAHLUNGSSENSOR_FUNKTION: std::strcpy(buffer,"STRAHLUNGSSENSOR_FUNKTION"); break;
-        case Property::kSTRAHLUNGSSENSOR_ABGLEICH: std::strcpy(buffer,"STRAHLUNGSSENSOR_ABGLEICH"); break;
-        case Property::kSOLAR_KICKPAUSE1: std::strcpy(buffer,"SOLAR_KICKPAUSE1"); break;
-        case Property::kSOLAR_KICKDAUER1: std::strcpy(buffer,"SOLAR_KICKDAUER1"); break;
-        case Property::kSOLAR_KICKPAUSE2: std::strcpy(buffer,"SOLAR_KICKPAUSE2"); break;
-        case Property::kSOLAR_KICKDAUER2: std::strcpy(buffer,"SOLAR_KICKDAUER2"); break;
-        case Property::kSOLAR_KICKPROG_EINSCAHLTZEIT: std::strcpy(buffer,"SOLAR_KICKPROG_EINSCAHLTZEIT"); break;
-        case Property::kSOLAR_KICKPROG_AUSSCHALTZEIT: std::strcpy(buffer,"SOLAR_KICKPROG_AUSSCHALTZEIT"); break;
-        case Property::kSOLAR_KICK_GRADIENTENZEIT1: std::strcpy(buffer,"SOLAR_KICK_GRADIENTENZEIT1"); break;
-        case Property::kSOLAR_KICK_GRADIENTENZEIT2: std::strcpy(buffer,"SOLAR_KICK_GRADIENTENZEIT2"); break;
-        case Property::kSOLAR_OST_WEST_KOLLEKTOR: std::strcpy(buffer,"SOLAR_OST_WEST_KOLLEKTOR"); break;
-        case Property::kSOLAR_DIFFERENZ_KOLLEKTOR1: std::strcpy(buffer,"SOLAR_DIFFERENZ_KOLLEKTOR1"); break;
-        case Property::kSOLAR_DIFFERENZ_KOLLEKTOR1_AUS: std::strcpy(buffer,"SOLAR_DIFFERENZ_KOLLEKTOR1_AUS"); break;
-        case Property::kSOLAR_DIFFERENZ_KOLLEKTOR2: std::strcpy(buffer,"SOLAR_DIFFERENZ_KOLLEKTOR2"); break;
-        case Property::kSOLAR_DIFFERENZ_KOLLEKTOR2_AUS: std::strcpy(buffer,"SOLAR_DIFFERENZ_KOLLEKTOR2_AUS"); break;
-        case Property::kSOLAR_THERMOSTAT_KOLLEKTOR1: std::strcpy(buffer,"SOLAR_THERMOSTAT_KOLLEKTOR1"); break;
-        case Property::kSOLAR_THERMOSTAT_KOLLEKTOR1_AUS: std::strcpy(buffer,"SOLAR_THERMOSTAT_KOLLEKTOR1_AUS"); break;
-        case Property::kSOLAR_THERMOSTAT_KOLLEKTOR2: std::strcpy(buffer,"SOLAR_THERMOSTAT_KOLLEKTOR2"); break;
-        case Property::kSOLAR_THERMOSTAT_KOLLEKTOR2_AUS: std::strcpy(buffer,"SOLAR_THERMOSTAT_KOLLEKTOR2_AUS"); break;
-        case Property::kSOLAR_KOLLEKTOR1_KUEHL: std::strcpy(buffer,"SOLAR_KOLLEKTOR1_KUEHL"); break;
-        case Property::kSOLAR_KOLLEKTOR1_KUEHL_AUS: std::strcpy(buffer,"SOLAR_KOLLEKTOR1_KUEHL_AUS"); break;
-        case Property::kSOLAR_KOLLEKTOR2_KUEHL: std::strcpy(buffer,"SOLAR_KOLLEKTOR2_KUEHL"); break;
-        case Property::kSOLAR_KOLLEKTOR2_KUEHL_AUS: std::strcpy(buffer,"SOLAR_KOLLEKTOR2_KUEHL_AUS"); break;
-        case Property::kSOLAR_KOLLEKTOR1_NOTAUS: std::strcpy(buffer,"SOLAR_KOLLEKTOR1_NOTAUS"); break;
-        case Property::kSOLAR_KOLLEKTOR1_WIEDEREIN_NACH_NOTAUS: std::strcpy(buffer,"SOLAR_KOLLEKTOR1_WIEDEREIN_NACH_NOTAUS"); break;
-        case Property::kSOLAR_KOLLEKTOR2_NOTAUS: std::strcpy(buffer,"SOLAR_KOLLEKTOR2_NOTAUS"); break;
-        case Property::kSOLAR_KOLLEKTOR2_WIEDEREIN_NACH_NOTAUS: std::strcpy(buffer,"SOLAR_KOLLEKTOR2_WIEDEREIN_NACH_NOTAUS"); break;
-        case Property::kSOLAR_KOLLEKTOR_KUEHL_SPEICHER_NR: std::strcpy(buffer,"SOLAR_KOLLEKTOR_KUEHL_SPEICHER_NR"); break;
-        case Property::kFEUCHTEREGELUNG_EIN_AUS: std::strcpy(buffer,"FEUCHTEREGELUNG_EIN_AUS"); break;
-        case Property::kMIN_SOLL_FEUCHTE: std::strcpy(buffer,"MIN_SOLL_FEUCHTE"); break;
-        case Property::kMAX_SOLL_FEUCHTE: std::strcpy(buffer,"MAX_SOLL_FEUCHTE"); break;
-        case Property::kMAXTEMP_SPEICHER1: std::strcpy(buffer,"MAXTEMP_SPEICHER1"); break;
-        case Property::kMAXTEMP_SPEICHER1_WIEDEREIN: std::strcpy(buffer,"MAXTEMP_SPEICHER1_WIEDEREIN"); break;
-        case Property::kMAXTEMP_SPEICHER2: std::strcpy(buffer,"MAXTEMP_SPEICHER2"); break;
-        case Property::kMAXTEMP_SPEICHER2_WIEDEREIN: std::strcpy(buffer,"MAXTEMP_SPEICHER2_WIEDEREIN"); break;
-        case Property::kMAXTEMP_SPEICHER3: std::strcpy(buffer,"MAXTEMP_SPEICHER3"); break;
-        case Property::kMAXTEMP_SPEICHER3_WIEDEREIN: std::strcpy(buffer,"MAXTEMP_SPEICHER3_WIEDEREIN"); break;
-        case Property::kMAXTEMP_SPEICHER_KUEHLFUNKTION: std::strcpy(buffer,"MAXTEMP_SPEICHER_KUEHLFUNKTION"); break;
-        case Property::kLAUFZEIT_SOLAR_HIGH: std::strcpy(buffer,"LAUFZEIT_SOLAR_HIGH"); break;
-        case Property::kLAUFZEIT_SOLAR2: std::strcpy(buffer,"LAUFZEIT_SOLAR2"); break;
-        case Property::kLAUFZEIT_SOLAR2_HIGH: std::strcpy(buffer,"LAUFZEIT_SOLAR2_HIGH"); break;
-        case Property::kLADEZEIT_SPEICHER: std::strcpy(buffer,"LADEZEIT_SPEICHER"); break;
-        case Property::kLADEZEIT_SPEICHER_HIGH: std::strcpy(buffer,"LADEZEIT_SPEICHER_HIGH"); break;
-        case Property::kLADEZEIT_SPEICHER2: std::strcpy(buffer,"LADEZEIT_SPEICHER2"); break;
-        case Property::kLADEZEIT_SPEICHER2_HIGH: std::strcpy(buffer,"LADEZEIT_SPEICHER2_HIGH"); break;
-        case Property::kLADEZEIT_SPEICHER3: std::strcpy(buffer,"LADEZEIT_SPEICHER3"); break;
-        case Property::kLADEZEIT_SPEICHER3_HIGH: std::strcpy(buffer,"LADEZEIT_SPEICHER3_HIGH"); break;
-        case Property::kPELLET_EIN_AUS: std::strcpy(buffer,"PELLET_EIN_AUS"); break;
-        case Property::kPELLET_PUFFER_LADETEMP: std::strcpy(buffer,"PELLET_PUFFER_LADETEMP"); break;
-        case Property::kPELLET_KUEHLFUNKTION: std::strcpy(buffer,"PELLET_KUEHLFUNKTION"); break;
-        case Property::kPELLET_KUEHLFUNKTION_SCHALTTEMP: std::strcpy(buffer,"PELLET_KUEHLFUNKTION_SCHALTTEMP"); break;
-        case Property::kPELLET_KUEHLFUNKTION_VORLAUFSOLLTEMP: std::strcpy(buffer,"PELLET_KUEHLFUNKTION_VORLAUFSOLLTEMP"); break;
-        case Property::kMAX_PP_GRADIENTEN_TEMP: std::strcpy(buffer,"MAX_PP_GRADIENTEN_TEMP"); break;
-        case Property::kMAX_PP_GRADIENT: std::strcpy(buffer,"MAX_PP_GRADIENT"); break;
-        case Property::kECO_PUFFERTEMP_ABSOLUT_EIN: std::strcpy(buffer,"ECO_PUFFERTEMP_ABSOLUT_EIN"); break;
-        case Property::kECO_PUFFERTEMP_ABSOLUT_AUS: std::strcpy(buffer,"ECO_PUFFERTEMP_ABSOLUT_AUS"); break;
-        case Property::kWARMLUFTKOLLEKTOR_WW_MAXTEMP: std::strcpy(buffer,"WARMLUFTKOLLEKTOR_WW_MAXTEMP"); break;
-        case Property::kWARMLUFTKOLLEKTOR_WW_WIEDEREIN_NACH_MAXTEMP: std::strcpy(buffer,"WARMLUFTKOLLEKTOR_WW_WIEDEREIN_NACH_MAXTEMP"); break;
-        case Property::kSCHWIMMBADREGELUNG_EIN_AUS: std::strcpy(buffer,"SCHWIMMBADREGELUNG_EIN_AUS"); break;
-        case Property::kSOLAR_PLAUSI_FEHLERMELDUNGEN_EIN_AUS: std::strcpy(buffer,"SOLAR_PLAUSI_FEHLERMELDUNGEN_EIN_AUS"); break;
-        case Property::kSPEICHERLADEPUMPE_PWM_SIGNAL: std::strcpy(buffer,"SPEICHERLADEPUMPE_PWM_SIGNAL"); break;
-        case Property::kAKT_SPERRZEIT: std::strcpy(buffer,"AKT_SPERRZEIT"); break;
-        case Property::kKASKADEN_SCHALTWERT: std::strcpy(buffer,"KASKADEN_SCHALTWERT"); break;
-        case Property::kREGELDIFFERENZ: std::strcpy(buffer,"REGELDIFFERENZ"); break;
-        case Property::kSCHALTHYSTERESE_PUFFER: std::strcpy(buffer,"SCHALTHYSTERESE_PUFFER"); break;
-        case Property::kPUFFERUEBERHOEHUNGSDIFF: std::strcpy(buffer,"PUFFERUEBERHOEHUNGSDIFF"); break;
-        case Property::kMAX_PUFFERTEMPERATUR: std::strcpy(buffer,"MAX_PUFFERTEMPERATUR"); break;
-        case Property::kMIN_PUFFERTEMPERATUR: std::strcpy(buffer,"MIN_PUFFERTEMPERATUR"); break;
-        case Property::kMAX_SAMMLERTEMPERATUR: std::strcpy(buffer,"MAX_SAMMLERTEMPERATUR"); break;
-        case Property::kMIN_SAMMLERTEMPERATUR: std::strcpy(buffer,"MIN_SAMMLERTEMPERATUR"); break;
-        case Property::kSAMMLERUEBERHOEHUNGSDIFF: std::strcpy(buffer,"SAMMLERUEBERHOEHUNGSDIFF"); break;
-        case Property::kABREGELTEMPERATUR: std::strcpy(buffer,"ABREGELTEMPERATUR"); break;
-        case Property::kFOLGEWECHSEL_IN_STD: std::strcpy(buffer,"FOLGEWECHSEL_IN_STD"); break;
-        case Property::kSONDERNIVEAU_TEMPERATUR: std::strcpy(buffer,"SONDERNIVEAU_TEMPERATUR"); break;
-        case Property::kAUSSEN_FROSTTEMP: std::strcpy(buffer,"AUSSEN_FROSTTEMP"); break;
-        case Property::kBRENNER1LAUFZEIT: std::strcpy(buffer,"BRENNER1LAUFZEIT"); break;
-        case Property::kBRENNER1STARTS: std::strcpy(buffer,"BRENNER1STARTS"); break;
-        case Property::kBRENNER2LAUFZEIT: std::strcpy(buffer,"BRENNER2LAUFZEIT"); break;
-        case Property::kBRENNER2STARTS: std::strcpy(buffer,"BRENNER2STARTS"); break;
-        case Property::kEINSTELL_SPEICHERSOLLTEMP2: std::strcpy(buffer,"EINSTELL_SPEICHERSOLLTEMP2"); break;
-        case Property::kSTATUS_HK_ANZEIGE: std::strcpy(buffer,"STATUS_HK_ANZEIGE"); break;
-        case Property::kUEBERLAUF_BRENNER1LAUFZEIT: std::strcpy(buffer,"UEBERLAUF_BRENNER1LAUFZEIT"); break;
-        case Property::kUEBERLAUF_BRENNER1STARTS: std::strcpy(buffer,"UEBERLAUF_BRENNER1STARTS"); break;
-        case Property::kUEBERLAUF_BRENNER2LAUFZEIT: std::strcpy(buffer,"UEBERLAUF_BRENNER2LAUFZEIT"); break;
-        case Property::kUEBERLAUF_BRENNER2STARTS: std::strcpy(buffer,"UEBERLAUF_BRENNER2STARTS"); break;
-        case Property::kAUSSENTEMP_MITTEL: std::strcpy(buffer,"AUSSENTEMP_MITTEL"); break;
-        case Property::kKEIN_HEIZBEDARF: std::strcpy(buffer,"KEIN_HEIZBEDARF"); break;
-        case Property::kSTATUSWAERMEANFORDERUNG: std::strcpy(buffer,"STATUSWAERMEANFORDERUNG"); break;
-        case Property::kVARIABLER_VERBRAUCHER: std::strcpy(buffer,"VARIABLER_VERBRAUCHER"); break;
-        case Property::kCUST_EEPR_TIMEOUT: std::strcpy(buffer,"CUST_EEPR_TIMEOUT"); break;
-        case Property::kHARDWARE_VERSION: std::strcpy(buffer,"HARDWARE_VERSION"); break;
-        case Property::kESTRICH_TAG: std::strcpy(buffer,"ESTRICH_TAG"); break;
-        case Property::kESTRICH_VORLAUFTEMP: std::strcpy(buffer,"ESTRICH_VORLAUFTEMP"); break;
-        case Property::kRAUM_FROSTSCHUTZTEMP: std::strcpy(buffer,"RAUM_FROSTSCHUTZTEMP"); break;
-        case Property::kSOLL_TEMP_MODE: std::strcpy(buffer,"SOLL_TEMP_MODE"); break;
-        case Property::kMERKER_ECO: std::strcpy(buffer,"MERKER_ECO"); break;
-        case Property::kMERKER_ECO_2: std::strcpy(buffer,"MERKER_ECO_2"); break;
-        case Property::kMERKER_SOMMER: std::strcpy(buffer,"MERKER_SOMMER"); break;
-        case Property::kWCM_GERAET: std::strcpy(buffer,"WCM_GERAET"); break;
-        case Property::kAUSSENTEMP_MISCH: std::strcpy(buffer,"AUSSENTEMP_MISCH"); break;
-        case Property::kTIMEOUT: std::strcpy(buffer,"TIMEOUT"); break;
-        case Property::kVAR_RAUMTHERMOSTAT: std::strcpy(buffer,"VAR_RAUMTHERMOSTAT"); break;
-        case Property::kMERKER_RAUMTHERMOSTAT: std::strcpy(buffer,"MERKER_RAUMTHERMOSTAT"); break;
-        case Property::kKESSELLEISTUNG: std::strcpy(buffer,"KESSELLEISTUNG"); break;
-        case Property::kZEITMASTER: std::strcpy(buffer,"ZEITMASTER"); break;
-        case Property::kSAMMEL_RELAISSTATUS: std::strcpy(buffer,"SAMMEL_RELAISSTATUS"); break;
-        case Property::kPARAMETER_KONFIGURATION: std::strcpy(buffer,"PARAMETER_KONFIGURATION"); break;
-        case Property::kEBUS_STROMUEBERSCHUSS: std::strcpy(buffer,"EBUS_STROMUEBERSCHUSS"); break;
-        case Property::kMASTERZUGRIFF: std::strcpy(buffer,"MASTERZUGRIFF"); break;
-        case Property::kEBUS_SPERRZAEHLER: std::strcpy(buffer,"EBUS_SPERRZAEHLER"); break;
-        case Property::kFEHLERSTRING: std::strcpy(buffer,"FEHLERSTRING"); break;
-        case Property::kBUSFEHLER: std::strcpy(buffer,"BUSFEHLER"); break;
-        case Property::kDIREKT_EINGANG: std::strcpy(buffer,"DIREKT_EINGANG"); break;
-        case Property::kEINGANG0: std::strcpy(buffer,"EINGANG0"); break;
-        case Property::kEINGANG1: std::strcpy(buffer,"EINGANG1"); break;
-        case Property::kEINGANG2: std::strcpy(buffer,"EINGANG2"); break;
-        case Property::kEINGANG3: std::strcpy(buffer,"EINGANG3"); break;
-        case Property::kEINGANG4: std::strcpy(buffer,"EINGANG4"); break;
-        case Property::kEINGANG5: std::strcpy(buffer,"EINGANG5"); break;
-        case Property::kEINGANG6: std::strcpy(buffer,"EINGANG6"); break;
-        case Property::kEINGANG7: std::strcpy(buffer,"EINGANG7"); break;
-        case Property::kEINGANG8: std::strcpy(buffer,"EINGANG8"); break;
-        case Property::kEINGANG9: std::strcpy(buffer,"EINGANG9"); break;
-        case Property::kEINGANG10: std::strcpy(buffer,"EINGANG10"); break;
-        case Property::kEINGANG11: std::strcpy(buffer,"EINGANG11"); break;
-        case Property::kEINGANG12: std::strcpy(buffer,"EINGANG12"); break;
-        case Property::kEINGANG13: std::strcpy(buffer,"EINGANG13"); break;
-        case Property::kEINGANG14: std::strcpy(buffer,"EINGANG14"); break;
-        case Property::kEINGANG15: std::strcpy(buffer,"EINGANG15"); break;
-        case Property::kEINGANG16: std::strcpy(buffer,"EINGANG16"); break;
-        case Property::kEINGANG17: std::strcpy(buffer,"EINGANG17"); break;
-        case Property::kEINGANG18: std::strcpy(buffer,"EINGANG18"); break;
-        case Property::kEINGANG19: std::strcpy(buffer,"EINGANG19"); break;
-        case Property::kEINGANG20: std::strcpy(buffer,"EINGANG20"); break;
-        case Property::kKONFIG_EINGANG0: std::strcpy(buffer,"KONFIG_EINGANG0"); break;
-        case Property::kKONFIG_EINGANG1: std::strcpy(buffer,"KONFIG_EINGANG1"); break;
-        case Property::kKONFIG_EINGANG2: std::strcpy(buffer,"KONFIG_EINGANG2"); break;
-        case Property::kKONFIG_EINGANG3: std::strcpy(buffer,"KONFIG_EINGANG3"); break;
-        case Property::kKONFIG_EINGANG4: std::strcpy(buffer,"KONFIG_EINGANG4"); break;
-        case Property::kKONFIG_EINGANG5: std::strcpy(buffer,"KONFIG_EINGANG5"); break;
-        case Property::kKONFIG_EINGANG6: std::strcpy(buffer,"KONFIG_EINGANG6"); break;
-        case Property::kKONFIG_EINGANG7: std::strcpy(buffer,"KONFIG_EINGANG7"); break;
-        case Property::kKONFIG_EINGANG8: std::strcpy(buffer,"KONFIG_EINGANG8"); break;
-        case Property::kKONFIG_EINGANG9: std::strcpy(buffer,"KONFIG_EINGANG9"); break;
-        case Property::kKONFIG_EINGANG10: std::strcpy(buffer,"KONFIG_EINGANG10"); break;
-        case Property::kKONFIG_EINGANG11: std::strcpy(buffer,"KONFIG_EINGANG11"); break;
-        case Property::kKONFIG_EINGANG12: std::strcpy(buffer,"KONFIG_EINGANG12"); break;
-        case Property::kKONFIG_EINGANG13: std::strcpy(buffer,"KONFIG_EINGANG13"); break;
-        case Property::kKONFIG_EINGANG14: std::strcpy(buffer,"KONFIG_EINGANG14"); break;
-        case Property::kKONFIG_EINGANG15: std::strcpy(buffer,"KONFIG_EINGANG15"); break;
-        case Property::kKONFIG_EINGANG16: std::strcpy(buffer,"KONFIG_EINGANG16"); break;
-        case Property::kKONFIG_EINGANG17: std::strcpy(buffer,"KONFIG_EINGANG17"); break;
-        case Property::kKONFIG_EINGANG18: std::strcpy(buffer,"KONFIG_EINGANG18"); break;
-        case Property::kKONFIG_EINGANG19: std::strcpy(buffer,"KONFIG_EINGANG19"); break;
-        case Property::kKONFIG_EINGANG20: std::strcpy(buffer,"KONFIG_EINGANG20"); break;
-        case Property::kAUSGANG0: std::strcpy(buffer,"AUSGANG0"); break;
-        case Property::kAUSGANG1: std::strcpy(buffer,"AUSGANG1"); break;
-        case Property::kAUSGANG2: std::strcpy(buffer,"AUSGANG2"); break;
-        case Property::kAUSGANG3: std::strcpy(buffer,"AUSGANG3"); break;
-        case Property::kAUSGANG4: std::strcpy(buffer,"AUSGANG4"); break;
-        case Property::kAUSGANG5: std::strcpy(buffer,"AUSGANG5"); break;
-        case Property::kAUSGANG6: std::strcpy(buffer,"AUSGANG6"); break;
-        case Property::kAUSGANG7: std::strcpy(buffer,"AUSGANG7"); break;
-        case Property::kAUSGANG8: std::strcpy(buffer,"AUSGANG8"); break;
-        case Property::kAUSGANG9: std::strcpy(buffer,"AUSGANG9"); break;
-        case Property::kAUSGANG10: std::strcpy(buffer,"AUSGANG10"); break;
-        case Property::kAUSGANG11: std::strcpy(buffer,"AUSGANG11"); break;
-        case Property::kAUSGANG12: std::strcpy(buffer,"AUSGANG12"); break;
-        case Property::kAUSGANG13: std::strcpy(buffer,"AUSGANG13"); break;
-        case Property::kAUSGANG14: std::strcpy(buffer,"AUSGANG14"); break;
-        case Property::kAUSGANG15: std::strcpy(buffer,"AUSGANG15"); break;
-        case Property::kAUSGANG16: std::strcpy(buffer,"AUSGANG16"); break;
-        case Property::kAUSGANG17: std::strcpy(buffer,"AUSGANG17"); break;
-        case Property::kAUSGANG18: std::strcpy(buffer,"AUSGANG18"); break;
-        case Property::kAUSGANG19: std::strcpy(buffer,"AUSGANG19"); break;
-        case Property::kAUSGANG20: std::strcpy(buffer,"AUSGANG20"); break;
-        case Property::kKONFIG_AUSGANG0: std::strcpy(buffer,"KONFIG_AUSGANG0"); break;
-        case Property::kKONFIG_AUSGANG1: std::strcpy(buffer,"KONFIG_AUSGANG1"); break;
-        case Property::kKONFIG_AUSGANG2: std::strcpy(buffer,"KONFIG_AUSGANG2"); break;
-        case Property::kKONFIG_AUSGANG3: std::strcpy(buffer,"KONFIG_AUSGANG3"); break;
-        case Property::kKONFIG_AUSGANG4: std::strcpy(buffer,"KONFIG_AUSGANG4"); break;
-        case Property::kKONFIG_AUSGANG5: std::strcpy(buffer,"KONFIG_AUSGANG5"); break;
-        case Property::kKONFIG_AUSGANG6: std::strcpy(buffer,"KONFIG_AUSGANG6"); break;
-        case Property::kKONFIG_AUSGANG7: std::strcpy(buffer,"KONFIG_AUSGANG7"); break;
-        case Property::kKONFIG_AUSGANG8: std::strcpy(buffer,"KONFIG_AUSGANG8"); break;
-        case Property::kKONFIG_AUSGANG9: std::strcpy(buffer,"KONFIG_AUSGANG9"); break;
-        case Property::kKONFIG_AUSGANG10: std::strcpy(buffer,"KONFIG_AUSGANG10"); break;
-        case Property::kKONFIG_AUSGANG11: std::strcpy(buffer,"KONFIG_AUSGANG11"); break;
-        case Property::kKONFIG_AUSGANG12: std::strcpy(buffer,"KONFIG_AUSGANG12"); break;
-        case Property::kKONFIG_AUSGANG13: std::strcpy(buffer,"KONFIG_AUSGANG13"); break;
-        case Property::kKONFIG_AUSGANG14: std::strcpy(buffer,"KONFIG_AUSGANG14"); break;
-        case Property::kKONFIG_AUSGANG15: std::strcpy(buffer,"KONFIG_AUSGANG15"); break;
-        case Property::kKONFIG_AUSGANG16: std::strcpy(buffer,"KONFIG_AUSGANG16"); break;
-        case Property::kKONFIG_AUSGANG17: std::strcpy(buffer,"KONFIG_AUSGANG17"); break;
-        case Property::kKONFIG_AUSGANG18: std::strcpy(buffer,"KONFIG_AUSGANG18"); break;
-        case Property::kKONFIG_AUSGANG19: std::strcpy(buffer,"KONFIG_AUSGANG19"); break;
-        case Property::kKONFIG_AUSGANG20: std::strcpy(buffer,"KONFIG_AUSGANG20"); break;
-        case Property::kFEHLERFELD_0: std::strcpy(buffer,"FEHLERFELD_0"); break;
-        case Property::kFEHLERFELD_1: std::strcpy(buffer,"FEHLERFELD_1"); break;
-        case Property::kFEHLERFELD_2: std::strcpy(buffer,"FEHLERFELD_2"); break;
-        case Property::kFEHLERFELD_3: std::strcpy(buffer,"FEHLERFELD_3"); break;
-        case Property::kFEHLERFELD_4: std::strcpy(buffer,"FEHLERFELD_4"); break;
-        case Property::kFEHLERFELD_5: std::strcpy(buffer,"FEHLERFELD_5"); break;
-        case Property::kFEHLERFELD_6: std::strcpy(buffer,"FEHLERFELD_6"); break;
-        case Property::kFEHLERFELD_7: std::strcpy(buffer,"FEHLERFELD_7"); break;
-        case Property::kFEHLERFELD_8: std::strcpy(buffer,"FEHLERFELD_8"); break;
-        case Property::kFEHLERFELD_9: std::strcpy(buffer,"FEHLERFELD_9"); break;
-        case Property::kFEHLERFELD_10: std::strcpy(buffer,"FEHLERFELD_10"); break;
-        case Property::kFEHLERFELD_11: std::strcpy(buffer,"FEHLERFELD_11"); break;
-        case Property::kFEHLERFELD_12: std::strcpy(buffer,"FEHLERFELD_12"); break;
-        case Property::kFEHLERFELD_13: std::strcpy(buffer,"FEHLERFELD_13"); break;
-        case Property::kFEHLERFELD_14: std::strcpy(buffer,"FEHLERFELD_14"); break;
-        case Property::kFEHLERFELD_15: std::strcpy(buffer,"FEHLERFELD_15"); break;
-        case Property::kFEHLERFELD_16: std::strcpy(buffer,"FEHLERFELD_16"); break;
-        case Property::kFEHLERFELD_17: std::strcpy(buffer,"FEHLERFELD_17"); break;
-        case Property::kFEHLERFELD_18: std::strcpy(buffer,"FEHLERFELD_18"); break;
-        case Property::kFEHLERFELD_19: std::strcpy(buffer,"FEHLERFELD_19"); break;
-        case Property::kFEHLERFELD_20: std::strcpy(buffer,"FEHLERFELD_20"); break;
-        case Property::kFEHLERFELD_21: std::strcpy(buffer,"FEHLERFELD_21"); break;
-        case Property::kFEHLERFELD_22: std::strcpy(buffer,"FEHLERFELD_22"); break;
-        case Property::kFEHLERFELD_23: std::strcpy(buffer,"FEHLERFELD_23"); break;
-        case Property::kFEHLERFELD_24: std::strcpy(buffer,"FEHLERFELD_24"); break;
-        case Property::kFEHLERFELD_25: std::strcpy(buffer,"FEHLERFELD_25"); break;
-        case Property::kFEHLERFELD_26: std::strcpy(buffer,"FEHLERFELD_26"); break;
-        case Property::kFEHLERFELD_27: std::strcpy(buffer,"FEHLERFELD_27"); break;
-        case Property::kFEHLERFELD_28: std::strcpy(buffer,"FEHLERFELD_28"); break;
-        case Property::kFEHLERFELD_29: std::strcpy(buffer,"FEHLERFELD_29"); break;
-        case Property::kFEHLERFELD_30: std::strcpy(buffer,"FEHLERFELD_30"); break;
-        case Property::kFEHLERFELD_31: std::strcpy(buffer,"FEHLERFELD_31"); break;
-        case Property::kFEHLERFELD_32: std::strcpy(buffer,"FEHLERFELD_32"); break;
-        case Property::kFEHLERFELD_33: std::strcpy(buffer,"FEHLERFELD_33"); break;
-        case Property::kFEHLERFELD_34: std::strcpy(buffer,"FEHLERFELD_34"); break;
-        case Property::kFEHLERFELD_35: std::strcpy(buffer,"FEHLERFELD_35"); break;
-        case Property::kFEHLERFELD_36: std::strcpy(buffer,"FEHLERFELD_36"); break;
-        case Property::kFEHLERFELD_37: std::strcpy(buffer,"FEHLERFELD_37"); break;
-        case Property::kFEHLERFELD_38: std::strcpy(buffer,"FEHLERFELD_38"); break;
-        case Property::kFEHLERFELD_39: std::strcpy(buffer,"FEHLERFELD_39"); break;
-        case Property::kFEHLERFELD_40: std::strcpy(buffer,"FEHLERFELD_40"); break;
-        case Property::kFEHLERFELD_41: std::strcpy(buffer,"FEHLERFELD_41"); break;
-        case Property::kFEHLERFELD_42: std::strcpy(buffer,"FEHLERFELD_42"); break;
-        case Property::kFEHLERFELD_43: std::strcpy(buffer,"FEHLERFELD_43"); break;
-        case Property::kFEHLERFELD_44: std::strcpy(buffer,"FEHLERFELD_44"); break;
-        case Property::kFEHLERFELD_45: std::strcpy(buffer,"FEHLERFELD_45"); break;
-        case Property::kFEHLERFELD_46: std::strcpy(buffer,"FEHLERFELD_46"); break;
-        case Property::kFEHLERFELD_47: std::strcpy(buffer,"FEHLERFELD_47"); break;
-        case Property::kFEHLERFELD_48: std::strcpy(buffer,"FEHLERFELD_48"); break;
-        case Property::kFEHLERFELD_49: std::strcpy(buffer,"FEHLERFELD_49"); break;
-        case Property::kFEHLERFELD_50: std::strcpy(buffer,"FEHLERFELD_50"); break;
-        case Property::kFEHLERFELD_51: std::strcpy(buffer,"FEHLERFELD_51"); break;
-        case Property::kFEHLERFELD_52: std::strcpy(buffer,"FEHLERFELD_52"); break;
-        case Property::kFEHLERFELD_53: std::strcpy(buffer,"FEHLERFELD_53"); break;
-        case Property::kFEHLERFELD_54: std::strcpy(buffer,"FEHLERFELD_54"); break;
-        case Property::kFEHLERFELD_55: std::strcpy(buffer,"FEHLERFELD_55"); break;
-        case Property::kFEHLERFELD_56: std::strcpy(buffer,"FEHLERFELD_56"); break;
-        case Property::kFEHLERFELD_57: std::strcpy(buffer,"FEHLERFELD_57"); break;
-        case Property::kFEHLERFELD_58: std::strcpy(buffer,"FEHLERFELD_58"); break;
-        case Property::kFEHLERFELD_59: std::strcpy(buffer,"FEHLERFELD_59"); break;
-        case Property::kFEHLERFELD_60: std::strcpy(buffer,"FEHLERFELD_60"); break;
-        case Property::kFEHLERFELD_61: std::strcpy(buffer,"FEHLERFELD_61"); break;
-        case Property::kFEHLERFELD_62: std::strcpy(buffer,"FEHLERFELD_62"); break;
-        case Property::kFEHLERFELD_63: std::strcpy(buffer,"FEHLERFELD_63"); break;
-        case Property::kFEHLERFELD_64: std::strcpy(buffer,"FEHLERFELD_64"); break;
-        case Property::kFEHLERFELD_65: std::strcpy(buffer,"FEHLERFELD_65"); break;
-        case Property::kFEHLERFELD_66: std::strcpy(buffer,"FEHLERFELD_66"); break;
-        case Property::kFEHLERFELD_67: std::strcpy(buffer,"FEHLERFELD_67"); break;
-        case Property::kFEHLERFELD_68: std::strcpy(buffer,"FEHLERFELD_68"); break;
-        case Property::kFEHLERFELD_69: std::strcpy(buffer,"FEHLERFELD_69"); break;
-        case Property::kFEHLERFELD_70: std::strcpy(buffer,"FEHLERFELD_70"); break;
-        case Property::kFEHLERFELD_71: std::strcpy(buffer,"FEHLERFELD_71"); break;
-        case Property::kFEHLERFELD_72: std::strcpy(buffer,"FEHLERFELD_72"); break;
-        case Property::kFEHLERFELD_73: std::strcpy(buffer,"FEHLERFELD_73"); break;
-        case Property::kFEHLERFELD_74: std::strcpy(buffer,"FEHLERFELD_74"); break;
-        case Property::kFEHLERFELD_75: std::strcpy(buffer,"FEHLERFELD_75"); break;
-        case Property::kFEHLERFELD_76: std::strcpy(buffer,"FEHLERFELD_76"); break;
-        case Property::kFEHLERFELD_77: std::strcpy(buffer,"FEHLERFELD_77"); break;
-        case Property::kFEHLERFELD_78: std::strcpy(buffer,"FEHLERFELD_78"); break;
-        case Property::kFEHLERFELD_79: std::strcpy(buffer,"FEHLERFELD_79"); break;
-        case Property::kFEHLERFELD_80: std::strcpy(buffer,"FEHLERFELD_80"); break;
-        case Property::kFEHLERFELD_81: std::strcpy(buffer,"FEHLERFELD_81"); break;
-        case Property::kFEHLERFELD_82: std::strcpy(buffer,"FEHLERFELD_82"); break;
-        case Property::kFEHLERFELD_83: std::strcpy(buffer,"FEHLERFELD_83"); break;
-        case Property::kFEHLERFELD_84: std::strcpy(buffer,"FEHLERFELD_84"); break;
-        case Property::kFEHLERFELD_85: std::strcpy(buffer,"FEHLERFELD_85"); break;
-        case Property::kFEHLERFELD_86: std::strcpy(buffer,"FEHLERFELD_86"); break;
-        case Property::kFEHLERFELD_87: std::strcpy(buffer,"FEHLERFELD_87"); break;
-        case Property::kFEHLERFELD_88: std::strcpy(buffer,"FEHLERFELD_88"); break;
-        case Property::kFEHLERFELD_89: std::strcpy(buffer,"FEHLERFELD_89"); break;
-        case Property::kFEHLERFELD_90: std::strcpy(buffer,"FEHLERFELD_90"); break;
-        case Property::kFEHLERFELD_91: std::strcpy(buffer,"FEHLERFELD_91"); break;
-        case Property::kFEHLERFELD_92: std::strcpy(buffer,"FEHLERFELD_92"); break;
-        case Property::kFEHLERFELD_93: std::strcpy(buffer,"FEHLERFELD_93"); break;
-        case Property::kFEHLERFELD_94: std::strcpy(buffer,"FEHLERFELD_94"); break;
-        case Property::kFEHLERFELD_95: std::strcpy(buffer,"FEHLERFELD_95"); break;
-        case Property::kFEHLERFELD_96: std::strcpy(buffer,"FEHLERFELD_96"); break;
-        case Property::kFEHLERFELD_97: std::strcpy(buffer,"FEHLERFELD_97"); break;
-        case Property::kFEHLERFELD_98: std::strcpy(buffer,"FEHLERFELD_98"); break;
-        case Property::kFEHLERFELD_99: std::strcpy(buffer,"FEHLERFELD_99"); break;
-        case Property::kFEHLERFELD_100: std::strcpy(buffer,"FEHLERFELD_100"); break;
-        case Property::kFEHLERFELD_101: std::strcpy(buffer,"FEHLERFELD_101"); break;
-        case Property::kFEHLERFELD_102: std::strcpy(buffer,"FEHLERFELD_102"); break;
-        case Property::kFEHLERFELD_103: std::strcpy(buffer,"FEHLERFELD_103"); break;
-        case Property::kFEHLERFELD_104: std::strcpy(buffer,"FEHLERFELD_104"); break;
-        case Property::kFEHLERFELD_105: std::strcpy(buffer,"FEHLERFELD_105"); break;
-        case Property::kFEHLERFELD_106: std::strcpy(buffer,"FEHLERFELD_106"); break;
-        case Property::kFEHLERFELD_107: std::strcpy(buffer,"FEHLERFELD_107"); break;
-        case Property::kFEHLERFELD_108: std::strcpy(buffer,"FEHLERFELD_108"); break;
-        case Property::kFEHLERFELD_109: std::strcpy(buffer,"FEHLERFELD_109"); break;
-        case Property::kFEHLERFELD_110: std::strcpy(buffer,"FEHLERFELD_110"); break;
-        case Property::kFEHLERFELD_111: std::strcpy(buffer,"FEHLERFELD_111"); break;
-        case Property::kFEHLERFELD_112: std::strcpy(buffer,"FEHLERFELD_112"); break;
-        case Property::kFEHLERFELD_113: std::strcpy(buffer,"FEHLERFELD_113"); break;
-        case Property::kFEHLERFELD_114: std::strcpy(buffer,"FEHLERFELD_114"); break;
-        case Property::kFEHLERFELD_115: std::strcpy(buffer,"FEHLERFELD_115"); break;
-        case Property::kFEHLERFELD_116: std::strcpy(buffer,"FEHLERFELD_116"); break;
-        case Property::kFEHLERFELD_117: std::strcpy(buffer,"FEHLERFELD_117"); break;
-        case Property::kFEHLERFELD_118: std::strcpy(buffer,"FEHLERFELD_118"); break;
-        case Property::kFEHLERFELD_119: std::strcpy(buffer,"FEHLERFELD_119"); break;
-        case Property::kFEHLERFELD_120: std::strcpy(buffer,"FEHLERFELD_120"); break;
-        case Property::kFEHLERFELD_121: std::strcpy(buffer,"FEHLERFELD_121"); break;
-        case Property::kFEHLERFELD_122: std::strcpy(buffer,"FEHLERFELD_122"); break;
-        case Property::kFEHLERFELD_123: std::strcpy(buffer,"FEHLERFELD_123"); break;
-        case Property::kFEHLERFELD_124: std::strcpy(buffer,"FEHLERFELD_124"); break;
-        case Property::kFEHLERFELD_125: std::strcpy(buffer,"FEHLERFELD_125"); break;
-        case Property::kFEHLERFELD_126: std::strcpy(buffer,"FEHLERFELD_126"); break;
-        case Property::kFEHLERFELD_127: std::strcpy(buffer,"FEHLERFELD_127"); break;
-        case Property::kFEHLERFELD_128: std::strcpy(buffer,"FEHLERFELD_128"); break;
-        case Property::kFEHLERFELD_129: std::strcpy(buffer,"FEHLERFELD_129"); break;
-        case Property::kFEHLERFELD_130: std::strcpy(buffer,"FEHLERFELD_130"); break;
-        case Property::kFEHLERFELD_131: std::strcpy(buffer,"FEHLERFELD_131"); break;
-        case Property::kFEHLERFELD_132: std::strcpy(buffer,"FEHLERFELD_132"); break;
-        case Property::kFEHLERFELD_133: std::strcpy(buffer,"FEHLERFELD_133"); break;
-        case Property::kFEHLERFELD_134: std::strcpy(buffer,"FEHLERFELD_134"); break;
-        case Property::kFEHLERFELD_135: std::strcpy(buffer,"FEHLERFELD_135"); break;
-        case Property::kFEHLERFELD_136: std::strcpy(buffer,"FEHLERFELD_136"); break;
-        case Property::kFEHLERFELD_137: std::strcpy(buffer,"FEHLERFELD_137"); break;
-        case Property::kFEHLERFELD_138: std::strcpy(buffer,"FEHLERFELD_138"); break;
-        case Property::kFEHLERFELD_139: std::strcpy(buffer,"FEHLERFELD_139"); break;
-        case Property::kFEHLERSPEICHER_FELDINDEX: std::strcpy(buffer,"FEHLERSPEICHER_FELDINDEX"); break;
-        case Property::kFEHLERSPEICHER_FEHLERNUMMER: std::strcpy(buffer,"FEHLERSPEICHER_FEHLERNUMMER"); break;
-        case Property::kFEHLERSPEICHER_MODULTYD: std::strcpy(buffer,"FEHLERSPEICHER_MODULTYD"); break;
-        case Property::kFEHLERSPEICHER_BUSKENNUNG: std::strcpy(buffer,"FEHLERSPEICHER_BUSKENNUNG"); break;
-        case Property::kFEHLERSPEICHER_SEKUNDE: std::strcpy(buffer,"FEHLERSPEICHER_SEKUNDE"); break;
-        case Property::kFEHLERSPEICHER_MINUTE: std::strcpy(buffer,"FEHLERSPEICHER_MINUTE"); break;
-        case Property::kFEHLERSPEICHER_STUNDE: std::strcpy(buffer,"FEHLERSPEICHER_STUNDE"); break;
-        case Property::kFEHLERSPEICHER_TAG: std::strcpy(buffer,"FEHLERSPEICHER_TAG"); break;
-        case Property::kFEHLERSPEICHER_MONAT: std::strcpy(buffer,"FEHLERSPEICHER_MONAT"); break;
-        case Property::kFEHLERSPEICHER_JAHR: std::strcpy(buffer,"FEHLERSPEICHER_JAHR"); break;
-        case Property::kESTRICHPROGRAMM_TAG_1: std::strcpy(buffer,"ESTRICHPROGRAMM_TAG_1"); break;
-        case Property::kESTRICHPROGRAMM_TAG_2: std::strcpy(buffer,"ESTRICHPROGRAMM_TAG_2"); break;
-        case Property::kESTRICHPROGRAMM_TAG_3: std::strcpy(buffer,"ESTRICHPROGRAMM_TAG_3"); break;
-        case Property::kESTRICHPROGRAMM_TAG_4: std::strcpy(buffer,"ESTRICHPROGRAMM_TAG_4"); break;
-        case Property::kESTRICHPROGRAMM_TAG_5: std::strcpy(buffer,"ESTRICHPROGRAMM_TAG_5"); break;
-        case Property::kESTRICHPROGRAMM_TAG_6: std::strcpy(buffer,"ESTRICHPROGRAMM_TAG_6"); break;
-        case Property::kESTRICHPROGRAMM_TAG_7: std::strcpy(buffer,"ESTRICHPROGRAMM_TAG_7"); break;
-        case Property::kESTRICHPROGRAMM_TAG_8: std::strcpy(buffer,"ESTRICHPROGRAMM_TAG_8"); break;
-        case Property::kESTRICHPROGRAMM_TAG_9: std::strcpy(buffer,"ESTRICHPROGRAMM_TAG_9"); break;
-        case Property::kESTRICHPROGRAMM_TAG_10: std::strcpy(buffer,"ESTRICHPROGRAMM_TAG_10"); break;
-        case Property::kESTRICHPROGRAMM_TAG_11: std::strcpy(buffer,"ESTRICHPROGRAMM_TAG_11"); break;
-        case Property::kESTRICHPROGRAMM_TAG_12: std::strcpy(buffer,"ESTRICHPROGRAMM_TAG_12"); break;
-        case Property::kESTRICHPROGRAMM_TAG_13: std::strcpy(buffer,"ESTRICHPROGRAMM_TAG_13"); break;
-        case Property::kESTRICHPROGRAMM_TAG_14: std::strcpy(buffer,"ESTRICHPROGRAMM_TAG_14"); break;
-        case Property::kESTRICHPROGRAMM_TAG_15: std::strcpy(buffer,"ESTRICHPROGRAMM_TAG_15"); break;
-        case Property::kESTRICHPROGRAMM_TAG_16: std::strcpy(buffer,"ESTRICHPROGRAMM_TAG_16"); break;
-        case Property::kESTRICHPROGRAMM_TAG_17: std::strcpy(buffer,"ESTRICHPROGRAMM_TAG_17"); break;
-        case Property::kESTRICHPROGRAMM_TAG_18: std::strcpy(buffer,"ESTRICHPROGRAMM_TAG_18"); break;
-        case Property::kESTRICHPROGRAMM_TAG_19: std::strcpy(buffer,"ESTRICHPROGRAMM_TAG_19"); break;
-        case Property::kESTRICHPROGRAMM_TAG_20: std::strcpy(buffer,"ESTRICHPROGRAMM_TAG_20"); break;
-        case Property::kESTRICHPROGRAMM_TAG_21: std::strcpy(buffer,"ESTRICHPROGRAMM_TAG_21"); break;
-        case Property::kESTRICHPROGRAMM_TAG_22: std::strcpy(buffer,"ESTRICHPROGRAMM_TAG_22"); break;
-        case Property::kESTRICHPROGRAMM_TAG_23: std::strcpy(buffer,"ESTRICHPROGRAMM_TAG_23"); break;
-        case Property::kESTRICHPROGRAMM_TAG_24: std::strcpy(buffer,"ESTRICHPROGRAMM_TAG_24"); break;
-        case Property::kESTRICHPROGRAMM_TAG_25: std::strcpy(buffer,"ESTRICHPROGRAMM_TAG_25"); break;
-        case Property::kESTRICHPROGRAMM_TAG_26: std::strcpy(buffer,"ESTRICHPROGRAMM_TAG_26"); break;
-        case Property::kESTRICHPROGRAMM_TAG_27: std::strcpy(buffer,"ESTRICHPROGRAMM_TAG_27"); break;
-        case Property::kESTRICHPROGRAMM_TAG_28: std::strcpy(buffer,"ESTRICHPROGRAMM_TAG_28"); break;
-        case Property::kESTRICHPROGRAMM_TAG_29: std::strcpy(buffer,"ESTRICHPROGRAMM_TAG_29"); break;
-        case Property::kESTRICHPROGRAMM_TAG_30: std::strcpy(buffer,"ESTRICHPROGRAMM_TAG_30"); break;
-        case Property::kESTRICHPROGRAMM_TAG_31: std::strcpy(buffer,"ESTRICHPROGRAMM_TAG_31"); break;
-        case Property::kOT_REQUEST_CODE: std::strcpy(buffer,"OT_REQUEST_CODE"); break;
-        case Property::kOT_FHB_00: std::strcpy(buffer,"OT_FHB_00"); break;
-        case Property::kOT_FHB_01: std::strcpy(buffer,"OT_FHB_01"); break;
-        case Property::kOT_FHB_02: std::strcpy(buffer,"OT_FHB_02"); break;
-        case Property::kOT_FHB_03: std::strcpy(buffer,"OT_FHB_03"); break;
-        case Property::kOT_FHB_04: std::strcpy(buffer,"OT_FHB_04"); break;
-        case Property::kOT_FHB_05: std::strcpy(buffer,"OT_FHB_05"); break;
-        case Property::kOT_FHB_06: std::strcpy(buffer,"OT_FHB_06"); break;
-        case Property::kOT_FHB_07: std::strcpy(buffer,"OT_FHB_07"); break;
-        case Property::kOT_FHB_08: std::strcpy(buffer,"OT_FHB_08"); break;
-        case Property::kOT_FHB_09: std::strcpy(buffer,"OT_FHB_09"); break;
-        case Property::kSTART_BEREICH_INFONUMMERN_OS: std::strcpy(buffer,"START_BEREICH_INFONUMMERN_OS"); break;
-        case Property::kFERNSTEUERBETRIEB_TEMPERATURSOLLWERT: std::strcpy(buffer,"FERNSTEUERBETRIEB_TEMPERATURSOLLWERT"); break;
-        case Property::kESTB_ISTTEMPERATUR: std::strcpy(buffer,"ESTB_ISTTEMPERATUR"); break;
-        case Property::kFESTWERT_HEIZUNGSBETRIEB: std::strcpy(buffer,"FESTWERT_HEIZUNGSBETRIEB"); break;
-        case Property::kAUSSENFUEHLERKORREKTURWERT: std::strcpy(buffer,"AUSSENFUEHLERKORREKTURWERT"); break;
-        case Property::kHZK_PUMPE_DAUERLAUF: std::strcpy(buffer,"HZK_PUMPE_DAUERLAUF"); break;
-        case Property::kPWM_PUMPENMODE: std::strcpy(buffer,"PWM_PUMPENMODE"); break;
-        case Property::kPWM_TEMPERATURDIFFERENZREGELUNG_TV_TWEICHE: std::strcpy(buffer,"PWM_TEMPERATURDIFFERENZREGELUNG_TV_TWEICHE"); break;
-        case Property::kPWM_TEMPERATURDIFFERENZREGELUNG_TV_TR: std::strcpy(buffer,"PWM_TEMPERATURDIFFERENZREGELUNG_TV_TR"); break;
-        case Property::kWARTUNGSINTERVAL_STUNDEN: std::strcpy(buffer,"WARTUNGSINTERVAL_STUNDEN"); break;
-        case Property::kPRUEFSTANDSBEFEHL: std::strcpy(buffer,"PRUEFSTANDSBEFEHL"); break;
-        case Property::kENDE_BEREICH_INFONUMMERN_OS: std::strcpy(buffer,"ENDE_BEREICH_INFONUMMERN_OS"); break;
-        case Property::kSOLAR_KOLLEKTOR_1_P_ANTEIL: std::strcpy(buffer,"SOLAR_KOLLEKTOR_1_P_ANTEIL"); break;
-        case Property::kSOLAR_KOLLEKTOR_1_I_ANTEIL: std::strcpy(buffer,"SOLAR_KOLLEKTOR_1_I_ANTEIL"); break;
-        case Property::kSOLAR_KOLLEKTOR_2_P_ANTEIL: std::strcpy(buffer,"SOLAR_KOLLEKTOR_2_P_ANTEIL"); break;
-        case Property::kSOLAR_KOLLEKTOR_2_I_ANTEIL: std::strcpy(buffer,"SOLAR_KOLLEKTOR_2_I_ANTEIL"); break;
-        case Property::kSOLAR_KOLLEKTOR_3_P_ANTEIL: std::strcpy(buffer,"SOLAR_KOLLEKTOR_3_P_ANTEIL"); break;
-        case Property::kSOLAR_KOLLEKTOR_3_I_ANTEIL: std::strcpy(buffer,"SOLAR_KOLLEKTOR_3_I_ANTEIL"); break;
-        case Property::kFEHLERNUMMER: std::strcpy(buffer,"FEHLERNUMMER"); break;
-       // case Property::kREPEAT_MESSAGE_ALL_24H: std::strcpy(buffer,"REPEAT_MESSAGE_ALL_24H"); break; duolicate
-        case Property::kLARGE_STATUS_AUSGANG: std::strcpy(buffer,"LARGE_STATUS_AUSGANG"); break;
-        case Property::kLARGE_KONFIGURATION_AUSGANG: std::strcpy(buffer,"LARGE_KONFIGURATION_AUSGANG"); break;
-        case Property::kLARGE_INFO_AN_BEI_AUSGANG: std::strcpy(buffer,"LARGE_INFO_AN_BEI_AUSGANG"); break;
-        case Property::kLARGE_SONDERFUNKTIONEN_AUSGANG: std::strcpy(buffer,"LARGE_SONDERFUNKTIONEN_AUSGANG"); break;
-        case Property::kLARGE_KONFIGURATION_EINGANG: std::strcpy(buffer,"LARGE_KONFIGURATION_EINGANG"); break;
-        case Property::kLARGE_FAKTOR_EINGANG: std::strcpy(buffer,"LARGE_FAKTOR_EINGANG"); break;
-        case Property::kLARGE_EINHEIT_EINGANG: std::strcpy(buffer,"LARGE_EINHEIT_EINGANG"); break;
-        case Property::kLARGE_KONTAKT_GESCHLOSSEN_EINGANG: std::strcpy(buffer,"LARGE_KONTAKT_GESCHLOSSEN_EINGANG"); break;
-        case Property::kLARGE_INFO_AN_BEI_EINGANG: std::strcpy(buffer,"LARGE_INFO_AN_BEI_EINGANG"); break;
-        case Property::kLARGE_SMS_ZUSATZTEXT_EINGANG: std::strcpy(buffer,"LARGE_SMS_ZUSATZTEXT_EINGANG"); break;
-        case Property::kLARGE_USERNAMER: std::strcpy(buffer,"LARGE_USERNAMER"); break;
-        case Property::kLARGE_USERPASSWORD: std::strcpy(buffer,"LARGE_USERPASSWORD"); break;
-        case Property::kLARGE_USERGROUP: std::strcpy(buffer,"LARGE_USERGROUP"); break;
-        case Property::kLARGE_STATUS_EINGANG: std::strcpy(buffer,"LARGE_STATUS_EINGANG"); break;
-        case Property::kLARGE_RESET_COUNTER_EINGANG: std::strcpy(buffer,"LARGE_RESET_COUNTER_EINGANG"); break;
-        case Property::kLARGE_SMTP_SERVER: std::strcpy(buffer,"LARGE_SMTP_SERVER"); break;
-        case Property::kLARGE_SMTP_LOGINNAME: std::strcpy(buffer,"LARGE_SMTP_LOGINNAME"); break;
-        case Property::kLARGE_SMTP_PASSWORT: std::strcpy(buffer,"LARGE_SMTP_PASSWORT"); break;
-        case Property::kLARGE_POP3_SERVER: std::strcpy(buffer,"LARGE_POP3_SERVER"); break;
-        case Property::kLARGE_POP3_LOGINNAME: std::strcpy(buffer,"LARGE_POP3_LOGINNAME"); break;
-        case Property::kLARGE_POP3_PASSWORT: std::strcpy(buffer,"LARGE_POP3_PASSWORT"); break;
-        case Property::kLARGE_SMS_TEXT_ADRESSE: std::strcpy(buffer,"LARGE_SMS_TEXT_ADRESSE"); break;
-        case Property::kLARGE_EMPFAEGER_KONTAKTDATEN_NAME: std::strcpy(buffer,"LARGE_EMPFAEGER_KONTAKTDATEN_NAME"); break;
-        case Property::kLARGE_EMPFAEGER_KONTAKTDATEN_RUFNUMMER: std::strcpy(buffer,"LARGE_EMPFAEGER_KONTAKTDATEN_RUFNUMMER"); break;
-        case Property::kLARGE_EMPFAEGER_KONTAKTDATEN_EMAIL: std::strcpy(buffer,"LARGE_EMPFAEGER_KONTAKTDATEN_EMAIL"); break;
-        case Property::kLARGE_UEBERTRAGUNGSWEG: std::strcpy(buffer,"LARGE_UEBERTRAGUNGSWEG"); break;
-        case Property::kLARGE_TEST_NACHRICHT_SENDEN: std::strcpy(buffer,"LARGE_TEST_NACHRICHT_SENDEN"); break;
-        case Property::kGSM_SIGNAL_POWER: std::strcpy(buffer,"GSM_SIGNAL_POWER"); break;
-        case Property::kGSM_CONNECTION_STATE: std::strcpy(buffer,"GSM_CONNECTION_STATE"); break;
-        case Property::kGSM_SWITCH_OFF: std::strcpy(buffer,"GSM_SWITCH_OFF"); break;
-        case Property::kGSM_PIN: std::strcpy(buffer,"GSM_PIN"); break;
-        case Property::kGSM_PIN_OFF: std::strcpy(buffer,"GSM_PIN_OFF"); break;
-        case Property::kLARGE_ACCESSPOINT: std::strcpy(buffer,"LARGE_ACCESSPOINT"); break;
-        case Property::kLARGE_SMS_ADRESSTEXT: std::strcpy(buffer,"LARGE_SMS_ADRESSTEXT"); break;
-        case Property::kSMS_24h_REPEAT: std::strcpy(buffer,"SMS_24h_REPEAT"); break;
-        case Property::kLARGE_ALARM_KONFIGURATION_1: std::strcpy(buffer,"LARGE_ALARM_KONFIGURATION_1"); break;
-        case Property::kLARGE_ALARM_KONFIGURATION_2: std::strcpy(buffer,"LARGE_ALARM_KONFIGURATION_2"); break;
-        case Property::kLARGE_ALARM_KONFIGURATION_3: std::strcpy(buffer,"LARGE_ALARM_KONFIGURATION_3"); break;
-        case Property::kLARGE_ALARM_KONFIGURATION_4: std::strcpy(buffer,"LARGE_ALARM_KONFIGURATION_4"); break;
-        case Property::kLARGE_ALARM_KONFIGURATION_5: std::strcpy(buffer,"LARGE_ALARM_KONFIGURATION_5"); break;
-        case Property::kIP_MODE: std::strcpy(buffer,"IP_MODE"); break;
-        case Property::kLARGE_IP_ADRESS: std::strcpy(buffer,"LARGE_IP_ADRESS"); break;
-        case Property::kLARGE_SUBNET: std::strcpy(buffer,"LARGE_SUBNET"); break;
-        case Property::kLARGE_GATEWAY: std::strcpy(buffer,"LARGE_GATEWAY"); break;
-        case Property::kLARGE_DEVICENAME: std::strcpy(buffer,"LARGE_DEVICENAME"); break;
-        case Property::kLARGE_MAC_ADR: std::strcpy(buffer,"LARGE_MAC_ADR"); break;
-        case Property::kBUS_STATUS: std::strcpy(buffer,"BUS_STATUS"); break;
-        case Property::kLARGE_EWI_FILTER: std::strcpy(buffer,"LARGE_EWI_FILTER"); break;
-        case Property::kLARGE_ERRORLOGDATA: std::strcpy(buffer,"LARGE_ERRORLOGDATA"); break;
-        case Property::kKEEP_ALIVE: std::strcpy(buffer,"KEEP_ALIVE"); break;
-        case Property::kLARGE_ERRORLOG_DATA: std::strcpy(buffer,"LARGE_ERRORLOG_DATA"); break;
-        case Property::kLARGE_EWI_FILTER_CONFIG: std::strcpy(buffer,"LARGE_EWI_FILTER_CONFIG"); break;
-        case Property::kLARGE_COCO_CONFIG_PARAMETER: std::strcpy(buffer,"LARGE_COCO_CONFIG_PARAMETER"); break;
-        case Property::kLARGE_DATALOGGER_DATA: std::strcpy(buffer,"LARGE_DATALOGGER_DATA"); break;
-        case Property::kLARGE_DATALOGGER_DATA_POINTER: std::strcpy(buffer,"LARGE_DATALOGGER_DATA_POINTER"); break;
-        case Property::kWE3_TYP: std::strcpy(buffer,"WE3_TYP"); break;
-        case Property::kWE4_TYP: std::strcpy(buffer,"WE4_TYP"); break;
-        case Property::kSCAN_AKTIV: std::strcpy(buffer,"SCAN_AKTIV"); break;
-        case Property::kRUECKLAUFISTTEMP_GES: std::strcpy(buffer,"RUECKLAUFISTTEMP_GES"); break;
-        case Property::kSOLARNUTZUNG: std::strcpy(buffer,"SOLARNUTZUNG"); break;
-        case Property::kMAX_MODGRAD_WW: std::strcpy(buffer,"MAX_MODGRAD_WW"); break;
-        case Property::kZIRKPUMPE_BEI_ANTILEG: std::strcpy(buffer,"ZIRKPUMPE_BEI_ANTILEG"); break;
-        case Property::kLARGE_USB_CONF_TCP_IP: std::strcpy(buffer,"LARGE_USB_CONF_TCP_IP"); break;
-        case Property::kLARGE_USB_CONF_TCP_IP_INDEX: std::strcpy(buffer,"LARGE_USB_CONF_TCP_IP_INDEX"); break;
-        case Property::kMAC_ADR_0: std::strcpy(buffer,"MAC_ADR_0"); break;
-        case Property::kMAC_ADR_1: std::strcpy(buffer,"MAC_ADR_1"); break;
-        case Property::kMAC_ADR_2: std::strcpy(buffer,"MAC_ADR_2"); break;
-        case Property::kMAC_ADR_3: std::strcpy(buffer,"MAC_ADR_3"); break;
-        case Property::kMAC_ADR_4: std::strcpy(buffer,"MAC_ADR_4"); break;
-        case Property::kMAC_ADR_5: std::strcpy(buffer,"MAC_ADR_5"); break;
-        case Property::kCELSIUS_FAHRENHEIT_UMSCH: std::strcpy(buffer,"CELSIUS_FAHRENHEIT_UMSCH"); break;
-        case Property::kWP_VERZOEGERUNG: std::strcpy(buffer,"WP_VERZOEGERUNG"); break;
-        case Property::kMAX_RL_KUEHLEN: std::strcpy(buffer,"MAX_RL_KUEHLEN"); break;
-        case Property::kLARGE_DATALOGGER_HEADER: std::strcpy(buffer,"LARGE_DATALOGGER_HEADER"); break;
-        case Property::kHEIZPROG_1: std::strcpy(buffer,"HEIZPROG_1"); break;
-        case Property::kHEIZPROG_1_MO: std::strcpy(buffer,"HEIZPROG_1_MO"); break;
-        case Property::kHEIZPROG_1_MO_SCHALT_2: std::strcpy(buffer,"HEIZPROG_1_MO_SCHALT_2"); break;
-        case Property::kHEIZPROG_1_MO_SCHALT_3: std::strcpy(buffer,"HEIZPROG_1_MO_SCHALT_3"); break;
-        case Property::kHEIZPROG_1_DI: std::strcpy(buffer,"HEIZPROG_1_DI"); break;
-        case Property::kHEIZPROG_1_DI_SCHALT_2: std::strcpy(buffer,"HEIZPROG_1_DI_SCHALT_2"); break;
-        case Property::kHEIZPROG_1_DI_SCHALT_3: std::strcpy(buffer,"HEIZPROG_1_DI_SCHALT_3"); break;
-        case Property::kHEIZPROG_1_MI: std::strcpy(buffer,"HEIZPROG_1_MI"); break;
-        case Property::kHEIZPROG_1_MI_SCHALT_2: std::strcpy(buffer,"HEIZPROG_1_MI_SCHALT_2"); break;
-        case Property::kHEIZPROG_1_MI_SCHALT_3: std::strcpy(buffer,"HEIZPROG_1_MI_SCHALT_3"); break;
-        case Property::kHEIZPROG_1_DO: std::strcpy(buffer,"HEIZPROG_1_DO"); break;
-        case Property::kHEIZPROG_1_DO_SCHALT_2: std::strcpy(buffer,"HEIZPROG_1_DO_SCHALT_2"); break;
-        case Property::kHEIZPROG_1_DO_SCHALT_3: std::strcpy(buffer,"HEIZPROG_1_DO_SCHALT_3"); break;
-        case Property::kHEIZPROG_1_FR: std::strcpy(buffer,"HEIZPROG_1_FR"); break;
-        case Property::kHEIZPROG_1_FR_SCHALT_2: std::strcpy(buffer,"HEIZPROG_1_FR_SCHALT_2"); break;
-        case Property::kHEIZPROG_1_FR_SCHALT_3: std::strcpy(buffer,"HEIZPROG_1_FR_SCHALT_3"); break;
-        case Property::kHEIZPROG_1_SA: std::strcpy(buffer,"HEIZPROG_1_SA"); break;
-        case Property::kHEIZPROG_1_SA_SCHALT_2: std::strcpy(buffer,"HEIZPROG_1_SA_SCHALT_2"); break;
-        case Property::kHEIZPROG_1_SA_SCHALT_3: std::strcpy(buffer,"HEIZPROG_1_SA_SCHALT_3"); break;
-        case Property::kHEIZPROG_1_SO: std::strcpy(buffer,"HEIZPROG_1_SO"); break;
-        case Property::kHEIZPROG_1_SO_SCHALT_2: std::strcpy(buffer,"HEIZPROG_1_SO_SCHALT_2"); break;
-        case Property::kHEIZPROG_1_SO_SCHALT_3: std::strcpy(buffer,"HEIZPROG_1_SO_SCHALT_3"); break;
-        case Property::kHEIZPROG_1_MO_FR: std::strcpy(buffer,"HEIZPROG_1_MO_FR"); break;
-        case Property::kHEIZPROG_1_MO_FR_SCHALT_2: std::strcpy(buffer,"HEIZPROG_1_MO_FR_SCHALT_2"); break;
-        case Property::kHEIZPROG_1_MO_FR_SCHALT_3: std::strcpy(buffer,"HEIZPROG_1_MO_FR_SCHALT_3"); break;
-        case Property::kHEIZPROG_1_SA_SO: std::strcpy(buffer,"HEIZPROG_1_SA_SO"); break;
-        case Property::kHEIZPROG_1_SA_SO_SCHALT_2: std::strcpy(buffer,"HEIZPROG_1_SA_SO_SCHALT_2"); break;
-        case Property::kHEIZPROG_1_SA_SO_SCHALT_3: std::strcpy(buffer,"HEIZPROG_1_SA_SO_SCHALT_3"); break;
-        case Property::kHEIZPROG_1_MO_SO: std::strcpy(buffer,"HEIZPROG_1_MO_SO"); break;
-        case Property::kHEIZPROG_1_MO_SO_SCHALT_2: std::strcpy(buffer,"HEIZPROG_1_MO_SO_SCHALT_2"); break;
-        case Property::kHEIZPROG_1_MO_SO_SCHALT_3: std::strcpy(buffer,"HEIZPROG_1_MO_SO_SCHALT_3"); break;
-        case Property::kHEIZPROG_1_MO_DO: std::strcpy(buffer,"HEIZPROG_1_MO_DO"); break;
-        case Property::kHEIZPROG_1_MO_DO_SCHALT_2: std::strcpy(buffer,"HEIZPROG_1_MO_DO_SCHALT_2"); break;
-        case Property::kHEIZPROG_1_MO_DO_SCHALT_3: std::strcpy(buffer,"HEIZPROG_1_MO_DO_SCHALT_3"); break;
-        case Property::kHEIZPROG_2: std::strcpy(buffer,"HEIZPROG_2"); break;
-        case Property::kHEIZPROG_2_MO: std::strcpy(buffer,"HEIZPROG_2_MO"); break;
-        case Property::kHEIZPROG_2_MO_SCHALT_2: std::strcpy(buffer,"HEIZPROG_2_MO_SCHALT_2"); break;
-        case Property::kHEIZPROG_2_MO_SCHALT_3: std::strcpy(buffer,"HEIZPROG_2_MO_SCHALT_3"); break;
-        case Property::kHEIZPROG_2_DI: std::strcpy(buffer,"HEIZPROG_2_DI"); break;
-        case Property::kHEIZPROG_2_DI_SCHALT_2: std::strcpy(buffer,"HEIZPROG_2_DI_SCHALT_2"); break;
-        case Property::kHEIZPROG_2_DI_SCHALT_3: std::strcpy(buffer,"HEIZPROG_2_DI_SCHALT_3"); break;
-        case Property::kHEIZPROG_2_MI: std::strcpy(buffer,"HEIZPROG_2_MI"); break;
-        case Property::kHEIZPROG_2_MI_SCHALT_2: std::strcpy(buffer,"HEIZPROG_2_MI_SCHALT_2"); break;
-        case Property::kHEIZPROG_2_MI_SCHALT_3: std::strcpy(buffer,"HEIZPROG_2_MI_SCHALT_3"); break;
-        case Property::kHEIZPROG_2_DO: std::strcpy(buffer,"HEIZPROG_2_DO"); break;
-        case Property::kHEIZPROG_2_DO_SCHALT_2: std::strcpy(buffer,"HEIZPROG_2_DO_SCHALT_2"); break;
-        case Property::kHEIZPROG_2_DO_SCHALT_3: std::strcpy(buffer,"HEIZPROG_2_DO_SCHALT_3"); break;
-        case Property::kHEIZPROG_2_FR: std::strcpy(buffer,"HEIZPROG_2_FR"); break;
-        case Property::kHEIZPROG_2_FR_SCHALT_2: std::strcpy(buffer,"HEIZPROG_2_FR_SCHALT_2"); break;
-        case Property::kHEIZPROG_2_FR_SCHALT_3: std::strcpy(buffer,"HEIZPROG_2_FR_SCHALT_3"); break;
-        case Property::kHEIZPROG_2_SA: std::strcpy(buffer,"HEIZPROG_2_SA"); break;
-        case Property::kHEIZPROG_2_SA_SCHALT_2: std::strcpy(buffer,"HEIZPROG_2_SA_SCHALT_2"); break;
-        case Property::kHEIZPROG_2_SA_SCHALT_3: std::strcpy(buffer,"HEIZPROG_2_SA_SCHALT_3"); break;
-        case Property::kHEIZPROG_2_SO: std::strcpy(buffer,"HEIZPROG_2_SO"); break;
-        case Property::kHEIZPROG_2_SO_SCHALT_2: std::strcpy(buffer,"HEIZPROG_2_SO_SCHALT_2"); break;
-        case Property::kHEIZPROG_2_SO_SCHALT_3: std::strcpy(buffer,"HEIZPROG_2_SO_SCHALT_3"); break;
-        case Property::kHEIZPROG_2_MO_FR: std::strcpy(buffer,"HEIZPROG_2_MO_FR"); break;
-        case Property::kHEIZPROG_2_MO_FR_SCHALT_2: std::strcpy(buffer,"HEIZPROG_2_MO_FR_SCHALT_2"); break;
-        case Property::kHEIZPROG_2_MO_FR_SCHALT_3: std::strcpy(buffer,"HEIZPROG_2_MO_FR_SCHALT_3"); break;
-        case Property::kHEIZPROG_2_SA_SO: std::strcpy(buffer,"HEIZPROG_2_SA_SO"); break;
-        case Property::kHEIZPROG_2_SA_SO_SCHALT_2: std::strcpy(buffer,"HEIZPROG_2_SA_SO_SCHALT_2"); break;
-        case Property::kHEIZPROG_2_SA_SO_SCHALT_3: std::strcpy(buffer,"HEIZPROG_2_SA_SO_SCHALT_3"); break;
-        case Property::kHEIZPROG_2_MO_SO: std::strcpy(buffer,"HEIZPROG_2_MO_SO"); break;
-        case Property::kHEIZPROG_2_MO_SO_SCHALT_2: std::strcpy(buffer,"HEIZPROG_2_MO_SO_SCHALT_2"); break;
-        case Property::kHEIZPROG_2_MO_SO_SCHALT_3: std::strcpy(buffer,"HEIZPROG_2_MO_SO_SCHALT_3"); break;
-        case Property::kHEIZPROG_2_MO_DO: std::strcpy(buffer,"HEIZPROG_2_MO_DO"); break;
-        case Property::kHEIZPROG_2_MO_DO_SCHALT_2: std::strcpy(buffer,"HEIZPROG_2_MO_DO_SCHALT_2"); break;
-        case Property::kHEIZPROG_2_MO_DO_SCHALT_3: std::strcpy(buffer,"HEIZPROG_2_MO_DO_SCHALT_3"); break;
-        case Property::kHEIZPROG_3: std::strcpy(buffer,"HEIZPROG_3"); break;
-        case Property::kHEIZPROG_3_MO: std::strcpy(buffer,"HEIZPROG_3_MO"); break;
-        case Property::kHEIZPROG_3_MO_SCHALT_2: std::strcpy(buffer,"HEIZPROG_3_MO_SCHALT_2"); break;
-        case Property::kHEIZPROG_3_MO_SCHALT_3: std::strcpy(buffer,"HEIZPROG_3_MO_SCHALT_3"); break;
-        case Property::kHEIZPROG_3_DI: std::strcpy(buffer,"HEIZPROG_3_DI"); break;
-        case Property::kHEIZPROG_3_DI_SCHALT_2: std::strcpy(buffer,"HEIZPROG_3_DI_SCHALT_2"); break;
-        case Property::kHEIZPROG_3_DI_SCHALT_3: std::strcpy(buffer,"HEIZPROG_3_DI_SCHALT_3"); break;
-        case Property::kHEIZPROG_3_MI: std::strcpy(buffer,"HEIZPROG_3_MI"); break;
-        case Property::kHEIZPROG_3_MI_SCHALT_2: std::strcpy(buffer,"HEIZPROG_3_MI_SCHALT_2"); break;
-        case Property::kHEIZPROG_3_MI_SCHALT_3: std::strcpy(buffer,"HEIZPROG_3_MI_SCHALT_3"); break;
-        case Property::kHEIZPROG_3_DO: std::strcpy(buffer,"HEIZPROG_3_DO"); break;
-        case Property::kHEIZPROG_3_DO_SCHALT_2: std::strcpy(buffer,"HEIZPROG_3_DO_SCHALT_2"); break;
-        case Property::kHEIZPROG_3_DO_SCHALT_3: std::strcpy(buffer,"HEIZPROG_3_DO_SCHALT_3"); break;
-        case Property::kHEIZPROG_3_FR: std::strcpy(buffer,"HEIZPROG_3_FR"); break;
-        case Property::kHEIZPROG_3_FR_SCHALT_2: std::strcpy(buffer,"HEIZPROG_3_FR_SCHALT_2"); break;
-        case Property::kHEIZPROG_3_FR_SCHALT_3: std::strcpy(buffer,"HEIZPROG_3_FR_SCHALT_3"); break;
-        case Property::kHEIZPROG_3_SA: std::strcpy(buffer,"HEIZPROG_3_SA"); break;
-        case Property::kHEIZPROG_3_SA_SCHALT_2: std::strcpy(buffer,"HEIZPROG_3_SA_SCHALT_2"); break;
-        case Property::kHEIZPROG_3_SA_SCHALT_3: std::strcpy(buffer,"HEIZPROG_3_SA_SCHALT_3"); break;
-        case Property::kHEIZPROG_3_SO: std::strcpy(buffer,"HEIZPROG_3_SO"); break;
-        case Property::kHEIZPROG_3_SO_SCHALT_2: std::strcpy(buffer,"HEIZPROG_3_SO_SCHALT_2"); break;
-        case Property::kHEIZPROG_3_SO_SCHALT_3: std::strcpy(buffer,"HEIZPROG_3_SO_SCHALT_3"); break;
-        case Property::kHEIZPROG_3_MO_FR: std::strcpy(buffer,"HEIZPROG_3_MO_FR"); break;
-        case Property::kHEIZPROG_3_MO_FR_SCHALT_2: std::strcpy(buffer,"HEIZPROG_3_MO_FR_SCHALT_2"); break;
-        case Property::kHEIZPROG_3_MO_FR_SCHALT_3: std::strcpy(buffer,"HEIZPROG_3_MO_FR_SCHALT_3"); break;
-        case Property::kHEIZPROG_3_SA_SO: std::strcpy(buffer,"HEIZPROG_3_SA_SO"); break;
-        case Property::kHEIZPROG_3_SA_SO_SCHALT_2: std::strcpy(buffer,"HEIZPROG_3_SA_SO_SCHALT_2"); break;
-        case Property::kHEIZPROG_3_SA_SO_SCHALT_3: std::strcpy(buffer,"HEIZPROG_3_SA_SO_SCHALT_3"); break;
-        case Property::kHEIZPROG_3_MO_SO: std::strcpy(buffer,"HEIZPROG_3_MO_SO"); break;
-        case Property::kHEIZPROG_3_MO_SO_SCHALT_2: std::strcpy(buffer,"HEIZPROG_3_MO_SO_SCHALT_2"); break;
-        case Property::kHEIZPROG_3_MO_SO_SCHALT_3: std::strcpy(buffer,"HEIZPROG_3_MO_SO_SCHALT_3"); break;
-        case Property::kHEIZPROG_3_MO_DO: std::strcpy(buffer,"HEIZPROG_3_MO_DO"); break;
-        case Property::kHEIZPROG_3_MO_DO_SCHALT_2: std::strcpy(buffer,"HEIZPROG_3_MO_DO_SCHALT_2"); break;
-        case Property::kHEIZPROG_3_MO_DO_SCHALT_3: std::strcpy(buffer,"HEIZPROG_3_MO_DO_SCHALT_3"); break;
-        case Property::kW_WASSERPROG_1: std::strcpy(buffer,"W_WASSERPROG_1"); break;
-        case Property::kW_WASSERPROG_1_MO: std::strcpy(buffer,"W_WASSERPROG_1_MO"); break;
-        case Property::kW_WASSERPROG_1_MO_SCHALT_2: std::strcpy(buffer,"W_WASSERPROG_1_MO_SCHALT_2"); break;
-        case Property::kW_WASSERPROG_1_MO_SCHALT_3: std::strcpy(buffer,"W_WASSERPROG_1_MO_SCHALT_3"); break;
-        case Property::kW_WASSERPROG_1_DI: std::strcpy(buffer,"W_WASSERPROG_1_DI"); break;
-        case Property::kW_WASSERPROG_1_DI_SCHALT_2: std::strcpy(buffer,"W_WASSERPROG_1_DI_SCHALT_2"); break;
-        case Property::kW_WASSERPROG_1_DI_SCHALT_3: std::strcpy(buffer,"W_WASSERPROG_1_DI_SCHALT_3"); break;
-        case Property::kW_WASSERPROG_1_MI: std::strcpy(buffer,"W_WASSERPROG_1_MI"); break;
-        case Property::kW_WASSERPROG_1_MI_SCHALT_2: std::strcpy(buffer,"W_WASSERPROG_1_MI_SCHALT_2"); break;
-        case Property::kW_WASSERPROG_1_MI_SCHALT_3: std::strcpy(buffer,"W_WASSERPROG_1_MI_SCHALT_3"); break;
-        case Property::kW_WASSERPROG_1_DO: std::strcpy(buffer,"W_WASSERPROG_1_DO"); break;
-        case Property::kW_WASSERPROG_1_DO_SCHALT_2: std::strcpy(buffer,"W_WASSERPROG_1_DO_SCHALT_2"); break;
-        case Property::kW_WASSERPROG_1_DO_SCHALT_3: std::strcpy(buffer,"W_WASSERPROG_1_DO_SCHALT_3"); break;
-        case Property::kW_WASSERPROG_1_FR: std::strcpy(buffer,"W_WASSERPROG_1_FR"); break;
-        case Property::kW_WASSERPROG_1_FR_SCHALT_2: std::strcpy(buffer,"W_WASSERPROG_1_FR_SCHALT_2"); break;
-        case Property::kW_WASSERPROG_1_FR_SCHALT_3: std::strcpy(buffer,"W_WASSERPROG_1_FR_SCHALT_3"); break;
-        case Property::kW_WASSERPROG_1_SA: std::strcpy(buffer,"W_WASSERPROG_1_SA"); break;
-        case Property::kW_WASSERPROG_1_SA_SCHALT_2: std::strcpy(buffer,"W_WASSERPROG_1_SA_SCHALT_2"); break;
-        case Property::kW_WASSERPROG_1_SA_SCHALT_3: std::strcpy(buffer,"W_WASSERPROG_1_SA_SCHALT_3"); break;
-        case Property::kW_WASSERPROG_1_SO: std::strcpy(buffer,"W_WASSERPROG_1_SO"); break;
-        case Property::kW_WASSERPROG_1_SO_SCHALT_2: std::strcpy(buffer,"W_WASSERPROG_1_SO_SCHALT_2"); break;
-        case Property::kW_WASSERPROG_1_SO_SCHALT_3: std::strcpy(buffer,"W_WASSERPROG_1_SO_SCHALT_3"); break;
-        case Property::kW_WASSERPROG_1_MO_FR: std::strcpy(buffer,"W_WASSERPROG_1_MO_FR"); break;
-        case Property::kW_WASSERPROG_1_MO_FR_SCHALT_2: std::strcpy(buffer,"W_WASSERPROG_1_MO_FR_SCHALT_2"); break;
-        case Property::kW_WASSERPROG_1_MO_FR_SCHALT_3: std::strcpy(buffer,"W_WASSERPROG_1_MO_FR_SCHALT_3"); break;
-        case Property::kW_WASSERPROG_1_SA_SO: std::strcpy(buffer,"W_WASSERPROG_1_SA_SO"); break;
-        case Property::kW_WASSERPROG_1_SA_SO_SCHALT_2: std::strcpy(buffer,"W_WASSERPROG_1_SA_SO_SCHALT_2"); break;
-        case Property::kW_WASSERPROG_1_SA_SO_SCHALT_3: std::strcpy(buffer,"W_WASSERPROG_1_SA_SO_SCHALT_3"); break;
-        case Property::kW_WASSERPROG_1_MO_SO: std::strcpy(buffer,"W_WASSERPROG_1_MO_SO"); break;
-        case Property::kW_WASSERPROG_1_MO_SO_SCHALT_2: std::strcpy(buffer,"W_WASSERPROG_1_MO_SO_SCHALT_2"); break;
-        case Property::kW_WASSERPROG_1_MO_SO_SCHALT_3: std::strcpy(buffer,"W_WASSERPROG_1_MO_SO_SCHALT_3"); break;
-        case Property::kW_WASSERPROG_1_MO_DO: std::strcpy(buffer,"W_WASSERPROG_1_MO_DO"); break;
-        case Property::kW_WASSERPROG_1_MO_DO_SCHALT_2: std::strcpy(buffer,"W_WASSERPROG_1_MO_DO_SCHALT_2"); break;
-        case Property::kW_WASSERPROG_1_MO_DO_SCHALT_3: std::strcpy(buffer,"W_WASSERPROG_1_MO_DO_SCHALT_3"); break;
-        case Property::kW_WASSERPROG_2: std::strcpy(buffer,"W_WASSERPROG_2"); break;
-        case Property::kW_WASSERPROG_2_MO: std::strcpy(buffer,"W_WASSERPROG_2_MO"); break;
-        case Property::kW_WASSERPROG_2_MO_SCHALT_2: std::strcpy(buffer,"W_WASSERPROG_2_MO_SCHALT_2"); break;
-        case Property::kW_WASSERPROG_2_MO_SCHALT_3: std::strcpy(buffer,"W_WASSERPROG_2_MO_SCHALT_3"); break;
-        case Property::kW_WASSERPROG_2_DI: std::strcpy(buffer,"W_WASSERPROG_2_DI"); break;
-        case Property::kW_WASSERPROG_2_DI_SCHALT_2: std::strcpy(buffer,"W_WASSERPROG_2_DI_SCHALT_2"); break;
-        case Property::kW_WASSERPROG_2_DI_SCHALT_3: std::strcpy(buffer,"W_WASSERPROG_2_DI_SCHALT_3"); break;
-        case Property::kW_WASSERPROG_2_MI: std::strcpy(buffer,"W_WASSERPROG_2_MI"); break;
-        case Property::kW_WASSERPROG_2_MI_SCHALT_2: std::strcpy(buffer,"W_WASSERPROG_2_MI_SCHALT_2"); break;
-        case Property::kW_WASSERPROG_2_MI_SCHALT_3: std::strcpy(buffer,"W_WASSERPROG_2_MI_SCHALT_3"); break;
-        case Property::kW_WASSERPROG_2_DO: std::strcpy(buffer,"W_WASSERPROG_2_DO"); break;
-        case Property::kW_WASSERPROG_2_DO_SCHALT_2: std::strcpy(buffer,"W_WASSERPROG_2_DO_SCHALT_2"); break;
-        case Property::kW_WASSERPROG_2_DO_SCHALT_3: std::strcpy(buffer,"W_WASSERPROG_2_DO_SCHALT_3"); break;
-        case Property::kW_WASSERPROG_2_FR: std::strcpy(buffer,"W_WASSERPROG_2_FR"); break;
-        case Property::kW_WASSERPROG_2_FR_SCHALT_2: std::strcpy(buffer,"W_WASSERPROG_2_FR_SCHALT_2"); break;
-        case Property::kW_WASSERPROG_2_FR_SCHALT_3: std::strcpy(buffer,"W_WASSERPROG_2_FR_SCHALT_3"); break;
-        case Property::kW_WASSERPROG_2_SA: std::strcpy(buffer,"W_WASSERPROG_2_SA"); break;
-        case Property::kW_WASSERPROG_2_SA_SCHALT_2: std::strcpy(buffer,"W_WASSERPROG_2_SA_SCHALT_2"); break;
-        case Property::kW_WASSERPROG_2_SA_SCHALT_3: std::strcpy(buffer,"W_WASSERPROG_2_SA_SCHALT_3"); break;
-        case Property::kW_WASSERPROG_2_SO: std::strcpy(buffer,"W_WASSERPROG_2_SO"); break;
-        case Property::kW_WASSERPROG_2_SO_SCHALT_2: std::strcpy(buffer,"W_WASSERPROG_2_SO_SCHALT_2"); break;
-        case Property::kW_WASSERPROG_2_SO_SCHALT_3: std::strcpy(buffer,"W_WASSERPROG_2_SO_SCHALT_3"); break;
-        case Property::kW_WASSERPROG_2_MO_FR: std::strcpy(buffer,"W_WASSERPROG_2_MO_FR"); break;
-        case Property::kW_WASSERPROG_2_MO_FR_SCHALT_2: std::strcpy(buffer,"W_WASSERPROG_2_MO_FR_SCHALT_2"); break;
-        case Property::kW_WASSERPROG_2_MO_FR_SCHALT_3: std::strcpy(buffer,"W_WASSERPROG_2_MO_FR_SCHALT_3"); break;
-        case Property::kW_WASSERPROG_2_SA_SO: std::strcpy(buffer,"W_WASSERPROG_2_SA_SO"); break;
-        case Property::kW_WASSERPROG_2_SA_SO_SCHALT_2: std::strcpy(buffer,"W_WASSERPROG_2_SA_SO_SCHALT_2"); break;
-        case Property::kW_WASSERPROG_2_SA_SO_SCHALT_3: std::strcpy(buffer,"W_WASSERPROG_2_SA_SO_SCHALT_3"); break;
-        case Property::kW_WASSERPROG_2_MO_SO: std::strcpy(buffer,"W_WASSERPROG_2_MO_SO"); break;
-        case Property::kW_WASSERPROG_2_MO_SO_SCHALT_2: std::strcpy(buffer,"W_WASSERPROG_2_MO_SO_SCHALT_2"); break;
-        case Property::kW_WASSERPROG_2_MO_SO_SCHALT_3: std::strcpy(buffer,"W_WASSERPROG_2_MO_SO_SCHALT_3"); break;
-        case Property::kW_WASSERPROG_2_MO_DO: std::strcpy(buffer,"W_WASSERPROG_2_MO_DO"); break;
-        case Property::kW_WASSERPROG_2_MO_DO_SCHALT_2: std::strcpy(buffer,"W_WASSERPROG_2_MO_DO_SCHALT_2"); break;
-        case Property::kW_WASSERPROG_2_MO_DO_SCHALT_3: std::strcpy(buffer,"W_WASSERPROG_2_MO_DO_SCHALT_3"); break;
-        case Property::kW_WASSERPROG_3: std::strcpy(buffer,"W_WASSERPROG_3"); break;
-        case Property::kW_WASSERPROG_3_MO: std::strcpy(buffer,"W_WASSERPROG_3_MO"); break;
-        case Property::kW_WASSERPROG_3_MO_SCHALT_2: std::strcpy(buffer,"W_WASSERPROG_3_MO_SCHALT_2"); break;
-        case Property::kW_WASSERPROG_3_MO_SCHALT_3: std::strcpy(buffer,"W_WASSERPROG_3_MO_SCHALT_3"); break;
-        case Property::kW_WASSERPROG_3_DI: std::strcpy(buffer,"W_WASSERPROG_3_DI"); break;
-        case Property::kW_WASSERPROG_3_DI_SCHALT_2: std::strcpy(buffer,"W_WASSERPROG_3_DI_SCHALT_2"); break;
-        case Property::kW_WASSERPROG_3_DI_SCHALT_3: std::strcpy(buffer,"W_WASSERPROG_3_DI_SCHALT_3"); break;
-        case Property::kW_WASSERPROG_3_MI: std::strcpy(buffer,"W_WASSERPROG_3_MI"); break;
-        case Property::kW_WASSERPROG_3_MI_SCHALT_2: std::strcpy(buffer,"W_WASSERPROG_3_MI_SCHALT_2"); break;
-        case Property::kW_WASSERPROG_3_MI_SCHALT_3: std::strcpy(buffer,"W_WASSERPROG_3_MI_SCHALT_3"); break;
-        case Property::kW_WASSERPROG_3_DO: std::strcpy(buffer,"W_WASSERPROG_3_DO"); break;
-        case Property::kW_WASSERPROG_3_DO_SCHALT_2: std::strcpy(buffer,"W_WASSERPROG_3_DO_SCHALT_2"); break;
-        case Property::kW_WASSERPROG_3_DO_SCHALT_3: std::strcpy(buffer,"W_WASSERPROG_3_DO_SCHALT_3"); break;
-        case Property::kW_WASSERPROG_3_FR: std::strcpy(buffer,"W_WASSERPROG_3_FR"); break;
-        case Property::kW_WASSERPROG_3_FR_SCHALT_2: std::strcpy(buffer,"W_WASSERPROG_3_FR_SCHALT_2"); break;
-        case Property::kW_WASSERPROG_3_FR_SCHALT_3: std::strcpy(buffer,"W_WASSERPROG_3_FR_SCHALT_3"); break;
-        case Property::kW_WASSERPROG_3_SA: std::strcpy(buffer,"W_WASSERPROG_3_SA"); break;
-        case Property::kW_WASSERPROG_3_SA_SCHALT_2: std::strcpy(buffer,"W_WASSERPROG_3_SA_SCHALT_2"); break;
-        case Property::kW_WASSERPROG_3_SA_SCHALT_3: std::strcpy(buffer,"W_WASSERPROG_3_SA_SCHALT_3"); break;
-        case Property::kW_WASSERPROG_3_SO: std::strcpy(buffer,"W_WASSERPROG_3_SO"); break;
-        case Property::kW_WASSERPROG_3_SO_SCHALT_2: std::strcpy(buffer,"W_WASSERPROG_3_SO_SCHALT_2"); break;
-        case Property::kW_WASSERPROG_3_SO_SCHALT_3: std::strcpy(buffer,"W_WASSERPROG_3_SO_SCHALT_3"); break;
-        case Property::kW_WASSERPROG_3_MO_FR: std::strcpy(buffer,"W_WASSERPROG_3_MO_FR"); break;
-        case Property::kW_WASSERPROG_3_MO_FR_SCHALT_2: std::strcpy(buffer,"W_WASSERPROG_3_MO_FR_SCHALT_2"); break;
-        case Property::kW_WASSERPROG_3_MO_FR_SCHALT_3: std::strcpy(buffer,"W_WASSERPROG_3_MO_FR_SCHALT_3"); break;
-        case Property::kW_WASSERPROG_3_SA_SO: std::strcpy(buffer,"W_WASSERPROG_3_SA_SO"); break;
-        case Property::kW_WASSERPROG_3_SA_SO_SCHALT_2: std::strcpy(buffer,"W_WASSERPROG_3_SA_SO_SCHALT_2"); break;
-        case Property::kW_WASSERPROG_3_SA_SO_SCHALT_3: std::strcpy(buffer,"W_WASSERPROG_3_SA_SO_SCHALT_3"); break;
-        case Property::kW_WASSERPROG_3_MO_SO: std::strcpy(buffer,"W_WASSERPROG_3_MO_SO"); break;
-        case Property::kW_WASSERPROG_3_MO_SO_SCHALT_2: std::strcpy(buffer,"W_WASSERPROG_3_MO_SO_SCHALT_2"); break;
-        case Property::kW_WASSERPROG_3_MO_SO_SCHALT_3: std::strcpy(buffer,"W_WASSERPROG_3_MO_SO_SCHALT_3"); break;
-        case Property::kW_WASSERPROG_3_MO_DO: std::strcpy(buffer,"W_WASSERPROG_3_MO_DO"); break;
-        case Property::kW_WASSERPROG_3_MO_DO_SCHALT_2: std::strcpy(buffer,"W_WASSERPROG_3_MO_DO_SCHALT_2"); break;
-        case Property::kW_WASSERPROG_3_MO_DO_SCHALT_3: std::strcpy(buffer,"W_WASSERPROG_3_MO_DO_SCHALT_3"); break;
-        case Property::kZIRKPROG_1: std::strcpy(buffer,"ZIRKPROG_1"); break;
-        case Property::kZIRKPROG_1_MO: std::strcpy(buffer,"ZIRKPROG_1_MO"); break;
-        case Property::kZIRKPROG_1_MO_SCHALT_2: std::strcpy(buffer,"ZIRKPROG_1_MO_SCHALT_2"); break;
-        case Property::kZIRKPROG_1_MO_SCHALT_3: std::strcpy(buffer,"ZIRKPROG_1_MO_SCHALT_3"); break;
-        case Property::kZIRKPROG_1_DI: std::strcpy(buffer,"ZIRKPROG_1_DI"); break;
-        case Property::kZIRKPROG_1_DI_SCHALT_2: std::strcpy(buffer,"ZIRKPROG_1_DI_SCHALT_2"); break;
-        case Property::kZIRKPROG_1_DI_SCHALT_3: std::strcpy(buffer,"ZIRKPROG_1_DI_SCHALT_3"); break;
-        case Property::kZIRKPROG_1_MI: std::strcpy(buffer,"ZIRKPROG_1_MI"); break;
-        case Property::kZIRKPROG_1_MI_SCHALT_2: std::strcpy(buffer,"ZIRKPROG_1_MI_SCHALT_2"); break;
-        case Property::kZIRKPROG_1_MI_SCHALT_3: std::strcpy(buffer,"ZIRKPROG_1_MI_SCHALT_3"); break;
-        case Property::kZIRKPROG_1_DO: std::strcpy(buffer,"ZIRKPROG_1_DO"); break;
-        case Property::kZIRKPROG_1_DO_SCHALT_2: std::strcpy(buffer,"ZIRKPROG_1_DO_SCHALT_2"); break;
-        case Property::kZIRKPROG_1_DO_SCHALT_3: std::strcpy(buffer,"ZIRKPROG_1_DO_SCHALT_3"); break;
-        case Property::kZIRKPROG_1_FR: std::strcpy(buffer,"ZIRKPROG_1_FR"); break;
-        case Property::kZIRKPROG_1_FR_SCHALT_2: std::strcpy(buffer,"ZIRKPROG_1_FR_SCHALT_2"); break;
-        case Property::kZIRKPROG_1_FR_SCHALT_3: std::strcpy(buffer,"ZIRKPROG_1_FR_SCHALT_3"); break;
-        case Property::kZIRKPROG_1_SA: std::strcpy(buffer,"ZIRKPROG_1_SA"); break;
-        case Property::kZIRKPROG_1_SA_SCHALT_2: std::strcpy(buffer,"ZIRKPROG_1_SA_SCHALT_2"); break;
-        case Property::kZIRKPROG_1_SA_SCHALT_3: std::strcpy(buffer,"ZIRKPROG_1_SA_SCHALT_3"); break;
-        case Property::kZIRKPROG_1_SO: std::strcpy(buffer,"ZIRKPROG_1_SO"); break;
-        case Property::kZIRKPROG_1_SO_SCHALT_2: std::strcpy(buffer,"ZIRKPROG_1_SO_SCHALT_2"); break;
-        case Property::kZIRKPROG_1_SO_SCHALT_3: std::strcpy(buffer,"ZIRKPROG_1_SO_SCHALT_3"); break;
-        case Property::kZIRKPROG_1_MO_FR: std::strcpy(buffer,"ZIRKPROG_1_MO_FR"); break;
-        case Property::kZIRKPROG_1_MO_FR_SCHALT_2: std::strcpy(buffer,"ZIRKPROG_1_MO_FR_SCHALT_2"); break;
-        case Property::kZIRKPROG_1_MO_FR_SCHALT_3: std::strcpy(buffer,"ZIRKPROG_1_MO_FR_SCHALT_3"); break;
-        case Property::kZIRKPROG_1_SA_SO: std::strcpy(buffer,"ZIRKPROG_1_SA_SO"); break;
-        case Property::kZIRKPROG_1_SA_SO_SCHALT_2: std::strcpy(buffer,"ZIRKPROG_1_SA_SO_SCHALT_2"); break;
-        case Property::kZIRKPROG_1_SA_SO_SCHALT_3: std::strcpy(buffer,"ZIRKPROG_1_SA_SO_SCHALT_3"); break;
-        case Property::kZIRKPROG_1_MO_SO: std::strcpy(buffer,"ZIRKPROG_1_MO_SO"); break;
-        case Property::kZIRKPROG_1_MO_SO_SCHALT_2: std::strcpy(buffer,"ZIRKPROG_1_MO_SO_SCHALT_2"); break;
-        case Property::kZIRKPROG_1_MO_SO_SCHALT_3: std::strcpy(buffer,"ZIRKPROG_1_MO_SO_SCHALT_3"); break;
-        case Property::kZIRKPROG_1_MO_DO: std::strcpy(buffer,"ZIRKPROG_1_MO_DO"); break;
-        case Property::kZIRKPROG_1_MO_DO_SCHALT_2: std::strcpy(buffer,"ZIRKPROG_1_MO_DO_SCHALT_2"); break;
-        case Property::kZIRKPROG_1_MO_DO_SCHALT_3: std::strcpy(buffer,"ZIRKPROG_1_MO_DO_SCHALT_3"); break;
-        case Property::kZIRKPROG_2: std::strcpy(buffer,"ZIRKPROG_2"); break;
-        case Property::kZIRKPROG_2_MO: std::strcpy(buffer,"ZIRKPROG_2_MO"); break;
-        case Property::kZIRKPROG_2_MO_SCHALT_2: std::strcpy(buffer,"ZIRKPROG_2_MO_SCHALT_2"); break;
-        case Property::kZIRKPROG_2_MO_SCHALT_3: std::strcpy(buffer,"ZIRKPROG_2_MO_SCHALT_3"); break;
-        case Property::kZIRKPROG_2_DI: std::strcpy(buffer,"ZIRKPROG_2_DI"); break;
-        case Property::kZIRKPROG_2_DI_SCHALT_2: std::strcpy(buffer,"ZIRKPROG_2_DI_SCHALT_2"); break;
-        case Property::kZIRKPROG_2_DI_SCHALT_3: std::strcpy(buffer,"ZIRKPROG_2_DI_SCHALT_3"); break;
-        case Property::kZIRKPROG_2_MI: std::strcpy(buffer,"ZIRKPROG_2_MI"); break;
-        case Property::kZIRKPROG_2_MI_SCHALT_2: std::strcpy(buffer,"ZIRKPROG_2_MI_SCHALT_2"); break;
-        case Property::kZIRKPROG_2_MI_SCHALT_3: std::strcpy(buffer,"ZIRKPROG_2_MI_SCHALT_3"); break;
-        case Property::kZIRKPROG_2_DO: std::strcpy(buffer,"ZIRKPROG_2_DO"); break;
-        case Property::kZIRKPROG_2_DO_SCHALT_2: std::strcpy(buffer,"ZIRKPROG_2_DO_SCHALT_2"); break;
-        case Property::kZIRKPROG_2_DO_SCHALT_3: std::strcpy(buffer,"ZIRKPROG_2_DO_SCHALT_3"); break;
-        case Property::kZIRKPROG_2_FR: std::strcpy(buffer,"ZIRKPROG_2_FR"); break;
-        case Property::kZIRKPROG_2_FR_SCHALT_2: std::strcpy(buffer,"ZIRKPROG_2_FR_SCHALT_2"); break;
-        case Property::kZIRKPROG_2_FR_SCHALT_3: std::strcpy(buffer,"ZIRKPROG_2_FR_SCHALT_3"); break;
-        case Property::kZIRKPROG_2_SA: std::strcpy(buffer,"ZIRKPROG_2_SA"); break;
-        case Property::kZIRKPROG_2_SA_SCHALT_2: std::strcpy(buffer,"ZIRKPROG_2_SA_SCHALT_2"); break;
-        case Property::kZIRKPROG_2_SA_SCHALT_3: std::strcpy(buffer,"ZIRKPROG_2_SA_SCHALT_3"); break;
-        case Property::kZIRKPROG_2_SO: std::strcpy(buffer,"ZIRKPROG_2_SO"); break;
-        case Property::kZIRKPROG_2_SO_SCHALT_2: std::strcpy(buffer,"ZIRKPROG_2_SO_SCHALT_2"); break;
-        case Property::kZIRKPROG_2_SO_SCHALT_3: std::strcpy(buffer,"ZIRKPROG_2_SO_SCHALT_3"); break;
-        case Property::kZIRKPROG_2_MO_FR: std::strcpy(buffer,"ZIRKPROG_2_MO_FR"); break;
-        case Property::kZIRKPROG_2_MO_FR_SCHALT_2: std::strcpy(buffer,"ZIRKPROG_2_MO_FR_SCHALT_2"); break;
-        case Property::kZIRKPROG_2_MO_FR_SCHALT_3: std::strcpy(buffer,"ZIRKPROG_2_MO_FR_SCHALT_3"); break;
-        case Property::kZIRKPROG_2_SA_SO: std::strcpy(buffer,"ZIRKPROG_2_SA_SO"); break;
-        case Property::kZIRKPROG_2_SA_SO_SCHALT_2: std::strcpy(buffer,"ZIRKPROG_2_SA_SO_SCHALT_2"); break;
-        case Property::kZIRKPROG_2_SA_SO_SCHALT_3: std::strcpy(buffer,"ZIRKPROG_2_SA_SO_SCHALT_3"); break;
-        case Property::kZIRKPROG_2_MO_SO: std::strcpy(buffer,"ZIRKPROG_2_MO_SO"); break;
-        case Property::kZIRKPROG_2_MO_SO_SCHALT_2: std::strcpy(buffer,"ZIRKPROG_2_MO_SO_SCHALT_2"); break;
-        case Property::kZIRKPROG_2_MO_SO_SCHALT_3: std::strcpy(buffer,"ZIRKPROG_2_MO_SO_SCHALT_3"); break;
-        case Property::kZIRKPROG_2_MO_DO: std::strcpy(buffer,"ZIRKPROG_2_MO_DO"); break;
-        case Property::kZIRKPROG_2_MO_DO_SCHALT_2: std::strcpy(buffer,"ZIRKPROG_2_MO_DO_SCHALT_2"); break;
-        case Property::kZIRKPROG_2_MO_DO_SCHALT_3: std::strcpy(buffer,"ZIRKPROG_2_MO_DO_SCHALT_3"); break;
-        case Property::kZIRKPROG_3: std::strcpy(buffer,"ZIRKPROG_3"); break;
-        case Property::kZIRKPROG_3_MO: std::strcpy(buffer,"ZIRKPROG_3_MO"); break;
-        case Property::kZIRKPROG_3_MO_SCHALT_2: std::strcpy(buffer,"ZIRKPROG_3_MO_SCHALT_2"); break;
-        case Property::kZIRKPROG_3_MO_SCHALT_3: std::strcpy(buffer,"ZIRKPROG_3_MO_SCHALT_3"); break;
-        case Property::kZIRKPROG_3_DI: std::strcpy(buffer,"ZIRKPROG_3_DI"); break;
-        case Property::kZIRKPROG_3_DI_SCHALT_2: std::strcpy(buffer,"ZIRKPROG_3_DI_SCHALT_2"); break;
-        case Property::kZIRKPROG_3_DI_SCHALT_3: std::strcpy(buffer,"ZIRKPROG_3_DI_SCHALT_3"); break;
-        case Property::kZIRKPROG_3_MI: std::strcpy(buffer,"ZIRKPROG_3_MI"); break;
-        case Property::kZIRKPROG_3_MI_SCHALT_2: std::strcpy(buffer,"ZIRKPROG_3_MI_SCHALT_2"); break;
-        case Property::kZIRKPROG_3_MI_SCHALT_3: std::strcpy(buffer,"ZIRKPROG_3_MI_SCHALT_3"); break;
-        case Property::kZIRKPROG_3_DO: std::strcpy(buffer,"ZIRKPROG_3_DO"); break;
-        case Property::kZIRKPROG_3_DO_SCHALT_2: std::strcpy(buffer,"ZIRKPROG_3_DO_SCHALT_2"); break;
-        case Property::kZIRKPROG_3_DO_SCHALT_3: std::strcpy(buffer,"ZIRKPROG_3_DO_SCHALT_3"); break;
-        case Property::kZIRKPROG_3_FR: std::strcpy(buffer,"ZIRKPROG_3_FR"); break;
-        case Property::kZIRKPROG_3_FR_SCHALT_2: std::strcpy(buffer,"ZIRKPROG_3_FR_SCHALT_2"); break;
-        case Property::kZIRKPROG_3_FR_SCHALT_3: std::strcpy(buffer,"ZIRKPROG_3_FR_SCHALT_3"); break;
-        case Property::kZIRKPROG_3_SA: std::strcpy(buffer,"ZIRKPROG_3_SA"); break;
-        case Property::kZIRKPROG_3_SA_SCHALT_2: std::strcpy(buffer,"ZIRKPROG_3_SA_SCHALT_2"); break;
-        case Property::kZIRKPROG_3_SA_SCHALT_3: std::strcpy(buffer,"ZIRKPROG_3_SA_SCHALT_3"); break;
-        case Property::kZIRKPROG_3_SO: std::strcpy(buffer,"ZIRKPROG_3_SO"); break;
-        case Property::kZIRKPROG_3_SO_SCHALT_2: std::strcpy(buffer,"ZIRKPROG_3_SO_SCHALT_2"); break;
-        case Property::kZIRKPROG_3_SO_SCHALT_3: std::strcpy(buffer,"ZIRKPROG_3_SO_SCHALT_3"); break;
-        case Property::kZIRKPROG_3_MO_FR: std::strcpy(buffer,"ZIRKPROG_3_MO_FR"); break;
-        case Property::kZIRKPROG_3_MO_FR_SCHALT_2: std::strcpy(buffer,"ZIRKPROG_3_MO_FR_SCHALT_2"); break;
-        case Property::kZIRKPROG_3_MO_FR_SCHALT_3: std::strcpy(buffer,"ZIRKPROG_3_MO_FR_SCHALT_3"); break;
-        case Property::kZIRKPROG_3_SA_SO: std::strcpy(buffer,"ZIRKPROG_3_SA_SO"); break;
-        case Property::kZIRKPROG_3_SA_SO_SCHALT_2: std::strcpy(buffer,"ZIRKPROG_3_SA_SO_SCHALT_2"); break;
-        case Property::kZIRKPROG_3_SA_SO_SCHALT_3: std::strcpy(buffer,"ZIRKPROG_3_SA_SO_SCHALT_3"); break;
-        case Property::kZIRKPROG_3_MO_SO: std::strcpy(buffer,"ZIRKPROG_3_MO_SO"); break;
-        case Property::kZIRKPROG_3_MO_SO_SCHALT_2: std::strcpy(buffer,"ZIRKPROG_3_MO_SO_SCHALT_2"); break;
-        case Property::kZIRKPROG_3_MO_SO_SCHALT_3: std::strcpy(buffer,"ZIRKPROG_3_MO_SO_SCHALT_3"); break;
-        case Property::kZIRKPROG_3_MO_DO: std::strcpy(buffer,"ZIRKPROG_3_MO_DO"); break;
-        case Property::kZIRKPROG_3_MO_DO_SCHALT_2: std::strcpy(buffer,"ZIRKPROG_3_MO_DO_SCHALT_2"); break;
-        case Property::kZIRKPROG_3_MO_DO_SCHALT_3: std::strcpy(buffer,"ZIRKPROG_3_MO_DO_SCHALT_3"); break;
-        case Property::kZBV_PROG_1: std::strcpy(buffer,"ZBV_PROG_1"); break;
-        case Property::kZBV_PROG_1_MO: std::strcpy(buffer,"ZBV_PROG_1_MO"); break;
-        case Property::kZBV_PROG_1_MO_SCHALT_2: std::strcpy(buffer,"ZBV_PROG_1_MO_SCHALT_2"); break;
-        case Property::kZBV_PROG_1_MO_SCHALT_3: std::strcpy(buffer,"ZBV_PROG_1_MO_SCHALT_3"); break;
-        case Property::kZBV_PROG_1_DI: std::strcpy(buffer,"ZBV_PROG_1_DI"); break;
-        case Property::kZBV_PROG_1_DI_SCHALT_2: std::strcpy(buffer,"ZBV_PROG_1_DI_SCHALT_2"); break;
-        case Property::kZBV_PROG_1_DI_SCHALT_3: std::strcpy(buffer,"ZBV_PROG_1_DI_SCHALT_3"); break;
-        case Property::kZBV_PROG_1_MI: std::strcpy(buffer,"ZBV_PROG_1_MI"); break;
-        case Property::kZBV_PROG_1_MI_SCHALT_2: std::strcpy(buffer,"ZBV_PROG_1_MI_SCHALT_2"); break;
-        case Property::kZBV_PROG_1_MI_SCHALT_3: std::strcpy(buffer,"ZBV_PROG_1_MI_SCHALT_3"); break;
-        case Property::kZBV_PROG_1_DO: std::strcpy(buffer,"ZBV_PROG_1_DO"); break;
-        case Property::kZBV_PROG_1_DO_SCHALT_2: std::strcpy(buffer,"ZBV_PROG_1_DO_SCHALT_2"); break;
-        case Property::kZBV_PROG_1_DO_SCHALT_3: std::strcpy(buffer,"ZBV_PROG_1_DO_SCHALT_3"); break;
-        case Property::kZBV_PROG_1_FR: std::strcpy(buffer,"ZBV_PROG_1_FR"); break;
-        case Property::kZBV_PROG_1_FR_SCHALT_2: std::strcpy(buffer,"ZBV_PROG_1_FR_SCHALT_2"); break;
-        case Property::kZBV_PROG_1_FR_SCHALT_3: std::strcpy(buffer,"ZBV_PROG_1_FR_SCHALT_3"); break;
-        case Property::kZBV_PROG_1_SA: std::strcpy(buffer,"ZBV_PROG_1_SA"); break;
-        case Property::kZBV_PROG_1_SA_SCHALT_2: std::strcpy(buffer,"ZBV_PROG_1_SA_SCHALT_2"); break;
-        case Property::kZBV_PROG_1_SA_SCHALT_3: std::strcpy(buffer,"ZBV_PROG_1_SA_SCHALT_3"); break;
-        case Property::kZBV_PROG_1_SO: std::strcpy(buffer,"ZBV_PROG_1_SO"); break;
-        case Property::kZBV_PROG_1_SO_SCHALT_2: std::strcpy(buffer,"ZBV_PROG_1_SO_SCHALT_2"); break;
-        case Property::kZBV_PROG_1_SO_SCHALT_3: std::strcpy(buffer,"ZBV_PROG_1_SO_SCHALT_3"); break;
-        case Property::kZBV_PROG_1_MO_FR: std::strcpy(buffer,"ZBV_PROG_1_MO_FR"); break;
-        case Property::kZBV_PROG_1_MO_FR_SCHALT_2: std::strcpy(buffer,"ZBV_PROG_1_MO_FR_SCHALT_2"); break;
-        case Property::kZBV_PROG_1_MO_FR_SCHALT_3: std::strcpy(buffer,"ZBV_PROG_1_MO_FR_SCHALT_3"); break;
-        case Property::kZBV_PROG_1_SA_SO: std::strcpy(buffer,"ZBV_PROG_1_SA_SO"); break;
-        case Property::kZBV_PROG_1_SA_SO_SCHALT_2: std::strcpy(buffer,"ZBV_PROG_1_SA_SO_SCHALT_2"); break;
-        case Property::kZBV_PROG_1_SA_SO_SCHALT_3: std::strcpy(buffer,"ZBV_PROG_1_SA_SO_SCHALT_3"); break;
-        case Property::kZBV_PROG_1_MO_SO: std::strcpy(buffer,"ZBV_PROG_1_MO_SO"); break;
-        case Property::kZBV_PROG_1_MO_SO_SCHALT_2: std::strcpy(buffer,"ZBV_PROG_1_MO_SO_SCHALT_2"); break;
-        case Property::kZBV_PROG_1_MO_SO_SCHALT_3: std::strcpy(buffer,"ZBV_PROG_1_MO_SO_SCHALT_3"); break;
-        case Property::kZBV_PROG_1_MO_DO: std::strcpy(buffer,"ZBV_PROG_1_MO_DO"); break;
-        case Property::kZBV_PROG_1_MO_DO_SCHALT_2: std::strcpy(buffer,"ZBV_PROG_1_MO_DO_SCHALT_2"); break;
-        case Property::kZBV_PROG_1_MO_DO_SCHALT_3: std::strcpy(buffer,"ZBV_PROG_1_MO_DO_SCHALT_3"); break;
-        case Property::kZBV_PROG_2: std::strcpy(buffer,"ZBV_PROG_2"); break;
-        case Property::kZBV_PROG_2_MO: std::strcpy(buffer,"ZBV_PROG_2_MO"); break;
-        case Property::kZBV_PROG_2_MO_SCHALT_2: std::strcpy(buffer,"ZBV_PROG_2_MO_SCHALT_2"); break;
-        case Property::kZBV_PROG_2_MO_SCHALT_3: std::strcpy(buffer,"ZBV_PROG_2_MO_SCHALT_3"); break;
-        case Property::kZBV_PROG_2_DI: std::strcpy(buffer,"ZBV_PROG_2_DI"); break;
-        case Property::kZBV_PROG_2_DI_SCHALT_2: std::strcpy(buffer,"ZBV_PROG_2_DI_SCHALT_2"); break;
-        case Property::kZBV_PROG_2_DI_SCHALT_3: std::strcpy(buffer,"ZBV_PROG_2_DI_SCHALT_3"); break;
-        case Property::kZBV_PROG_2_MI: std::strcpy(buffer,"ZBV_PROG_2_MI"); break;
-        case Property::kZBV_PROG_2_MI_SCHALT_2: std::strcpy(buffer,"ZBV_PROG_2_MI_SCHALT_2"); break;
-        case Property::kZBV_PROG_2_MI_SCHALT_3: std::strcpy(buffer,"ZBV_PROG_2_MI_SCHALT_3"); break;
-        case Property::kZBV_PROG_2_DO: std::strcpy(buffer,"ZBV_PROG_2_DO"); break;
-        case Property::kZBV_PROG_2_DO_SCHALT_2: std::strcpy(buffer,"ZBV_PROG_2_DO_SCHALT_2"); break;
-        case Property::kZBV_PROG_2_DO_SCHALT_3: std::strcpy(buffer,"ZBV_PROG_2_DO_SCHALT_3"); break;
-        case Property::kZBV_PROG_2_FR: std::strcpy(buffer,"ZBV_PROG_2_FR"); break;
-        case Property::kZBV_PROG_2_FR_SCHALT_2: std::strcpy(buffer,"ZBV_PROG_2_FR_SCHALT_2"); break;
-        case Property::kZBV_PROG_2_FR_SCHALT_3: std::strcpy(buffer,"ZBV_PROG_2_FR_SCHALT_3"); break;
-        case Property::kZBV_PROG_2_SA: std::strcpy(buffer,"ZBV_PROG_2_SA"); break;
-        case Property::kZBV_PROG_2_SA_SCHALT_2: std::strcpy(buffer,"ZBV_PROG_2_SA_SCHALT_2"); break;
-        case Property::kZBV_PROG_2_SA_SCHALT_3: std::strcpy(buffer,"ZBV_PROG_2_SA_SCHALT_3"); break;
-        case Property::kZBV_PROG_2_SO: std::strcpy(buffer,"ZBV_PROG_2_SO"); break;
-        case Property::kZBV_PROG_2_SO_SCHALT_2: std::strcpy(buffer,"ZBV_PROG_2_SO_SCHALT_2"); break;
-        case Property::kZBV_PROG_2_SO_SCHALT_3: std::strcpy(buffer,"ZBV_PROG_2_SO_SCHALT_3"); break;
-        case Property::kZBV_PROG_2_MO_FR: std::strcpy(buffer,"ZBV_PROG_2_MO_FR"); break;
-        case Property::kZBV_PROG_2_MO_FR_SCHALT_2: std::strcpy(buffer,"ZBV_PROG_2_MO_FR_SCHALT_2"); break;
-        case Property::kZBV_PROG_2_MO_FR_SCHALT_3: std::strcpy(buffer,"ZBV_PROG_2_MO_FR_SCHALT_3"); break;
-        case Property::kZBV_PROG_2_SA_SO: std::strcpy(buffer,"ZBV_PROG_2_SA_SO"); break;
-        case Property::kZBV_PROG_2_SA_SO_SCHALT_2: std::strcpy(buffer,"ZBV_PROG_2_SA_SO_SCHALT_2"); break;
-        case Property::kZBV_PROG_2_SA_SO_SCHALT_3: std::strcpy(buffer,"ZBV_PROG_2_SA_SO_SCHALT_3"); break;
-        case Property::kZBV_PROG_2_MO_SO: std::strcpy(buffer,"ZBV_PROG_2_MO_SO"); break;
-        case Property::kZBV_PROG_2_MO_SO_SCHALT_2: std::strcpy(buffer,"ZBV_PROG_2_MO_SO_SCHALT_2"); break;
-        case Property::kZBV_PROG_2_MO_SO_SCHALT_3: std::strcpy(buffer,"ZBV_PROG_2_MO_SO_SCHALT_3"); break;
-        case Property::kZBV_PROG_2_MO_DO: std::strcpy(buffer,"ZBV_PROG_2_MO_DO"); break;
-        case Property::kZBV_PROG_2_MO_DO_SCHALT_2: std::strcpy(buffer,"ZBV_PROG_2_MO_DO_SCHALT_2"); break;
-        case Property::kZBV_PROG_2_MO_DO_SCHALT_3: std::strcpy(buffer,"ZBV_PROG_2_MO_DO_SCHALT_3"); break;
-        case Property::kHEIZPROG_1_SCHALTPKT_1: std::strcpy(buffer,"HEIZPROG_1_SCHALTPKT_1"); break;
-        case Property::kHEIZPROG_1_SCHALTPKT_2: std::strcpy(buffer,"HEIZPROG_1_SCHALTPKT_2"); break;
-        case Property::kHEIZPROG_1_SCHALTPKT_3: std::strcpy(buffer,"HEIZPROG_1_SCHALTPKT_3"); break;
-        case Property::kHEIZPROG_1_SCHALTPKT_4: std::strcpy(buffer,"HEIZPROG_1_SCHALTPKT_4"); break;
-        case Property::kHEIZPROG_1_SCHALTPKT_5: std::strcpy(buffer,"HEIZPROG_1_SCHALTPKT_5"); break;
-        case Property::kHEIZPROG_1_SCHALTPKT_6: std::strcpy(buffer,"HEIZPROG_1_SCHALTPKT_6"); break;
-        case Property::kHEIZPROG_1_SCHALTPKT_7: std::strcpy(buffer,"HEIZPROG_1_SCHALTPKT_7"); break;
-        case Property::kHEIZPROG_1_SCHALTPKT_8: std::strcpy(buffer,"HEIZPROG_1_SCHALTPKT_8"); break;
-        case Property::kHEIZPROG_1_SCHALTPKT_9: std::strcpy(buffer,"HEIZPROG_1_SCHALTPKT_9"); break;
-        case Property::kHEIZPROG_1_SCHALTPKT_10: std::strcpy(buffer,"HEIZPROG_1_SCHALTPKT_10"); break;
-        case Property::kHEIZPROG_1_SCHALTPKT_11: std::strcpy(buffer,"HEIZPROG_1_SCHALTPKT_11"); break;
-        case Property::kHEIZPROG_1_SCHALTPKT_12: std::strcpy(buffer,"HEIZPROG_1_SCHALTPKT_12"); break;
-        case Property::kHEIZPROG_1_SCHALTPKT_13: std::strcpy(buffer,"HEIZPROG_1_SCHALTPKT_13"); break;
-        case Property::kHEIZPROG_1_SCHALTPKT_14: std::strcpy(buffer,"HEIZPROG_1_SCHALTPKT_14"); break;
-        case Property::kHEIZPROG_2_SCHALTPKT_1: std::strcpy(buffer,"HEIZPROG_2_SCHALTPKT_1"); break;
-        case Property::kHEIZPROG_2_SCHALTPKT_2: std::strcpy(buffer,"HEIZPROG_2_SCHALTPKT_2"); break;
-        case Property::kHEIZPROG_2_SCHALTPKT_3: std::strcpy(buffer,"HEIZPROG_2_SCHALTPKT_3"); break;
-        case Property::kHEIZPROG_2_SCHALTPKT_4: std::strcpy(buffer,"HEIZPROG_2_SCHALTPKT_4"); break;
-        case Property::kHEIZPROG_2_SCHALTPKT_5: std::strcpy(buffer,"HEIZPROG_2_SCHALTPKT_5"); break;
-        case Property::kHEIZPROG_2_SCHALTPKT_6: std::strcpy(buffer,"HEIZPROG_2_SCHALTPKT_6"); break;
-        case Property::kHEIZPROG_2_SCHALTPKT_7: std::strcpy(buffer,"HEIZPROG_2_SCHALTPKT_7"); break;
-        case Property::kHEIZPROG_2_SCHALTPKT_8: std::strcpy(buffer,"HEIZPROG_2_SCHALTPKT_8"); break;
-        case Property::kHEIZPROG_2_SCHALTPKT_9: std::strcpy(buffer,"HEIZPROG_2_SCHALTPKT_9"); break;
-        case Property::kHEIZPROG_2_SCHALTPKT_10: std::strcpy(buffer,"HEIZPROG_2_SCHALTPKT_10"); break;
-        case Property::kHEIZPROG_2_SCHALTPKT_11: std::strcpy(buffer,"HEIZPROG_2_SCHALTPKT_11"); break;
-        case Property::kHEIZPROG_2_SCHALTPKT_12: std::strcpy(buffer,"HEIZPROG_2_SCHALTPKT_12"); break;
-        case Property::kHEIZPROG_2_SCHALTPKT_13: std::strcpy(buffer,"HEIZPROG_2_SCHALTPKT_13"); break;
-        case Property::kHEIZPROG_2_SCHALTPKT_14: std::strcpy(buffer,"HEIZPROG_2_SCHALTPKT_14"); break;
-        case Property::kHEIZPROG_3_SCHALTPKT_1: std::strcpy(buffer,"HEIZPROG_3_SCHALTPKT_1"); break;
-        case Property::kHEIZPROG_3_SCHALTPKT_2: std::strcpy(buffer,"HEIZPROG_3_SCHALTPKT_2"); break;
-        case Property::kHEIZPROG_3_SCHALTPKT_3: std::strcpy(buffer,"HEIZPROG_3_SCHALTPKT_3"); break;
-        case Property::kHEIZPROG_3_SCHALTPKT_4: std::strcpy(buffer,"HEIZPROG_3_SCHALTPKT_4"); break;
-        case Property::kHEIZPROG_3_SCHALTPKT_5: std::strcpy(buffer,"HEIZPROG_3_SCHALTPKT_5"); break;
-        case Property::kHEIZPROG_3_SCHALTPKT_6: std::strcpy(buffer,"HEIZPROG_3_SCHALTPKT_6"); break;
-        case Property::kHEIZPROG_3_SCHALTPKT_7: std::strcpy(buffer,"HEIZPROG_3_SCHALTPKT_7"); break;
-        case Property::kHEIZPROG_3_SCHALTPKT_8: std::strcpy(buffer,"HEIZPROG_3_SCHALTPKT_8"); break;
-        case Property::kHEIZPROG_3_SCHALTPKT_9: std::strcpy(buffer,"HEIZPROG_3_SCHALTPKT_9"); break;
-        case Property::kHEIZPROG_3_SCHALTPKT_10: std::strcpy(buffer,"HEIZPROG_3_SCHALTPKT_10"); break;
-        case Property::kHEIZPROG_3_SCHALTPKT_11: std::strcpy(buffer,"HEIZPROG_3_SCHALTPKT_11"); break;
-        case Property::kHEIZPROG_3_SCHALTPKT_12: std::strcpy(buffer,"HEIZPROG_3_SCHALTPKT_12"); break;
-        case Property::kHEIZPROG_3_SCHALTPKT_13: std::strcpy(buffer,"HEIZPROG_3_SCHALTPKT_13"); break;
-        case Property::kHEIZPROG_3_SCHALTPKT_14: std::strcpy(buffer,"HEIZPROG_3_SCHALTPKT_14"); break;
-        case Property::kWWROG_1_SCHALTPKT_1: std::strcpy(buffer,"WWROG_1_SCHALTPKT_1"); break;
-        case Property::kWWROG_1_SCHALTPKT_2: std::strcpy(buffer,"WWROG_1_SCHALTPKT_2"); break;
-        case Property::kWWROG_1_SCHALTPKT_3: std::strcpy(buffer,"WWROG_1_SCHALTPKT_3"); break;
-        case Property::kWWROG_1_SCHALTPKT_4: std::strcpy(buffer,"WWROG_1_SCHALTPKT_4"); break;
-        case Property::kWWROG_1_SCHALTPKT_5: std::strcpy(buffer,"WWROG_1_SCHALTPKT_5"); break;
-        case Property::kWWROG_1_SCHALTPKT_6: std::strcpy(buffer,"WWROG_1_SCHALTPKT_6"); break;
-        case Property::kWWROG_1_SCHALTPKT_7: std::strcpy(buffer,"WWROG_1_SCHALTPKT_7"); break;
-        case Property::kWWROG_1_SCHALTPKT_8: std::strcpy(buffer,"WWROG_1_SCHALTPKT_8"); break;
-        case Property::kWWROG_1_SCHALTPKT_9: std::strcpy(buffer,"WWROG_1_SCHALTPKT_9"); break;
-        case Property::kWWROG_1_SCHALTPKT_10: std::strcpy(buffer,"WWROG_1_SCHALTPKT_10"); break;
-        case Property::kWWROG_1_SCHALTPKT_11: std::strcpy(buffer,"WWROG_1_SCHALTPKT_11"); break;
-        case Property::kWWROG_1_SCHALTPKT_12: std::strcpy(buffer,"WWROG_1_SCHALTPKT_12"); break;
-        case Property::kWWROG_1_SCHALTPKT_13: std::strcpy(buffer,"WWROG_1_SCHALTPKT_13"); break;
-        case Property::kWWROG_1_SCHALTPKT_14: std::strcpy(buffer,"WWROG_1_SCHALTPKT_14"); break;
-        case Property::kWWROG_2_SCHALTPKT_1: std::strcpy(buffer,"WWROG_2_SCHALTPKT_1"); break;
-        case Property::kWWROG_2_SCHALTPKT_2: std::strcpy(buffer,"WWROG_2_SCHALTPKT_2"); break;
-        case Property::kWWROG_2_SCHALTPKT_3: std::strcpy(buffer,"WWROG_2_SCHALTPKT_3"); break;
-        case Property::kWWROG_2_SCHALTPKT_4: std::strcpy(buffer,"WWROG_2_SCHALTPKT_4"); break;
-        case Property::kWWROG_2_SCHALTPKT_5: std::strcpy(buffer,"WWROG_2_SCHALTPKT_5"); break;
-        case Property::kWWROG_2_SCHALTPKT_6: std::strcpy(buffer,"WWROG_2_SCHALTPKT_6"); break;
-        case Property::kWWROG_2_SCHALTPKT_7: std::strcpy(buffer,"WWROG_2_SCHALTPKT_7"); break;
-        case Property::kWWROG_2_SCHALTPKT_8: std::strcpy(buffer,"WWROG_2_SCHALTPKT_8"); break;
-        case Property::kWWROG_2_SCHALTPKT_9: std::strcpy(buffer,"WWROG_2_SCHALTPKT_9"); break;
-        case Property::kWWROG_2_SCHALTPKT_10: std::strcpy(buffer,"WWROG_2_SCHALTPKT_10"); break;
-        case Property::kWWROG_2_SCHALTPKT_11: std::strcpy(buffer,"WWROG_2_SCHALTPKT_11"); break;
-        case Property::kWWROG_2_SCHALTPKT_12: std::strcpy(buffer,"WWROG_2_SCHALTPKT_12"); break;
-        case Property::kWWROG_2_SCHALTPKT_13: std::strcpy(buffer,"WWROG_2_SCHALTPKT_13"); break;
-        case Property::kWWROG_2_SCHALTPKT_14: std::strcpy(buffer,"WWROG_2_SCHALTPKT_14"); break;
-        case Property::kWWROG_3_SCHALTPKT_1: std::strcpy(buffer,"WWROG_3_SCHALTPKT_1"); break;
-        case Property::kWWROG_3_SCHALTPKT_2: std::strcpy(buffer,"WWROG_3_SCHALTPKT_2"); break;
-        case Property::kWWROG_3_SCHALTPKT_3: std::strcpy(buffer,"WWROG_3_SCHALTPKT_3"); break;
-        case Property::kWWROG_3_SCHALTPKT_4: std::strcpy(buffer,"WWROG_3_SCHALTPKT_4"); break;
-        case Property::kWWROG_3_SCHALTPKT_5: std::strcpy(buffer,"WWROG_3_SCHALTPKT_5"); break;
-        case Property::kWWROG_3_SCHALTPKT_6: std::strcpy(buffer,"WWROG_3_SCHALTPKT_6"); break;
-        case Property::kWWROG_3_SCHALTPKT_7: std::strcpy(buffer,"WWROG_3_SCHALTPKT_7"); break;
-        case Property::kWWROG_3_SCHALTPKT_8: std::strcpy(buffer,"WWROG_3_SCHALTPKT_8"); break;
-        case Property::kWWROG_3_SCHALTPKT_9: std::strcpy(buffer,"WWROG_3_SCHALTPKT_9"); break;
-        case Property::kWWROG_3_SCHALTPKT_10: std::strcpy(buffer,"WWROG_3_SCHALTPKT_10"); break;
-        case Property::kWWROG_3_SCHALTPKT_11: std::strcpy(buffer,"WWROG_3_SCHALTPKT_11"); break;
-        case Property::kWWROG_3_SCHALTPKT_12: std::strcpy(buffer,"WWROG_3_SCHALTPKT_12"); break;
-        case Property::kWWROG_3_SCHALTPKT_13: std::strcpy(buffer,"WWROG_3_SCHALTPKT_13"); break;
-        case Property::kWWROG_3_SCHALTPKT_14: std::strcpy(buffer,"WWROG_3_SCHALTPKT_14"); break;
-        case Property::kZIRKROG_1_SCHALTPKT_1: std::strcpy(buffer,"ZIRKROG_1_SCHALTPKT_1"); break;
-        case Property::kZIRKROG_1_SCHALTPKT_2: std::strcpy(buffer,"ZIRKROG_1_SCHALTPKT_2"); break;
-        case Property::kZIRKROG_1_SCHALTPKT_3: std::strcpy(buffer,"ZIRKROG_1_SCHALTPKT_3"); break;
-        case Property::kZIRKROG_1_SCHALTPKT_4: std::strcpy(buffer,"ZIRKROG_1_SCHALTPKT_4"); break;
-        case Property::kZIRKROG_1_SCHALTPKT_5: std::strcpy(buffer,"ZIRKROG_1_SCHALTPKT_5"); break;
-        case Property::kZIRKROG_1_SCHALTPKT_6: std::strcpy(buffer,"ZIRKROG_1_SCHALTPKT_6"); break;
-        case Property::kZIRKROG_1_SCHALTPKT_7: std::strcpy(buffer,"ZIRKROG_1_SCHALTPKT_7"); break;
-        case Property::kZIRKROG_1_SCHALTPKT_8: std::strcpy(buffer,"ZIRKROG_1_SCHALTPKT_8"); break;
-        case Property::kZIRKROG_1_SCHALTPKT_9: std::strcpy(buffer,"ZIRKROG_1_SCHALTPKT_9"); break;
-        case Property::kZIRKROG_1_SCHALTPKT_10: std::strcpy(buffer,"ZIRKROG_1_SCHALTPKT_10"); break;
-        case Property::kZIRKROG_1_SCHALTPKT_11: std::strcpy(buffer,"ZIRKROG_1_SCHALTPKT_11"); break;
-        case Property::kZIRKROG_1_SCHALTPKT_12: std::strcpy(buffer,"ZIRKROG_1_SCHALTPKT_12"); break;
-        case Property::kZIRKROG_1_SCHALTPKT_13: std::strcpy(buffer,"ZIRKROG_1_SCHALTPKT_13"); break;
-        case Property::kZIRKROG_1_SCHALTPKT_14: std::strcpy(buffer,"ZIRKROG_1_SCHALTPKT_14"); break;
-        case Property::kZIRKROG_2_SCHALTPKT_1: std::strcpy(buffer,"ZIRKROG_2_SCHALTPKT_1"); break;
-        case Property::kZIRKROG_2_SCHALTPKT_2: std::strcpy(buffer,"ZIRKROG_2_SCHALTPKT_2"); break;
-        case Property::kZIRKROG_2_SCHALTPKT_3: std::strcpy(buffer,"ZIRKROG_2_SCHALTPKT_3"); break;
-        case Property::kZIRKROG_2_SCHALTPKT_4: std::strcpy(buffer,"ZIRKROG_2_SCHALTPKT_4"); break;
-        case Property::kZIRKROG_2_SCHALTPKT_5: std::strcpy(buffer,"ZIRKROG_2_SCHALTPKT_5"); break;
-        case Property::kZIRKROG_2_SCHALTPKT_6: std::strcpy(buffer,"ZIRKROG_2_SCHALTPKT_6"); break;
-        case Property::kZIRKROG_2_SCHALTPKT_7: std::strcpy(buffer,"ZIRKROG_2_SCHALTPKT_7"); break;
-        case Property::kZIRKROG_2_SCHALTPKT_8: std::strcpy(buffer,"ZIRKROG_2_SCHALTPKT_8"); break;
-        case Property::kZIRKROG_2_SCHALTPKT_9: std::strcpy(buffer,"ZIRKROG_2_SCHALTPKT_9"); break;
-        case Property::kZIRKROG_2_SCHALTPKT_10: std::strcpy(buffer,"ZIRKROG_2_SCHALTPKT_10"); break;
-        case Property::kZIRKROG_2_SCHALTPKT_11: std::strcpy(buffer,"ZIRKROG_2_SCHALTPKT_11"); break;
-        case Property::kZIRKROG_2_SCHALTPKT_12: std::strcpy(buffer,"ZIRKROG_2_SCHALTPKT_12"); break;
-        case Property::kZIRKROG_2_SCHALTPKT_13: std::strcpy(buffer,"ZIRKROG_2_SCHALTPKT_13"); break;
-        case Property::kZIRKROG_2_SCHALTPKT_14: std::strcpy(buffer,"ZIRKROG_2_SCHALTPKT_14"); break;
-        case Property::kZIRKROG_3_SCHALTPKT_1: std::strcpy(buffer,"ZIRKROG_3_SCHALTPKT_1"); break;
-        case Property::kZIRKROG_3_SCHALTPKT_2: std::strcpy(buffer,"ZIRKROG_3_SCHALTPKT_2"); break;
-        case Property::kZIRKROG_3_SCHALTPKT_3: std::strcpy(buffer,"ZIRKROG_3_SCHALTPKT_3"); break;
-        case Property::kZIRKROG_3_SCHALTPKT_4: std::strcpy(buffer,"ZIRKROG_3_SCHALTPKT_4"); break;
-        case Property::kZIRKROG_3_SCHALTPKT_5: std::strcpy(buffer,"ZIRKROG_3_SCHALTPKT_5"); break;
-        case Property::kZIRKROG_3_SCHALTPKT_6: std::strcpy(buffer,"ZIRKROG_3_SCHALTPKT_6"); break;
-        case Property::kZIRKROG_3_SCHALTPKT_7: std::strcpy(buffer,"ZIRKROG_3_SCHALTPKT_7"); break;
-        case Property::kZIRKROG_3_SCHALTPKT_8: std::strcpy(buffer,"ZIRKROG_3_SCHALTPKT_8"); break;
-        case Property::kZIRKROG_3_SCHALTPKT_9: std::strcpy(buffer,"ZIRKROG_3_SCHALTPKT_9"); break;
-        case Property::kZIRKROG_3_SCHALTPKT_10: std::strcpy(buffer,"ZIRKROG_3_SCHALTPKT_10"); break;
-        case Property::kZIRKROG_3_SCHALTPKT_11: std::strcpy(buffer,"ZIRKROG_3_SCHALTPKT_11"); break;
-        case Property::kZIRKROG_3_SCHALTPKT_12: std::strcpy(buffer,"ZIRKROG_3_SCHALTPKT_12"); break;
-        case Property::kZIRKROG_3_SCHALTPKT_13: std::strcpy(buffer,"ZIRKROG_3_SCHALTPKT_13"); break;
-        case Property::kZIRKROG_3_SCHALTPKT_14: std::strcpy(buffer,"ZIRKROG_3_SCHALTPKT_14"); break;
-        case Property::kZEITPROG_1: std::strcpy(buffer,"ZEITPROG_1"); break;
-        case Property::kZEITPROG_1_MO: std::strcpy(buffer,"ZEITPROG_1_MO"); break;
-        case Property::kZEITPROG_1_MO_SCHALT_2: std::strcpy(buffer,"ZEITPROG_1_MO_SCHALT_2"); break;
-        case Property::kZEITPROG_1_MO_SCHALT_3: std::strcpy(buffer,"ZEITPROG_1_MO_SCHALT_3"); break;
-        case Property::kZEITPROG_1_DI: std::strcpy(buffer,"ZEITPROG_1_DI"); break;
-        case Property::kZEITPROG_1_DI_SCHALT_2: std::strcpy(buffer,"ZEITPROG_1_DI_SCHALT_2"); break;
-        case Property::kZEITPROG_1_DI_SCHALT_3: std::strcpy(buffer,"ZEITPROG_1_DI_SCHALT_3"); break;
-        case Property::kZEITPROG_1_MI: std::strcpy(buffer,"ZEITPROG_1_MI"); break;
-        case Property::kZEITPROG_1_MI_SCHALT_2: std::strcpy(buffer,"ZEITPROG_1_MI_SCHALT_2"); break;
-        case Property::kZEITPROG_1_MI_SCHALT_3: std::strcpy(buffer,"ZEITPROG_1_MI_SCHALT_3"); break;
-        case Property::kZEITPROG_1_DO: std::strcpy(buffer,"ZEITPROG_1_DO"); break;
-        case Property::kZEITPROG_1_DO_SCHALT_2: std::strcpy(buffer,"ZEITPROG_1_DO_SCHALT_2"); break;
-        case Property::kZEITPROG_1_DO_SCHALT_3: std::strcpy(buffer,"ZEITPROG_1_DO_SCHALT_3"); break;
-        case Property::kZEITPROG_1_FR: std::strcpy(buffer,"ZEITPROG_1_FR"); break;
-        case Property::kZEITPROG_1_FR_SCHALT_2: std::strcpy(buffer,"ZEITPROG_1_FR_SCHALT_2"); break;
-        case Property::kZEITPROG_1_FR_SCHALT_3: std::strcpy(buffer,"ZEITPROG_1_FR_SCHALT_3"); break;
-        case Property::kZEITPROG_1_SA: std::strcpy(buffer,"ZEITPROG_1_SA"); break;
-        case Property::kZEITPROG_1_SA_SCHALT_2: std::strcpy(buffer,"ZEITPROG_1_SA_SCHALT_2"); break;
-        case Property::kZEITPROG_1_SA_SCHALT_3: std::strcpy(buffer,"ZEITPROG_1_SA_SCHALT_3"); break;
-        case Property::kZEITPROG_1_SO: std::strcpy(buffer,"ZEITPROG_1_SO"); break;
-        case Property::kZEITPROG_1_SO_SCHALT_2: std::strcpy(buffer,"ZEITPROG_1_SO_SCHALT_2"); break;
-        case Property::kZEITPROG_1_SO_SCHALT_3: std::strcpy(buffer,"ZEITPROG_1_SO_SCHALT_3"); break;
-        case Property::kZEITPROG_1_MO_FR: std::strcpy(buffer,"ZEITPROG_1_MO_FR"); break;
-        case Property::kZEITPROG_1_MO_FR_SCHALT_2: std::strcpy(buffer,"ZEITPROG_1_MO_FR_SCHALT_2"); break;
-        case Property::kZEITPROG_1_MO_FR_SCHALT_3: std::strcpy(buffer,"ZEITPROG_1_MO_FR_SCHALT_3"); break;
-        case Property::kZEITPROG_1_SA_SO: std::strcpy(buffer,"ZEITPROG_1_SA_SO"); break;
-        case Property::kZEITPROG_1_SA_SO_SCHALT_2: std::strcpy(buffer,"ZEITPROG_1_SA_SO_SCHALT_2"); break;
-        case Property::kZEITPROG_1_SA_SO_SCHALT_3: std::strcpy(buffer,"ZEITPROG_1_SA_SO_SCHALT_3"); break;
-        case Property::kZEITPROG_1_MO_SO: std::strcpy(buffer,"ZEITPROG_1_MO_SO"); break;
-        case Property::kZEITPROG_1_MO_SO_SCHALT_2: std::strcpy(buffer,"ZEITPROG_1_MO_SO_SCHALT_2"); break;
-        case Property::kZEITPROG_1_MO_SO_SCHALT_3: std::strcpy(buffer,"ZEITPROG_1_MO_SO_SCHALT_3"); break;
-        case Property::kZEITPROG_1_MO_DO: std::strcpy(buffer,"ZEITPROG_1_MO_DO"); break;
-        case Property::kZEITPROG_1_MO_DO_SCHALT_2: std::strcpy(buffer,"ZEITPROG_1_MO_DO_SCHALT_2"); break;
-        case Property::kZEITPROG_1_MO_DO_SCHALT_3: std::strcpy(buffer,"ZEITPROG_1_MO_DO_SCHALT_3"); break;
-        case Property::kZEITPROG_2: std::strcpy(buffer,"ZEITPROG_2"); break;
-        case Property::kZEITPROG_2_MO: std::strcpy(buffer,"ZEITPROG_2_MO"); break;
-        case Property::kZEITPROG_2_MO_SCHALT_2: std::strcpy(buffer,"ZEITPROG_2_MO_SCHALT_2"); break;
-        case Property::kZEITPROG_2_MO_SCHALT_3: std::strcpy(buffer,"ZEITPROG_2_MO_SCHALT_3"); break;
-        case Property::kZEITPROG_2_DI: std::strcpy(buffer,"ZEITPROG_2_DI"); break;
-        case Property::kZEITPROG_2_DI_SCHALT_2: std::strcpy(buffer,"ZEITPROG_2_DI_SCHALT_2"); break;
-        case Property::kZEITPROG_2_DI_SCHALT_3: std::strcpy(buffer,"ZEITPROG_2_DI_SCHALT_3"); break;
-        case Property::kZEITPROG_2_MI: std::strcpy(buffer,"ZEITPROG_2_MI"); break;
-        case Property::kZEITPROG_2_MI_SCHALT_2: std::strcpy(buffer,"ZEITPROG_2_MI_SCHALT_2"); break;
-        case Property::kZEITPROG_2_MI_SCHALT_3: std::strcpy(buffer,"ZEITPROG_2_MI_SCHALT_3"); break;
-        case Property::kZEITPROG_2_DO: std::strcpy(buffer,"ZEITPROG_2_DO"); break;
-        case Property::kZEITPROG_2_DO_SCHALT_2: std::strcpy(buffer,"ZEITPROG_2_DO_SCHALT_2"); break;
-        case Property::kZEITPROG_2_DO_SCHALT_3: std::strcpy(buffer,"ZEITPROG_2_DO_SCHALT_3"); break;
-        case Property::kZEITPROG_2_FR: std::strcpy(buffer,"ZEITPROG_2_FR"); break;
-        case Property::kZEITPROG_2_FR_SCHALT_2: std::strcpy(buffer,"ZEITPROG_2_FR_SCHALT_2"); break;
-        case Property::kZEITPROG_2_FR_SCHALT_3: std::strcpy(buffer,"ZEITPROG_2_FR_SCHALT_3"); break;
-        case Property::kZEITPROG_2_SA: std::strcpy(buffer,"ZEITPROG_2_SA"); break;
-        case Property::kZEITPROG_2_SA_SCHALT_2: std::strcpy(buffer,"ZEITPROG_2_SA_SCHALT_2"); break;
-        case Property::kZEITPROG_2_SA_SCHALT_3: std::strcpy(buffer,"ZEITPROG_2_SA_SCHALT_3"); break;
-        case Property::kZEITPROG_2_SO: std::strcpy(buffer,"ZEITPROG_2_SO"); break;
-        case Property::kZEITPROG_2_SO_SCHALT_2: std::strcpy(buffer,"ZEITPROG_2_SO_SCHALT_2"); break;
-        case Property::kZEITPROG_2_SO_SCHALT_3: std::strcpy(buffer,"ZEITPROG_2_SO_SCHALT_3"); break;
-        case Property::kZEITPROG_2_MO_FR: std::strcpy(buffer,"ZEITPROG_2_MO_FR"); break;
-        case Property::kZEITPROG_2_MO_FR_SCHALT_2: std::strcpy(buffer,"ZEITPROG_2_MO_FR_SCHALT_2"); break;
-        case Property::kZEITPROG_2_MO_FR_SCHALT_3: std::strcpy(buffer,"ZEITPROG_2_MO_FR_SCHALT_3"); break;
-        case Property::kZEITPROG_2_SA_SO: std::strcpy(buffer,"ZEITPROG_2_SA_SO"); break;
-        case Property::kZEITPROG_2_SA_SO_SCHALT_2: std::strcpy(buffer,"ZEITPROG_2_SA_SO_SCHALT_2"); break;
-        case Property::kZEITPROG_2_SA_SO_SCHALT_3: std::strcpy(buffer,"ZEITPROG_2_SA_SO_SCHALT_3"); break;
-        case Property::kZEITPROG_2_MO_SO: std::strcpy(buffer,"ZEITPROG_2_MO_SO"); break;
-        case Property::kZEITPROG_2_MO_SO_SCHALT_2: std::strcpy(buffer,"ZEITPROG_2_MO_SO_SCHALT_2"); break;
-        case Property::kZEITPROG_2_MO_SO_SCHALT_3: std::strcpy(buffer,"ZEITPROG_2_MO_SO_SCHALT_3"); break;
-        case Property::kZEITPROG_2_MO_DO: std::strcpy(buffer,"ZEITPROG_2_MO_DO"); break;
-        case Property::kZEITPROG_2_MO_DO_SCHALT_2: std::strcpy(buffer,"ZEITPROG_2_MO_DO_SCHALT_2"); break;
-        case Property::kZEITPROG_2_MO_DO_SCHALT_3: std::strcpy(buffer,"ZEITPROG_2_MO_DO_SCHALT_3"); break;
-        case Property::kZEITPROG_3: std::strcpy(buffer,"ZEITPROG_3"); break;
-        case Property::kZEITPROG_3_MO: std::strcpy(buffer,"ZEITPROG_3_MO"); break;
-        case Property::kZEITPROG_3_MO_SCHALT_2: std::strcpy(buffer,"ZEITPROG_3_MO_SCHALT_2"); break;
-        case Property::kZEITPROG_3_MO_SCHALT_3: std::strcpy(buffer,"ZEITPROG_3_MO_SCHALT_3"); break;
-        case Property::kZEITPROG_3_DI: std::strcpy(buffer,"ZEITPROG_3_DI"); break;
-        case Property::kZEITPROG_3_DI_SCHALT_2: std::strcpy(buffer,"ZEITPROG_3_DI_SCHALT_2"); break;
-        case Property::kZEITPROG_3_DI_SCHALT_3: std::strcpy(buffer,"ZEITPROG_3_DI_SCHALT_3"); break;
-        case Property::kZEITPROG_3_MI: std::strcpy(buffer,"ZEITPROG_3_MI"); break;
-        case Property::kZEITPROG_3_MI_SCHALT_2: std::strcpy(buffer,"ZEITPROG_3_MI_SCHALT_2"); break;
-        case Property::kZEITPROG_3_MI_SCHALT_3: std::strcpy(buffer,"ZEITPROG_3_MI_SCHALT_3"); break;
-        case Property::kZEITPROG_3_DO: std::strcpy(buffer,"ZEITPROG_3_DO"); break;
-        case Property::kZEITPROG_3_DO_SCHALT_2: std::strcpy(buffer,"ZEITPROG_3_DO_SCHALT_2"); break;
-        case Property::kZEITPROG_3_DO_SCHALT_3: std::strcpy(buffer,"ZEITPROG_3_DO_SCHALT_3"); break;
-        case Property::kZEITPROG_3_FR: std::strcpy(buffer,"ZEITPROG_3_FR"); break;
-        case Property::kZEITPROG_3_FR_SCHALT_2: std::strcpy(buffer,"ZEITPROG_3_FR_SCHALT_2"); break;
-        case Property::kZEITPROG_3_FR_SCHALT_3: std::strcpy(buffer,"ZEITPROG_3_FR_SCHALT_3"); break;
-        case Property::kZEITPROG_3_SA: std::strcpy(buffer,"ZEITPROG_3_SA"); break;
-        case Property::kZEITPROG_3_SA_SCHALT_2: std::strcpy(buffer,"ZEITPROG_3_SA_SCHALT_2"); break;
-        case Property::kZEITPROG_3_SA_SCHALT_3: std::strcpy(buffer,"ZEITPROG_3_SA_SCHALT_3"); break;
-        case Property::kZEITPROG_3_SO: std::strcpy(buffer,"ZEITPROG_3_SO"); break;
-        case Property::kZEITPROG_3_SO_SCHALT_2: std::strcpy(buffer,"ZEITPROG_3_SO_SCHALT_2"); break;
-        case Property::kZEITPROG_3_SO_SCHALT_3: std::strcpy(buffer,"ZEITPROG_3_SO_SCHALT_3"); break;
-        case Property::kZEITPROG_3_MO_FR: std::strcpy(buffer,"ZEITPROG_3_MO_FR"); break;
-        case Property::kZEITPROG_3_MO_FR_SCHALT_2: std::strcpy(buffer,"ZEITPROG_3_MO_FR_SCHALT_2"); break;
-        case Property::kZEITPROG_3_MO_FR_SCHALT_3: std::strcpy(buffer,"ZEITPROG_3_MO_FR_SCHALT_3"); break;
-        case Property::kZEITPROG_3_SA_SO: std::strcpy(buffer,"ZEITPROG_3_SA_SO"); break;
-        case Property::kZEITPROG_3_SA_SO_SCHALT_2: std::strcpy(buffer,"ZEITPROG_3_SA_SO_SCHALT_2"); break;
-        case Property::kZEITPROG_3_SA_SO_SCHALT_3: std::strcpy(buffer,"ZEITPROG_3_SA_SO_SCHALT_3"); break;
-        case Property::kZEITPROG_3_MO_SO: std::strcpy(buffer,"ZEITPROG_3_MO_SO"); break;
-        case Property::kZEITPROG_3_MO_SO_SCHALT_2: std::strcpy(buffer,"ZEITPROG_3_MO_SO_SCHALT_2"); break;
-        case Property::kZEITPROG_3_MO_SO_SCHALT_3: std::strcpy(buffer,"ZEITPROG_3_MO_SO_SCHALT_3"); break;
-        case Property::kZEITPROG_3_MO_DO: std::strcpy(buffer,"ZEITPROG_3_MO_DO"); break;
-        case Property::kZEITPROG_3_MO_DO_SCHALT_2: std::strcpy(buffer,"ZEITPROG_3_MO_DO_SCHALT_2"); break;
-        case Property::kZEITPROG_3_MO_DO_SCHALT_3: std::strcpy(buffer,"ZEITPROG_3_MO_DO_SCHALT_3"); break;
-        case Property::kZEITPROG_4: std::strcpy(buffer,"ZEITPROG_4"); break;
-        case Property::kZEITPROG_4_MO: std::strcpy(buffer,"ZEITPROG_4_MO"); break;
-        case Property::kZEITPROG_4_MO_SCHALT_2: std::strcpy(buffer,"ZEITPROG_4_MO_SCHALT_2"); break;
-        case Property::kZEITPROG_4_MO_SCHALT_3: std::strcpy(buffer,"ZEITPROG_4_MO_SCHALT_3"); break;
-        case Property::kZEITPROG_4_DI: std::strcpy(buffer,"ZEITPROG_4_DI"); break;
-        case Property::kZEITPROG_4_DI_SCHALT_2: std::strcpy(buffer,"ZEITPROG_4_DI_SCHALT_2"); break;
-        case Property::kZEITPROG_4_DI_SCHALT_3: std::strcpy(buffer,"ZEITPROG_4_DI_SCHALT_3"); break;
-        case Property::kZEITPROG_4_MI: std::strcpy(buffer,"ZEITPROG_4_MI"); break;
-        case Property::kZEITPROG_4_MI_SCHALT_2: std::strcpy(buffer,"ZEITPROG_4_MI_SCHALT_2"); break;
-        case Property::kZEITPROG_4_MI_SCHALT_3: std::strcpy(buffer,"ZEITPROG_4_MI_SCHALT_3"); break;
-        case Property::kZEITPROG_4_DO: std::strcpy(buffer,"ZEITPROG_4_DO"); break;
-        case Property::kZEITPROG_4_DO_SCHALT_2: std::strcpy(buffer,"ZEITPROG_4_DO_SCHALT_2"); break;
-        case Property::kZEITPROG_4_DO_SCHALT_3: std::strcpy(buffer,"ZEITPROG_4_DO_SCHALT_3"); break;
-        case Property::kZEITPROG_4_FR: std::strcpy(buffer,"ZEITPROG_4_FR"); break;
-        case Property::kZEITPROG_4_FR_SCHALT_2: std::strcpy(buffer,"ZEITPROG_4_FR_SCHALT_2"); break;
-        case Property::kZEITPROG_4_FR_SCHALT_3: std::strcpy(buffer,"ZEITPROG_4_FR_SCHALT_3"); break;
-        case Property::kZEITPROG_4_SA: std::strcpy(buffer,"ZEITPROG_4_SA"); break;
-        case Property::kZEITPROG_4_SA_SCHALT_2: std::strcpy(buffer,"ZEITPROG_4_SA_SCHALT_2"); break;
-        case Property::kZEITPROG_4_SA_SCHALT_3: std::strcpy(buffer,"ZEITPROG_4_SA_SCHALT_3"); break;
-        case Property::kZEITPROG_4_SO: std::strcpy(buffer,"ZEITPROG_4_SO"); break;
-        case Property::kZEITPROG_4_SO_SCHALT_2: std::strcpy(buffer,"ZEITPROG_4_SO_SCHALT_2"); break;
-        case Property::kZEITPROG_4_SO_SCHALT_3: std::strcpy(buffer,"ZEITPROG_4_SO_SCHALT_3"); break;
-        case Property::kZEITPROG_4_MO_FR: std::strcpy(buffer,"ZEITPROG_4_MO_FR"); break;
-        case Property::kZEITPROG_4_MO_FR_SCHALT_2: std::strcpy(buffer,"ZEITPROG_4_MO_FR_SCHALT_2"); break;
-        case Property::kZEITPROG_4_MO_FR_SCHALT_3: std::strcpy(buffer,"ZEITPROG_4_MO_FR_SCHALT_3"); break;
-        case Property::kZEITPROG_4_SA_SO: std::strcpy(buffer,"ZEITPROG_4_SA_SO"); break;
-        case Property::kZEITPROG_4_SA_SO_SCHALT_2: std::strcpy(buffer,"ZEITPROG_4_SA_SO_SCHALT_2"); break;
-        case Property::kZEITPROG_4_SA_SO_SCHALT_3: std::strcpy(buffer,"ZEITPROG_4_SA_SO_SCHALT_3"); break;
-        case Property::kZEITPROG_4_MO_SO: std::strcpy(buffer,"ZEITPROG_4_MO_SO"); break;
-        case Property::kZEITPROG_4_MO_SO_SCHALT_2: std::strcpy(buffer,"ZEITPROG_4_MO_SO_SCHALT_2"); break;
-        case Property::kZEITPROG_4_MO_SO_SCHALT_3: std::strcpy(buffer,"ZEITPROG_4_MO_SO_SCHALT_3"); break;
-        case Property::kZEITPROG_4_MO_DO: std::strcpy(buffer,"ZEITPROG_4_MO_DO"); break;
-        case Property::kZEITPROG_4_MO_DO_SCHALT_2: std::strcpy(buffer,"ZEITPROG_4_MO_DO_SCHALT_2"); break;
-        case Property::kZEITPROG_4_MO_DO_SCHALT_3: std::strcpy(buffer,"ZEITPROG_4_MO_DO_SCHALT_3"); break;
-        case Property::kLEISTUNG_AUSLEGUNG_HEIZUNG: std::strcpy(buffer,"LEISTUNG_AUSLEGUNG_HEIZUNG"); break;
-        case Property::kVERDICHTER_STARTS: std::strcpy(buffer,"VERDICHTER_STARTS"); break;
-        case Property::kVERDICHTER_STARTS_K: std::strcpy(buffer,"VERDICHTER_STARTS_K"); break;
-        case Property::kHF_MONITOR_TYP: std::strcpy(buffer,"HF_MONITOR_TYP"); break;
-        case Property::kSTART_BEREICH_SOFTWARE_SIMULATION: std::strcpy(buffer,"START_BEREICH_SOFTWARE_SIMULATION"); break;
-        case Property::kBETRIEBS_STATUS_2: std::strcpy(buffer,"kBETRIEBS_STATUS_2"); break;        
-        case Property::kENDE_BEREICH_SOFTWARE_SIMULATION: std::strcpy(buffer,"ENDE_BEREICH_SOFTWARE_SIMULATION"); break;
-        case Property::kSTART_CHAR_BEREICH: std::strcpy(buffer,"START_CHAR_BEREICH"); break;
-        case Property::kMODE_MULTIFUNKTIONSAUSGANG_2: std::strcpy(buffer,"MODE_MULTIFUNKTIONSAUSGANG_2"); break;
-        case Property::kWECHSELANZEIGE: std::strcpy(buffer,"WECHSELANZEIGE"); break;
-        case Property::kSCHNELLAUFHEIZUNG: std::strcpy(buffer,"SCHNELLAUFHEIZUNG"); break;
-        case Property::kFEHLERANZAHL: std::strcpy(buffer,"FEHLERANZAHL"); break;
-        case Property::kANZEIGESTATUS: std::strcpy(buffer,"ANZEIGESTATUS"); break;
-        case Property::kBUSKONTROLLE: std::strcpy(buffer,"BUSKONTROLLE"); break;
-        case Property::kZWEITER_WE_STATUS: std::strcpy(buffer,"ZWEITER_WE_STATUS"); break;
-        case Property::kWP_EVU: std::strcpy(buffer,"WP_EVU"); break;
-        case Property::kWP_PUMPENSTATUS: std::strcpy(buffer,"WP_PUMPENSTATUS"); break;
-        case Property::kWP_STATUS: std::strcpy(buffer,"WP_STATUS"); break;
-        case Property::kDAUERLAUF_PUFFERLADEPUMPE: std::strcpy(buffer,"DAUERLAUF_PUFFERLADEPUMPE"); break;
-        case Property::kSCHALTWERKDYNAMIKZEIT: std::strcpy(buffer,"SCHALTWERKDYNAMIKZEIT"); break;
-        case Property::kPUMPENZYKLEN: std::strcpy(buffer,"PUMPENZYKLEN"); break;
-        case Property::kGEBAEUDEART: std::strcpy(buffer,"GEBAEUDEART"); break;
-        case Property::kSOMMERBETRIEB: std::strcpy(buffer,"SOMMERBETRIEB"); break;
-        case Property::kIMPULSRATE: std::strcpy(buffer,"IMPULSRATE"); break;
-        case Property::kSOLARBETRIEB: std::strcpy(buffer,"SOLARBETRIEB"); break;
-        case Property::kWAERMEMENGE: std::strcpy(buffer,"WAERMEMENGE"); break;
-        case Property::kAUTOMATIK_WARMWASSER: std::strcpy(buffer,"AUTOMATIK_WARMWASSER"); break;
-        case Property::kWPSTUFEN_WW: std::strcpy(buffer,"WPSTUFEN_WW"); break;
-        case Property::kWW_MIT_2WE: std::strcpy(buffer,"WW_MIT_2WE"); break;
-        case Property::kSPERREN_2WE: std::strcpy(buffer,"SPERREN_2WE"); break;
-        case Property::kFREIGABE_2WE: std::strcpy(buffer,"FREIGABE_2WE"); break;
-        case Property::kDYNAMIK: std::strcpy(buffer,"DYNAMIK"); break;
-        case Property::kPARTYSTUNDEN: std::strcpy(buffer,"PARTYSTUNDEN"); break;
-        case Property::kMANUELLES_ABTAUEN: std::strcpy(buffer,"MANUELLES_ABTAUEN"); break;
-        case Property::kHEIZKREIS_PROGRAMMSCHALTER: std::strcpy(buffer,"HEIZKREIS_PROGRAMMSCHALTER"); break;
-        case Property::kMODE_EINGANG2: std::strcpy(buffer,"MODE_EINGANG2"); break;
-        case Property::kFUEHLERKENNLINIE: std::strcpy(buffer,"FUEHLERKENNLINIE"); break;
-        case Property::kWARTUNG_JAHR: std::strcpy(buffer,"WARTUNG_JAHR"); break;
-        case Property::kWARTUNG_MONAT: std::strcpy(buffer,"WARTUNG_MONAT"); break;
-        case Property::kWARTUNG_TAG: std::strcpy(buffer,"WARTUNG_TAG"); break;
-        case Property::kTHERMOSTATEINGANG_WW: std::strcpy(buffer,"THERMOSTATEINGANG_WW"); break;
-        case Property::kBETRIEBSART_HZK_PUMPE: std::strcpy(buffer,"BETRIEBSART_HZK_PUMPE"); break;
-        case Property::kANNAHME_LEISTUNGSZWANG: std::strcpy(buffer,"ANNAHME_LEISTUNGSZWANG"); break;
-        case Property::kKESSELFOLGE1_1: std::strcpy(buffer,"KESSELFOLGE1_1"); break;
-        case Property::kKESSELFOLGE1_2: std::strcpy(buffer,"KESSELFOLGE1_2"); break;
-        case Property::kKESSELFOLGE1_3: std::strcpy(buffer,"KESSELFOLGE1_3"); break;
-        case Property::kKESSELFOLGE1_4: std::strcpy(buffer,"KESSELFOLGE1_4"); break;
-        case Property::kKESSELFOLGE1_5: std::strcpy(buffer,"KESSELFOLGE1_5"); break;
-        case Property::kKESSELFOLGE1_6: std::strcpy(buffer,"KESSELFOLGE1_6"); break;
-        case Property::kKESSELFOLGE1_7: std::strcpy(buffer,"KESSELFOLGE1_7"); break;
-        case Property::kKESSELFOLGE1_8: std::strcpy(buffer,"KESSELFOLGE1_8"); break;
-        case Property::kKESSELFOLGE1_9: std::strcpy(buffer,"KESSELFOLGE1_9"); break;
-        case Property::kKESSELFOLGE1_10: std::strcpy(buffer,"KESSELFOLGE1_10"); break;
-        case Property::kKESSELFOLGE2_1: std::strcpy(buffer,"KESSELFOLGE2_1"); break;
-        case Property::kKESSELFOLGE2_2: std::strcpy(buffer,"KESSELFOLGE2_2"); break;
-        case Property::kKESSELFOLGE2_3: std::strcpy(buffer,"KESSELFOLGE2_3"); break;
-        case Property::kKESSELFOLGE2_4: std::strcpy(buffer,"KESSELFOLGE2_4"); break;
-        case Property::kKESSELFOLGE2_5: std::strcpy(buffer,"KESSELFOLGE2_5"); break;
-        case Property::kKESSELFOLGE2_6: std::strcpy(buffer,"KESSELFOLGE2_6"); break;
-        case Property::kKESSELFOLGE2_7: std::strcpy(buffer,"KESSELFOLGE2_7"); break;
-        case Property::kKESSELFOLGE2_8: std::strcpy(buffer,"KESSELFOLGE2_8"); break;
-        case Property::kKESSELFOLGE2_9: std::strcpy(buffer,"KESSELFOLGE2_9"); break;
-      //  case Property::kKESSELFOLGE2_10: std::strcpy(buffer,"KESSELFOLGE2_10"); break; duplicate
-        case Property::kTAG_SOMMER_BEGIN: std::strcpy(buffer,"TAG_SOMMER_BEGIN"); break;
-        case Property::kMONAT_SOMMER_BEGIN: std::strcpy(buffer,"MONAT_SOMMER_BEGIN"); break;
-        case Property::kTAG_SOMMER_ENDE: std::strcpy(buffer,"TAG_SOMMER_ENDE"); break;
-        case Property::kMONAT_SOMMER_ENDE: std::strcpy(buffer,"MONAT_SOMMER_ENDE"); break;
-        case Property::kSCHALTHYST_PUFFER: std::strcpy(buffer,"SCHALTHYST_PUFFER"); break;
-        case Property::kPUFFERUEBERHOEHUNG: std::strcpy(buffer,"PUFFERUEBERHOEHUNG"); break;
-        case Property::kMAX_PUFFERTEMP: std::strcpy(buffer,"MAX_PUFFERTEMP"); break;
-        case Property::kMIN_PUFFERTEMP: std::strcpy(buffer,"MIN_PUFFERTEMP"); break;
-        case Property::kMAX_SAMMLERTEMP: std::strcpy(buffer,"MAX_SAMMLERTEMP"); break;
-        case Property::kMIN_SAMMLERTEMP: std::strcpy(buffer,"MIN_SAMMLERTEMP"); break;
-        case Property::kSAMMLERUEBERHOEHUNG: std::strcpy(buffer,"SAMMLERUEBERHOEHUNG"); break;
-        case Property::kABREGELPARAMETER: std::strcpy(buffer,"ABREGELPARAMETER"); break;
-        case Property::kMAX_MODGRAD: std::strcpy(buffer,"MAX_MODGRAD"); break;
-        case Property::kMIN_MODGRAD: std::strcpy(buffer,"MIN_MODGRAD"); break;
-        case Property::kFOLGEWECHSEL_STD: std::strcpy(buffer,"FOLGEWECHSEL_STD"); break;
-        case Property::kFOLGEWECHSELMODUS: std::strcpy(buffer,"FOLGEWECHSELMODUS"); break;
-        case Property::kSONDERNIVEAU_TEMP: std::strcpy(buffer,"SONDERNIVEAU_TEMP"); break;
-        case Property::kMODE_EINGANG1: std::strcpy(buffer,"MODE_EINGANG1"); break;
-        case Property::kSTATUS_VARIABLER_AUSGANG: std::strcpy(buffer,"STATUS_VARIABLER_AUSGANG"); break;
-        case Property::kMODE_VARIABLER_AUSGANG: std::strcpy(buffer,"MODE_VARIABLER_AUSGANG"); break;
-        case Property::kSTATUS_MULTIFUNKTIONSAUSGANG: std::strcpy(buffer,"STATUS_MULTIFUNKTIONSAUSGANG"); break;
-        case Property::kMODE_MULTIFUNKTIONSAUSGANG: std::strcpy(buffer,"MODE_MULTIFUNKTIONSAUSGANG"); break;
-        case Property::kANTILEGIONELLEN_ZEITPUNKT: std::strcpy(buffer,"ANTILEGIONELLEN_ZEITPUNKT"); break;
-        case Property::kSOFORT_AUS: std::strcpy(buffer,"SOFORT_AUS"); break;
-        case Property::kPROGSTELL_UHR_SONNE_BEREIT: std::strcpy(buffer,"PROGSTELL_UHR_SONNE_BEREIT"); break;
-        case Property::kBM_GEFUNDEN: std::strcpy(buffer,"BM_GEFUNDEN"); break;
-        case Property::kHEIZTHERME: std::strcpy(buffer,"HEIZTHERME"); break;
-        case Property::kRAUMSOLLTEMP_VERSTELLUNG: std::strcpy(buffer,"RAUMSOLLTEMP_VERSTELLUNG"); break;
-        case Property::kFUELLSTAND: std::strcpy(buffer,"FUELLSTAND"); break;
-        case Property::kBUSVERSORGUNG: std::strcpy(buffer,"BUSVERSORGUNG"); break;
-        case Property::kSOLARSYSTEMAUSWAHL: std::strcpy(buffer,"SOLARSYSTEMAUSWAHL"); break;
-        case Property::kFUELLSTANDSGEBER: std::strcpy(buffer,"FUELLSTANDSGEBER"); break;
-        case Property::kKESSELTYP: std::strcpy(buffer,"KESSELTYP"); break;
-        case Property::kMOD_KLAPPENSTATUS: std::strcpy(buffer,"MOD_KLAPPENSTATUS"); break;
-        case Property::kENDE_CHAR_BEREICH: std::strcpy(buffer,"ENDE_CHAR_BEREICH"); break;
-        case Property::kINFOBLOCK_1: std::strcpy(buffer,"INFOBLOCK_1"); break;
-        case Property::kINFOBLOCK_2: std::strcpy(buffer,"INFOBLOCK_2"); break;
-        case Property::kINFOBLOCK_3: std::strcpy(buffer,"INFOBLOCK_3"); break;
-        case Property::kINFOBLOCK_4: std::strcpy(buffer,"INFOBLOCK_4"); break;
-        case Property::kINFOBLOCK_5: std::strcpy(buffer,"INFOBLOCK_5"); break;
-        case Property::kINFOBLOCK_6: std::strcpy(buffer,"INFOBLOCK_6"); break;
+#include <unordered_map>
+#include <string_view>
+#include <string>
 
-        case Property::kABLUFT_TEMP: std::strcpy(buffer,"ABLUFT_TEMP"); break;
-        case Property::kABLUFT_LUFTFEUCHTIGKEIT: std::strcpy(buffer,"ABLUFT_LUFTFEUCHTIGKEIT"); break;
-        case Property::kABLUFT_TAUPUNKT: std::strcpy(buffer,"ABLUFT_TAUPUNKT"); break;
-        case Property::kLUEFT_STUFE_BEREITSCHAFT: std::strcpy(buffer,"LUEFT_STUFE_BEREITSCHAFT"); break;
-        default: std::strcpy(buffer, "Unknown");
+#include "property.h"
+
+
+std::unordered_map<Property,std::string_view> propertyNameMap {
+  {Property::kINDEX_NOT_FOUND, "INDEX_NOT_FOUND"},
+  {Property::kFEHLERMELDUNG, "FEHLERMELDUNG"},
+  {Property::kKESSELSOLLTEMP, "KESSELSOLLTEMP"},
+  {Property::kSPEICHERSOLLTEMP, "SPEICHERSOLLTEMP"},
+  {Property::kVORLAUFSOLLTEMP, "VORLAUFSOLLTEMP"},
+  {Property::kRAUMSOLLTEMP_I, "RAUMSOLLTEMP_I"},
+  {Property::kRAUMSOLLTEMP_II, "RAUMSOLLTEMP_II"},
+  {Property::kRAUMSOLLTEMP_III, "RAUMSOLLTEMP_III"},
+  {Property::kRAUMSOLLTEMP_NACHT, "RAUMSOLLTEMP_NACHT"},
+  {Property::kUHRZEIT, "UHRZEIT"},
+  {Property::kDATUM, "DATUM"},
+  {Property::kGERAETE_ID, "GERAETE_ID"},
+  {Property::kAUSSENTEMP, "AUSSENTEMP"},
+  {Property::kSAMMLERISTTEMP, "SAMMLERISTTEMP"},
+  {Property::kSPEICHERISTTEMP, "SPEICHERISTTEMP"},
+  {Property::kVORLAUFISTTEMP, "VORLAUFISTTEMP"},
+  {Property::kGERAETEKONFIGURATION, "GERAETEKONFIGURATION"},
+  {Property::kRAUMISTTEMP, "RAUMISTTEMP"},
+  {Property::kVERSTELLTE_RAUMSOLLTEMP, "VERSTELLTE_RAUMSOLLTEMP"},
+  {Property::kEINSTELL_SPEICHERSOLLTEMP, "EINSTELL_SPEICHERSOLLTEMP"},
+  {Property::kVERDAMPFERTEMP, "VERDAMPFERTEMP"},
+  {Property::kSAMMLERSOLLTEMP, "SAMMLERSOLLTEMP"},
+  {Property::kRUECKLAUFISTTEMP, "RUECKLAUFISTTEMP"},
+  {Property::kSPEICHER_UNTEN_TEMP, "SPEICHER_UNTEN_TEMP"},
+  {Property::kSOLARZONENTEMP, "SOLARZONENTEMP"},
+  {Property::kSPEICHER_OBEN_TEMP, "SPEICHER_OBEN_TEMP"},
+  {Property::kKUNDENKENNUNG, "KUNDENKENNUNG"},
+  {Property::kKOLLEKTORTEMP, "KOLLEKTORTEMP"},
+  {Property::kFESTSTOFFKESSELTEMP, "FESTSTOFFKESSELTEMP"},
+  {Property::kWASSERDRUCK, "WASSERDRUCK"},
+  {Property::kMIN_TEMP_KESSEL, "MIN_TEMP_KESSEL"},
+  {Property::kANFAHRTEMP, "ANFAHRTEMP"},
+  {Property::kHYSTERESEZEIT, "HYSTERESEZEIT"},
+  {Property::kMAX_HYSTERESE, "MAX_HYSTERESE"},
+  {Property::kPPL, "PPL"},
+  {Property::kSPEICHERSPERRE, "SPEICHERSPERRE"},
+  {Property::kSPERRZEIT, "SPERRZEIT"},
+  {Property::kHYSTERESE2, "HYSTERESE2"},
+  {Property::kMAX_TEMP_KESSEL, "MAX_TEMP_KESSEL"},
+  {Property::kMAX_TEMP_HZK, "MAX_TEMP_HZK"},
+  {Property::kKP, "KP"},
+  {Property::kTN, "TN"},
+  {Property::kMISCHERLAUFZEIT, "MISCHERLAUFZEIT"},
+  {Property::kMODGRAD, "MODGRAD"},
+  {Property::kKESSELUEBERHOEHUNG_WW, "KESSELUEBERHOEHUNG_WW"},
+  {Property::kSTAENDIGE_MINIMALBEGRENZUNG, "STAENDIGE_MINIMALBEGRENZUNG"},
+  {Property::kACCESS_EEPROM, "ACCESS_EEPROM"},
+  {Property::kMINDESTABTAUZEIT, "MINDESTABTAUZEIT"},
+  {Property::kACCESS_XRAM, "ACCESS_XRAM"},
+  {Property::kACCESS_IRAM, "ACCESS_IRAM"},
+  {Property::kMIN_WASSERDRUCK, "MIN_WASSERDRUCK"},
+  {Property::kLEISTUNGSKORREKTUR, "LEISTUNGSKORREKTUR"},
+  {Property::kKOLLEKTORTEMP_2, "KOLLEKTORTEMP_2"},
+  {Property::kMULTIFUNKTION_ISTTEMP, "MULTIFUNKTION_ISTTEMP"},
+  {Property::kBRENNER, "BRENNER"},
+  {Property::kHZK_PUMPE, "HZK_PUMPE"},
+  {Property::kSPL_PUMPE, "SPL_PUMPE"},
+  {Property::kDCF, "DCF"},
+  {Property::kMISCHER_AUF, "MISCHER_AUF"},
+  {Property::kMISCHER_ZU, "MISCHER_ZU"},
+  {Property::kHEIZKREIS_STATUS, "HEIZKREIS_STATUS"},
+  {Property::kSPEICHER_STATUS, "SPEICHER_STATUS"},
+  {Property::kSCHALTERSTELLUNG, "SCHALTERSTELLUNG"},
+  {Property::kANFAHRENT, "ANFAHRENT"},
+  {Property::kTEILVORRANG_WW, "TEILVORRANG_WW"},
+  {Property::kSPEICHERBEDARF, "SPEICHERBEDARF"},
+  {Property::kSCHALTFKT_IWS, "SCHALTFKT_IWS"},
+  {Property::kABTAUUNGAKTIV, "ABTAUUNGAKTIV"},
+  {Property::kWAERMEPUMPEN_STATUS, "WAERMEPUMPEN_STATUS"},
+  {Property::kKESSELSTATUS, "KESSELSTATUS"},
+  {Property::kSAMMLER_PUMPE, "SAMMLER_PUMPE"},
+  {Property::kZIRK_PUMPE, "ZIRK_PUMPE"},
+  {Property::kMISCHERSTATUS, "MISCHERSTATUS"},
+  {Property::kSONDERKREIS_STATUS, "SONDERKREIS_STATUS"},
+  {Property::kBETRIEBSART, "BETRIEBSART"},
+  {Property::kIO_TEST, "IO_TEST"},
+  {Property::kRESET_KONFIGURATION, "RESET_KONFIGURATION"},
+  {Property::kPARTY_EIN_AUS, "PARTY_EIN_AUS"},
+  {Property::kECO_EIN_AUS, "ECO_EIN_AUS"},
+  {Property::kWAHLUMSCHALTUNG, "WAHLUMSCHALTUNG"},
+  {Property::kHEIZKREIS_STATUS_PROGSTELL, "HEIZKREIS_STATUS_PROGSTELL"},
+  {Property::kFERIENBETRIEB, "FERIENBETRIEB"},
+  {Property::kDREHZAHLREG_JA_NEIN, "DREHZAHLREG_JA_NEIN"},
+  {Property::kANFORDERUNG_LEISTUNGSZWANG, "ANFORDERUNG_LEISTUNGSZWANG"},
+  {Property::kANTILEG_AKTIV, "ANTILEG_AKTIV"},
+  {Property::kBITSCHALTER, "BITSCHALTER"},
+  {Property::kEVU_SPERRE_AKTIV, "EVU_SPERRE_AKTIV"},
+  {Property::kFEUCHTE, "FEUCHTE"},
+  {Property::kPUFFERTEMP_OBEN1, "PUFFERTEMP_OBEN1"},
+  {Property::kPUFFERTEMP_MITTE1, "PUFFERTEMP_MITTE1"},
+  {Property::kPUFFERTEMP_UNTEN1, "PUFFERTEMP_UNTEN1"},
+  {Property::kPUFFERTEMP_OBEN2, "PUFFERTEMP_OBEN2"},
+  {Property::kPUFFERTEMP_MITTE2, "PUFFERTEMP_MITTE2"},
+  {Property::kPUFFERTEMP_UNTEN2, "PUFFERTEMP_UNTEN2"},
+  {Property::kPUFFERTEMP_OBEN3, "PUFFERTEMP_OBEN3"},
+  {Property::kPUFFERTEMP_MITTE3, "PUFFERTEMP_MITTE3"},
+  {Property::kPUFFERTEMP_UNTEN3, "PUFFERTEMP_UNTEN3"},
+  {Property::kEINSTRAHLUNGS_SENSOR, "EINSTRAHLUNGS_SENSOR"},
+  {Property::kECO_AKZEPTANZ_WW, "ECO_AKZEPTANZ_WW"},
+  {Property::kECO_AKZEPTANZ_RAUM, "ECO_AKZEPTANZ_RAUM"},
+  {Property::kSOLAR_AKT_VOLUMENSTROM, "SOLAR_AKT_VOLUMENSTROM"},
+  {Property::kSOLAR_DURCHSCHNITT_VOLUMENSTROM, "SOLAR_DURCHSCHNITT_VOLUMENSTROM"},
+  {Property::kSOLAR_AKT_LEISTUNG_W, "SOLAR_AKT_LEISTUNG_W"},
+  {Property::kSOLAR_TAGESERTRAG_WH, "SOLAR_TAGESERTRAG_WH"},
+  {Property::kSOLAR_TAGESERTRAG_KWH, "SOLAR_TAGESERTRAG_KWH"},
+  {Property::kSOLAR_GESAMTERTRAG_WH, "SOLAR_GESAMTERTRAG_WH"},
+  {Property::kSOLAR_GESAMTERTRAG_KWH, "SOLAR_GESAMTERTRAG_KWH"},
+  {Property::kSOLAR_GESAMTERTRAG_MWH, "SOLAR_GESAMTERTRAG_MWH"},
+  {Property::kMODGRAD_IST, "MODGRAD_IST"},
+  {Property::kECO_AKZEPTANZ_PUFFER, "ECO_AKZEPTANZ_PUFFER"},
+  {Property::kGESAMT_MODGRAD, "GESAMT_MODGRAD"},
+  {Property::kMIN_MOD_KASKADE, "MIN_MOD_KASKADE"},
+  {Property::kFEUCHTE_HYSTERESE, "FEUCHTE_HYSTERESE"},
+  {Property::kLOAD_STANDARD, "LOAD_STANDARD"},
+  {Property::kONL_CODENUMMER, "ONL_CODENUMMER"},
+  {Property::kSYSTEM_RESET, "SYSTEM_RESET"},
+  {Property::kCAN_FEHLERMELDUNG, "CAN_FEHLERMELDUNG"},
+  {Property::kBUSKONFIGURATION, "BUSKONFIGURATION"},
+  {Property::kINITIALISIERUNG, "INITIALISIERUNG"},
+  {Property::kUNGUELTIG, "UNGUELTIG"},
+  {Property::kANTILEGIONELLEN, "ANTILEGIONELLEN"},
+  {Property::kAUSSENFUEHLER_VERSORGUNG, "AUSSENFUEHLER_VERSORGUNG"},
+  {Property::kAUFHEIZOPTIMIERUNG, "AUFHEIZOPTIMIERUNG"},
+  {Property::kFERIENDAUER_TAGE, "FERIENDAUER_TAGE"},
+  {Property::kRAUMFUEHLERKORREKTUR, "RAUMFUEHLERKORREKTUR"},
+  {Property::kAUSSENTEMPVERZOEGERUNG, "AUSSENTEMPVERZOEGERUNG"},
+  {Property::kCODENUMMER, "CODENUMMER"},
+  {Property::kHEIZKURVE, "HEIZKURVE"},
+  {Property::kRAUMEINFLUSS, "RAUMEINFLUSS"},
+  {Property::kMAX_VORVERLEGUNG, "MAX_VORVERLEGUNG"},
+  {Property::kHZK_KURVENABSTAND, "HZK_KURVENABSTAND"},
+  {Property::kPROGRAMMSCHALTER, "PROGRAMMSCHALTER"},
+  {Property::kSPRACHE, "SPRACHE"},
+  {Property::kAKTIVES_HEIZPROGRAMM, "AKTIVES_HEIZPROGRAMM"},
+  {Property::kHEIZKURVENADAPTION, "HEIZKURVENADAPTION"},
+  {Property::kHEIZGRENZE_TAG, "HEIZGRENZE_TAG"},
+  {Property::kHEIZGRENZE_NACHT, "HEIZGRENZE_NACHT"},
+  {Property::kECO_BETRIEB, "ECO_BETRIEB"},
+  {Property::kAUSWAHL_STANDARDTEMP, "AUSWAHL_STANDARDTEMP"},
+  {Property::kESTRICHFUNKTION, "ESTRICHFUNKTION"},
+  {Property::kFERIENANFANG_TAG, "FERIENANFANG_TAG"},
+  {Property::kFERIENANFANG_MONAT, "FERIENANFANG_MONAT"},
+  {Property::kFERIENANFANG_JAHR, "FERIENANFANG_JAHR"},
+  {Property::kFERIENENDE_TAG, "FERIENENDE_TAG"},
+  {Property::kFERIENENDE_MONAT, "FERIENENDE_MONAT"},
+  {Property::kFERIENENDE_JAHR, "FERIENENDE_JAHR"},
+  {Property::kWOCHENTAG, "WOCHENTAG"},
+  {Property::kTAG, "TAG"},
+  {Property::kMONAT, "MONAT"},
+  {Property::kJAHR, "JAHR"},
+  {Property::kSTUNDE, "STUNDE"},
+  {Property::kMINUTE, "MINUTE"},
+  {Property::kSEKUNDE, "SEKUNDE"},
+  {Property::kBAUWEISE, "BAUWEISE"},
+  {Property::kVORLAUF_NENN_SOLLWERT, "VORLAUF_NENN_SOLLWERT"},
+  {Property::kVORLAUF_REDUZIER_SOLLWERT, "VORLAUF_REDUZIER_SOLLWERT"},
+  {Property::kMIN_TEMP_HZK, "MIN_TEMP_HZK"},
+  {Property::kFERIEN_ABSENKTEMP, "FERIEN_ABSENKTEMP"},
+  {Property::kAUSSCHALTZEITOPTI, "AUSSCHALTZEITOPTI"},
+  {Property::kMAX_PUMPENDREHZAHL, "MAX_PUMPENDREHZAHL"},
+  {Property::kMIN_PUMPENDREHZAHL, "MIN_PUMPENDREHZAHL"},
+  {Property::kBETRIEBSNIVEAU_PWMPUMPE, "BETRIEBSNIVEAU_PWMPUMPE"},
+  {Property::kHZK_PUMPE_ABSENK, "HZK_PUMPE_ABSENK"},
+  {Property::kWW_SOLLWERT_REDUZIERT, "WW_SOLLWERT_REDUZIERT"},
+  {Property::kWW_MAXTEMP, "WW_MAXTEMP"},
+  {Property::kWARMWASSERMODE, "WARMWASSERMODE"},
+  {Property::kADAPT_INFO, "ADAPT_INFO"},
+  {Property::kKESSELSOLLTEMP_2WE, "KESSELSOLLTEMP_2WE"},
+  {Property::kDURCHFLUSS_CH, "DURCHFLUSS_CH"},
+  {Property::kSTANDBY_GEBLAESE_DREHZAHL, "STANDBY_GEBLAESE_DREHZAHL"},
+  {Property::kBENOETIGTE_AUFHEIZZEIT, "BENOETIGTE_AUFHEIZZEIT"},
+  {Property::kABWESENHEITSTEMP, "ABWESENHEITSTEMP"},
+  {Property::kEINSTELL_SPEICHERSOLLTEMP3, "EINSTELL_SPEICHERSOLLTEMP3"},
+  {Property::kK_OS_OBERE_GEBLAESE_DREHZAHL, "K_OS_OBERE_GEBLAESE_DREHZAHL"},
+  {Property::kWW_HYSTERSE, "WW_HYSTERSE"},
+  {Property::kHZK_MODE, "HZK_MODE"},
+  {Property::kHZK_NACHLAUF, "HZK_NACHLAUF"},
+  {Property::kTAKTSPERRE, "TAKTSPERRE"},
+  {Property::kEINMAL_WW_AKTIV, "EINMAL_WW_AKTIV"},
+  {Property::kABGASTEMP, "ABGASTEMP"},
+  {Property::kKUNDEN_KENNUNG, "KUNDEN_KENNUNG"},
+  {Property::kHERSTELLER_KENNUNG, "HERSTELLER_KENNUNG"},
+  {Property::kGERAETE_KENNUNG, "GERAETE_KENNUNG"},
+  {Property::kK_OS_MAX_VL_AENDERUNG, "K_OS_MAX_VL_AENDERUNG"},
+  {Property::kK_OS_MAX_DREHZAHLAENDERUNG, "K_OS_MAX_DREHZAHLAENDERUNG"},
+  {Property::kK_OS_FREIGABEDREHZAHL, "K_OS_FREIGABEDREHZAHL"},
+  {Property::kK_OS_SOFTSTARTZEIT, "K_OS_SOFTSTARTZEIT"},
+  {Property::kRUECKLAUF_HYSTERESE, "RUECKLAUF_HYSTERESE"},
+  {Property::kMIN_PUMPENLEISTUNG, "MIN_PUMPENLEISTUNG"},
+  {Property::kMAX_PUMPENLEISTUNG, "MAX_PUMPENLEISTUNG"},
+  {Property::kPUMPENLEISTUNG_WW, "PUMPENLEISTUNG_WW"},
+  {Property::kPUMPENLEISTUNG_STANDBY, "PUMPENLEISTUNG_STANDBY"},
+  {Property::kK_OS_OBERE_GEBLAESE_DREHZAHL_WW, "K_OS_OBERE_GEBLAESE_DREHZAHL_WW"},
+  {Property::kK_OS_UNTERE_GEBLAESE_DREHZAHL, "K_OS_UNTERE_GEBLAESE_DREHZAHL"},
+  {Property::kGERAETEKONFIGURATION_2, "GERAETEKONFIGURATION_2"},
+  {Property::kQQ_BEI_TRANSPARENT_MODE, "QQ_BEI_TRANSPARENT_MODE"},
+  {Property::kNON_FAILSAVE_CRC, "NON_FAILSAVE_CRC"},
+  {Property::kFAILSAVE_CRC, "FAILSAVE_CRC"},
+  {Property::kDATEN_GESCHRIEBEN, "DATEN_GESCHRIEBEN"},
+  {Property::kK_OS_GRENZE_OBERE_GEBLAESEDREHZAHL, "K_OS_GRENZE_OBERE_GEBLAESEDREHZAHL"},
+  {Property::kKESSELREGLER_P_ANTEIL, "KESSELREGLER_P_ANTEIL"},
+  {Property::kKESSELREGLER_I_ANTEIL, "KESSELREGLER_I_ANTEIL"},
+  {Property::kK_OS_FREIGABEDREHZAHL_SPEICHER_KOMBI, "K_OS_FREIGABEDREHZAHL_SPEICHER_KOMBI"},
+  {Property::kDURCHLAUFREGLER_2_PUNKT_UEBERHOEHUNG, "DURCHLAUFREGLER_2_PUNKT_UEBERHOEHUNG"},
+  {Property::kK_OS_TURBINENPARAMETRIERUNG, "K_OS_TURBINENPARAMETRIERUNG"},
+  {Property::kFAKTOR_DURCHLAUFUEBERHOEHUNG, "FAKTOR_DURCHLAUFUEBERHOEHUNG"},
+  {Property::kZAPFBEGINN, "ZAPFBEGINN"},
+  {Property::kDURCHLAUFREGLER_P_ANTEIL, "DURCHLAUFREGLER_P_ANTEIL"},
+  {Property::kDURCHLAUFREGLER_I_ANTEIL, "DURCHLAUFREGLER_I_ANTEIL"},
+  {Property::kWW_SCHNELL_START_TEMPERATUR, "WW_SCHNELL_START_TEMPERATUR"},
+  {Property::kGASART, "GASART"},
+  {Property::kDURCHFLUSS_WW, "DURCHFLUSS_WW"},
+  {Property::kPWM_SIGNAL_PUMPE, "PWM_SIGNAL_PUMPE"},
+  {Property::kGEBLAESE_SOLLWERT, "GEBLAESE_SOLLWERT"},
+  {Property::kGEBLAESEDREHZAHL, "GEBLAESEDREHZAHL"},
+  {Property::kIO_ISTWERT, "IO_ISTWERT"},
+  {Property::kINDIKATOR, "INDIKATOR"},
+  {Property::kK_OS_EINGANGSZUSTAND_KM351, "K_OS_EINGANGSZUSTAND_KM351"},
+  {Property::kK_OS_AUSGANGSZUSTAND_KM351, "K_OS_AUSGANGSZUSTAND_KM351"},
+  {Property::kK_OS_STATUS_KM351, "K_OS_STATUS_KM351"},
+  {Property::kFEUERUNGSAUTOMAT_STATUS, "FEUERUNGSAUTOMAT_STATUS"},
+  {Property::kBETRIEBS_STATUS, "BETRIEBS_STATUS"},
+  {Property::kZUSTAND_BCC, "ZUSTAND_BCC"},
+  {Property::kBUSKENNUNG, "BUSKENNUNG"},
+  {Property::kK_OS_GERAETEKONFIGURATON, "K_OS_GERAETEKONFIGURATON"},
+  {Property::kTROCKENLAUFFUNKTION, "TROCKENLAUFFUNKTION"},
+  {Property::kMISCHERLEISTUNGSSOLLWERT, "MISCHERLEISTUNGSSOLLWERT"},
+  {Property::kKONFIG_LEISTUNGSSOLLWERT, "KONFIG_LEISTUNGSSOLLWERT"},
+  {Property::kTELEFONKONTAKT, "TELEFONKONTAKT"},
+  {Property::kHEIZ_ZEIT_STATUS, "HEIZ_ZEIT_STATUS"},
+  {Property::kWW_NACHLAUFZEIT, "WW_NACHLAUFZEIT"},
+  {Property::kMAX_WW_LADEZEIT, "MAX_WW_LADEZEIT"},
+  {Property::kMAX_WW_TEMP, "MAX_WW_TEMP"},
+  {Property::kPARAMETER_ZIRKULATIONSPUMPE, "PARAMETER_ZIRKULATIONSPUMPE"},
+  {Property::kFERNBEDIENUNGSZUORDNUNG, "FERNBEDIENUNGSZUORDNUNG"},
+  {Property::kMITTELLUNGSZEIT, "MITTELLUNGSZEIT"},
+  {Property::kEINSTELL_MODULATIONS_SPERRZEIT, "EINSTELL_MODULATIONS_SPERRZEIT"},
+  {Property::kBRENNERART, "BRENNERART"},
+  {Property::kBRENNERSTUFEN_WW, "BRENNERSTUFEN_WW"},
+  {Property::kSOMMER_WINTERZEITUMSTELLUNG, "SOMMER_WINTERZEITUMSTELLUNG"},
+  {Property::kFEIERTAGS_PROGRAMM, "FEIERTAGS_PROGRAMM"},
+  {Property::kFEIER_DAUER, "FEIER_DAUER"},
+  {Property::kUNTERE_GRENZE_MINKESSELTEMP, "UNTERE_GRENZE_MINKESSELTEMP"},
+  {Property::kSERVICE_MINUTEN, "SERVICE_MINUTEN"},
+  {Property::kKONFIG_KONTAKT_OHNE_SPF, "KONFIG_KONTAKT_OHNE_SPF"},
+  {Property::kMODULATIONSDYNAMIK, "MODULATIONSDYNAMIK"},
+  {Property::kMISCHERPARAMETER, "MISCHERPARAMETER"},
+  {Property::kRUECKLAUFTEMPERATURANHEBUNG, "RUECKLAUFTEMPERATURANHEBUNG"},
+  {Property::kBRENNSTOFFVERBRAUCH_PAR_BR1, "BRENNSTOFFVERBRAUCH_PAR_BR1"},
+  {Property::kBRENNSTOFFVERBRAUCH_PAR_BR2, "BRENNSTOFFVERBRAUCH_PAR_BR2"},
+  {Property::kMAX_ABGASTEMP, "MAX_ABGASTEMP"},
+  {Property::kEINSCHALTTEMPERATUR_DIFFERENZ, "EINSCHALTTEMPERATUR_DIFFERENZ"},
+  {Property::kAUSSCHALTTEMPERATUR_DIFFERENZ, "AUSSCHALTTEMPERATUR_DIFFERENZ"},
+  {Property::kBRENNSTOFFVERBRAUCH_BRENNER1, "BRENNSTOFFVERBRAUCH_BRENNER1"},
+  {Property::kBRENNSTOFFVERBRAUCH_BRENNER2, "BRENNSTOFFVERBRAUCH_BRENNER2"},
+  {Property::kMIN_SOLAR_SPEICHERTEMP, "MIN_SOLAR_SPEICHERTEMP"},
+  {Property::kSOFTWARE_NUMMER, "SOFTWARE_NUMMER"},
+  {Property::kSOFTWARE_VERSION, "SOFTWARE_VERSION"},
+  {Property::kSPEICHER_ZEIT_STATUS, "SPEICHER_ZEIT_STATUS"},
+  {Property::kINFO_TYP, "INFO_TYP"},
+  {Property::kMISCHERPARAMETER_ZU, "MISCHERPARAMETER_ZU"},
+  {Property::kWW_BETRIEB, "WW_BETRIEB"},
+  {Property::kMULTIFUNKTIONS_SCHALTHYSTERESE, "MULTIFUNKTIONS_SCHALTHYSTERESE"},
+  {Property::kMULTIFUNKTIONS_SCHALTTEMP, "MULTIFUNKTIONS_SCHALTTEMP"},
+  {Property::kPC_CODENUMMER, "PC_CODENUMMER"},
+  {Property::kMAX_WASSERDRUCK, "MAX_WASSERDRUCK"},
+  {Property::kAUSGANG_KM_OS, "AUSGANG_KM_OS"},
+  {Property::kEINGANG_KM_OS, "EINGANG_KM_OS"},
+  {Property::kK_OS_UNTERE_GEBLAESE_DREHZAHL_WW, "K_OS_UNTERE_GEBLAESE_DREHZAHL_WW"},
+  {Property::kK_OS_GEBLAESE_DREHZAHL_WW, "K_OS_GEBLAESE_DREHZAHL_WW"},
+  {Property::kK_OS_KASKADENRELAIS_EINSCHALTVERZOEGERUNG, "K_OS_KASKADENRELAIS_EINSCHALTVERZOEGERUNG"},
+  {Property::kK_OS_KASKADENRELAIS_AUSSCHALTLEISTUNG, "K_OS_KASKADENRELAIS_AUSSCHALTLEISTUNG"},
+  {Property::kEINGANG_SPANNUNG, "EINGANG_SPANNUNG"},
+  {Property::kEINGANG_STROM, "EINGANG_STROM"},
+  {Property::kDONGLE_NR, "DONGLE_NR"},
+  {Property::kBIVALENTPARALLELTEMPERATUR_HZG, "BIVALENTPARALLELTEMPERATUR_HZG"},
+  {Property::kBIVALENTPARALLELTEMPERATUR_WW, "BIVALENTPARALLELTEMPERATUR_WW"},
+  {Property::kBIVALENZALTERNATIVTEMPERATUR_HZG, "BIVALENZALTERNATIVTEMPERATUR_HZG"},
+  {Property::kBIVALENZALTERNATIVTEMPERATUR_WW, "BIVALENZALTERNATIVTEMPERATUR_WW"},
+  {Property::kQUELLENSOLLTEMPERATUR, "QUELLENSOLLTEMPERATUR"},
+  {Property::kSOLLTEMP_ANZEIGE_0_1, "SOLLTEMP_ANZEIGE_0_1"},
+  {Property::kSOLLTEMP_ANZEIGE_0_2, "SOLLTEMP_ANZEIGE_0_2"},
+  {Property::kSOLLTEMP_ANZEIGE_0_3, "SOLLTEMP_ANZEIGE_0_3"},
+  {Property::kSOLLTEMP_ANZEIGE_1_1, "SOLLTEMP_ANZEIGE_1_1"},
+  {Property::kSOLLTEMP_ANZEIGE_1_2, "SOLLTEMP_ANZEIGE_1_2"},
+  {Property::kSOLLTEMP_ANZEIGE_1_3, "SOLLTEMP_ANZEIGE_1_3"},
+  {Property::kAUSSENTEMPERATUR_WARMWASSER, "AUSSENTEMPERATUR_WARMWASSER"},
+  {Property::kSOLARDIFFERENZ, "SOLARDIFFERENZ"},
+  {Property::kSOLARTEMP_MAX, "SOLARTEMP_MAX"},
+  {Property::kESTRICH_STEIGUNG_PRO_TAG, "ESTRICH_STEIGUNG_PRO_TAG"},
+  {Property::kESTRICH_SOCKELTEMPERATUR, "ESTRICH_SOCKELTEMPERATUR"},
+  {Property::kESTRICH_HALTEN_SOCKELTEMPERATUR, "ESTRICH_HALTEN_SOCKELTEMPERATUR"},
+  {Property::kESTRICH_MAX_TEMPERATUR, "ESTRICH_MAX_TEMPERATUR"},
+  {Property::kESTRICH_HALTEN_MAX_TEMPERATUR, "ESTRICH_HALTEN_MAX_TEMPERATUR"},
+  {Property::kSW_AUSSENTEMP, "SW_AUSSENTEMP"},
+  {Property::kFESTWERT, "FESTWERT"},
+  {Property::kGESAMTERTRAG_WATT, "GESAMTERTRAG_WATT"},
+  {Property::kGESAMTERTRAG_KWATT, "GESAMTERTRAG_KWATT"},
+  {Property::kGESAMTERTRAG_MWATT, "GESAMTERTRAG_MWATT"},
+  {Property::kLAUFZEIT_WP1, "LAUFZEIT_WP1"},
+  {Property::kLAUFZEIT_WP2, "LAUFZEIT_WP2"},
+  {Property::kLAUFZEIT_WP3, "LAUFZEIT_WP3"},
+  {Property::kLAUFZEIT_WP4, "LAUFZEIT_WP4"},
+  {Property::kLAUFZEIT_WP5, "LAUFZEIT_WP5"},
+  {Property::kLAUFZEIT_WP6, "LAUFZEIT_WP6"},
+  {Property::kLAUFZEIT_SOLAR, "LAUFZEIT_SOLAR"},
+  {Property::kLAUFZEIT_2WE, "LAUFZEIT_2WE"},
+  {Property::kSTILLSTANDZEIT_0, "STILLSTANDZEIT_0"},
+  {Property::kSTILLSTANDZEIT_1, "STILLSTANDZEIT_1"},
+  {Property::kSTILLSTANDZEIT_2, "STILLSTANDZEIT_2"},
+  {Property::kSTILLSTANDZEIT_3, "STILLSTANDZEIT_3"},
+  {Property::kSTILLSTANDZEIT_4, "STILLSTANDZEIT_4"},
+  {Property::kSTILLSTANDZEIT_5, "STILLSTANDZEIT_5"},
+  {Property::kPUMPENSTATUS, "PUMPENSTATUS"},
+  {Property::kEVU, "EVU"},
+  {Property::kQUELLE_IST, "QUELLE_IST"},
+  {Property::kPUFFERSOLL, "PUFFERSOLL"},
+  {Property::kWPVORLAUFIST, "WPVORLAUFIST"},
+  {Property::kHILFSKESSELSOLL, "HILFSKESSELSOLL"},
+  {Property::kFUEHLER_1, "FUEHLER_1"},
+  {Property::kFUEHLER_2, "FUEHLER_2"},
+  {Property::kVOLUMENSTROM, "VOLUMENSTROM"},
+  {Property::kERTRAG_AKT, "ERTRAG_AKT"},
+  {Property::kERTRAG_TAG_W, "ERTRAG_TAG_W"},
+  {Property::kERTRAG_TAG_KW, "ERTRAG_TAG_KW"},
+  {Property::kKESSELREGLER_D_ANTEIL, "KESSELREGLER_D_ANTEIL"},
+  {Property::kDURCHLAUFREGLER_D_ANTEIL, "DURCHLAUFREGLER_D_ANTEIL"},
+  {Property::kFUEHLERFROSTSCHUTZ, "FUEHLERFROSTSCHUTZ"},
+  {Property::kPUMPENSTEUERUNG_dT, "PUMPENSTEUERUNG_dT"},
+  {Property::kSOLL_DIFFERENZ_RUECKLAUF, "SOLL_DIFFERENZ_RUECKLAUF"},
+  {Property::kMAX_DIFFERENZ_RUECKLAUF, "MAX_DIFFERENZ_RUECKLAUF"},
+  {Property::kK_OS_GEBLAESEREGLERANPASSUNG, "K_OS_GEBLAESEREGLERANPASSUNG"},
+  {Property::kK_OS_START_PWM, "K_OS_START_PWM"},
+  {Property::kGEBLAESEREGLER_P_ANTEIL, "GEBLAESEREGLER_P_ANTEIL"},
+  {Property::kGEBLAESEREGLER_I_ANTEIL, "GEBLAESEREGLER_I_ANTEIL"},
+  {Property::kMAX_HEIZUNG_TEMP, "MAX_HEIZUNG_TEMP"},
+  {Property::kMAX_POS_GEBLAESEANSTIEG, "MAX_POS_GEBLAESEANSTIEG"},
+  {Property::kMAX_NEG_GEBLAESEANSTIEG, "MAX_NEG_GEBLAESEANSTIEG"},
+  {Property::kSTEP_dT_REGELUNG, "STEP_dT_REGELUNG"},
+  {Property::kABSENKZEIT, "ABSENKZEIT"},
+  {Property::kSCHALTPROG_0_6, "SCHALTPROG_0_6"},
+  {Property::kSCHALTPROG_6_12, "SCHALTPROG_6_12"},
+  {Property::kSCHALTPROG_12_18, "SCHALTPROG_12_18"},
+  {Property::kSCHALTPROG_18_24, "SCHALTPROG_18_24"},
+  {Property::kFEHLERLISTEN_EINTRAG, "FEHLERLISTEN_EINTRAG"},
+  {Property::kFEHLERART, "FEHLERART"},
+  {Property::kZUFALLSZAHL, "ZUFALLSZAHL"},
+  {Property::kDONGELKEY1, "DONGELKEY1"},
+  {Property::kDONGELKEY2, "DONGELKEY2"},
+  {Property::kK_OS_PUMPENLEISTUNG_VORSPUELUNG, "K_OS_PUMPENLEISTUNG_VORSPUELUNG"},
+  {Property::kK_OS_PUMPENTAKTUNG_PAUSE, "K_OS_PUMPENTAKTUNG_PAUSE"},
+  {Property::kK_OS_PUMPENTAKTUNG_PULS, "K_OS_PUMPENTAKTUNG_PULS"},
+  {Property::kK_OS_NEG_HYSTERESE_VORL, "K_OS_NEG_HYSTERESE_VORL"},
+  {Property::kK_OS_WW_SCHNELLSTARTTEMPERATUR, "K_OS_WW_SCHNELLSTARTTEMPERATUR"},
+  {Property::kK_OS_DYN_KESSELHYSTERESE_ZEIT, "K_OS_DYN_KESSELHYSTERESE_ZEIT"},
+  {Property::kK_OS_DYN_KESSELHYSTERESE_DELTA, "K_OS_DYN_KESSELHYSTERESE_DELTA"},
+  {Property::kK_OS_WARMWASSER_HYSTERESE, "K_OS_WARMWASSER_HYSTERESE"},
+  {Property::kK_OS_TOLERANZZEIT_SW_KONTROLLE, "K_OS_TOLERANZZEIT_SW_KONTROLLE"},
+  {Property::kK_OS_TOLERANZZEIT_NON_ZERO_CHECK, "K_OS_TOLERANZZEIT_NON_ZERO_CHECK"},
+  {Property::kK_OS_LEISTUNG_KASKADENRELAIS_EIN, "K_OS_LEISTUNG_KASKADENRELAIS_EIN"},
+  {Property::kK_OS_AUSSCHALTVERZ_KASKADENRELAIS, "K_OS_AUSSCHALTVERZ_KASKADENRELAIS"},
+  {Property::kK_OS_FS_OPTIONEN, "K_OS_FS_OPTIONEN"},
+  {Property::kK_OS_FS_GEBLAESEREGELUNG, "K_OS_FS_GEBLAESEREGELUNG"},
+  {Property::kK_OS_FS_VORSPUELZEIT, "K_OS_FS_VORSPUELZEIT"},
+  {Property::kK_OS_FS_SICHERHEITSZEIT, "K_OS_FS_SICHERHEITSZEIT"},
+  {Property::kK_OS_FS_NACHSPUELZEIT, "K_OS_FS_NACHSPUELZEIT"},
+  {Property::kK_OS_FS_VORZUENDZEIT, "K_OS_FS_VORZUENDZEIT"},
+  {Property::kK_OS_FS_FLAMMENSTABILISIERUNGSZEIT, "K_OS_FS_FLAMMENSTABILISIERUNGSZEIT"},
+  {Property::kK_OS_FS_ZUENDDREHZAHL, "K_OS_FS_ZUENDDREHZAHL"},
+  {Property::kK_OS_FS_VORSPUELDREHZAHL, "K_OS_FS_VORSPUELDREHZAHL"},
+  {Property::kK_OS_FS_NACHSPUELDREHZAHL, "K_OS_FS_NACHSPUELDREHZAHL"},
+  {Property::kK_OS_FS_ANZAHL_STARTVERSUCHE, "K_OS_FS_ANZAHL_STARTVERSUCHE"},
+  {Property::kK_OS_FS_MINIMALE_DREHZAHL, "K_OS_FS_MINIMALE_DREHZAHL"},
+  {Property::kK_OS_FS_MAXIMALE_DREHZAHL, "K_OS_FS_MAXIMALE_DREHZAHL"},
+  {Property::kK_OS_FS_STB_KESSELTEMPERATUR, "K_OS_FS_STB_KESSELTEMPERATUR"},
+  {Property::kK_OS_FS_STW_KESSELTEMPERATUR, "K_OS_FS_STW_KESSELTEMPERATUR"},
+  {Property::kK_OS_FS_ASTB_ABSCHALTTEMPERATUR_ABGAS, "K_OS_FS_ASTB_ABSCHALTTEMPERATUR_ABGAS"},
+  {Property::kK_OS_FS_OFFSET_FLAMMENVERSTAERKER, "K_OS_FS_OFFSET_FLAMMENVERSTAERKER"},
+  {Property::kK_OS_FS_ABSCHALTSCHWELLE_FLAMMENVERST, "K_OS_FS_ABSCHALTSCHWELLE_FLAMMENVERST"},
+  {Property::kK_OS_FS_EINSCHALTSCHWELLE_FLAMMENVERST, "K_OS_FS_EINSCHALTSCHWELLE_FLAMMENVERST"},
+  {Property::kK_OS_FS_MAXIMALE_DREHZAHLGRENZE, "K_OS_FS_MAXIMALE_DREHZAHLGRENZE"},
+  {Property::kK_OS_FS_CRC, "K_OS_FS_CRC"},
+  {Property::kK_OS_DONGLE_NR_LO, "K_OS_DONGLE_NR_LO"},
+  {Property::kK_OS_DONGLE_NR_HI, "K_OS_DONGLE_NR_HI"},
+  {Property::kK_OS_FIRMWARE_01, "K_OS_FIRMWARE_01"},
+  {Property::kK_OS_FIRMWARE_02, "K_OS_FIRMWARE_02"},
+  {Property::kK_OS_FIRMWARE_03, "K_OS_FIRMWARE_03"},
+  {Property::kK_OS_FIRMWARE_04, "K_OS_FIRMWARE_04"},
+  {Property::kK_OS_FIRMWARE_05, "K_OS_FIRMWARE_05"},
+  {Property::kK_OS_BRENNERSTARTS_LO_MID, "K_OS_BRENNERSTARTS_LO_MID"},
+  {Property::kK_OS_BRENNERSTARTS_HI, "K_OS_BRENNERSTARTS_HI"},
+  {Property::kK_OS_NETZBETRIEB_LO_HI, "K_OS_NETZBETRIEB_LO_HI"},
+  {Property::kK_OS_NETZBETRIEB_HI, "K_OS_NETZBETRIEB_HI"},
+  {Property::kK_OS_BRENNERBETRIEB_LO_HI, "K_OS_BRENNERBETRIEB_LO_HI"},
+  {Property::kK_OS_STOERMELDUNG_1, "K_OS_STOERMELDUNG_1"},
+  {Property::kK_OS_STUNDEN_TAGESZAEHLER_1, "K_OS_STUNDEN_TAGESZAEHLER_1"},
+  {Property::kK_OS_STOERMELDUNG_2, "K_OS_STOERMELDUNG_2"},
+  {Property::kK_OS_STUNDEN_TAGESZAEHLER_2, "K_OS_STUNDEN_TAGESZAEHLER_2"},
+  {Property::kK_OS_STOERMELDUNG_3, "K_OS_STOERMELDUNG_3"},
+  {Property::kK_OS_STUNDEN_TAGESZAEHLER_3, "K_OS_STUNDEN_TAGESZAEHLER_3"},
+  {Property::kK_OS_STOERMELDUNG_4, "K_OS_STOERMELDUNG_4"},
+  {Property::kK_OS_STUNDEN_TAGESZAEHLER_4, "K_OS_STUNDEN_TAGESZAEHLER_4"},
+  {Property::kK_OS_STOERMELDUNG_5, "K_OS_STOERMELDUNG_5"},
+  {Property::kK_OS_STUNDEN_TAGESZAEHLER_5, "K_OS_STUNDEN_TAGESZAEHLER_5"},
+  {Property::kK_OS_STOERMELDUNG_6, "K_OS_STOERMELDUNG_6"},
+  {Property::kK_OS_STUNDEN_TAGESZAEHLER_6, "K_OS_STUNDEN_TAGESZAEHLER_6"},
+  {Property::kK_OS_STOERMELDUNG_7, "K_OS_STOERMELDUNG_7"},
+  {Property::kK_OS_STUNDEN_TAGESZAEHLER_7, "K_OS_STUNDEN_TAGESZAEHLER_7"},
+  {Property::kK_OS_STOERMELDUNG_8, "K_OS_STOERMELDUNG_8"},
+  {Property::kK_OS_STUNDEN_TAGESZAEHLER_8, "K_OS_STUNDEN_TAGESZAEHLER_8"},
+  {Property::kK_OS_STOERMELDUNG_9, "K_OS_STOERMELDUNG_9"},
+  {Property::kK_OS_STUNDEN_TAGESZAEHLER_9, "K_OS_STUNDEN_TAGESZAEHLER_9"},
+  {Property::kK_OS_STOERMELDUNG_10, "K_OS_STOERMELDUNG_10"},
+  {Property::kK_OS_STUNDEN_TAGESZAEHLER_10, "K_OS_STUNDEN_TAGESZAEHLER_10"},
+  {Property::kK_OS_20S_ZAEHLER, "K_OS_20S_ZAEHLER"},
+  {Property::kDEBUG_MEMORY_POINTER, "DEBUG_MEMORY_POINTER"},
+  {Property::kDEBUG_MEMORY_WERT_INT8, "DEBUG_MEMORY_WERT_INT8"},
+  {Property::kDEBUG_MEMORY_WERT_INT16, "DEBUG_MEMORY_WERT_INT16"},
+  {Property::kDEBUG_EEPROM_POINTER, "DEBUG_EEPROM_POINTER"},
+  {Property::kDEBUG_EEPROM_WERT_INT8, "DEBUG_EEPROM_WERT_INT8"},
+  {Property::kDEBUG_EEPROM_WERT_INT16, "DEBUG_EEPROM_WERT_INT16"},
+  {Property::kTARGET_COMPILING_DATE, "TARGET_COMPILING_DATE"},
+  {Property::kTARGET_COMPILING_TIME, "TARGET_COMPILING_TIME"},
+  {Property::kENTRIEGELN_FA, "ENTRIEGELN_FA"},
+  {Property::kLAUFZEIT_DHC1, "LAUFZEIT_DHC1"},
+  {Property::kLAUFZEIT_DHC2, "LAUFZEIT_DHC2"},
+  {Property::kGEBLAESEKUEHLUNG, "GEBLAESEKUEHLUNG"},
+  {Property::kVORLAUFSOLL_GEBLAESE, "VORLAUFSOLL_GEBLAESE"},
+  {Property::kRAUMSOLL_GEBLAESE, "RAUMSOLL_GEBLAESE"},
+  {Property::kHYSTERESE_GEBLAESE, "HYSTERESE_GEBLAESE"},
+  {Property::kFLAECHENKUEHLUNG, "FLAECHENKUEHLUNG"},
+  {Property::kVORLAUFSOLL_FLAECHE, "VORLAUFSOLL_FLAECHE"},
+  {Property::kRAUMSOLL_FLAECHE, "RAUMSOLL_FLAECHE"},
+  {Property::kHYSTERESE_FLAECHE, "HYSTERESE_FLAECHE"},
+  {Property::kWWKORREKTUR, "WWKORREKTUR"},
+  {Property::kTAUPUNKT_TEMP, "TAUPUNKT_TEMP"},
+  {Property::kHEISSGAS_TEMP, "HEISSGAS_TEMP"},
+  {Property::kHDSENSOR_TEMP, "HDSENSOR_TEMP"},
+  {Property::kTASTENSPERRE, "TASTENSPERRE"},
+  {Property::kMASCHINENDRUCK, "MASCHINENDRUCK"},
+  {Property::kEXT_RAUMFUEHLER, "EXT_RAUMFUEHLER"},
+  {Property::kWARTUNGSMELDUNGSZEIT, "WARTUNGSMELDUNGSZEIT"},
+  {Property::kGEBLAESE_ZUENDDREHZAHL, "GEBLAESE_ZUENDDREHZAHL"},
+  {Property::kGEBLAESE_VORSPUELDREHZAHL, "GEBLAESE_VORSPUELDREHZAHL"},
+  {Property::kMIN_DURCHFLUSS_FA, "MIN_DURCHFLUSS_FA"},
+  {Property::kDURCHFLUSS_SCHUTZ_FA, "DURCHFLUSS_SCHUTZ_FA"},
+  {Property::kHYSTERESE_MOD_KESSEL, "HYSTERESE_MOD_KESSEL"},
+  {Property::kGERAETEFOLGE_1, "GERAETEFOLGE_1"},
+  {Property::kGERAETEFOLGE_2, "GERAETEFOLGE_2"},
+  {Property::kGERAETEFOLGE_3, "GERAETEFOLGE_3"},
+  {Property::kGERAETEFOLGE_4, "GERAETEFOLGE_4"},
+  {Property::kSAMMLERKONSTANT_TEMP, "SAMMLERKONSTANT_TEMP"},
+  {Property::kUMSCHALTUNG_SPEICHERVORRANG, "UMSCHALTUNG_SPEICHERVORRANG"},
+  {Property::kDT_MAX_PARALLELBETRIEB, "DT_MAX_PARALLELBETRIEB"},
+  {Property::kOFFSET_TIME_MISCHERRELAIS, "OFFSET_TIME_MISCHERRELAIS"},
+  {Property::kSYSTEMAUSWAHL, "SYSTEMAUSWAHL"},
+  {Property::kTEMPERATURWAECHTER_TEMP, "TEMPERATURWAECHTER_TEMP"},
+  {Property::kGESPEICHERTE_FEHLER_LOESCHEN, "GESPEICHERTE_FEHLER_LOESCHEN"},
+  {Property::kFEHLERSTATISTIK_FELDINDEX, "FEHLERSTATISTIK_FELDINDEX"},
+  {Property::kFEHLERSTATISTIK_FEHLERNUMMER, "FEHLERSTATISTIK_FEHLERNUMMER"},
+  {Property::kFEHLERSTATISTIK_FEHLERANZAHL, "FEHLERSTATISTIK_FEHLERANZAHL"},
+  {Property::kWW_ECO, "WW_ECO"},
+  {Property::kANZEIGE_HEIZPROG_NACH_HEIZKREIS, "ANZEIGE_HEIZPROG_NACH_HEIZKREIS"},
+  {Property::kSAMMEL_SOLAR_STATUS, "SAMMEL_SOLAR_STATUS"},
+  {Property::kMODULATION_SOLLWERT_SOLAR_1, "MODULATION_SOLLWERT_SOLAR_1"},
+  {Property::kMODULATION_SOLLWERT_SOLAR_2, "MODULATION_SOLLWERT_SOLAR_2"},
+  {Property::kMIN_TEMP_KESSEL_HEIZBETRIEB, "MIN_TEMP_KESSEL_HEIZBETRIEB"},
+  {Property::kMAX_TEMP_KESSEL_HEIZBETRIEB, "MAX_TEMP_KESSEL_HEIZBETRIEB"},
+  {Property::kHZK_PUMPENDREHZAHL_SOLLWERT, "HZK_PUMPENDREHZAHL_SOLLWERT"},
+  {Property::kWEICHENISTTEMP, "WEICHENISTTEMP"},
+  {Property::kKUEHLMODE, "KUEHLMODE"},
+  {Property::kKUEHLDYNAMIK_FLAECHE, "KUEHLDYNAMIK_FLAECHE"},
+  {Property::kKUEHLDYNAMIK_GEBLAESE, "KUEHLDYNAMIK_GEBLAESE"},
+  {Property::kMIN_WW_TEMP, "MIN_WW_TEMP"},
+  {Property::kRAUMEINFLUSS_PAR_ON_OFF, "RAUMEINFLUSS_PAR_ON_OFF"},
+  {Property::kRUECKLAUFKONFIGURATION, "RUECKLAUFKONFIGURATION"},
+  {Property::kBYPASSPUMPEN_STATUS, "BYPASSPUMPEN_STATUS"},
+  {Property::kSPG_KURVE, "SPG_KURVE"},
+  {Property::kSPG_KURVE_U1, "SPG_KURVE_U1"},
+  {Property::kSPG_KURVE_U2, "SPG_KURVE_U2"},
+  {Property::kSPG_KURVE_T1, "SPG_KURVE_T1"},
+  {Property::kSPG_KURVE_T2, "SPG_KURVE_T2"},
+  {Property::kSPG_KURVE_U_AUS, "SPG_KURVE_U_AUS"},
+  {Property::kWE1_TYP, "WE1_TYP"},
+  {Property::kWE_REGELUNGSTYP, "WE_REGELUNGSTYP"},
+  {Property::kWE1_PELLET, "WE1_PELLET"},
+  {Property::kWE1_BUS, "WE1_BUS"},
+  {Property::kWE2_TYP, "WE2_TYP"},
+  {Property::kHZ_PUFFER, "HZ_PUFFER"},
+  {Property::kWE2_SPEICHER, "WE2_SPEICHER"},
+  {Property::kWE2_MAXTEMP, "WE2_MAXTEMP"},
+  {Property::kWE2_MINTEMP, "WE2_MINTEMP"},
+  {Property::kKESSELMODGRAD_BEI_WW, "KESSELMODGRAD_BEI_WW"},
+  {Property::kMIN_WE_MODGRAD, "MIN_WE_MODGRAD"},
+  {Property::kTN_KASKADE, "TN_KASKADE"},
+  {Property::kQUOTIENT_KASKADE_AUF, "QUOTIENT_KASKADE_AUF"},
+  {Property::kQUOTIENT_KASKADE_AB, "QUOTIENT_KASKADE_AB"},
+  {Property::kANZAHL_START_KESSEL, "ANZAHL_START_KESSEL"},
+  {Property::kAKTIVE_FOLGE, "AKTIVE_FOLGE"},
+  {Property::kWARTUNG_BETRIEBS_STD, "WARTUNG_BETRIEBS_STD"},
+  {Property::kBUSABSCHLUSS, "BUSABSCHLUSS"},
+  {Property::kFUNKTION_MFR_INDEX, "FUNKTION_MFR_INDEX"},
+  {Property::kFKT_MFR_FUNKTION, "FKT_MFR_FUNKTION"},
+  {Property::kFKT_MFR_SCHALTTEMP, "FKT_MFR_SCHALTTEMP"},
+  {Property::kFKT_MFR_HYSTERESE, "FKT_MFR_HYSTERESE"},
+  {Property::kBRENNER_INDEX, "BRENNER_INDEX"},
+  {Property::kBRENNER_LEISTUNG, "BRENNER_LEISTUNG"},
+  {Property::kBRENNER_STARTS, "BRENNER_STARTS"},
+  {Property::kBRENNER_LAUFZEIT, "BRENNER_LAUFZEIT"},
+  {Property::kABGELAUFENE_WARTUNGSZEIT, "ABGELAUFENE_WARTUNGSZEIT"},
+  {Property::kPUMPENSTOPP_MIT_RAUMREGLER, "PUMPENSTOPP_MIT_RAUMREGLER"},
+  {Property::kABSENKSTOP, "ABSENKSTOP"},
+  {Property::kAUSSENTEMP_MAX, "AUSSENTEMP_MAX"},
+  {Property::kAUSSENTEMP_MIN, "AUSSENTEMP_MIN"},
+  {Property::kANZAHL_STARTVERSUCHE, "ANZAHL_STARTVERSUCHE"},
+  {Property::kFA_STATUS, "FA_STATUS"},
+  {Property::kFERNBEDIENUNG, "FERNBEDIENUNG"},
+  {Property::kWW_DURCHLADEN, "WW_DURCHLADEN"},
+  {Property::kEXT_SOLLTEMP, "EXT_SOLLTEMP"},
+  {Property::kRUECKLAUFISTTEMP_2, "RUECKLAUFISTTEMP_2"},
+  {Property::kANFORDERUNG_KONSTANTTEMPERATUR, "ANFORDERUNG_KONSTANTTEMPERATUR"},
+  {Property::kMATERIALNUMMER_LOW, "MATERIALNUMMER_LOW"},
+  {Property::kMATERIALNUMMER_HIGH, "MATERIALNUMMER_HIGH"},
+  {Property::kPUMPENDREHZAHL_HEIZEN, "PUMPENDREHZAHL_HEIZEN"},
+  {Property::kLEISTUNG_PUMPE_HZK, "LEISTUNG_PUMPE_HZK"},
+  {Property::kLEISTUNG_PUMPE_SPL, "LEISTUNG_PUMPE_SPL"},
+  {Property::kLEISTUNG_PUMPE_WW_PRI, "LEISTUNG_PUMPE_WW_PRI"},
+  {Property::kSOLARPUMPEN_STATUS_1, "SOLARPUMPEN_STATUS_1"},
+  {Property::kSOLARPUMPEN_STATUS_2, "SOLARPUMPEN_STATUS_2"},
+  {Property::kLADEPUMPE_PUFFER_1, "LADEPUMPE_PUFFER_1"},
+  {Property::kLADEPUMPE_PUFFER_2, "LADEPUMPE_PUFFER_2"},
+  {Property::kLADEPUMPE_PUFFER_3, "LADEPUMPE_PUFFER_3"},
+  {Property::kVOLUMENSTROM_SOLARPUMPE_1, "VOLUMENSTROM_SOLARPUMPE_1"},
+  {Property::kVOLUMENSTROM_SOLARPUMPE_2, "VOLUMENSTROM_SOLARPUMPE_2"},
+  {Property::kSOLARPUMPE_DREHZAHL_SOLL_1, "SOLARPUMPE_DREHZAHL_SOLL_1"},
+  {Property::kSOLARPUMPE_DREHZAHL_MAX_1, "SOLARPUMPE_DREHZAHL_MAX_1"},
+  {Property::kSOLARPUMPE_DREHZAHL_MIN_1, "SOLARPUMPE_DREHZAHL_MIN_1"},
+  {Property::kSOLARPUMPE_DREHZAHLDYNAMIK_1, "SOLARPUMPE_DREHZAHLDYNAMIK_1"},
+  {Property::kKOLLEKTORANZAHL, "KOLLEKTORANZAHL"},
+  {Property::kPRIO_1_PUFFER, "PRIO_1_PUFFER"},
+  {Property::kPRIO_2_PUFFER, "PRIO_2_PUFFER"},
+  {Property::kPRIO_3_PUFFER, "PRIO_3_PUFFER"},
+  {Property::kWE_GEFUNDEN, "WE_GEFUNDEN"},
+  {Property::kWE_KONFIG_OK, "WE_KONFIG_OK"},
+  {Property::kBUS_SCAN, "BUS_SCAN"},
+  {Property::kWE2_ISTTEMP, "WE2_ISTTEMP"},
+  {Property::kWE_KONFIGURATION, "WE_KONFIGURATION"},
+  {Property::kVOLUMENSTROM_PUMPE_HZK, "VOLUMENSTROM_PUMPE_HZK"},
+  {Property::kVOLUMENSTROM_PUMPE_SPL, "VOLUMENSTROM_PUMPE_SPL"},
+  {Property::kVOLUMENSTROM_PUMPE_WW_PRI, "VOLUMENSTROM_PUMPE_WW_PRI"},
+  {Property::kSOLAR_WOCHENERTRAG_WH, "SOLAR_WOCHENERTRAG_WH"},
+  {Property::kSOLAR_WOCHENERTRAG_KWH, "SOLAR_WOCHENERTRAG_KWH"},
+  {Property::kSOLAR_WOCHENERTRAG_MWH, "SOLAR_WOCHENERTRAG_MWH"},
+  {Property::kSOLAR_JAHRESERTRAG_WH, "SOLAR_JAHRESERTRAG_WH"},
+  {Property::kSOLAR_JAHRESERTRAG_KWH, "SOLAR_JAHRESERTRAG_KWH"},
+  {Property::kSOLAR_JAHRESERTRAG_MWH, "SOLAR_JAHRESERTRAG_MWH"},
+  {Property::kSOLAR_UMSCHALTVENTIL_1, "SOLAR_UMSCHALTVENTIL_1"},
+  {Property::kSOLAR_UMSCHALTVENTIL_2, "SOLAR_UMSCHALTVENTIL_2"},
+  {Property::kSOLAR_UMSCHALTVENTIL_3, "SOLAR_UMSCHALTVENTIL_3"},
+  {Property::kSOLARPUMPENDREHZAL_1, "SOLARPUMPENDREHZAL_1"},
+  {Property::kSOLARPUMPENDREHZAL_2, "SOLARPUMPENDREHZAL_2"},
+  {Property::kSOLARPUMPENDREHZAL_3, "SOLARPUMPENDREHZAL_3"},
+  {Property::kSOLAR_BETRIEBSSTATUS, "SOLAR_BETRIEBSSTATUS"},
+  {Property::kANFORDERUNG_NACHHEIZUNG, "ANFORDERUNG_NACHHEIZUNG"},
+  {Property::kMODUL_IDENTIFIKATION, "MODUL_IDENTIFIKATION"},
+  {Property::kAEE_STATUS, "AEE_STATUS"},
+  {Property::kKOLLEKTORSCHUTZFUNKTION, "KOLLEKTORSCHUTZFUNKTION"},
+  {Property::kKOLLEKTORMAXTEMP, "KOLLEKTORMAXTEMP"},
+  {Property::kSOLARSPEICHER_ZUORDNUNG, "SOLARSPEICHER_ZUORDNUNG"},
+  {Property::kDURCHFLUSSMENGE_SOLAR, "DURCHFLUSSMENGE_SOLAR"},
+  {Property::kSOLARPUMPENBETRIEBSSTUNDEN1, "SOLARPUMPENBETRIEBSSTUNDEN1"},
+  {Property::kSOLARPUMPENBETRIEBSSTUNDEN2, "SOLARPUMPENBETRIEBSSTUNDEN2"},
+  {Property::kSOLARRUECKLAUFTEMP, "SOLARRUECKLAUFTEMP"},
+  {Property::kSOLAR_MONATRSERTRAG_W_1, "SOLAR_MONATRSERTRAG_W_1"},
+  {Property::kSOLAR_MONATRSERTRAG_W_2, "SOLAR_MONATRSERTRAG_W_2"},
+  {Property::kSOLAR_MONATRSERTRAG_W_3, "SOLAR_MONATRSERTRAG_W_3"},
+  {Property::kSOLAR_MONATRSERTRAG_W_4, "SOLAR_MONATRSERTRAG_W_4"},
+  {Property::kSOLAR_MONATRSERTRAG_W_5, "SOLAR_MONATRSERTRAG_W_5"},
+  {Property::kSOLAR_MONATRSERTRAG_W_6, "SOLAR_MONATRSERTRAG_W_6"},
+  {Property::kSOLAR_MONATRSERTRAG_W_7, "SOLAR_MONATRSERTRAG_W_7"},
+  {Property::kSOLAR_MONATRSERTRAG_W_8, "SOLAR_MONATRSERTRAG_W_8"},
+  {Property::kSOLAR_MONATRSERTRAG_W_9, "SOLAR_MONATRSERTRAG_W_9"},
+  {Property::kSOLAR_MONATRSERTRAG_W_10, "SOLAR_MONATRSERTRAG_W_10"},
+  {Property::kSOLAR_MONATRSERTRAG_W_11, "SOLAR_MONATRSERTRAG_W_11"},
+  {Property::kSOLAR_MONATRSERTRAG_W_12, "SOLAR_MONATRSERTRAG_W_12"},
+  {Property::kSOLAR_MONATRSERTRAG_KW_1, "SOLAR_MONATRSERTRAG_KW_1"},
+  {Property::kSOLAR_MONATRSERTRAG_KW_2, "SOLAR_MONATRSERTRAG_KW_2"},
+  {Property::kSOLAR_MONATRSERTRAG_KW_3, "SOLAR_MONATRSERTRAG_KW_3"},
+  {Property::kSOLAR_MONATRSERTRAG_KW_4, "SOLAR_MONATRSERTRAG_KW_4"},
+  {Property::kSOLAR_MONATRSERTRAG_KW_5, "SOLAR_MONATRSERTRAG_KW_5"},
+  {Property::kSOLAR_MONATRSERTRAG_KW_6, "SOLAR_MONATRSERTRAG_KW_6"},
+  {Property::kSOLAR_MONATRSERTRAG_KW_7, "SOLAR_MONATRSERTRAG_KW_7"},
+  {Property::kSOLAR_MONATRSERTRAG_KW_8, "SOLAR_MONATRSERTRAG_KW_8"},
+  {Property::kSOLAR_MONATRSERTRAG_KW_9, "SOLAR_MONATRSERTRAG_KW_9"},
+  {Property::kSOLAR_MONATRSERTRAG_KW_10, "SOLAR_MONATRSERTRAG_KW_10"},
+  {Property::kSOLAR_MONATRSERTRAG_KW_11, "SOLAR_MONATRSERTRAG_KW_11"},
+  {Property::kSOLAR_MONATRSERTRAG_KW_12, "SOLAR_MONATRSERTRAG_KW_12"},
+  {Property::kSOLAR_MONATRSERTRAG_MW_1, "SOLAR_MONATRSERTRAG_MW_1"},
+  {Property::kSOLAR_MONATRSERTRAG_MW_2, "SOLAR_MONATRSERTRAG_MW_2"},
+  {Property::kSOLAR_MONATRSERTRAG_MW_3, "SOLAR_MONATRSERTRAG_MW_3"},
+  {Property::kSOLAR_MONATRSERTRAG_MW_4, "SOLAR_MONATRSERTRAG_MW_4"},
+  {Property::kSOLAR_MONATRSERTRAG_MW_5, "SOLAR_MONATRSERTRAG_MW_5"},
+  {Property::kSOLAR_MONATRSERTRAG_MW_6, "SOLAR_MONATRSERTRAG_MW_6"},
+  {Property::kSOLAR_MONATRSERTRAG_MW_7, "SOLAR_MONATRSERTRAG_MW_7"},
+  {Property::kSOLAR_MONATRSERTRAG_MW_8, "SOLAR_MONATRSERTRAG_MW_8"},
+  {Property::kSOLAR_MONATRSERTRAG_MW_9, "SOLAR_MONATRSERTRAG_MW_9"},
+  {Property::kSOLAR_MONATRSERTRAG_MW_10, "SOLAR_MONATRSERTRAG_MW_10"},
+  {Property::kSOLAR_MONATRSERTRAG_MW_11, "SOLAR_MONATRSERTRAG_MW_11"},
+  {Property::kSOLAR_MONATRSERTRAG_MW_12, "SOLAR_MONATRSERTRAG_MW_12"},
+  {Property::kSOLAR_JAHRESERTRAG_W_1, "SOLAR_JAHRESERTRAG_W_1"},
+  {Property::kSOLAR_JAHRESERTRAG_W_2, "SOLAR_JAHRESERTRAG_W_2"},
+  {Property::kSOLAR_JAHRESERTRAG_W_3, "SOLAR_JAHRESERTRAG_W_3"},
+  {Property::kSOLAR_JAHRESERTRAG_W_4, "SOLAR_JAHRESERTRAG_W_4"},
+  {Property::kSOLAR_JAHRESERTRAG_W_5, "SOLAR_JAHRESERTRAG_W_5"},
+  {Property::kSOLAR_JAHRESERTRAG_KW_1, "SOLAR_JAHRESERTRAG_KW_1"},
+  {Property::kSOLAR_JAHRESERTRAG_KW_2, "SOLAR_JAHRESERTRAG_KW_2"},
+  {Property::kSOLAR_JAHRESERTRAG_KW_3, "SOLAR_JAHRESERTRAG_KW_3"},
+  {Property::kSOLAR_JAHRESERTRAG_KW_4, "SOLAR_JAHRESERTRAG_KW_4"},
+  {Property::kSOLAR_JAHRESERTRAG_KW_5, "SOLAR_JAHRESERTRAG_KW_5"},
+  {Property::kSOLAR_JAHRESERTRAG_MW_1, "SOLAR_JAHRESERTRAG_MW_1"},
+  {Property::kSOLAR_JAHRESERTRAG_MW_2, "SOLAR_JAHRESERTRAG_MW_2"},
+  {Property::kSOLAR_JAHRESERTRAG_MW_3, "SOLAR_JAHRESERTRAG_MW_3"},
+  {Property::kSOLAR_JAHRESERTRAG_MW_4, "SOLAR_JAHRESERTRAG_MW_4"},
+  {Property::kSOLAR_JAHRESERTRAG_MW_5, "SOLAR_JAHRESERTRAG_MW_5"},
+  {Property::kSPARBETRIEB_BIVALENZ, "SPARBETRIEB_BIVALENZ"},
+  {Property::kWARTEZEIT_DHC, "WARTEZEIT_DHC"},
+  {Property::kSTUFEN_DHC, "STUFEN_DHC"},
+  {Property::kFREIGEGEBENE_DHC_STUFEN, "FREIGEGEBENE_DHC_STUFEN"},
+  {Property::kVERDAMPFERTEMP_LUEFTUNG, "VERDAMPFERTEMP_LUEFTUNG"},
+  {Property::kFROSTSCHUTZTEMP_LUEFTUNG, "FROSTSCHUTZTEMP_LUEFTUNG"},
+  {Property::kMINDESTVOLUMENSTROM_LUEFTUNG, "MINDESTVOLUMENSTROM_LUEFTUNG"},
+  {Property::kABSENKVOLUMENSTROM_LUEFTUNG, "ABSENKVOLUMENSTROM_LUEFTUNG"},
+  {Property::kNORMALVOLUMENSTROM_LUEFTUNG, "NORMALVOLUMENSTROM_LUEFTUNG"},
+  {Property::kPARTYVOLUMENSTROM_LUEFTUNG, "PARTYVOLUMENSTROM_LUEFTUNG"},
+  {Property::kNACHTKUEHLUNG_LUEFTUNG, "NACHTKUEHLUNG_LUEFTUNG"},
+  {Property::kSOMMERBETRIEB_LUEFTUNG, "SOMMERBETRIEB_LUEFTUNG"},
+  {Property::kFILTER_RESET_NACH_LAUFZEIT, "FILTER_RESET_NACH_LAUFZEIT"},
+  {Property::kINTEGRAL_REGELABWEICHUNG, "INTEGRAL_REGELABWEICHUNG"},
+  {Property::kREGELABWEICHUNG, "REGELABWEICHUNG"},
+  {Property::kPROGRAMMSCHALTER_LUEFTUNG, "PROGRAMMSCHALTER_LUEFTUNG"},
+  {Property::kABLUFTTEMPERATUR_SOLL, "ABLUFTTEMPERATUR_SOLL"},
+  {Property::kLAUFZEIT_DHC3, "LAUFZEIT_DHC3"},
+  {Property::kLAUFZEIT_FILTER, "LAUFZEIT_FILTER"},
+  {Property::kEINSCHALTTEMPERATUR_DIFFERENZ2, "EINSCHALTTEMPERATUR_DIFFERENZ2"},
+  {Property::kAUSSCHALTTEMPERATUR_DIFFERENZ2, "AUSSCHALTTEMPERATUR_DIFFERENZ2"},
+  {Property::kSOLARSPEICHER_ZUORDNUNG2, "SOLARSPEICHER_ZUORDNUNG2"},
+  {Property::kDREHZAHLREGELUNG_SOLARPUMPE1, "DREHZAHLREGELUNG_SOLARPUMPE1"},
+  {Property::kDREHZAHLREGELUNG_SOLARPUMPE2, "DREHZAHLREGELUNG_SOLARPUMPE2"},
+  {Property::kBRENNERSPERRZEIT_BEI_RUECKLAUFANHEBUNG_SOLAR, "BRENNERSPERRZEIT_BEI_RUECKLAUFANHEBUNG_SOLAR"},
+  {Property::kEINSCHALTDIFFERENZ_RUECKLAUFANHEBUNG_SOLAR, "EINSCHALTDIFFERENZ_RUECKLAUFANHEBUNG_SOLAR"},
+  {Property::kAUSSCHALTDIFFERENZ_RUECKLAUFANHEBUNG_SOLAR, "AUSSCHALTDIFFERENZ_RUECKLAUFANHEBUNG_SOLAR"},
+  {Property::kSPEICHERVORRANG_FUER_2_SPEICHER_SOLARANLAGEN, "SPEICHERVORRANG_FUER_2_SPEICHER_SOLARANLAGEN"},
+  {Property::kSP_PARALLELBETR_TEMP_DIFF_SOLAR, "SP_PARALLELBETR_TEMP_DIFF_SOLAR"},
+  {Property::kEINSCHALT_KOLLEKTEMP_BEI_SOLBYPASS_SCHALT, "EINSCHALT_KOLLEKTEMP_BEI_SOLBYPASS_SCHALT"},
+  {Property::kSP_UMSCHICHTUNG_BEI_ANTILEG_BETRIEB, "SP_UMSCHICHTUNG_BEI_ANTILEG_BETRIEB"},
+  {Property::kVERFLUESSIGERTEMP, "VERFLUESSIGERTEMP"},
+  {Property::kOEL_VERBRAUCH_LOW, "OEL_VERBRAUCH_LOW"},
+  {Property::kOEL_VERBRAUCH_HIGH, "OEL_VERBRAUCH_HIGH"},
+  {Property::kMIN_MODULATIONSSTROM_ERDGAS, "MIN_MODULATIONSSTROM_ERDGAS"},
+  {Property::kMAX_MODULATIONSSTROM_HEIZUNG_ERDGAS, "MAX_MODULATIONSSTROM_HEIZUNG_ERDGAS"},
+  {Property::kMAX_MODULATIONSSTROM_WW_ERDGAS, "MAX_MODULATIONSSTROM_WW_ERDGAS"},
+  {Property::kMIN_MODULATIONSSTROM_FLUESSIGGAS, "MIN_MODULATIONSSTROM_FLUESSIGGAS"},
+  {Property::kMAX_MODULATIONSSTROM_HEIZUNG_FLUESSIGGAS, "MAX_MODULATIONSSTROM_HEIZUNG_FLUESSIGGAS"},
+  {Property::kMAX_MODULATIONSSTROM_WW_FLUESSIGGAS, "MAX_MODULATIONSSTROM_WW_FLUESSIGGAS"},
+  {Property::kPRUEFSTATUS, "PRUEFSTATUS"},
+  {Property::kHARDWARE_NUMMER, "HARDWARE_NUMMER"},
+  {Property::kGERAETEKONFIGURATION_3, "GERAETEKONFIGURATION_3"},
+  {Property::kAFB_PROGRAMMSCHALTER, "AFB_PROGRAMMSCHALTER"},
+  {Property::kAFB_VORHANDEN, "AFB_VORHANDEN"},
+  {Property::kAFB_SOLLWERTVERSTELLUNG, "AFB_SOLLWERTVERSTELLUNG"},
+  {Property::kAFB_TELEFONKONTAKT, "AFB_TELEFONKONTAKT"},
+  {Property::kAFB_RAUMISTTEMPERATUR, "AFB_RAUMISTTEMPERATUR"},
+  {Property::kK_OS_WEICHENREGLER_I_ANTEIL, "K_OS_WEICHENREGLER_I_ANTEIL"},
+  {Property::kK_OS_WEICHENREGLER_P_ANTEIL, "K_OS_WEICHENREGLER_P_ANTEIL"},
+  {Property::kK_OS_WARTEZEIT_NACH_VORSPUELEN, "K_OS_WARTEZEIT_NACH_VORSPUELEN"},
+  {Property::kK_OS_KESSELLEISTUNG_PUMPENLEISTUNG_MAX, "K_OS_KESSELLEISTUNG_PUMPENLEISTUNG_MAX"},
+  {Property::kK_OS_GEBLAESE_ABTASTRATE, "K_OS_GEBLAESE_ABTASTRATE"},
+  {Property::kK_OS_ZUENDSTELLUNG, "K_OS_ZUENDSTELLUNG"},
+  {Property::kK_FEHLERZAEHLER_01, "K_FEHLERZAEHLER_01"},
+  {Property::kK_FEHLERZAEHLER_02, "K_FEHLERZAEHLER_02"},
+  {Property::kK_FEHLERZAEHLER_03, "K_FEHLERZAEHLER_03"},
+  {Property::kK_FEHLERZAEHLER_04, "K_FEHLERZAEHLER_04"},
+  {Property::kK_FEHLERZAEHLER_05, "K_FEHLERZAEHLER_05"},
+  {Property::kK_FEHLERZAEHLER_06, "K_FEHLERZAEHLER_06"},
+  {Property::kK_FEHLERZAEHLER_07, "K_FEHLERZAEHLER_07"},
+  {Property::kK_FEHLERZAEHLER_08, "K_FEHLERZAEHLER_08"},
+  {Property::kK_FEHLERZAEHLER_09, "K_FEHLERZAEHLER_09"},
+  {Property::kK_FEHLERZAEHLER_10, "K_FEHLERZAEHLER_10"},
+  {Property::kK_FEHLERZAEHLER_11, "K_FEHLERZAEHLER_11"},
+  {Property::kK_FEHLERZAEHLER_12, "K_FEHLERZAEHLER_12"},
+  {Property::kK_FEHLERZAEHLER_13, "K_FEHLERZAEHLER_13"},
+  {Property::kK_FEHLERZAEHLER_14, "K_FEHLERZAEHLER_14"},
+  {Property::kK_FEHLERZAEHLER_15, "K_FEHLERZAEHLER_15"},
+  {Property::kK_FEHLERZAEHLER_16, "K_FEHLERZAEHLER_16"},
+  {Property::kK_FEHLERZAEHLER_17, "K_FEHLERZAEHLER_17"},
+  {Property::kK_FEHLERZAEHLER_18, "K_FEHLERZAEHLER_18"},
+  {Property::kK_FEHLERZAEHLER_19, "K_FEHLERZAEHLER_19"},
+  {Property::kK_FEHLERZAEHLER_20, "K_FEHLERZAEHLER_20"},
+  {Property::kK_FEHLERZAEHLER_21, "K_FEHLERZAEHLER_21"},
+  {Property::kK_FEHLERZAEHLER_22, "K_FEHLERZAEHLER_22"},
+  {Property::kK_FEHLERZAEHLER_23, "K_FEHLERZAEHLER_23"},
+  {Property::kK_FEHLERZAEHLER_24, "K_FEHLERZAEHLER_24"},
+  {Property::kK_FEHLERZAEHLER_25, "K_FEHLERZAEHLER_25"},
+  {Property::kK_OS_STOERMELDUNG_POINTER, "K_OS_STOERMELDUNG_POINTER"},
+  {Property::kK_OS_STOERMELDUNG_11, "K_OS_STOERMELDUNG_11"},
+  {Property::kK_OS_STOERMELDUNG_12, "K_OS_STOERMELDUNG_12"},
+  {Property::kK_OS_STOERMELDUNG_13, "K_OS_STOERMELDUNG_13"},
+  {Property::kK_OS_STOERMELDUNG_14, "K_OS_STOERMELDUNG_14"},
+  {Property::kK_OS_STOERMELDUNG_15, "K_OS_STOERMELDUNG_15"},
+  {Property::kK_OS_STOERMELDUNG_16, "K_OS_STOERMELDUNG_16"},
+  {Property::kK_OS_STOERMELDUNG_17, "K_OS_STOERMELDUNG_17"},
+  {Property::kK_OS_STOERMELDUNG_18, "K_OS_STOERMELDUNG_18"},
+  {Property::kK_OS_STOERMELDUNG_19, "K_OS_STOERMELDUNG_19"},
+  {Property::kK_OS_STOERMELDUNG_20, "K_OS_STOERMELDUNG_20"},
+  {Property::kK_OS_DUMMY, "K_OS_DUMMY"},
+  {Property::kK_OS_STARTBEDINGUNGEN_1, "K_OS_STARTBEDINGUNGEN_1"},
+  {Property::kK_OS_STARTBEDINGUNGEN_2, "K_OS_STARTBEDINGUNGEN_2"},
+  {Property::kK_OS_STARTBEDINGUNGEN_3, "K_OS_STARTBEDINGUNGEN_3"},
+  {Property::kK_OS_SAMLERIST_FUEHLER, "K_OS_SAMLERIST_FUEHLER"},
+  {Property::kKESSELISTTEMP_2, "KESSELISTTEMP_2"},
+  {Property::kWW_AUSLAUFTEMPERATUR, "WW_AUSLAUFTEMPERATUR"},
+  {Property::kMODULATIONSSTROM_GASVENTIL, "MODULATIONSSTROM_GASVENTIL"},
+  {Property::kMAX_VORVERLEGUNG_MIN, "MAX_VORVERLEGUNG_MIN"},
+  {Property::kWE1_GRADIENTENUEBERWACHUNG, "WE1_GRADIENTENUEBERWACHUNG"},
+  {Property::kWE2_GRADIENTENUEBERWACHUNG, "WE2_GRADIENTENUEBERWACHUNG"},
+  {Property::kBUSKENNUNG_2, "BUSKENNUNG_2"},
+  {Property::kBUSKENNUNG_3, "BUSKENNUNG_3"},
+  {Property::kZIRKULATIONSTEMP, "ZIRKULATIONSTEMP"},
+  {Property::kZUSCHALTSPERRE_KASKADE_PAR, "ZUSCHALTSPERRE_KASKADE_PAR"},
+  {Property::kHYSTERESE_ZUSCHALTSPERRE, "HYSTERESE_ZUSCHALTSPERRE"},
+  {Property::kKSOLL_RUECKLANHEB_HOLZKESSEL1, "KSOLL_RUECKLANHEB_HOLZKESSEL1"},
+  {Property::kKSOLL_RUECKLANHEB_HYST1, "KSOLL_RUECKLANHEB_HYST1"},
+  {Property::kKSOLL_RUECKLANHEB_HOLZKESSEL2, "KSOLL_RUECKLANHEB_HOLZKESSEL2"},
+  {Property::kKSOLL_RUECKLANHEB_HYST2, "KSOLL_RUECKLANHEB_HYST2"},
+  {Property::kLADEPUMPE_PUFFER_DREHZAL_1, "LADEPUMPE_PUFFER_DREHZAL_1"},
+  {Property::kLADEPUMPE_PUFFER_DREHZAL_2, "LADEPUMPE_PUFFER_DREHZAL_2"},
+  {Property::kLADEPUMPE_PUFFER_DREHZAL_3, "LADEPUMPE_PUFFER_DREHZAL_3"},
+  {Property::kMISCHER_ABTASTZEIT, "MISCHER_ABTASTZEIT"},
+  {Property::kMISCHER_BETRIEBSART, "MISCHER_BETRIEBSART"},
+  {Property::kHD_EVE_GRENZWERT_VND, "HD_EVE_GRENZWERT_VND"},
+  {Property::kANZAHL_KUEHLUNGSSTUFEN, "ANZAHL_KUEHLUNGSSTUFEN"},
+  {Property::kKONFIGURATION_KUEHLUNG, "KONFIGURATION_KUEHLUNG"},
+  {Property::kMISCHER_KP, "MISCHER_KP"},
+  {Property::kMISCHER_TN, "MISCHER_TN"},
+  {Property::kMISCHER_TV, "MISCHER_TV"},
+  {Property::kPERIODENDAUER_ABTAUEN, "PERIODENDAUER_ABTAUEN"},
+  {Property::kRELATIVE_ABTAUDAUER1, "RELATIVE_ABTAUDAUER1"},
+  {Property::kRELATIVE_ABTAUDAUER2, "RELATIVE_ABTAUDAUER2"},
+  {Property::kMAX_ABTAUDAUER_VERDAMPFER, "MAX_ABTAUDAUER_VERDAMPFER"},
+  {Property::kWE1_TYP_NEU, "WE1_TYP_NEU"},
+  {Property::kBUSSYSTEM, "BUSSYSTEM"},
+  {Property::kWAERMEERTRAG_RUECKGE_TAG_WH, "WAERMEERTRAG_RUECKGE_TAG_WH"},
+  {Property::kWAERMEERTRAG_RUECKGE_TAG_KWH, "WAERMEERTRAG_RUECKGE_TAG_KWH"},
+  {Property::kWAERMEERTRAG_RUECKGE_SUMME_KWH, "WAERMEERTRAG_RUECKGE_SUMME_KWH"},
+  {Property::kWAERMEERTRAG_RUECKGE_SUMME_MWH, "WAERMEERTRAG_RUECKGE_SUMME_MWH"},
+  {Property::kSOLAR_MAX_DREHZAHL_TEMP, "SOLAR_MAX_DREHZAHL_TEMP"},
+  {Property::kSOLAR_KOLLEKTOR_FREIGABETEMP, "SOLAR_KOLLEKTOR_FREIGABETEMP"},
+  {Property::kSOLAR_KOLLEKTOR_SPERRTEMP, "SOLAR_KOLLEKTOR_SPERRTEMP"},
+  {Property::kSOLAR_FREIGABETEMP_2WE, "SOLAR_FREIGABETEMP_2WE"},
+  {Property::kSOLAR_MAX_TEMP_2WE, "SOLAR_MAX_TEMP_2WE"},
+  {Property::kSOLAR_KOLLEKTORSCHUTZTEMP, "SOLAR_KOLLEKTORSCHUTZTEMP"},
+  {Property::kSOLAR_SCHALTSCHWELLE_RUECKKUEHLUNG, "SOLAR_SCHALTSCHWELLE_RUECKKUEHLUNG"},
+  {Property::kSOLAR_ZIRKPUMPE_EINSCHALTZEIT, "SOLAR_ZIRKPUMPE_EINSCHALTZEIT"},
+  {Property::kSOLAR_ZIRKPUMPE_AUSSCHALTZEIT, "SOLAR_ZIRKPUMPE_AUSSCHALTZEIT"},
+  {Property::kSOLAR_NACHHEIZEN_EINSCHALTZEIT, "SOLAR_NACHHEIZEN_EINSCHALTZEIT"},
+  {Property::kSOLAR_NACHHEIZEN_AUSSCHALTZEIT, "SOLAR_NACHHEIZEN_AUSSCHALTZEIT"},
+  {Property::kSOLAR_ANLAGENAUSWAHL, "SOLAR_ANLAGENAUSWAHL"},
+  {Property::kSOLAR_TOLERANZ_SOLARERTRAG, "SOLAR_TOLERANZ_SOLARERTRAG"},
+  {Property::kSOLAR_MIN_RUECKLAUFTEMP, "SOLAR_MIN_RUECKLAUFTEMP"},
+  {Property::kSOLAR_VOLUMENSTROMVERTEILUNG_WMZ, "SOLAR_VOLUMENSTROMVERTEILUNG_WMZ"},
+  {Property::kSOLAR_IMPULSRATE_EINHEIT_WMZ, "SOLAR_IMPULSRATE_EINHEIT_WMZ"},
+  {Property::kSOLAR_ZUSATZRELAISFUNKTION2, "SOLAR_ZUSATZRELAISFUNKTION2"},
+  {Property::kSOLAR_ZUSATZRELAISFUNKTION, "SOLAR_ZUSATZRELAISFUNKTION"},
+  {Property::kSOLAR_MAX_DREHZAHL, "SOLAR_MAX_DREHZAHL"},
+  {Property::kSOLAR_MIN_DREHZAHL, "SOLAR_MIN_DREHZAHL"},
+  {Property::kSOLAR_HAND_DREHZAHLSOLL, "SOLAR_HAND_DREHZAHLSOLL"},
+  {Property::kSOLAR_BETRIEBSART_DREHZAHL, "SOLAR_BETRIEBSART_DREHZAHL"},
+  {Property::kSOLAR_THERMOSTATFUNKTION_EINSCHALTTEMP, "SOLAR_THERMOSTATFUNKTION_EINSCHALTTEMP"},
+  {Property::kSOLAR_THERMOSTATFUNKTION_AUSSCHALTDIFFERENZ, "SOLAR_THERMOSTATFUNKTION_AUSSCHALTDIFFERENZ"},
+  {Property::kSOLAR_ROEHRENKOLLEKTORFUNKTION, "SOLAR_ROEHRENKOLLEKTORFUNKTION"},
+  {Property::kSOLAR_FROSTSCHUTZFUNKTION, "SOLAR_FROSTSCHUTZFUNKTION"},
+  {Property::kSOLAR_SPEICHERLADUNG_ERFOLGREICH, "SOLAR_SPEICHERLADUNG_ERFOLGREICH"},
+  {Property::kEINSCHALTTEMPERATUR_DIFFERENZ3, "EINSCHALTTEMPERATUR_DIFFERENZ3"},
+  {Property::kAUSSCHALTTEMPERATUR_DIFFERENZ3, "AUSSCHALTTEMPERATUR_DIFFERENZ3"},
+  {Property::kMAXTEMP_ERDSONDE, "MAXTEMP_ERDSONDE"},
+  {Property::kMAXTEMP_ERDSONDE_WIEDEREIN, "MAXTEMP_ERDSONDE_WIEDEREIN"},
+  {Property::kMAXTEMP_SCHWIMMBAD, "MAXTEMP_SCHWIMMBAD"},
+  {Property::kMAXTEMP_SCHWIMMBAD_WIEDEREIN, "MAXTEMP_SCHWIMMBAD_WIEDEREIN"},
+  {Property::kSOLAR_HAND_DREHZAHL2_SOLL, "SOLAR_HAND_DREHZAHL2_SOLL"},
+  {Property::kDURCHFLUSSMENGE_SOLAR_SOLL, "DURCHFLUSSMENGE_SOLAR_SOLL"},
+  {Property::kDURCHFLUSSMENGE_SOLAR2, "DURCHFLUSSMENGE_SOLAR2"},
+  {Property::kDURCHFLUSSMENGE_SOLAR2_SOLL, "DURCHFLUSSMENGE_SOLAR2_SOLL"},
+  {Property::kKUEHL_FREIGABE_TEMPERATUR, "KUEHL_FREIGABE_TEMPERATUR"},
+  {Property::kKUEHL_VORLAUFSOLLTEMP, "KUEHL_VORLAUFSOLLTEMP"},
+  {Property::kKUEHL_RUECKLAUFSOLLTEMP, "KUEHL_RUECKLAUFSOLLTEMP"},
+  {Property::kSOLAR_HYSTERESE_NACHHEIZUNG, "SOLAR_HYSTERESE_NACHHEIZUNG"},
+  {Property::kUMLADUNG_PUMPEMSTATUS1, "UMLADUNG_PUMPEMSTATUS1"},
+  {Property::kUMLADUNG_PUMPEMSTATUS2, "UMLADUNG_PUMPEMSTATUS2"},
+  {Property::kHF_FELDSTAERKE, "HF_FELDSTAERKE"},
+  {Property::kKUEHLDYNAMIK_FLAECHE_PASSIV, "KUEHLDYNAMIK_FLAECHE_PASSIV"},
+  {Property::kKUEHLDYNAMIK_GEBLAESE_PASSIV, "KUEHLDYNAMIK_GEBLAESE_PASSIV"},
+  {Property::kMANAGER_SYSTEM_INFOS, "MANAGER_SYSTEM_INFOS"},
+  {Property::kQUELLENPUMPEN_STATUS, "QUELLENPUMPEN_STATUS"},
+  {Property::kKUEHL_AUSGANG, "KUEHL_AUSGANG"},
+  {Property::kWERKSTEST_BESTANDEN, "WERKSTEST_BESTANDEN"},
+  {Property::kKESSEL_1_STUFE_1_LEISTUNG, "KESSEL_1_STUFE_1_LEISTUNG"},
+  {Property::kKESSEL_2_STUFE_1_LEISTUNG, "KESSEL_2_STUFE_1_LEISTUNG"},
+  {Property::kKESSEL_3_STUFE_1_LEISTUNG, "KESSEL_3_STUFE_1_LEISTUNG"},
+  {Property::kKESSEL_4_STUFE_1_LEISTUNG, "KESSEL_4_STUFE_1_LEISTUNG"},
+  {Property::kKESSEL_5_STUFE_1_LEISTUNG, "KESSEL_5_STUFE_1_LEISTUNG"},
+  {Property::kKESSEL_6_STUFE_1_LEISTUNG, "KESSEL_6_STUFE_1_LEISTUNG"},
+  {Property::kKESSEL_7_STUFE_1_LEISTUNG, "KESSEL_7_STUFE_1_LEISTUNG"},
+  {Property::kKESSEL_8_STUFE_1_LEISTUNG, "KESSEL_8_STUFE_1_LEISTUNG"},
+  {Property::kKESSEL_9_STUFE_1_LEISTUNG, "KESSEL_9_STUFE_1_LEISTUNG"},
+  {Property::kKESSEL_10_STUFE_1_LEISTUNG, "KESSEL_10_STUFE_1_LEISTUNG"},
+  {Property::kKESSEL_11_STUFE_1_LEISTUNG, "KESSEL_11_STUFE_1_LEISTUNG"},
+  {Property::kKESSEL_12_STUFE_1_LEISTUNG, "KESSEL_12_STUFE_1_LEISTUNG"},
+  {Property::kKESSEL_13_STUFE_1_LEISTUNG, "KESSEL_13_STUFE_1_LEISTUNG"},
+  {Property::kKESSEL_14_STUFE_1_LEISTUNG, "KESSEL_14_STUFE_1_LEISTUNG"},
+  {Property::kKESSEL_15_STUFE_1_LEISTUNG, "KESSEL_15_STUFE_1_LEISTUNG"},
+  {Property::kKESSEL_16_STUFE_1_LEISTUNG, "KESSEL_16_STUFE_1_LEISTUNG"},
+  {Property::kKESSEL_1_STUFE_2_LEISTUNG, "KESSEL_1_STUFE_2_LEISTUNG"},
+  {Property::kKESSEL_2_STUFE_2_LEISTUNG, "KESSEL_2_STUFE_2_LEISTUNG"},
+  {Property::kKESSEL_3_STUFE_2_LEISTUNG, "KESSEL_3_STUFE_2_LEISTUNG"},
+  {Property::kKESSEL_4_STUFE_2_LEISTUNG, "KESSEL_4_STUFE_2_LEISTUNG"},
+  {Property::kKESSEL_5_STUFE_2_LEISTUNG, "KESSEL_5_STUFE_2_LEISTUNG"},
+  {Property::kKESSEL_6_STUFE_2_LEISTUNG, "KESSEL_6_STUFE_2_LEISTUNG"},
+  {Property::kKESSEL_7_STUFE_2_LEISTUNG, "KESSEL_7_STUFE_2_LEISTUNG"},
+  {Property::kKESSEL_8_STUFE_2_LEISTUNG, "KESSEL_8_STUFE_2_LEISTUNG"},
+  {Property::kKESSEL_9_STUFE_2_LEISTUNG, "KESSEL_9_STUFE_2_LEISTUNG"},
+  {Property::kKESSEL_10_STUFE_2_LEISTUNG, "KESSEL_10_STUFE_2_LEISTUNG"},
+  {Property::kKESSEL_11_STUFE_2_LEISTUNG, "KESSEL_11_STUFE_2_LEISTUNG"},
+  {Property::kKESSEL_12_STUFE_2_LEISTUNG, "KESSEL_12_STUFE_2_LEISTUNG"},
+  {Property::kKESSEL_13_STUFE_2_LEISTUNG, "KESSEL_13_STUFE_2_LEISTUNG"},
+  {Property::kKESSEL_14_STUFE_2_LEISTUNG, "KESSEL_14_STUFE_2_LEISTUNG"},
+  {Property::kKESSEL_15_STUFE_2_LEISTUNG, "KESSEL_15_STUFE_2_LEISTUNG"},
+  {Property::kKESSEL_16_STUFE_2_LEISTUNG, "KESSEL_16_STUFE_2_LEISTUNG"},
+  {Property::kKESSEL_1_STUFE_1_STARTS, "KESSEL_1_STUFE_1_STARTS"},
+  {Property::kKESSEL_2_STUFE_1_STARTS, "KESSEL_2_STUFE_1_STARTS"},
+  {Property::kKESSEL_3_STUFE_1_STARTS, "KESSEL_3_STUFE_1_STARTS"},
+  {Property::kKESSEL_4_STUFE_1_STARTS, "KESSEL_4_STUFE_1_STARTS"},
+  {Property::kKESSEL_5_STUFE_1_STARTS, "KESSEL_5_STUFE_1_STARTS"},
+  {Property::kKESSEL_6_STUFE_1_STARTS, "KESSEL_6_STUFE_1_STARTS"},
+  {Property::kKESSEL_7_STUFE_1_STARTS, "KESSEL_7_STUFE_1_STARTS"},
+  {Property::kKESSEL_8_STUFE_1_STARTS, "KESSEL_8_STUFE_1_STARTS"},
+  {Property::kKESSEL_9_STUFE_1_STARTS, "KESSEL_9_STUFE_1_STARTS"},
+  {Property::kKESSEL_10_STUFE_1_STARTS, "KESSEL_10_STUFE_1_STARTS"},
+  {Property::kKESSEL_11_STUFE_1_STARTS, "KESSEL_11_STUFE_1_STARTS"},
+  {Property::kKESSEL_12_STUFE_1_STARTS, "KESSEL_12_STUFE_1_STARTS"},
+  {Property::kKESSEL_13_STUFE_1_STARTS, "KESSEL_13_STUFE_1_STARTS"},
+  {Property::kKESSEL_14_STUFE_1_STARTS, "KESSEL_14_STUFE_1_STARTS"},
+  {Property::kKESSEL_15_STUFE_1_STARTS, "KESSEL_15_STUFE_1_STARTS"},
+  {Property::kKESSEL_16_STUFE_1_STARTS, "KESSEL_16_STUFE_1_STARTS"},
+  {Property::kKESSEL_1_STUFE_2_STARTS, "KESSEL_1_STUFE_2_STARTS"},
+  {Property::kKESSEL_2_STUFE_2_STARTS, "KESSEL_2_STUFE_2_STARTS"},
+  {Property::kKESSEL_3_STUFE_2_STARTS, "KESSEL_3_STUFE_2_STARTS"},
+  {Property::kKESSEL_4_STUFE_2_STARTS, "KESSEL_4_STUFE_2_STARTS"},
+  {Property::kKESSEL_5_STUFE_2_STARTS, "KESSEL_5_STUFE_2_STARTS"},
+  {Property::kKESSEL_6_STUFE_2_STARTS, "KESSEL_6_STUFE_2_STARTS"},
+  {Property::kKESSEL_7_STUFE_2_STARTS, "KESSEL_7_STUFE_2_STARTS"},
+  {Property::kKESSEL_8_STUFE_2_STARTS, "KESSEL_8_STUFE_2_STARTS"},
+  {Property::kKESSEL_9_STUFE_2_STARTS, "KESSEL_9_STUFE_2_STARTS"},
+  {Property::kKESSEL_10_STUFE_2_STARTS, "KESSEL_10_STUFE_2_STARTS"},
+  {Property::kKESSEL_11_STUFE_2_STARTS, "KESSEL_11_STUFE_2_STARTS"},
+  {Property::kKESSEL_12_STUFE_2_STARTS, "KESSEL_12_STUFE_2_STARTS"},
+  {Property::kKESSEL_13_STUFE_2_STARTS, "KESSEL_13_STUFE_2_STARTS"},
+  {Property::kKESSEL_14_STUFE_2_STARTS, "KESSEL_14_STUFE_2_STARTS"},
+  {Property::kKESSEL_15_STUFE_2_STARTS, "KESSEL_15_STUFE_2_STARTS"},
+  {Property::kKESSEL_16_STUFE_2_STARTS, "KESSEL_16_STUFE_2_STARTS"},
+  {Property::kKESSEL_1_STUFEN_1_STARTS_UEBERLAUF, "KESSEL_1_STUFEN_1_STARTS_UEBERLAUF"},
+  {Property::kKESSEL_2_STUFEN_1_STARTS_UEBERLAUF, "KESSEL_2_STUFEN_1_STARTS_UEBERLAUF"},
+  {Property::kKESSEL_3_STUFEN_1_STARTS_UEBERLAUF, "KESSEL_3_STUFEN_1_STARTS_UEBERLAUF"},
+  {Property::kKESSEL_4_STUFEN_1_STARTS_UEBERLAUF, "KESSEL_4_STUFEN_1_STARTS_UEBERLAUF"},
+  {Property::kKESSEL_5_STUFEN_1_STARTS_UEBERLAUF, "KESSEL_5_STUFEN_1_STARTS_UEBERLAUF"},
+  {Property::kKESSEL_6_STUFEN_1_STARTS_UEBERLAUF, "KESSEL_6_STUFEN_1_STARTS_UEBERLAUF"},
+  {Property::kKESSEL_7_STUFEN_1_STARTS_UEBERLAUF, "KESSEL_7_STUFEN_1_STARTS_UEBERLAUF"},
+  {Property::kKESSEL_8_STUFEN_1_STARTS_UEBERLAUF, "KESSEL_8_STUFEN_1_STARTS_UEBERLAUF"},
+  {Property::kKESSEL_9_STUFEN_1_STARTS_UEBERLAUF, "KESSEL_9_STUFEN_1_STARTS_UEBERLAUF"},
+  {Property::kKESSEL_10_STUFEN_1_STARTS_UEBERLAUF, "KESSEL_10_STUFEN_1_STARTS_UEBERLAUF"},
+  {Property::kKESSEL_11_STUFEN_1_STARTS_UEBERLAUF, "KESSEL_11_STUFEN_1_STARTS_UEBERLAUF"},
+  {Property::kKESSEL_12_STUFEN_1_STARTS_UEBERLAUF, "KESSEL_12_STUFEN_1_STARTS_UEBERLAUF"},
+  {Property::kKESSEL_13_STUFEN_1_STARTS_UEBERLAUF, "KESSEL_13_STUFEN_1_STARTS_UEBERLAUF"},
+  {Property::kKESSEL_14_STUFEN_1_STARTS_UEBERLAUF, "KESSEL_14_STUFEN_1_STARTS_UEBERLAUF"},
+  {Property::kKESSEL_15_STUFEN_1_STARTS_UEBERLAUF, "KESSEL_15_STUFEN_1_STARTS_UEBERLAUF"},
+  {Property::kKESSEL_16_STUFEN_1_STARTS_UEBERLAUF, "KESSEL_16_STUFEN_1_STARTS_UEBERLAUF"},
+  {Property::kKESSEL_1_STUFEN_2_STARTS_UEBERLAUF, "KESSEL_1_STUFEN_2_STARTS_UEBERLAUF"},
+  {Property::kKESSEL_2_STUFEN_2_STARTS_UEBERLAUF, "KESSEL_2_STUFEN_2_STARTS_UEBERLAUF"},
+  {Property::kKESSEL_3_STUFEN_2_STARTS_UEBERLAUF, "KESSEL_3_STUFEN_2_STARTS_UEBERLAUF"},
+  {Property::kKESSEL_4_STUFEN_2_STARTS_UEBERLAUF, "KESSEL_4_STUFEN_2_STARTS_UEBERLAUF"},
+  {Property::kKESSEL_5_STUFEN_2_STARTS_UEBERLAUF, "KESSEL_5_STUFEN_2_STARTS_UEBERLAUF"},
+  {Property::kKESSEL_6_STUFEN_2_STARTS_UEBERLAUF, "KESSEL_6_STUFEN_2_STARTS_UEBERLAUF"},
+  {Property::kKESSEL_7_STUFEN_2_STARTS_UEBERLAUF, "KESSEL_7_STUFEN_2_STARTS_UEBERLAUF"},
+  {Property::kKESSEL_8_STUFEN_2_STARTS_UEBERLAUF, "KESSEL_8_STUFEN_2_STARTS_UEBERLAUF"},
+  {Property::kKESSEL_9_STUFEN_2_STARTS_UEBERLAUF, "KESSEL_9_STUFEN_2_STARTS_UEBERLAUF"},
+  {Property::kKESSEL_10_STUFEN_2_STARTS_UEBERLAUF, "KESSEL_10_STUFEN_2_STARTS_UEBERLAUF"},
+  {Property::kKESSEL_11_STUFEN_2_STARTS_UEBERLAUF, "KESSEL_11_STUFEN_2_STARTS_UEBERLAUF"},
+  {Property::kKESSEL_12_STUFEN_2_STARTS_UEBERLAUF, "KESSEL_12_STUFEN_2_STARTS_UEBERLAUF"},
+  {Property::kKESSEL_13_STUFEN_2_STARTS_UEBERLAUF, "KESSEL_13_STUFEN_2_STARTS_UEBERLAUF"},
+  {Property::kKESSEL_14_STUFEN_2_STARTS_UEBERLAUF, "KESSEL_14_STUFEN_2_STARTS_UEBERLAUF"},
+  {Property::kKESSEL_15_STUFEN_2_STARTS_UEBERLAUF, "KESSEL_15_STUFEN_2_STARTS_UEBERLAUF"},
+  {Property::kKESSEL_16_STUFEN_2_STARTS_UEBERLAUF, "KESSEL_16_STUFEN_2_STARTS_UEBERLAUF"},
+  {Property::kKESSEL_1_STUFE_1_LAUFZEIT, "KESSEL_1_STUFE_1_LAUFZEIT"},
+  {Property::kKESSEL_2_STUFE_1_LAUFZEIT, "KESSEL_2_STUFE_1_LAUFZEIT"},
+  {Property::kKESSEL_3_STUFE_1_LAUFZEIT, "KESSEL_3_STUFE_1_LAUFZEIT"},
+  {Property::kKESSEL_4_STUFE_1_LAUFZEIT, "KESSEL_4_STUFE_1_LAUFZEIT"},
+  {Property::kKESSEL_5_STUFE_1_LAUFZEIT, "KESSEL_5_STUFE_1_LAUFZEIT"},
+  {Property::kKESSEL_6_STUFE_1_LAUFZEIT, "KESSEL_6_STUFE_1_LAUFZEIT"},
+  {Property::kKESSEL_7_STUFE_1_LAUFZEIT, "KESSEL_7_STUFE_1_LAUFZEIT"},
+  {Property::kKESSEL_8_STUFE_1_LAUFZEIT, "KESSEL_8_STUFE_1_LAUFZEIT"},
+  {Property::kKESSEL_9_STUFE_1_LAUFZEIT, "KESSEL_9_STUFE_1_LAUFZEIT"},
+  {Property::kKESSEL_10_STUFE_1_LAUFZEIT, "KESSEL_10_STUFE_1_LAUFZEIT"},
+  {Property::kKESSEL_11_STUFE_1_LAUFZEIT, "KESSEL_11_STUFE_1_LAUFZEIT"},
+  {Property::kKESSEL_12_STUFE_1_LAUFZEIT, "KESSEL_12_STUFE_1_LAUFZEIT"},
+  {Property::kKESSEL_13_STUFE_1_LAUFZEIT, "KESSEL_13_STUFE_1_LAUFZEIT"},
+  {Property::kKESSEL_14_STUFE_1_LAUFZEIT, "KESSEL_14_STUFE_1_LAUFZEIT"},
+  {Property::kKESSEL_15_STUFE_1_LAUFZEIT, "KESSEL_15_STUFE_1_LAUFZEIT"},
+  {Property::kKESSEL_16_STUFE_1_LAUFZEIT, "KESSEL_16_STUFE_1_LAUFZEIT"},
+  {Property::kKESSEL_1_STUFE_2_LAUFZEIT, "KESSEL_1_STUFE_2_LAUFZEIT"},
+  {Property::kKESSEL_2_STUFE_2_LAUFZEIT, "KESSEL_2_STUFE_2_LAUFZEIT"},
+  {Property::kKESSEL_3_STUFE_2_LAUFZEIT, "KESSEL_3_STUFE_2_LAUFZEIT"},
+  {Property::kKESSEL_4_STUFE_2_LAUFZEIT, "KESSEL_4_STUFE_2_LAUFZEIT"},
+  {Property::kKESSEL_5_STUFE_2_LAUFZEIT, "KESSEL_5_STUFE_2_LAUFZEIT"},
+  {Property::kKESSEL_6_STUFE_2_LAUFZEIT, "KESSEL_6_STUFE_2_LAUFZEIT"},
+  {Property::kKESSEL_7_STUFE_2_LAUFZEIT, "KESSEL_7_STUFE_2_LAUFZEIT"},
+  {Property::kKESSEL_8_STUFE_2_LAUFZEIT, "KESSEL_8_STUFE_2_LAUFZEIT"},
+  {Property::kKESSEL_9_STUFE_2_LAUFZEIT, "KESSEL_9_STUFE_2_LAUFZEIT"},
+  {Property::kKESSEL_10_STUFE_2_LAUFZEIT, "KESSEL_10_STUFE_2_LAUFZEIT"},
+  {Property::kKESSEL_11_STUFE_2_LAUFZEIT, "KESSEL_11_STUFE_2_LAUFZEIT"},
+  {Property::kKESSEL_12_STUFE_2_LAUFZEIT, "KESSEL_12_STUFE_2_LAUFZEIT"},
+  {Property::kKESSEL_13_STUFE_2_LAUFZEIT, "KESSEL_13_STUFE_2_LAUFZEIT"},
+  {Property::kKESSEL_14_STUFE_2_LAUFZEIT, "KESSEL_14_STUFE_2_LAUFZEIT"},
+  {Property::kKESSEL_15_STUFE_2_LAUFZEIT, "KESSEL_15_STUFE_2_LAUFZEIT"},
+  {Property::kKESSEL_16_STUFE_2_LAUFZEIT, "KESSEL_16_STUFE_2_LAUFZEIT"},
+  {Property::kKESSEL_1_STUFE_1_LAUFZEIT_UEBERLAUF, "KESSEL_1_STUFE_1_LAUFZEIT_UEBERLAUF"},
+  {Property::kKESSEL_2_STUFE_1_LAUFZEIT_UEBERLAUF, "KESSEL_2_STUFE_1_LAUFZEIT_UEBERLAUF"},
+  {Property::kKESSEL_3_STUFE_1_LAUFZEIT_UEBERLAUF, "KESSEL_3_STUFE_1_LAUFZEIT_UEBERLAUF"},
+  {Property::kKESSEL_4_STUFE_1_LAUFZEIT_UEBERLAUF, "KESSEL_4_STUFE_1_LAUFZEIT_UEBERLAUF"},
+  {Property::kKESSEL_5_STUFE_1_LAUFZEIT_UEBERLAUF, "KESSEL_5_STUFE_1_LAUFZEIT_UEBERLAUF"},
+  {Property::kKESSEL_6_STUFE_1_LAUFZEIT_UEBERLAUF, "KESSEL_6_STUFE_1_LAUFZEIT_UEBERLAUF"},
+  {Property::kKESSEL_7_STUFE_1_LAUFZEIT_UEBERLAUF, "KESSEL_7_STUFE_1_LAUFZEIT_UEBERLAUF"},
+  {Property::kKESSEL_8_STUFE_1_LAUFZEIT_UEBERLAUF, "KESSEL_8_STUFE_1_LAUFZEIT_UEBERLAUF"},
+  {Property::kKESSEL_9_STUFE_1_LAUFZEIT_UEBERLAUF, "KESSEL_9_STUFE_1_LAUFZEIT_UEBERLAUF"},
+  {Property::kKESSEL_10_STUFE_1_LAUFZEIT_UEBERLAUF, "KESSEL_10_STUFE_1_LAUFZEIT_UEBERLAUF"},
+  {Property::kKESSEL_11_STUFE_1_LAUFZEIT_UEBERLAUF, "KESSEL_11_STUFE_1_LAUFZEIT_UEBERLAUF"},
+  {Property::kKESSEL_12_STUFE_1_LAUFZEIT_UEBERLAUF, "KESSEL_12_STUFE_1_LAUFZEIT_UEBERLAUF"},
+  {Property::kKESSEL_13_STUFE_1_LAUFZEIT_UEBERLAUF, "KESSEL_13_STUFE_1_LAUFZEIT_UEBERLAUF"},
+  {Property::kKESSEL_14_STUFE_1_LAUFZEIT_UEBERLAUF, "KESSEL_14_STUFE_1_LAUFZEIT_UEBERLAUF"},
+  {Property::kKESSEL_15_STUFE_1_LAUFZEIT_UEBERLAUF, "KESSEL_15_STUFE_1_LAUFZEIT_UEBERLAUF"},
+  {Property::kKESSEL_16_STUFE_1_LAUFZEIT_UEBERLAUF, "KESSEL_16_STUFE_1_LAUFZEIT_UEBERLAUF"},
+  {Property::kKESSEL_1_STUFE_2_LAUFZEIT_UEBERLAUF, "KESSEL_1_STUFE_2_LAUFZEIT_UEBERLAUF"},
+  {Property::kKESSEL_2_STUFE_2_LAUFZEIT_UEBERLAUF, "KESSEL_2_STUFE_2_LAUFZEIT_UEBERLAUF"},
+  {Property::kKESSEL_3_STUFE_2_LAUFZEIT_UEBERLAUF, "KESSEL_3_STUFE_2_LAUFZEIT_UEBERLAUF"},
+  {Property::kKESSEL_4_STUFE_2_LAUFZEIT_UEBERLAUF, "KESSEL_4_STUFE_2_LAUFZEIT_UEBERLAUF"},
+  {Property::kKESSEL_5_STUFE_2_LAUFZEIT_UEBERLAUF, "KESSEL_5_STUFE_2_LAUFZEIT_UEBERLAUF"},
+  {Property::kKESSEL_6_STUFE_2_LAUFZEIT_UEBERLAUF, "KESSEL_6_STUFE_2_LAUFZEIT_UEBERLAUF"},
+  {Property::kKESSEL_7_STUFE_2_LAUFZEIT_UEBERLAUF, "KESSEL_7_STUFE_2_LAUFZEIT_UEBERLAUF"},
+  {Property::kKESSEL_8_STUFE_2_LAUFZEIT_UEBERLAUF, "KESSEL_8_STUFE_2_LAUFZEIT_UEBERLAUF"},
+  {Property::kKESSEL_9_STUFE_2_LAUFZEIT_UEBERLAUF, "KESSEL_9_STUFE_2_LAUFZEIT_UEBERLAUF"},
+  {Property::kKESSEL_10_STUFE_2_LAUFZEIT_UEBERLAUF, "KESSEL_10_STUFE_2_LAUFZEIT_UEBERLAUF"},
+  {Property::kKESSEL_11_STUFE_2_LAUFZEIT_UEBERLAUF, "KESSEL_11_STUFE_2_LAUFZEIT_UEBERLAUF"},
+  {Property::kKESSEL_12_STUFE_2_LAUFZEIT_UEBERLAUF, "KESSEL_12_STUFE_2_LAUFZEIT_UEBERLAUF"},
+  {Property::kKESSEL_13_STUFE_2_LAUFZEIT_UEBERLAUF, "KESSEL_13_STUFE_2_LAUFZEIT_UEBERLAUF"},
+  {Property::kKESSEL_14_STUFE_2_LAUFZEIT_UEBERLAUF, "KESSEL_14_STUFE_2_LAUFZEIT_UEBERLAUF"},
+  {Property::kKESSEL_15_STUFE_2_LAUFZEIT_UEBERLAUF, "KESSEL_15_STUFE_2_LAUFZEIT_UEBERLAUF"},
+  {Property::kKESSEL_16_STUFE_2_LAUFZEIT_UEBERLAUF, "KESSEL_16_STUFE_2_LAUFZEIT_UEBERLAUF"},
+  {Property::kMFR_FUNKTION_1, "MFR_FUNKTION_1"},
+  {Property::kMFR_FUNKTION_2, "MFR_FUNKTION_2"},
+  {Property::kMFR_FUNKTION_3, "MFR_FUNKTION_3"},
+  {Property::kMFR_FUNKTION_4, "MFR_FUNKTION_4"},
+  {Property::kMFR_FUNKTION_5, "MFR_FUNKTION_5"},
+  {Property::kMFR_FUNKTION_6, "MFR_FUNKTION_6"},
+  {Property::kMFR_FUNKTION_7, "MFR_FUNKTION_7"},
+  {Property::kMFR_FUNKTION_8, "MFR_FUNKTION_8"},
+  {Property::kMFR_FUNKTION_9, "MFR_FUNKTION_9"},
+  {Property::kMFR_FUNKTION_10, "MFR_FUNKTION_10"},
+  {Property::kMFR_FUNKTION_11, "MFR_FUNKTION_11"},
+  {Property::kMFR_FUNKTION_12, "MFR_FUNKTION_12"},
+  {Property::kMFR_FUNKTION_13, "MFR_FUNKTION_13"},
+  {Property::kMFR_FUNKTION_14, "MFR_FUNKTION_14"},
+  {Property::kMFR_FUNKTION_15, "MFR_FUNKTION_15"},
+  {Property::kMFR_FUNKTION_16, "MFR_FUNKTION_16"},
+  {Property::kMFR_FUNKTION_17, "MFR_FUNKTION_17"},
+  {Property::kMFR_FUNKTION_18, "MFR_FUNKTION_18"},
+  {Property::kMFR_FUNKTION_19, "MFR_FUNKTION_19"},
+  {Property::kMFR_FUNKTION_20, "MFR_FUNKTION_20"},
+  {Property::kMFR_FUNKTION_21, "MFR_FUNKTION_21"},
+  {Property::kMFR_FUNKTION_22, "MFR_FUNKTION_22"},
+  {Property::kMFR_FUNKTION_23, "MFR_FUNKTION_23"},
+  {Property::kMFR_FUNKTION_24, "MFR_FUNKTION_24"},
+  {Property::kMFR_FUNKTION_25, "MFR_FUNKTION_25"},
+  {Property::kMFR_FUNKTION_26, "MFR_FUNKTION_26"},
+  {Property::kMFR_FUNKTION_27, "MFR_FUNKTION_27"},
+  {Property::kMFR_FUNKTION_28, "MFR_FUNKTION_28"},
+  {Property::kMFR_FUNKTION_29, "MFR_FUNKTION_29"},
+  {Property::kMFR_FUNKTION_30, "MFR_FUNKTION_30"},
+  {Property::kMFR_FUNKTION_31, "MFR_FUNKTION_31"},
+  {Property::kMFR_FUNKTION_32, "MFR_FUNKTION_32"},
+  {Property::kMFR_SCHALTTEMP_1, "MFR_SCHALTTEMP_1"},
+  {Property::kMFR_SCHALTTEMP_2, "MFR_SCHALTTEMP_2"},
+  {Property::kMFR_SCHALTTEMP_3, "MFR_SCHALTTEMP_3"},
+  {Property::kMFR_SCHALTTEMP_4, "MFR_SCHALTTEMP_4"},
+  {Property::kMFR_SCHALTTEMP_5, "MFR_SCHALTTEMP_5"},
+  {Property::kMFR_SCHALTTEMP_6, "MFR_SCHALTTEMP_6"},
+  {Property::kMFR_SCHALTTEMP_7, "MFR_SCHALTTEMP_7"},
+  {Property::kMFR_SCHALTTEMP_8, "MFR_SCHALTTEMP_8"},
+  {Property::kMFR_SCHALTTEMP_9, "MFR_SCHALTTEMP_9"},
+  {Property::kMFR_SCHALTTEMP_10, "MFR_SCHALTTEMP_10"},
+  {Property::kMFR_SCHALTTEMP_11, "MFR_SCHALTTEMP_11"},
+  {Property::kMFR_SCHALTTEMP_12, "MFR_SCHALTTEMP_12"},
+  {Property::kMFR_SCHALTTEMP_13, "MFR_SCHALTTEMP_13"},
+  {Property::kMFR_SCHALTTEMP_14, "MFR_SCHALTTEMP_14"},
+  {Property::kMFR_SCHALTTEMP_15, "MFR_SCHALTTEMP_15"},
+  {Property::kMFR_SCHALTTEMP_16, "MFR_SCHALTTEMP_16"},
+  {Property::kMFR_SCHALTTEMP_17, "MFR_SCHALTTEMP_17"},
+  {Property::kMFR_SCHALTTEMP_18, "MFR_SCHALTTEMP_18"},
+  {Property::kMFR_SCHALTTEMP_19, "MFR_SCHALTTEMP_19"},
+  {Property::kMFR_SCHALTTEMP_20, "MFR_SCHALTTEMP_20"},
+  {Property::kMFR_SCHALTTEMP_21, "MFR_SCHALTTEMP_21"},
+  {Property::kMFR_SCHALTTEMP_22, "MFR_SCHALTTEMP_22"},
+  {Property::kMFR_SCHALTTEMP_23, "MFR_SCHALTTEMP_23"},
+  {Property::kMFR_SCHALTTEMP_24, "MFR_SCHALTTEMP_24"},
+  {Property::kMFR_SCHALTTEMP_25, "MFR_SCHALTTEMP_25"},
+  {Property::kMFR_SCHALTTEMP_26, "MFR_SCHALTTEMP_26"},
+  {Property::kMFR_SCHALTTEMP_27, "MFR_SCHALTTEMP_27"},
+  {Property::kMFR_SCHALTTEMP_28, "MFR_SCHALTTEMP_28"},
+  {Property::kMFR_SCHALTTEMP_29, "MFR_SCHALTTEMP_29"},
+  {Property::kMFR_SCHALTTEMP_30, "MFR_SCHALTTEMP_30"},
+  {Property::kMFR_SCHALTTEMP_31, "MFR_SCHALTTEMP_31"},
+  {Property::kMFR_SCHALTTEMP_32, "MFR_SCHALTTEMP_32"},
+  {Property::kMFR_HYSTERESE_1, "MFR_HYSTERESE_1"},
+  {Property::kMFR_HYSTERESE_2, "MFR_HYSTERESE_2"},
+  {Property::kMFR_HYSTERESE_3, "MFR_HYSTERESE_3"},
+  {Property::kMFR_HYSTERESE_4, "MFR_HYSTERESE_4"},
+  {Property::kMFR_HYSTERESE_5, "MFR_HYSTERESE_5"},
+  {Property::kMFR_HYSTERESE_6, "MFR_HYSTERESE_6"},
+  {Property::kMFR_HYSTERESE_7, "MFR_HYSTERESE_7"},
+  {Property::kMFR_HYSTERESE_8, "MFR_HYSTERESE_8"},
+  {Property::kMFR_HYSTERESE_9, "MFR_HYSTERESE_9"},
+  {Property::kMFR_HYSTERESE_10, "MFR_HYSTERESE_10"},
+  {Property::kMFR_HYSTERESE_11, "MFR_HYSTERESE_11"},
+  {Property::kMFR_HYSTERESE_12, "MFR_HYSTERESE_12"},
+  {Property::kMFR_HYSTERESE_13, "MFR_HYSTERESE_13"},
+  {Property::kMFR_HYSTERESE_14, "MFR_HYSTERESE_14"},
+  {Property::kMFR_HYSTERESE_15, "MFR_HYSTERESE_15"},
+  {Property::kMFR_HYSTERESE_16, "MFR_HYSTERESE_16"},
+  {Property::kMFR_HYSTERESE_17, "MFR_HYSTERESE_17"},
+  {Property::kMFR_HYSTERESE_18, "MFR_HYSTERESE_18"},
+  {Property::kMFR_HYSTERESE_19, "MFR_HYSTERESE_19"},
+  {Property::kMFR_HYSTERESE_20, "MFR_HYSTERESE_20"},
+  {Property::kMFR_HYSTERESE_21, "MFR_HYSTERESE_21"},
+  {Property::kMFR_HYSTERESE_22, "MFR_HYSTERESE_22"},
+  {Property::kMFR_HYSTERESE_23, "MFR_HYSTERESE_23"},
+  {Property::kMFR_HYSTERESE_24, "MFR_HYSTERESE_24"},
+  {Property::kMFR_HYSTERESE_25, "MFR_HYSTERESE_25"},
+  {Property::kMFR_HYSTERESE_26, "MFR_HYSTERESE_26"},
+  {Property::kMFR_HYSTERESE_27, "MFR_HYSTERESE_27"},
+  {Property::kMFR_HYSTERESE_28, "MFR_HYSTERESE_28"},
+  {Property::kMFR_HYSTERESE_29, "MFR_HYSTERESE_29"},
+  {Property::kMFR_HYSTERESE_30, "MFR_HYSTERESE_30"},
+  {Property::kMFR_HYSTERESE_31, "MFR_HYSTERESE_31"},
+  {Property::kMFR_HYSTERESE_32, "MFR_HYSTERESE_32"},
+  {Property::kMFR_ISTTEMP1_1, "MFR_ISTTEMP1_1"},
+  {Property::kMFR_ISTTEMP1_2, "MFR_ISTTEMP1_2"},
+  {Property::kMFR_ISTTEMP1_3, "MFR_ISTTEMP1_3"},
+  {Property::kMFR_ISTTEMP1_4, "MFR_ISTTEMP1_4"},
+  {Property::kMFR_ISTTEMP1_5, "MFR_ISTTEMP1_5"},
+  {Property::kMFR_ISTTEMP1_6, "MFR_ISTTEMP1_6"},
+  {Property::kMFR_ISTTEMP1_7, "MFR_ISTTEMP1_7"},
+  {Property::kMFR_ISTTEMP1_8, "MFR_ISTTEMP1_8"},
+  {Property::kMFR_ISTTEMP1_9, "MFR_ISTTEMP1_9"},
+  {Property::kMFR_ISTTEMP1_10, "MFR_ISTTEMP1_10"},
+  {Property::kMFR_ISTTEMP1_11, "MFR_ISTTEMP1_11"},
+  {Property::kMFR_ISTTEMP1_12, "MFR_ISTTEMP1_12"},
+  {Property::kMFR_ISTTEMP1_13, "MFR_ISTTEMP1_13"},
+  {Property::kMFR_ISTTEMP1_14, "MFR_ISTTEMP1_14"},
+  {Property::kMFR_ISTTEMP1_15, "MFR_ISTTEMP1_15"},
+  {Property::kMFR_ISTTEMP1_16, "MFR_ISTTEMP1_16"},
+  {Property::kMFR_ISTTEMP1_17, "MFR_ISTTEMP1_17"},
+  {Property::kMFR_ISTTEMP1_18, "MFR_ISTTEMP1_18"},
+  {Property::kMFR_ISTTEMP1_19, "MFR_ISTTEMP1_19"},
+  {Property::kMFR_ISTTEMP1_20, "MFR_ISTTEMP1_20"},
+  {Property::kMFR_ISTTEMP1_21, "MFR_ISTTEMP1_21"},
+  {Property::kMFR_ISTTEMP1_22, "MFR_ISTTEMP1_22"},
+  {Property::kMFR_ISTTEMP1_23, "MFR_ISTTEMP1_23"},
+  {Property::kMFR_ISTTEMP1_24, "MFR_ISTTEMP1_24"},
+  {Property::kMFR_ISTTEMP1_25, "MFR_ISTTEMP1_25"},
+  {Property::kMFR_ISTTEMP1_26, "MFR_ISTTEMP1_26"},
+  {Property::kMFR_ISTTEMP1_27, "MFR_ISTTEMP1_27"},
+  {Property::kMFR_ISTTEMP1_28, "MFR_ISTTEMP1_28"},
+  {Property::kMFR_ISTTEMP1_29, "MFR_ISTTEMP1_29"},
+  {Property::kMFR_ISTTEMP1_30, "MFR_ISTTEMP1_30"},
+  {Property::kMFR_ISTTEMP1_31, "MFR_ISTTEMP1_31"},
+  {Property::kMFR_ISTTEMP1_32, "MFR_ISTTEMP1_32"},
+  {Property::kMFR_ISTTEMP2_1, "MFR_ISTTEMP2_1"},
+  {Property::kMFR_ISTTEMP2_2, "MFR_ISTTEMP2_2"},
+  {Property::kMFR_ISTTEMP2_3, "MFR_ISTTEMP2_3"},
+  {Property::kMFR_ISTTEMP2_4, "MFR_ISTTEMP2_4"},
+  {Property::kMFR_ISTTEMP2_5, "MFR_ISTTEMP2_5"},
+  {Property::kMFR_ISTTEMP2_6, "MFR_ISTTEMP2_6"},
+  {Property::kMFR_ISTTEMP2_7, "MFR_ISTTEMP2_7"},
+  {Property::kMFR_ISTTEMP2_8, "MFR_ISTTEMP2_8"},
+  {Property::kMFR_ISTTEMP2_9, "MFR_ISTTEMP2_9"},
+  {Property::kMFR_ISTTEMP2_10, "MFR_ISTTEMP2_10"},
+  {Property::kMFR_ISTTEMP2_11, "MFR_ISTTEMP2_11"},
+  {Property::kMFR_ISTTEMP2_12, "MFR_ISTTEMP2_12"},
+  {Property::kMFR_ISTTEMP2_13, "MFR_ISTTEMP2_13"},
+  {Property::kMFR_ISTTEMP2_14, "MFR_ISTTEMP2_14"},
+  {Property::kMFR_ISTTEMP2_15, "MFR_ISTTEMP2_15"},
+  {Property::kMFR_ISTTEMP2_16, "MFR_ISTTEMP2_16"},
+  {Property::kMFR_ISTTEMP2_17, "MFR_ISTTEMP2_17"},
+  {Property::kMFR_ISTTEMP2_18, "MFR_ISTTEMP2_18"},
+  {Property::kMFR_ISTTEMP2_19, "MFR_ISTTEMP2_19"},
+  {Property::kMFR_ISTTEMP2_20, "MFR_ISTTEMP2_20"},
+  {Property::kMFR_ISTTEMP2_21, "MFR_ISTTEMP2_21"},
+  {Property::kMFR_ISTTEMP2_22, "MFR_ISTTEMP2_22"},
+  {Property::kMFR_ISTTEMP2_23, "MFR_ISTTEMP2_23"},
+  {Property::kMFR_ISTTEMP2_24, "MFR_ISTTEMP2_24"},
+  {Property::kMFR_ISTTEMP2_25, "MFR_ISTTEMP2_25"},
+  {Property::kMFR_ISTTEMP2_26, "MFR_ISTTEMP2_26"},
+  {Property::kMFR_ISTTEMP2_27, "MFR_ISTTEMP2_27"},
+  {Property::kMFR_ISTTEMP2_28, "MFR_ISTTEMP2_28"},
+  {Property::kMFR_ISTTEMP2_29, "MFR_ISTTEMP2_29"},
+  {Property::kMFR_ISTTEMP2_30, "MFR_ISTTEMP2_30"},
+  {Property::kMFR_ISTTEMP2_31, "MFR_ISTTEMP2_31"},
+  {Property::kMFR_ISTTEMP2_32, "MFR_ISTTEMP2_32"},
+  {Property::kMFR_STATUS_1, "MFR_STATUS_1"},
+  {Property::kMFR_STATUS_2, "MFR_STATUS_2"},
+  {Property::kMFR_STATUS_3, "MFR_STATUS_3"},
+  {Property::kMFR_STATUS_4, "MFR_STATUS_4"},
+  {Property::kMFR_STATUS_5, "MFR_STATUS_5"},
+  {Property::kMFR_STATUS_6, "MFR_STATUS_6"},
+  {Property::kMFR_STATUS_7, "MFR_STATUS_7"},
+  {Property::kMFR_STATUS_8, "MFR_STATUS_8"},
+  {Property::kMFR_STATUS_9, "MFR_STATUS_9"},
+  {Property::kMFR_STATUS_10, "MFR_STATUS_10"},
+  {Property::kMFR_STATUS_11, "MFR_STATUS_11"},
+  {Property::kMFR_STATUS_12, "MFR_STATUS_12"},
+  {Property::kMFR_STATUS_13, "MFR_STATUS_13"},
+  {Property::kMFR_STATUS_14, "MFR_STATUS_14"},
+  {Property::kMFR_STATUS_15, "MFR_STATUS_15"},
+  {Property::kMFR_STATUS_16, "MFR_STATUS_16"},
+  {Property::kMFR_STATUS_17, "MFR_STATUS_17"},
+  {Property::kMFR_STATUS_18, "MFR_STATUS_18"},
+  {Property::kMFR_STATUS_19, "MFR_STATUS_19"},
+  {Property::kMFR_STATUS_20, "MFR_STATUS_20"},
+  {Property::kMFR_STATUS_21, "MFR_STATUS_21"},
+  {Property::kMFR_STATUS_22, "MFR_STATUS_22"},
+  {Property::kMFR_STATUS_23, "MFR_STATUS_23"},
+  {Property::kMFR_STATUS_24, "MFR_STATUS_24"},
+  {Property::kMFR_STATUS_25, "MFR_STATUS_25"},
+  {Property::kMFR_STATUS_26, "MFR_STATUS_26"},
+  {Property::kMFR_STATUS_27, "MFR_STATUS_27"},
+  {Property::kMFR_STATUS_28, "MFR_STATUS_28"},
+  {Property::kMFR_STATUS_29, "MFR_STATUS_29"},
+  {Property::kMFR_STATUS_30, "MFR_STATUS_30"},
+  {Property::kMFR_STATUS_31, "MFR_STATUS_31"},
+  {Property::kMFR_STATUS_32, "MFR_STATUS_32"},
+  {Property::kWE_TEMPERATUR_1, "WE_TEMPERATUR_1"},
+  {Property::kWE_TEMPERATUR_2, "WE_TEMPERATUR_2"},
+  {Property::kWE_TEMPERATUR_3, "WE_TEMPERATUR_3"},
+  {Property::kWE_TEMPERATUR_4, "WE_TEMPERATUR_4"},
+  {Property::kWE_TEMPERATUR_5, "WE_TEMPERATUR_5"},
+  {Property::kWE_TEMPERATUR_6, "WE_TEMPERATUR_6"},
+  {Property::kWE_TEMPERATUR_7, "WE_TEMPERATUR_7"},
+  {Property::kWE_TEMPERATUR_8, "WE_TEMPERATUR_8"},
+  {Property::kWE_TEMPERATUR_9, "WE_TEMPERATUR_9"},
+  {Property::kWE_TEMPERATUR_10, "WE_TEMPERATUR_10"},
+  {Property::kWE_TEMPERATUR_11, "WE_TEMPERATUR_11"},
+  {Property::kWE_TEMPERATUR_12, "WE_TEMPERATUR_12"},
+  {Property::kWE_TEMPERATUR_13, "WE_TEMPERATUR_13"},
+  {Property::kWE_TEMPERATUR_14, "WE_TEMPERATUR_14"},
+  {Property::kWE_TEMPERATUR_15, "WE_TEMPERATUR_15"},
+  {Property::kWE_TEMPERATUR_16, "WE_TEMPERATUR_16"},
+  {Property::kWE_MODGRAD_IST_1, "WE_MODGRAD_IST_1"},
+  {Property::kWE_MODGRAD_IST_2, "WE_MODGRAD_IST_2"},
+  {Property::kWE_MODGRAD_IST_3, "WE_MODGRAD_IST_3"},
+  {Property::kWE_MODGRAD_IST_4, "WE_MODGRAD_IST_4"},
+  {Property::kWE_MODGRAD_IST_5, "WE_MODGRAD_IST_5"},
+  {Property::kWE_MODGRAD_IST_6, "WE_MODGRAD_IST_6"},
+  {Property::kWE_MODGRAD_IST_7, "WE_MODGRAD_IST_7"},
+  {Property::kWE_MODGRAD_IST_8, "WE_MODGRAD_IST_8"},
+  {Property::kWE_MODGRAD_IST_9, "WE_MODGRAD_IST_9"},
+  {Property::kWE_MODGRAD_IST_10, "WE_MODGRAD_IST_10"},
+  {Property::kWE_MODGRAD_IST_11, "WE_MODGRAD_IST_11"},
+  {Property::kWE_MODGRAD_IST_12, "WE_MODGRAD_IST_12"},
+  {Property::kWE_MODGRAD_IST_13, "WE_MODGRAD_IST_13"},
+  {Property::kWE_MODGRAD_IST_14, "WE_MODGRAD_IST_14"},
+  {Property::kWE_MODGRAD_IST_15, "WE_MODGRAD_IST_15"},
+  {Property::kWE_MODGRAD_IST_16, "WE_MODGRAD_IST_16"},
+  {Property::kKUEHL_RAUMSOLL_TAG, "KUEHL_RAUMSOLL_TAG"},
+  {Property::kKUEHL_RAUMSOLL_ABWESEND, "KUEHL_RAUMSOLL_ABWESEND"},
+  {Property::kLUEFT_STUFE_TAG, "LUEFT_STUFE_TAG"},
+  {Property::kLUEFT_STUFE_NACHT, "LUEFT_STUFE_NACHT"},
+  {Property::kLUEFT_STUFE_BEREITSCHAFT, "LUEFT_STUFE_BEREITSCHAFT"},
+  {Property::kLUEFT_STUFE_ABWESEND, "LUEFT_STUFE_ABWESEND"},
+  {Property::kLUEFT_STUFE_PARTY, "LUEFT_STUFE_PARTY"},
+  {Property::kLUEFT_ZEIT_AUSSERPLAN_STUFE0, "LUEFT_ZEIT_AUSSERPLAN_STUFE0"},
+  {Property::kLUEFT_ZEIT_AUSSERPLAN_STUFE1, "LUEFT_ZEIT_AUSSERPLAN_STUFE1"},
+  {Property::kLUEFT_ZEIT_AUSSERPLAN_STUFE2, "LUEFT_ZEIT_AUSSERPLAN_STUFE2"},
+  {Property::kLUEFT_ZEIT_AUSSERPLAN_STUFE3, "LUEFT_ZEIT_AUSSERPLAN_STUFE3"},
+  {Property::kLUEFT_PASSIVKUEHLUNG, "LUEFT_PASSIVKUEHLUNG"},
+  {Property::kLUEFT_ZULUFT_STUFE1, "LUEFT_ZULUFT_STUFE1"},
+  {Property::kLUEFT_ZULUFT_STUFE2, "LUEFT_ZULUFT_STUFE2"},
+  {Property::kLUEFT_ZULUFT_STUFE3, "LUEFT_ZULUFT_STUFE3"},
+  {Property::kLUEFT_ABLUFT_STUFE1, "LUEFT_ABLUFT_STUFE1"},
+  {Property::kLUEFT_ABLUFT_STUFE2, "LUEFT_ABLUFT_STUFE2"},
+  {Property::kLUEFT_ABLUFT_STUFE3, "LUEFT_ABLUFT_STUFE3"},
+  {Property::kOFEN_FUNKTION, "OFEN_FUNKTION"},
+  {Property::kMAX_ABTAUDAUER, "MAX_ABTAUDAUER"},
+  {Property::kABTAUBEGINNSCHWELLE, "ABTAUBEGINNSCHWELLE"},
+  {Property::kDREHZAHL_FILTERWECHSEL, "DREHZAHL_FILTERWECHSEL"},
+  {Property::kEINSTELLSPEICHER_HAND, "EINSTELLSPEICHER_HAND"},
+  {Property::kEINSTELLSPEICHER_ABWESEND, "EINSTELLSPEICHER_ABWESEND"},
+  {Property::kKUEL_VORLAUFSOLLTEMP, "KUEL_VORLAUFSOLLTEMP"},
+  {Property::kKUEHL_HYST_SOLLTEMP, "KUEHL_HYST_SOLLTEMP"},
+  {Property::kKUEHL_HYST_RAUMTEMP, "KUEHL_HYST_RAUMTEMP"},
+  {Property::kMAX_ABTAUDAUER_LUFT, "MAX_ABTAUDAUER_LUFT"},
+  {Property::kANTILEG_INTERVALL_TAGE, "ANTILEG_INTERVALL_TAGE"},
+  {Property::kANTILEG_TEMP, "ANTILEG_TEMP"},
+  {Property::kNHZ_VERZOEGERUNG_WW, "NHZ_VERZOEGERUNG_WW"},
+  {Property::kNHZ_AUSSENTEMP_SOFORT_WW, "NHZ_AUSSENTEMP_SOFORT_WW"},
+  {Property::kNHZ_ANZAHL_STUFEN_WW, "NHZ_ANZAHL_STUFEN_WW"},
+  {Property::kWW_SPEICHER_ALS_PUFFER, "WW_SPEICHER_ALS_PUFFER"},
+  {Property::kMAX_VORLAUFTEMP_BEI_WW, "MAX_VORLAUFTEMP_BEI_WW"},
+  {Property::kABSCHALTUNG_VERDICHTER_WW, "ABSCHALTUNG_VERDICHTER_WW"},
+  {Property::kVERZOEGERUNG_VERDICHTER_WW, "VERZOEGERUNG_VERDICHTER_WW"},
+  {Property::kSOLAR_HYSTERESE, "SOLAR_HYSTERESE"},
+  {Property::kPARTY_ANFANG_TAG, "PARTY_ANFANG_TAG"},
+  {Property::kPARTY_ANFANG_MONAT, "PARTY_ANFANG_MONAT"},
+  {Property::kPARTY_ANFANG_JAHR, "PARTY_ANFANG_JAHR"},
+  {Property::kPARTY_ENDE_TAG, "PARTY_ENDE_TAG"},
+  {Property::kPARTY_ENDE_MONAT, "PARTY_ENDE_MONAT"},
+  #if defined(THZ_TYPE_ECO55)
+  {Property::kZULUFT_SOLL, "ZULUFT_SOLL"},
+  {Property::kZULUFT_IST, "ZULUFT_IST"},
+  {Property::kABLUFT_SOLL, "ABLUFT_SOLL"},
+  {Property::kABLUFT_IST, "ABLUFT_IST"},
+  #else
+  {Property::kPARTY_ENDE_JAHR, "PARTY_ENDE_JAHR"},
+  {Property::kZULUFT_SOLL, "ZULUFT_SOLL"},
+  {Property::kZULUFT_IST, "ZULUFT_IST"},
+  {Property::kABLUFT_SOLL, "ABLUFT_SOLL"},
+  {Property::kABLUFT_IST, "ABLUFT_IST"},
+  #endif
+  {Property::kFORTLUFT_SOLL, "FORTLUFT_SOLL"},
+  {Property::kFORTLUFT_IST, "FORTLUFT_IST"},
+  {Property::kVERFLUESSIGER_TEMP, "VERFLUESSIGER_TEMP"},
+  {Property::kANTEIL_VORLAUF, "ANTEIL_VORLAUF"},
+  {Property::kFUSSPUNKT_HEIZKURVE, "FUSSPUNKT_HEIZKURVE"},
+  {Property::kNHZ_ANZAHL_STUFEN, "NHZ_ANZAHL_STUFEN"},
+  {Property::kNHZ_VERZOEGERUNG, "NHZ_VERZOEGERUNG"},
+  {Property::kNHZ_LEISTUNG1, "NHZ_LEISTUNG1"},
+  {Property::kHEIZGRENZE_HYST, "HEIZGRENZE_HYST"},
+  {Property::kAUSSENTEMP_KORREKTUR, "AUSSENTEMP_KORREKTUR"},
+  {Property::kLAUFZEIT_VERDICHTER_HEIZEN, "LAUFZEIT_VERDICHTER_HEIZEN"},
+  {Property::kLAUFZEIT_VERDICHTER_KUEHLEN, "LAUFZEIT_VERDICHTER_KUEHLEN"},
+  {Property::kLAUFZEIT_VERDICHTER_WW, "LAUFZEIT_VERDICHTER_WW"},
+  {Property::kLAUFZEIT_NHZ_WW, "LAUFZEIT_NHZ_WW"},
+  {Property::kLAUFZEIT_NHZ_HEIZEN, "LAUFZEIT_NHZ_HEIZEN"},
+  {Property::kMANUELL_VERDICHTER, "MANUELL_VERDICHTER"},
+  {Property::kMANUELL_NHZ_STUFE, "MANUELL_NHZ_STUFE"},
+  {Property::kMANUELL_DREHZAHL_ABLUEFTER, "MANUELL_DREHZAHL_ABLUEFTER"},
+  {Property::kMANUELL_DREHZAHL_ZULUEFTER, "MANUELL_DREHZAHL_ZULUEFTER"},
+  {Property::kMANUELL_LUEFT_PARTY, "MANUELL_LUEFT_PARTY"},
+  {Property::kMANUELL_LUEFT_NACHT, "MANUELL_LUEFT_NACHT"},
+  {Property::kMANUELL_FENSTERKONTAKT, "MANUELL_FENSTERKONTAKT"},
+  {Property::kMANUELL_HEAT_PIPE_VENTIL, "MANUELL_HEAT_PIPE_VENTIL"},
+  {Property::kMANUELL_UMSCHALTVENTIL, "MANUELL_UMSCHALTVENTIL"},
+  {Property::kABTAUENDE_TEMP, "ABTAUENDE_TEMP"},
+  {Property::kNHZ_FROSTSCHUTZ, "NHZ_FROSTSCHUTZ"},
+  {Property::kABTAU_FROSTSCHUTZ, "ABTAU_FROSTSCHUTZ"},
+  {Property::kVERDICHTER_EINSCHALT_VERZ, "VERDICHTER_EINSCHALT_VERZ"},
+  {Property::kFORTLUFT_LUEFTER_DREHZAHL, "FORTLUFT_LUEFTER_DREHZAHL"},
+  {Property::kPUMPENZYKLEN_MAX, "PUMPENZYKLEN_MAX"},
+  {Property::kPUMPENZYKLEN_MIN, "PUMPENZYKLEN_MIN"},
+  {Property::kPUMPENZYKLEN_MAX_AUSSENT, "PUMPENZYKLEN_MAX_AUSSENT"},
+  {Property::kPUMPENZYKLEN_MIN_AUSSENT, "PUMPENZYKLEN_MIN_AUSSENT"},
+  {Property::kAKTIVE_HEIZSTUFEN, "AKTIVE_HEIZSTUFEN"},
+  {Property::kABTAUEN_LL_WT_AKTIV, "ABTAUEN_LL_WT_AKTIV"},
+  {Property::kRAUMTEMP_ERFASSUNG, "RAUMTEMP_ERFASSUNG"},
+  {Property::kSOLAR_EINSTELLSPEICHERSOLLT, "SOLAR_EINSTELLSPEICHERSOLLT"},
+  {Property::kEINSTELLSPEICHER_NACHT, "EINSTELLSPEICHER_NACHT"},
+  {Property::kHYST_HEIZSTUFE1, "HYST_HEIZSTUFE1"},
+  {Property::kHYST_HEIZSTUFE2, "HYST_HEIZSTUFE2"},
+  {Property::kHYST_HEIZSTUFE3, "HYST_HEIZSTUFE3"},
+  {Property::kHYST_HEIZSTUFE4, "HYST_HEIZSTUFE4"},
+  {Property::kHYST_HEIZSTUFE5, "HYST_HEIZSTUFE5"},
+  {Property::kASYMETRIE_HEIZSTUFEN, "ASYMETRIE_HEIZSTUFEN"},
+  {Property::kVOLUMENSTROMMESSUNG, "VOLUMENSTROMMESSUNG"},
+  {Property::kFEHLERAUFZEICHNUNG_STOP, "FEHLERAUFZEICHNUNG_STOP"},
+  {Property::kHEIZEITVORVERLEGUNG_VERDICHTER, "HEIZEITVORVERLEGUNG_VERDICHTER"},
+  {Property::kSOLAR_SPEERZEIT_VERDICHTER, "SOLAR_SPEERZEIT_VERDICHTER"},
+  {Property::kPUMPSTEUER_FUEHRUNGSKESSEL, "PUMPSTEUER_FUEHRUNGSKESSEL"},
+  {Property::kAKTIVIERUNG_LEISTUNGSZWANG_WW, "AKTIVIERUNG_LEISTUNGSZWANG_WW"},
+  {Property::kHYSTERESE_LEISTUNGSZWANG_WW, "HYSTERESE_LEISTUNGSZWANG_WW"},
+  {Property::kMIN_TEMP_DREHZAHLREGELUNG, "MIN_TEMP_DREHZAHLREGELUNG"},
+  {Property::kMAX_SPREIZUNG_DREHZAHLREGELUNG, "MAX_SPREIZUNG_DREHZAHLREGELUNG"},
+  {Property::kP_BEREICH_DREHZAHLPUMPE, "P_BEREICH_DREHZAHLPUMPE"},
+  {Property::kHF_NETZWERK_ID, "HF_NETZWERK_ID"},
+  {Property::kPARTY_ANFANG_UHRZEIT, "PARTY_ANFANG_UHRZEIT"},
+  {Property::kPARTY_ENDE_UHRZEIT, "PARTY_ENDE_UHRZEIT"},
+  {Property::kFERIEN_ANFANG_UHRZEIT, "FERIEN_ANFANG_UHRZEIT"},
+  {Property::kFERIEN_ENDE_UHRZEIT, "FERIEN_ENDE_UHRZEIT"},
+  {Property::kFABRIKTEST_START, "FABRIKTEST_START"},
+  {Property::kLEISTUNGSREDUZIERUNG_KUEHLEN, "LEISTUNGSREDUZIERUNG_KUEHLEN"},
+  {Property::kZWISCHENEINSPRITZUNG_ISTTEMP, "ZWISCHENEINSPRITZUNG_ISTTEMP"},
+  {Property::kBETRIEBSART_QUELLENPUMPE, "BETRIEBSART_QUELLENPUMPE"},
+  {Property::kGASVENTIL1, "GASVENTIL1"},
+  {Property::kGASVENTIL2, "GASVENTIL2"},
+  {Property::kLUEFT_PASSIVKUEHLUNG_UEBER_FORTLUEFTER, "LUEFT_PASSIVKUEHLUNG_UEBER_FORTLUEFTER"},
+  {Property::kKUEHLZUSTAND, "KUEHLZUSTAND"},
+  {Property::kTEMPORALE_LUEFTUNGSSTUFE_STUFE, "TEMPORALE_LUEFTUNGSSTUFE_STUFE"},
+  {Property::kTEMPORALE_LUEFTUNGSSTUFE_DAUER, "TEMPORALE_LUEFTUNGSSTUFE_DAUER"},
+  {Property::kSCHALTFKT_QUELLE_IWS, "SCHALTFKT_QUELLE_IWS"},
+  {Property::kBITSCHALTER_1, "BITSCHALTER_1"},
+  {Property::kWE_STATUS_1, "WE_STATUS_1"},
+  {Property::kWE_STATUS_2, "WE_STATUS_2"},
+  {Property::kWE_STATUS_3, "WE_STATUS_3"},
+  {Property::kWE_STATUS_4, "WE_STATUS_4"},
+  {Property::kWE_STATUS_5, "WE_STATUS_5"},
+  {Property::kWE_STATUS_6, "WE_STATUS_6"},
+  {Property::kWE_STATUS_7, "WE_STATUS_7"},
+  {Property::kWE_STATUS_8, "WE_STATUS_8"},
+  {Property::kWE_STATUS_9, "WE_STATUS_9"},
+  {Property::kWE_STATUS_10, "WE_STATUS_10"},
+  {Property::kWE_STATUS_11, "WE_STATUS_11"},
+  {Property::kWE_STATUS_12, "WE_STATUS_12"},
+  {Property::kWE_STATUS_13, "WE_STATUS_13"},
+  {Property::kWE_STATUS_14, "WE_STATUS_14"},
+  {Property::kWE_STATUS_15, "WE_STATUS_15"},
+  {Property::kWE_STATUS_16, "WE_STATUS_16"},
+  {Property::kWE_MODGRAD_VORGABE_1, "WE_MODGRAD_VORGABE_1"},
+  {Property::kWE_MODGRAD_VORGABE_2, "WE_MODGRAD_VORGABE_2"},
+  {Property::kWE_MODGRAD_VORGABE_3, "WE_MODGRAD_VORGABE_3"},
+  {Property::kWE_MODGRAD_VORGABE_4, "WE_MODGRAD_VORGABE_4"},
+  {Property::kWE_MODGRAD_VORGABE_5, "WE_MODGRAD_VORGABE_5"},
+  {Property::kWE_MODGRAD_VORGABE_6, "WE_MODGRAD_VORGABE_6"},
+  {Property::kWE_MODGRAD_VORGABE_7, "WE_MODGRAD_VORGABE_7"},
+  {Property::kWE_MODGRAD_VORGABE_8, "WE_MODGRAD_VORGABE_8"},
+  {Property::kWE_MODGRAD_VORGABE_9, "WE_MODGRAD_VORGABE_9"},
+  {Property::kWE_MODGRAD_VORGABE_10, "WE_MODGRAD_VORGABE_10"},
+  {Property::kWE_MODGRAD_VORGABE_11, "WE_MODGRAD_VORGABE_11"},
+  {Property::kWE_MODGRAD_VORGABE_12, "WE_MODGRAD_VORGABE_12"},
+  {Property::kWE_MODGRAD_VORGABE_13, "WE_MODGRAD_VORGABE_13"},
+  {Property::kWE_MODGRAD_VORGABE_14, "WE_MODGRAD_VORGABE_14"},
+  {Property::kWE_MODGRAD_VORGABE_15, "WE_MODGRAD_VORGABE_15"},
+  {Property::kWE_MODGRAD_VORGABE_16, "WE_MODGRAD_VORGABE_16"},
+  {Property::kWE_STB_TESTFUNKTION_1, "WE_STB_TESTFUNKTION_1"},
+  {Property::kWE_STB_TESTFUNKTION_2, "WE_STB_TESTFUNKTION_2"},
+  {Property::kWE_STB_TESTFUNKTION_3, "WE_STB_TESTFUNKTION_3"},
+  {Property::kWE_STB_TESTFUNKTION_4, "WE_STB_TESTFUNKTION_4"},
+  {Property::kWE_STB_TESTFUNKTION_5, "WE_STB_TESTFUNKTION_5"},
+  {Property::kWE_STB_TESTFUNKTION_6, "WE_STB_TESTFUNKTION_6"},
+  {Property::kWE_STB_TESTFUNKTION_7, "WE_STB_TESTFUNKTION_7"},
+  {Property::kWE_STB_TESTFUNKTION_8, "WE_STB_TESTFUNKTION_8"},
+  {Property::kWE_STB_TESTFUNKTION_9, "WE_STB_TESTFUNKTION_9"},
+  {Property::kWE_STB_TESTFUNKTION_10, "WE_STB_TESTFUNKTION_10"},
+  {Property::kWE_STB_TESTFUNKTION_11, "WE_STB_TESTFUNKTION_11"},
+  {Property::kWE_STB_TESTFUNKTION_12, "WE_STB_TESTFUNKTION_12"},
+  {Property::kWE_STB_TESTFUNKTION_13, "WE_STB_TESTFUNKTION_13"},
+  {Property::kWE_STB_TESTFUNKTION_14, "WE_STB_TESTFUNKTION_14"},
+  {Property::kWE_STB_TESTFUNKTION_15, "WE_STB_TESTFUNKTION_15"},
+  {Property::kWE_STB_TESTFUNKTION_16, "WE_STB_TESTFUNKTION_16"},
+  #if defined(THZ_TYPE_ECO55)
+  {Property::kLUEFT_STUFE_HAND, "LUEFT_STUFE_HAND"},
+  #else
+  {Property::kUNTERD_TEMPM_PUMPENANL, "UNTERD_TEMPM_PUMPENANL"},
+  {Property::kLUEFT_STUFE_HAND, "LUEFT_STUFE_HAND"},
+  #endif
+  {Property::kKUEHLSYSTEM, "KUEHLSYSTEM"},
+  {Property::kKESSEL_STARTVERZOEGERUNG, "KESSEL_STARTVERZOEGERUNG"},
+  {Property::kMFR_HYSTERESE2_1, "MFR_HYSTERESE2_1"},
+  {Property::kMFR_HYSTERESE2_2, "MFR_HYSTERESE2_2"},
+  {Property::kMFR_HYSTERESE2_3, "MFR_HYSTERESE2_3"},
+  {Property::kMFR_HYSTERESE2_4, "MFR_HYSTERESE2_4"},
+  {Property::kMFR_HYSTERESE2_5, "MFR_HYSTERESE2_5"},
+  {Property::kMFR_HYSTERESE2_6, "MFR_HYSTERESE2_6"},
+  {Property::kMFR_HYSTERESE2_7, "MFR_HYSTERESE2_7"},
+  {Property::kMFR_HYSTERESE2_8, "MFR_HYSTERESE2_8"},
+  {Property::kMFR_HYSTERESE2_9, "MFR_HYSTERESE2_9"},
+  {Property::kMFR_HYSTERESE2_10, "MFR_HYSTERESE2_10"},
+  {Property::kMFR_HYSTERESE2_11, "MFR_HYSTERESE2_11"},
+  {Property::kMFR_HYSTERESE2_12, "MFR_HYSTERESE2_12"},
+  {Property::kMFR_HYSTERESE2_13, "MFR_HYSTERESE2_13"},
+  {Property::kMFR_HYSTERESE2_14, "MFR_HYSTERESE2_14"},
+  {Property::kMFR_HYSTERESE2_15, "MFR_HYSTERESE2_15"},
+  {Property::kMFR_HYSTERESE2_16, "MFR_HYSTERESE2_16"},
+  {Property::kMFR_HYSTERESE2_17, "MFR_HYSTERESE2_17"},
+  {Property::kMFR_HYSTERESE2_18, "MFR_HYSTERESE2_18"},
+  {Property::kMFR_HYSTERESE2_19, "MFR_HYSTERESE2_19"},
+  {Property::kMFR_HYSTERESE2_20, "MFR_HYSTERESE2_20"},
+  {Property::kMFR_HYSTERESE2_21, "MFR_HYSTERESE2_21"},
+  {Property::kMFR_HYSTERESE2_22, "MFR_HYSTERESE2_22"},
+  {Property::kMFR_HYSTERESE2_23, "MFR_HYSTERESE2_23"},
+  {Property::kMFR_HYSTERESE2_24, "MFR_HYSTERESE2_24"},
+  {Property::kMFR_HYSTERESE2_25, "MFR_HYSTERESE2_25"},
+  {Property::kMFR_HYSTERESE2_26, "MFR_HYSTERESE2_26"},
+  {Property::kMFR_HYSTERESE2_27, "MFR_HYSTERESE2_27"},
+  {Property::kMFR_HYSTERESE2_28, "MFR_HYSTERESE2_28"},
+  {Property::kMFR_HYSTERESE2_29, "MFR_HYSTERESE2_29"},
+  {Property::kMFR_HYSTERESE2_30, "MFR_HYSTERESE2_30"},
+  {Property::kMFR_HYSTERESE2_31, "MFR_HYSTERESE2_31"},
+  {Property::kMFR_HYSTERESE2_32, "MFR_HYSTERESE2_32"},
+  {Property::kK_OS_START_DREHZAHLAENDERUNG, "K_OS_START_DREHZAHLAENDERUNG"},
+  {Property::kK_OS_RMX_RESERVE_INFO1, "K_OS_RMX_RESERVE_INFO1"},
+  {Property::kK_OS_RMX_RESERVE_INFO2, "K_OS_RMX_RESERVE_INFO2"},
+  {Property::kK_OS_RMX_RESERVE_INFO3, "K_OS_RMX_RESERVE_INFO3"},
+  {Property::kHW_BITSCHALTER, "HW_BITSCHALTER"},
+  {Property::kKUEHLFUNKTION, "KUEHLFUNKTION"},
+  {Property::kSOLLDREHZAHL_VERDICHTER_1, "SOLLDREHZAHL_VERDICHTER_1"},
+  {Property::kSOLLDREHZAHL_VERDICHTER_2, "SOLLDREHZAHL_VERDICHTER_2"},
+  {Property::kISTDREHZAHL_VERDICHTER_1, "ISTDREHZAHL_VERDICHTER_1"},
+  {Property::kISTDREHZAHL_VERDICHTER_2, "ISTDREHZAHL_VERDICHTER_2"},
+  {Property::kZWISCHENEINSPRITZUNG_ISTTEMP_VND, "ZWISCHENEINSPRITZUNG_ISTTEMP_VND"},
+  {Property::kDRUCK_HEIZKREIS, "DRUCK_HEIZKREIS"},
+  {Property::kABLUFT_TEMP, "ABLUFT_TEMP"},
+  {Property::kSTUETZSTELLE_ND1, "STUETZSTELLE_ND1"},
+  {Property::kSTUETZSTELLE_ND2, "STUETZSTELLE_ND2"},
+  {Property::kSTUETZSTELLE_HD1, "STUETZSTELLE_HD1"},
+  {Property::kSTUETZSTELLE_HD2, "STUETZSTELLE_HD2"},
+  {Property::kREKUPERATORISTTEMP, "REKUPERATORISTTEMP"},
+  {Property::kMESSSTROM_HOCHDRUCK, "MESSSTROM_HOCHDRUCK"},
+  {Property::kMESSSTROM_NIEDERDRUCK, "MESSSTROM_NIEDERDRUCK"},
+  {Property::kANZEIGE_HOCHDRUCK, "ANZEIGE_HOCHDRUCK"},
+  {Property::kANZEIGE_NIEDERDRUCK, "ANZEIGE_NIEDERDRUCK"},
+  {Property::kVERDICHTER, "VERDICHTER"},
+  {Property::kVERDAMPFERISTTEMP_KOMPENSIERT, "VERDAMPFERISTTEMP_KOMPENSIERT"},
+  {Property::kTAU_PENDEL_ERKENNUNGSZEIT, "TAU_PENDEL_ERKENNUNGSZEIT"},
+  {Property::kVERZOEGERUNG_PENDELERKENNUNG, "VERZOEGERUNG_PENDELERKENNUNG"},
+  {Property::kUEBERHITZUNG_VERDAMPFER_LOW, "UEBERHITZUNG_VERDAMPFER_LOW"},
+  {Property::kUEBERHITZUNG_VERDAMPFER_MID, "UEBERHITZUNG_VERDAMPFER_MID"},
+  {Property::kUEBERHITZUNG_VERDAMPFER_HIGH, "UEBERHITZUNG_VERDAMPFER_HIGH"},
+  {Property::kUEBERHITZUNG_REKUPERATOR, "UEBERHITZUNG_REKUPERATOR"},
+  {Property::kUEBERHITZUNG_BEI_KUEHLBETRIEB, "UEBERHITZUNG_BEI_KUEHLBETRIEB"},
+  {Property::kANFAHRFAKTOR_UEBERHITZUNG, "ANFAHRFAKTOR_UEBERHITZUNG"},
+  {Property::kANFAHRZEIT_UEBERHITZUNG, "ANFAHRZEIT_UEBERHITZUNG"},
+  {Property::kGRENZE_PENDELN_VERDAMPFER, "GRENZE_PENDELN_VERDAMPFER"},
+  {Property::kGRENZE_PENDELN_REKUPERATOR, "GRENZE_PENDELN_REKUPERATOR"},
+  {Property::kTAU_UEBERHITZUNG_VERKLEINERN, "TAU_UEBERHITZUNG_VERKLEINERN"},
+  {Property::kTAU_UEBERHITZUNG_VERGROESSERN, "TAU_UEBERHITZUNG_VERGROESSERN"},
+  {Property::kVARIATION_UEBERHITZUNG, "VARIATION_UEBERHITZUNG"},
+  {Property::kV_H_EXPONENT_VSKL, "V_H_EXPONENT_VSKL"},
+  {Property::kV_H_FAKTOR_VSKL, "V_H_FAKTOR_VSKL"},
+  {Property::kV_H_OFFSET_VSKL, "V_H_OFFSET_VSKL"},
+  {Property::kV_K_EXPONENT_VSKL, "V_K_EXPONENT_VSKL"},
+  {Property::kV_K_FAKTOR_VSKL, "V_K_FAKTOR_VSKL"},
+  {Property::kV_K_OFFSET_VSKL, "V_K_OFFSET_VSKL"},
+  {Property::kWICHTUNG_REGELABWEICHUNG, "WICHTUNG_REGELABWEICHUNG"},
+  {Property::kP_VERDAMPFER, "P_VERDAMPFER"},
+  {Property::kI_VERDAMPFER, "I_VERDAMPFER"},
+  {Property::kD_VERDAMPFER, "D_VERDAMPFER"},
+  {Property::kP_REKUPERATOR, "P_REKUPERATOR"},
+  {Property::kI_REKUPERATOR, "I_REKUPERATOR"},
+  {Property::kD_REKUPERATOR, "D_REKUPERATOR"},
+  {Property::kMIN_REGELDYNAMIK, "MIN_REGELDYNAMIK"},
+  {Property::kTAU_REGELDYNAMIK, "TAU_REGELDYNAMIK"},
+  {Property::kEXV_OEFFNUNGSGRAD_MIN, "EXV_OEFFNUNGSGRAD_MIN"},
+  {Property::kEXV_OEFFNUNGSGRAD_MAX, "EXV_OEFFNUNGSGRAD_MAX"},
+  {Property::kEXV_TOTZONE, "EXV_TOTZONE"},
+  {Property::kEXV_OEFFNUNGSGRAD, "EXV_OEFFNUNGSGRAD"},
+  {Property::kPARAMETERSATZ, "PARAMETERSATZ"},
+  {Property::kTIEFPASS_ND, "TIEFPASS_ND"},
+  {Property::kELEKTRONISCHE_ABTAUBEDARFSERKENNUNG, "ELEKTRONISCHE_ABTAUBEDARFSERKENNUNG"},
+  {Property::kELEKTRONISCHE_ABTAUENDEERKENNUNG, "ELEKTRONISCHE_ABTAUENDEERKENNUNG"},
+  {Property::kOEFFNUNGSGRAD_ABTAUEN, "OEFFNUNGSGRAD_ABTAUEN"},
+  {Property::kDRUCKDIFFERENZ_ABTAUEN, "DRUCKDIFFERENZ_ABTAUEN"},
+  {Property::kOEFFNUNGSGRAD_HANDBETRIEB, "OEFFNUNGSGRAD_HANDBETRIEB"},
+  {Property::kGRENZDRUCK_PUMPDOWN, "GRENZDRUCK_PUMPDOWN"},
+  {Property::kINJEKTION_PUMPDOWN, "INJEKTION_PUMPDOWN"},
+  {Property::kUMSCHALTUNG_VERFLUESSIGERTEMP, "UMSCHALTUNG_VERFLUESSIGERTEMP"},
+  {Property::kUMSCHALTUNG_TAUPUNKTTEMP, "UMSCHALTUNG_TAUPUNKTTEMP"},
+  {Property::kKALIBRIERUNG_ON_OFF, "KALIBRIERUNG_ON_OFF"},
+  {Property::kSTARTZAHL_BIS_KALIBRIERUNG, "STARTZAHL_BIS_KALIBRIERUNG"},
+  {Property::kLAUFZEIT_BIS_KALIBRIERUNG, "LAUFZEIT_BIS_KALIBRIERUNG"},
+  {Property::kARBEITSPUNKT_KALIBRIERUNG, "ARBEITSPUNKT_KALIBRIERUNG"},
+  {Property::kOEG_KALIBRIERUNG_FAKTOR, "OEG_KALIBRIERUNG_FAKTOR"},
+  {Property::kKALIBRIERDAUER, "KALIBRIERDAUER"},
+  {Property::kKALIBRIERABWEICHUNG_GRENZ, "KALIBRIERABWEICHUNG_GRENZ"},
+  {Property::kKALIBRIERABWEICHUNG_ABSCHALTUNG, "KALIBRIERABWEICHUNG_ABSCHALTUNG"},
+  {Property::kFREIGABE_AUSSENTEMP_ZWISCHENEINSPRITZUNG, "FREIGABE_AUSSENTEMP_ZWISCHENEINSPRITZUNG"},
+  {Property::kNIEDERDRUCK_MOP_ND, "NIEDERDRUCK_MOP_ND"},
+  {Property::kABTAUVERFAHREN, "ABTAUVERFAHREN"},
+  {Property::kGRENZDRUCK_ABTAUENDE, "GRENZDRUCK_ABTAUENDE"},
+  {Property::kDAEMPFUNG_TAUTEMP_ABTAUAUSLOESUNG, "DAEMPFUNG_TAUTEMP_ABTAUAUSLOESUNG"},
+  {Property::kTEMPERATURDIFFERENZ_ABTAUAUSLOESUNG, "TEMPERATURDIFFERENZ_ABTAUAUSLOESUNG"},
+  {Property::kFREIGABE_ABTAUERKENNUNG, "FREIGABE_ABTAUERKENNUNG"},
+  {Property::kBEGRENZUNG_HEISSGASTEMPERATUR, "BEGRENZUNG_HEISSGASTEMPERATUR"},
+  {Property::kP_FAKTOR_BEGRENZUNG_HEISSGASTEMPERATUR, "P_FAKTOR_BEGRENZUNG_HEISSGASTEMPERATUR"},
+  {Property::kLUEFTERLEISTUNG_AT_MIN, "LUEFTERLEISTUNG_AT_MIN"},
+  {Property::kLUEFTERLEISTUNG_AT_MAX, "LUEFTERLEISTUNG_AT_MAX"},
+  {Property::kGRENZWERT_ABWEICHUNG_V_KENNLINIE, "GRENZWERT_ABWEICHUNG_V_KENNLINIE"},
+  {Property::kZEIT_WAECHTER_ABWEICHUNG_V_KENNLINIE, "ZEIT_WAECHTER_ABWEICHUNG_V_KENNLINIE"},
+  {Property::kMINIMALER_GRENZWERT_UEBERHITZUNG, "MINIMALER_GRENZWERT_UEBERHITZUNG"},
+  {Property::kZEIT_WAECHTER_UEBERHITZUNG, "ZEIT_WAECHTER_UEBERHITZUNG"},
+  {Property::kND_EVE_FUNKTION, "ND_EVE_FUNKTION"},
+  {Property::kND_EVE_GRENZWERT, "ND_EVE_GRENZWERT"},
+  {Property::kND_MASKIERZEIT, "ND_MASKIERZEIT"},
+  {Property::kHD_EVE_FUNKTION, "HD_EVE_FUNKTION"},
+  {Property::kHD_EVE_GRENZWERT_VHD, "HD_EVE_GRENZWERT_VHD"},
+  {Property::kBETRIEBSART_WP, "BETRIEBSART_WP"},
+  {Property::kSOLLWERT_UEBERHITZUNG, "SOLLWERT_UEBERHITZUNG"},
+  {Property::kISTWERT_UEBERHITZUNG_VERDAMPFER, "ISTWERT_UEBERHITZUNG_VERDAMPFER"},
+  {Property::kISTWERT_UEBERHITZUNG_REKUPERATOR_KUEHLEN, "ISTWERT_UEBERHITZUNG_REKUPERATOR_KUEHLEN"},
+  {Property::kVORSTEUER_OEFFNUNGSGRAD, "VORSTEUER_OEFFNUNGSGRAD"},
+  {Property::kP_ANTEIL_EXV, "P_ANTEIL_EXV"},
+  {Property::kI_ANTEIL_EXV, "I_ANTEIL_EXV"},
+  {Property::kD_ANTEIL_EXV, "D_ANTEIL_EXV"},
+  {Property::kPENDELN_RELATIV, "PENDELN_RELATIV"},
+  {Property::kFAKTOR_REGELDYNAMIK, "FAKTOR_REGELDYNAMIK"},
+  {Property::kLZ_VERD_1_HEIZBETRIEB, "LZ_VERD_1_HEIZBETRIEB"},
+  {Property::kLZ_VERD_2_HEIZBETRIEB, "LZ_VERD_2_HEIZBETRIEB"},
+  {Property::kLZ_VERD_1_2_HEIZBETRIEB, "LZ_VERD_1_2_HEIZBETRIEB"},
+  {Property::kLZ_VERD_1_KUEHLBETRIEB, "LZ_VERD_1_KUEHLBETRIEB"},
+  {Property::kLZ_VERD_2_KUEHLBETRIEB, "LZ_VERD_2_KUEHLBETRIEB"},
+  {Property::kLZ_VERD_1_2_KUEHLBETRIEB, "LZ_VERD_1_2_KUEHLBETRIEB"},
+  {Property::kLZ_VERD_1_WW_BETRIEB, "LZ_VERD_1_WW_BETRIEB"},
+  {Property::kLZ_VERD_2_WW_BETRIEB, "LZ_VERD_2_WW_BETRIEB"},
+  {Property::kLZ_VERD_1_2_WW_BETRIEB, "LZ_VERD_1_2_WW_BETRIEB"},
+  {Property::kLZ_DHC12, "LZ_DHC12"},
+  {Property::kSTARTS_ABTAUUNG, "STARTS_ABTAUUNG"},
+  {Property::kZEITDAUER_LETZTE_ABTAUUNG, "ZEITDAUER_LETZTE_ABTAUUNG"},
+  {Property::kABTAUZEIT_VERD1, "ABTAUZEIT_VERD1"},
+  {Property::kABTAUZEIT_VERD2, "ABTAUZEIT_VERD2"},
+  {Property::kTAUPUNKTTEMPERATUR_REFERENZ, "TAUPUNKTTEMPERATUR_REFERENZ"},
+  {Property::kTAUPUNKTTEMPERATUR_KOMPENSIERT, "TAUPUNKTTEMPERATUR_KOMPENSIERT"},
+  {Property::kDRUCKREGELUNG_ND, "DRUCKREGELUNG_ND"},
+  {Property::kDRUCK_VERDAMPFER_GEFILTERT, "DRUCK_VERDAMPFER_GEFILTERT"},
+  {Property::kFATAL_ERROR, "FATAL_ERROR"},
+  {Property::kUEBERHITZUNG_ZWISCHENEINSPRITZUNG, "UEBERHITZUNG_ZWISCHENEINSPRITZUNG"},
+  {Property::kUNSYMMETRIE_DRUCK_ZE, "UNSYMMETRIE_DRUCK_ZE"},
+  {Property::kVORSTEUER_ZE_FAKTOR, "VORSTEUER_ZE_FAKTOR"},
+  {Property::kVORSTEUER_ZE_OFFSET, "VORSTEUER_ZE_OFFSET"},
+  {Property::kEINFLUSS_OG_DRUCK_ZE, "EINFLUSS_OG_DRUCK_ZE"},
+  {Property::kP_ANTEIL_ZWISCHENEINSPRITZUNG, "P_ANTEIL_ZWISCHENEINSPRITZUNG"},
+  {Property::kI_ANTEIL_ZWISCHENEINSPRITZUNG, "I_ANTEIL_ZWISCHENEINSPRITZUNG"},
+  {Property::kVARIATION_OG_ZE, "VARIATION_OG_ZE"},
+  {Property::kUEBERHITZ_ZU_LEISTUNG_K, "UEBERHITZ_ZU_LEISTUNG_K"},
+  {Property::kV_OG_ZU_LEISTUNG_K, "V_OG_ZU_LEISTUNG_K"},
+  {Property::kDRUCK_ZWISCHENEINSPRITZUNG, "DRUCK_ZWISCHENEINSPRITZUNG"},
+  {Property::kUEBERHITZUNG_IST_ZWISCHENEINSPRITZUNG, "UEBERHITZUNG_IST_ZWISCHENEINSPRITZUNG"},
+  {Property::kV_OEFFNUNGSGRAD_ZWISCHENEINSPRITZUNG, "V_OEFFNUNGSGRAD_ZWISCHENEINSPRITZUNG"},
+  {Property::kEXV_OEFFNUNGSGRAD_ZWISCHENEINSPRITZUNG, "EXV_OEFFNUNGSGRAD_ZWISCHENEINSPRITZUNG"},
+  {Property::kLAUFZEIT_VERD_BEI_SPEICHERBEDARF, "LAUFZEIT_VERD_BEI_SPEICHERBEDARF"},
+  {Property::kAUSSEN_LUEFTERLEISTUNG_AT_MIN, "AUSSEN_LUEFTERLEISTUNG_AT_MIN"},
+  {Property::kAUSSEN_LUEFTERLEISTUNG_AT_MAX, "AUSSEN_LUEFTERLEISTUNG_AT_MAX"},
+  {Property::kVERDAMPFERTEMP_VOR_KOMPENSATION, "VERDAMPFERTEMP_VOR_KOMPENSATION"},
+  {Property::kVERDAMPFERTEMP_NACH_KOMPENSATION, "VERDAMPFERTEMP_NACH_KOMPENSATION"},
+  {Property::kVORLAUFISTTEMP_WP_IWS, "VORLAUFISTTEMP_WP_IWS"},
+  {Property::kRUECKLAUFISTTEMP_WP_IWS, "RUECKLAUFISTTEMP_WP_IWS"},
+  {Property::kOEFFGRAD_ZE_KUEHLUNG, "OEFFGRAD_ZE_KUEHLUNG"},
+  {Property::kDATENLOGGER_RING_BETRIEBSART, "DATENLOGGER_RING_BETRIEBSART"},
+  {Property::kDATENLOGGER_RING_ZYKLUS, "DATENLOGGER_RING_ZYKLUS"},
+  {Property::kDATENLOGGER_TRIGGER_EREIGNIS, "DATENLOGGER_TRIGGER_EREIGNIS"},
+  {Property::kFEHLER_PARAMETERSATZ_IWS, "FEHLER_PARAMETERSATZ_IWS"},
+  {Property::kPARAMETERSATZ_ANGEPASST_IWS, "PARAMETERSATZ_ANGEPASST_IWS"},
+  {Property::kMIN_VORLAUF_KUEHLBETRIEB, "MIN_VORLAUF_KUEHLBETRIEB"},
+  {Property::kAKT_KALIBRIERWERT_V, "AKT_KALIBRIERWERT_V"},
+  {Property::kFUEHLERZEITKONSTANTE, "FUEHLERZEITKONSTANTE"},
+  {Property::kKONFIG_0_BIS_10V, "KONFIG_0_BIS_10V"},
+  {Property::kEVE_GRENZWERT_KUEHLBETRIEB, "EVE_GRENZWERT_KUEHLBETRIEB"},
+  {Property::kMODKLAPPENLAUFZEIT, "MODKLAPPENLAUFZEIT"},
+  {Property::kKONFIG_0_BIS_5V, "KONFIG_0_BIS_5V"},
+  {Property::kMESSSTROM_MITTELDRUCK, "MESSSTROM_MITTELDRUCK"},
+  {Property::kANZEIGE_MITTELDRUCK, "ANZEIGE_MITTELDRUCK"},
+  {Property::kLUEFTERDREHZAHL, "LUEFTERDREHZAHL"},
+  {Property::kD_ANTEIL_ZWISCHENEINSPRITZUNG, "D_ANTEIL_ZWISCHENEINSPRITZUNG"},
+  {Property::kSOLLWERT_UEBERHITZUNG_ZWISCHENEINSPRITZUNG, "SOLLWERT_UEBERHITZUNG_ZWISCHENEINSPRITZUNG"},
+  {Property::kGESPEICHERTE_MODULE_LETZTER_INDEX, "GESPEICHERTE_MODULE_LETZTER_INDEX"},
+  {Property::kGESPEICHERTE_MODULE_0, "GESPEICHERTE_MODULE_0"},
+  {Property::kGESPEICHERTE_MODULE_1, "GESPEICHERTE_MODULE_1"},
+  {Property::kGESPEICHERTE_MODULE_2, "GESPEICHERTE_MODULE_2"},
+  {Property::kGESPEICHERTE_MODULE_3, "GESPEICHERTE_MODULE_3"},
+  {Property::kGESPEICHERTE_MODULE_4, "GESPEICHERTE_MODULE_4"},
+  {Property::kGESPEICHERTE_MODULE_5, "GESPEICHERTE_MODULE_5"},
+  {Property::kGESPEICHERTE_MODULE_6, "GESPEICHERTE_MODULE_6"},
+  {Property::kGESPEICHERTE_MODULE_7, "GESPEICHERTE_MODULE_7"},
+  {Property::kGESPEICHERTE_MODULE_8, "GESPEICHERTE_MODULE_8"},
+  {Property::kGESPEICHERTE_MODULE_9, "GESPEICHERTE_MODULE_9"},
+  {Property::kGESPEICHERTE_MODULE_10, "GESPEICHERTE_MODULE_10"},
+  {Property::kGESPEICHERTE_MODULE_11, "GESPEICHERTE_MODULE_11"},
+  {Property::kGESPEICHERTE_MODULE_12, "GESPEICHERTE_MODULE_12"},
+  {Property::kGESPEICHERTE_MODULE_13, "GESPEICHERTE_MODULE_13"},
+  {Property::kGESPEICHERTE_MODULE_14, "GESPEICHERTE_MODULE_14"},
+  {Property::kGESPEICHERTE_MODULE_15, "GESPEICHERTE_MODULE_15"},
+  {Property::kGESPEICHERTE_MODULE_16, "GESPEICHERTE_MODULE_16"},
+  {Property::kGESPEICHERTE_MODULE_17, "GESPEICHERTE_MODULE_17"},
+  {Property::kGESPEICHERTE_MODULE_18, "GESPEICHERTE_MODULE_18"},
+  {Property::kGESPEICHERTE_MODULE_19, "GESPEICHERTE_MODULE_19"},
+  {Property::kGESPEICHERTE_MODULE_20, "GESPEICHERTE_MODULE_20"},
+  {Property::kGESPEICHERTE_MODULE_21, "GESPEICHERTE_MODULE_21"},
+  {Property::kGESPEICHERTE_MODULE_22, "GESPEICHERTE_MODULE_22"},
+  {Property::kGESPEICHERTE_MODULE_23, "GESPEICHERTE_MODULE_23"},
+  {Property::kGESPEICHERTE_MODULE_24, "GESPEICHERTE_MODULE_24"},
+  {Property::kGESPEICHERTE_MODULE_25, "GESPEICHERTE_MODULE_25"},
+  {Property::kGESPEICHERTE_MODULE_26, "GESPEICHERTE_MODULE_26"},
+  {Property::kGESPEICHERTE_MODULE_27, "GESPEICHERTE_MODULE_27"},
+  {Property::kGESPEICHERTE_MODULE_28, "GESPEICHERTE_MODULE_28"},
+  {Property::kGESPEICHERTE_MODULE_29, "GESPEICHERTE_MODULE_29"},
+  {Property::kGESPEICHERTE_MODULE_30, "GESPEICHERTE_MODULE_30"},
+  {Property::kGESPEICHERTE_MODULE_31, "GESPEICHERTE_MODULE_31"},
+  {Property::kGESPEICHERTE_MODULE_32, "GESPEICHERTE_MODULE_32"},
+  {Property::kGESPEICHERTE_MODULE_33, "GESPEICHERTE_MODULE_33"},
+  {Property::kGESPEICHERTE_MODULE_34, "GESPEICHERTE_MODULE_34"},
+  {Property::kGESPEICHERTE_MODULE_35, "GESPEICHERTE_MODULE_35"},
+  {Property::kGESPEICHERTE_MODULE_36, "GESPEICHERTE_MODULE_36"},
+  {Property::kGESPEICHERTE_MODULE_37, "GESPEICHERTE_MODULE_37"},
+  {Property::kGESPEICHERTE_MODULE_38, "GESPEICHERTE_MODULE_38"},
+  {Property::kGESPEICHERTE_MODULE_39, "GESPEICHERTE_MODULE_39"},
+  {Property::kGESPEICHERTE_MODULE_40, "GESPEICHERTE_MODULE_40"},
+  {Property::kGESPEICHERTE_MODULE_41, "GESPEICHERTE_MODULE_41"},
+  {Property::kGESPEICHERTE_MODULE_42, "GESPEICHERTE_MODULE_42"},
+  {Property::kGESPEICHERTE_MODULE_43, "GESPEICHERTE_MODULE_43"},
+  {Property::kGESPEICHERTE_MODULE_44, "GESPEICHERTE_MODULE_44"},
+  {Property::kGESPEICHERTE_MODULE_45, "GESPEICHERTE_MODULE_45"},
+  {Property::kGESPEICHERTE_MODULE_46, "GESPEICHERTE_MODULE_46"},
+  {Property::kGESPEICHERTE_MODULE_47, "GESPEICHERTE_MODULE_47"},
+  {Property::kGESPEICHERTE_MODULE_48, "GESPEICHERTE_MODULE_48"},
+  {Property::kGESPEICHERTE_MODULE_49, "GESPEICHERTE_MODULE_49"},
+  {Property::kGESPEICHERTE_MODULE_50, "GESPEICHERTE_MODULE_50"},
+  {Property::kGESPEICHERTE_MODULE_51, "GESPEICHERTE_MODULE_51"},
+  {Property::kGESPEICHERTE_MODULE_52, "GESPEICHERTE_MODULE_52"},
+  {Property::kGESPEICHERTE_MODULE_53, "GESPEICHERTE_MODULE_53"},
+  {Property::kGESPEICHERTE_MODULE_54, "GESPEICHERTE_MODULE_54"},
+  {Property::kGESPEICHERTE_MODULE_55, "GESPEICHERTE_MODULE_55"},
+  {Property::kGESPEICHERTE_MODULE_56, "GESPEICHERTE_MODULE_56"},
+  {Property::kGESPEICHERTE_MODULE_57, "GESPEICHERTE_MODULE_57"},
+  {Property::kGESPEICHERTE_MODULE_58, "GESPEICHERTE_MODULE_58"},
+  {Property::kGESPEICHERTE_MODULE_59, "GESPEICHERTE_MODULE_59"},
+  {Property::kGESPEICHERTE_MODULE_60, "GESPEICHERTE_MODULE_60"},
+  {Property::kGESPEICHERTE_MODULE_61, "GESPEICHERTE_MODULE_61"},
+  {Property::kGESPEICHERTE_MODULE_62, "GESPEICHERTE_MODULE_62"},
+  {Property::kGESPEICHERTE_MODULE_63, "GESPEICHERTE_MODULE_63"},
+  {Property::kLUEFTER_IST_DREHZAHL_WE1, "LUEFTER_IST_DREHZAHL_WE1"},
+  {Property::kLUEFTER_IST_DREHZAHL_WE2, "LUEFTER_IST_DREHZAHL_WE2"},
+  {Property::kSTROMAUFNAHME_WE1_STUFE_1, "STROMAUFNAHME_WE1_STUFE_1"},
+  {Property::kSTROMAUFNAHME_WE1_STUFE_2, "STROMAUFNAHME_WE1_STUFE_2"},
+  {Property::kSTROMAUFNAHME_WE2_STUFE_1, "STROMAUFNAHME_WE2_STUFE_1"},
+  {Property::kSTROMAUFNAHME_WE2_STUFE_2, "STROMAUFNAHME_WE2_STUFE_2"},
+  {Property::kSTROMAUFNAHME_WE3_STUFE_1, "STROMAUFNAHME_WE3_STUFE_1"},
+  {Property::kSTROMAUFNAHME_WE3_STUFE_2, "STROMAUFNAHME_WE3_STUFE_2"},
+  {Property::kSTROMAUFNAHME_WE4_STUFE_1, "STROMAUFNAHME_WE4_STUFE_1"},
+  {Property::kSTROMAUFNAHME_WE4_STUFE_2, "STROMAUFNAHME_WE4_STUFE_2"},
+  {Property::kEXV_SCHRITTWEITE, "EXV_SCHRITTWEITE"},
+  {Property::kMAX_RUECKLAUFTEMP_WP, "MAX_RUECKLAUFTEMP_WP"},
+  {Property::kMINDESTLAUFZEIT_WE, "MINDESTLAUFZEIT_WE"},
+  {Property::kSTUETZSTELLE_MD1, "STUETZSTELLE_MD1"},
+  {Property::kSTUETZSTELLE_MD2, "STUETZSTELLE_MD2"},
+  {Property::kINTEGRAL_REGELABWEICHUNG_RELATIV, "INTEGRAL_REGELABWEICHUNG_RELATIV"},
+  {Property::kNIEDERDRUCK_MOP_HD, "NIEDERDRUCK_MOP_HD"},
+  {Property::kAUSLEGUNG_WE_LEISTUNG_TA, "AUSLEGUNG_WE_LEISTUNG_TA"},
+  {Property::kEL_AUFNAHMELEISTUNG_WW_TAG_WH, "EL_AUFNAHMELEISTUNG_WW_TAG_WH"},
+  {Property::kEL_AUFNAHMELEISTUNG_WW_TAG_KWH, "EL_AUFNAHMELEISTUNG_WW_TAG_KWH"},
+  {Property::kEL_AUFNAHMELEISTUNG_WW_SUM_KWH, "EL_AUFNAHMELEISTUNG_WW_SUM_KWH"},
+  {Property::kEL_AUFNAHMELEISTUNG_WW_SUM_MWH, "EL_AUFNAHMELEISTUNG_WW_SUM_MWH"},
+  {Property::kEL_AUFNAHMELEISTUNG_HEIZ_TAG_WH, "EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH"},
+  {Property::kEL_AUFNAHMELEISTUNG_HEIZ_TAG_KWH, "EL_AUFNAHMELEISTUNG_HEIZ_TAG_KWH"},
+  {Property::kEL_AUFNAHMELEISTUNG_HEIZ_SUM_KWH, "EL_AUFNAHMELEISTUNG_HEIZ_SUM_KWH"},
+  {Property::kEL_AUFNAHMELEISTUNG_HEIZ_SUM_MWH, "EL_AUFNAHMELEISTUNG_HEIZ_SUM_MWH"},
+  {Property::kWAERMEERTRAG_2WE_WW_TAG_WH, "WAERMEERTRAG_2WE_WW_TAG_WH"},
+  {Property::kWAERMEERTRAG_2WE_WW_TAG_KWH, "WAERMEERTRAG_2WE_WW_TAG_KWH"},
+  {Property::kWAERMEERTRAG_2WE_WW_SUM_KWH, "WAERMEERTRAG_2WE_WW_SUM_KWH"},
+  {Property::kWAERMEERTRAG_2WE_WW_SUM_MWH, "WAERMEERTRAG_2WE_WW_SUM_MWH"},
+  {Property::kWAERMEERTRAG_2WE_HEIZ_TAG_WH, "WAERMEERTRAG_2WE_HEIZ_TAG_WH"},
+  {Property::kWAERMEERTRAG_2WE_HEIZ_TAG_KWH, "WAERMEERTRAG_2WE_HEIZ_TAG_KWH"},
+  {Property::kWAERMEERTRAG_2WE_HEIZ_SUM_KWH, "WAERMEERTRAG_2WE_HEIZ_SUM_KWH"},
+  {Property::kWAERMEERTRAG_2WE_HEIZ_SUM_MWH, "WAERMEERTRAG_2WE_HEIZ_SUM_MWH"},
+  {Property::kWAERMEERTRAG_WW_TAG_WH, "WAERMEERTRAG_WW_TAG_WH"},
+  {Property::kWAERMEERTRAG_WW_TAG_KWH, "WAERMEERTRAG_WW_TAG_KWH"},
+  {Property::kWAERMEERTRAG_WW_SUM_KWH, "WAERMEERTRAG_WW_SUM_KWH"},
+  {Property::kWAERMEERTRAG_WW_SUM_MWH, "WAERMEERTRAG_WW_SUM_MWH"},
+  {Property::kWAERMEERTRAG_HEIZ_TAG_WH, "WAERMEERTRAG_HEIZ_TAG_WH"},
+  {Property::kWAERMEERTRAG_HEIZ_TAG_KWH, "WAERMEERTRAG_HEIZ_TAG_KWH"},
+  {Property::kWAERMEERTRAG_HEIZ_SUM_KWH, "WAERMEERTRAG_HEIZ_SUM_KWH"},
+  {Property::kWAERMEERTRAG_HEIZ_SUM_MWH, "WAERMEERTRAG_HEIZ_SUM_MWH"},
+  {Property::kBUSKENNUNG_HEIZMODUL0, "BUSKENNUNG_HEIZMODUL0"},
+  {Property::kKUEHLEN_AUS_BEI_WW, "KUEHLEN_AUS_BEI_WW"},
+  {Property::kKUEHL_HYSTERESEZEIT, "KUEHL_HYSTERESEZEIT"},
+  {Property::kMAX_KUEHL_HYSTERESE, "MAX_KUEHL_HYSTERESE"},
+  {Property::kKUEHL_HYSTERESE_2, "KUEHL_HYSTERESE_2"},
+  {Property::kKUEHL_SPERRZEIT, "KUEHL_SPERRZEIT"},
+  {Property::kMAX_RUECKLAUFSOLLTEMP_WP, "MAX_RUECKLAUFSOLLTEMP_WP"},
+  {Property::kMIN_RUECKLAUFSOLLTEMP_WP, "MIN_RUECKLAUFSOLLTEMP_WP"},
+  {Property::kMAX_AUSSENTEMP_WE, "MAX_AUSSENTEMP_WE"},
+  {Property::kMIN_AUSSENTMEP_WP, "MIN_AUSSENTMEP_WP"},
+  {Property::kKUEHLEN_MIT_WP, "KUEHLEN_MIT_WP"},
+  {Property::kPU_NACHTLADUNGPROG_EINSCHALTZEIT, "PU_NACHTLADUNGPROG_EINSCHALTZEIT"},
+  {Property::kPU_NACHTLADUNGPROG_AUSSCHALTZEIT, "PU_NACHTLADUNGPROG_AUSSCHALTZEIT"},
+  {Property::kPU_NACHTLADUNG_TEMP, "PU_NACHTLADUNG_TEMP"},
+  {Property::kMIN_PU_TEMP_WE, "MIN_PU_TEMP_WE"},
+  {Property::kMIN_WW_TEMP_WE, "MIN_WW_TEMP_WE"},
+  {Property::kMAX_WE_SPERRZEIT, "MAX_WE_SPERRZEIT"},
+  {Property::kMIN_RUECKLAUFKUEHLTEMP, "MIN_RUECKLAUFKUEHLTEMP"},
+  {Property::kSOMMERZEIT_AUTOMATIK, "SOMMERZEIT_AUTOMATIK"},
+  {Property::kP_ANTEIL_EXV_ZE, "P_ANTEIL_EXV_ZE"},
+  {Property::kI_ANTEIL_EXV_ZE, "I_ANTEIL_EXV_ZE"},
+  {Property::kD_ANTEIL_EXV_ZE, "D_ANTEIL_EXV_ZE"},
+  {Property::kRESET_FEHLERBIT_STATUS_STUFE1, "RESET_FEHLERBIT_STATUS_STUFE1"},
+  {Property::kRESET_FEHLERBIT_STATUS_STUFE2, "RESET_FEHLERBIT_STATUS_STUFE2"},
+  {Property::kFEHLERBIT_STATUS_STUFE1, "FEHLERBIT_STATUS_STUFE1"},
+  {Property::kFEHLERBIT_STATUS_STUFE2, "FEHLERBIT_STATUS_STUFE2"},
+  {Property::kSAMMEL_RELAISSTATUS_ANZ, "SAMMEL_RELAISSTATUS_ANZ"},
+  {Property::kFOLGENWECHSEL_MINCOUNTER_LOW, "FOLGENWECHSEL_MINCOUNTER_LOW"},
+  {Property::kFOLGENWECHSEL_MINCOUNTER_HIGH, "FOLGENWECHSEL_MINCOUNTER_HIGH"},
+  {Property::kERKANNTE_KASKADENKESSEL, "ERKANNTE_KASKADENKESSEL"},
+  {Property::kSCHWIMMBADISTTEMP, "SCHWIMMBADISTTEMP"},
+  {Property::kSCHWIMMBADSOLLTEMP_I, "SCHWIMMBADSOLLTEMP_I"},
+  {Property::kSCHWIMMBADSOLLTEMP_II, "SCHWIMMBADSOLLTEMP_II"},
+  {Property::kSCHWIMMBADSOLLTEMP_III, "SCHWIMMBADSOLLTEMP_III"},
+  {Property::kSTATUSANZEIGE, "STATUSANZEIGE"},
+  {Property::kKONTRAST, "KONTRAST"},
+  {Property::kPARAMETER_SPANNUNGSEINGANG, "PARAMETER_SPANNUNGSEINGANG"},
+  {Property::kPROGRAMMSCHALTER_LEITSTELLE, "PROGRAMMSCHALTER_LEITSTELLE"},
+  {Property::kBERECHNETE_AUFHEIZOPTIMIERUNGSZEIT, "BERECHNETE_AUFHEIZOPTIMIERUNGSZEIT"},
+  {Property::kANTILEGIONELLEN_ERFOLGREICH_MIT_SOLAR, "ANTILEGIONELLEN_ERFOLGREICH_MIT_SOLAR"},
+  {Property::kTEMPORAERE_PROGSTELL, "TEMPORAERE_PROGSTELL"},
+  {Property::kRAUMREGLER_I_ANTEIL, "RAUMREGLER_I_ANTEIL"},
+  {Property::kHZK_VORVERLEGUNGSZEIT, "HZK_VORVERLEGUNGSZEIT"},
+  {Property::kHZK_TYP, "HZK_TYP"},
+  {Property::kINIT_FUEHLER, "INIT_FUEHLER"},
+  {Property::kFEHLER_STUNDE, "FEHLER_STUNDE"},
+  {Property::kFEHLER_MINUTE, "FEHLER_MINUTE"},
+  {Property::kKOLLEKTORTEMP1_MIN_24H, "KOLLEKTORTEMP1_MIN_24H"},
+  {Property::kKOLLEKTORTEMP1_MAX_24H, "KOLLEKTORTEMP1_MAX_24H"},
+  {Property::kKOLLEKTORTEMP2_MIN_24H, "KOLLEKTORTEMP2_MIN_24H"},
+  {Property::kKOLLEKTORTEMP2_MAX_24H, "KOLLEKTORTEMP2_MAX_24H"},
+  {Property::kSPEICHER_UNTEN_TEMP1_MIN_24H, "SPEICHER_UNTEN_TEMP1_MIN_24H"},
+  {Property::kSPEICHER_UNTEN_TEMP1_MAX_24H, "SPEICHER_UNTEN_TEMP1_MAX_24H"},
+  {Property::kSPEICHER_UNTEN_TEMP2_MIN_24H, "SPEICHER_UNTEN_TEMP2_MIN_24H"},
+  {Property::kSPEICHER_UNTEN_TEMP2_MAX_24H, "SPEICHER_UNTEN_TEMP2_MAX_24H"},
+  {Property::kSPEICHER_UNTEN_TEMP3_MIN_24H, "SPEICHER_UNTEN_TEMP3_MIN_24H"},
+  {Property::kSPEICHER_UNTEN_TEMP3_MAX_24H, "SPEICHER_UNTEN_TEMP3_MAX_24H"},
+  {Property::kEINSTRAHLUNG_MIN_24H, "EINSTRAHLUNG_MIN_24H"},
+  {Property::kEINSTRAHLUNG_MAX_24H, "EINSTRAHLUNG_MAX_24H"},
+  {Property::kFUEHLER_FUER_RLW_FUNKTION, "FUEHLER_FUER_RLW_FUNKTION"},
+  {Property::kFUEHLER_FUER_TH1_FUNKTION, "FUEHLER_FUER_TH1_FUNKTION"},
+  {Property::kFUEHLER_FUER_TH2_FUNKTION, "FUEHLER_FUER_TH2_FUNKTION"},
+  {Property::kFUEHLER_FUER_TH3_FUNKTION, "FUEHLER_FUER_TH3_FUNKTION"},
+  {Property::kFUEHLER_FUER_TH4_FUNKTION, "FUEHLER_FUER_TH4_FUNKTION"},
+  {Property::kFUEHLER1_FUER_DT1_FUNKTION, "FUEHLER1_FUER_DT1_FUNKTION"},
+  {Property::kFUEHLER2_FUER_DT1_FUNKTION, "FUEHLER2_FUER_DT1_FUNKTION"},
+  {Property::kFUEHLER1_FUER_DT2_FUNKTION, "FUEHLER1_FUER_DT2_FUNKTION"},
+  {Property::kFUEHLER2_FUER_DT2_FUNKTION, "FUEHLER2_FUER_DT2_FUNKTION"},
+  {Property::kTEMPERATUR_TH1_FUNKTION_EIN, "TEMPERATUR_TH1_FUNKTION_EIN"},
+  {Property::kTEMPERATUR_TH1_FUNKTION_AUS, "TEMPERATUR_TH1_FUNKTION_AUS"},
+  {Property::kTEMPERATUR_TH2_FUNKTION_EIN, "TEMPERATUR_TH2_FUNKTION_EIN"},
+  {Property::kTEMPERATUR_TH2_FUNKTION_AUS, "TEMPERATUR_TH2_FUNKTION_AUS"},
+  {Property::kTEMPERATUR_TH3_FUNKTION_EIN, "TEMPERATUR_TH3_FUNKTION_EIN"},
+  {Property::kTEMPERATUR_TH3_FUNKTION_AUS, "TEMPERATUR_TH3_FUNKTION_AUS"},
+  {Property::kTEMPERATUR_TH4_FUNKTION_EIN, "TEMPERATUR_TH4_FUNKTION_EIN"},
+  {Property::kTEMPERATUR_TH4_FUNKTION_AUS, "TEMPERATUR_TH4_FUNKTION_AUS"},
+  {Property::kTEMPERATUR_DT1_FUNKTION_EIN, "TEMPERATUR_DT1_FUNKTION_EIN"},
+  {Property::kTEMPERATUR_DT1_FUNKTION_AUS, "TEMPERATUR_DT1_FUNKTION_AUS"},
+  {Property::kTEMPERATUR_DT2_FUNKTION_EIN, "TEMPERATUR_DT2_FUNKTION_EIN"},
+  {Property::kTEMPERATUR_DT2_FUNKTION_AUS, "TEMPERATUR_DT2_FUNKTION_AUS"},
+  {Property::kWARMLUFTKOLLEKTOR_RAUMSOLL_EINSCHALTTEMP, "WARMLUFTKOLLEKTOR_RAUMSOLL_EINSCHALTTEMP"},
+  {Property::kWARMLUFTKOLLEKTOR_RAUMSOLL_AUSSCHALTTEMP, "WARMLUFTKOLLEKTOR_RAUMSOLL_AUSSCHALTTEMP"},
+  {Property::kWARMLUFTKOLLEKTOR_DIFFERENZ_EIN, "WARMLUFTKOLLEKTOR_DIFFERENZ_EIN"},
+  {Property::kWARMLUFTKOLLEKTOR_DIFFERENZ_AUS, "WARMLUFTKOLLEKTOR_DIFFERENZ_AUS"},
+  {Property::kWARMLUFTKOLLEKTOR_THERMOSTAT_EIN, "WARMLUFTKOLLEKTOR_THERMOSTAT_EIN"},
+  {Property::kWARMLUFTKOLLEKTOR_THERMOSTAT_AUS, "WARMLUFTKOLLEKTOR_THERMOSTAT_AUS"},
+  {Property::kWARMLUFTKOLLEKTOR_MAXTEMP, "WARMLUFTKOLLEKTOR_MAXTEMP"},
+  {Property::kWARMLUFTKOLLEKTOR_WIEDEREIN_NACH_MAXTEMP, "WARMLUFTKOLLEKTOR_WIEDEREIN_NACH_MAXTEMP"},
+  {Property::kFESTSTOFF_THERMOSTAT, "FESTSTOFF_THERMOSTAT"},
+  {Property::kFESTSTOFF_THERMOSTAT_AUS, "FESTSTOFF_THERMOSTAT_AUS"},
+  {Property::kFESTSTOFF_DIFFERENZ, "FESTSTOFF_DIFFERENZ"},
+  {Property::kFESTSTOFF_DIFFERENZ_AUS, "FESTSTOFF_DIFFERENZ_AUS"},
+  {Property::kRUECKLAUFW_DIFFERENZ, "RUECKLAUFW_DIFFERENZ"},
+  {Property::kRUECKLAUFW_DIFFERENZ_AUS, "RUECKLAUFW_DIFFERENZ_AUS"},
+  {Property::kUMLADUNG_DIFFERENZ, "UMLADUNG_DIFFERENZ"},
+  {Property::kUMLADUNG_DIFFERENZ_AUS, "UMLADUNG_DIFFERENZ_AUS"},
+  {Property::kUMLADUNG_ZIELSPEICHER_MAXTEMP, "UMLADUNG_ZIELSPEICHER_MAXTEMP"},
+  {Property::kUMLADUNG_WIEDEREIN_NACH_ZIELSP_MAXTEMP, "UMLADUNG_WIEDEREIN_NACH_ZIELSP_MAXTEMP"},
+  {Property::kWW_NACHHEIZUNG_FREIGABE, "WW_NACHHEIZUNG_FREIGABE"},
+  {Property::kWMZ_IMPULSRATE_SOLAR, "WMZ_IMPULSRATE_SOLAR"},
+  {Property::kWMZ_SOLARMEDIUM, "WMZ_SOLARMEDIUM"},
+  {Property::kWMZ_KONZENTRATION_SOLARMEDIUM, "WMZ_KONZENTRATION_SOLARMEDIUM"},
+  {Property::kWMZ_MESSUNG_IMPULS, "WMZ_MESSUNG_IMPULS"},
+  {Property::kWMZ_VOLUMENSTROM_FIX_SOLARPUMPE1, "WMZ_VOLUMENSTROM_FIX_SOLARPUMPE1"},
+  {Property::kWMZ_VOLUMENSTROM_FIX_SOLARPUMPE2, "WMZ_VOLUMENSTROM_FIX_SOLARPUMPE2"},
+  {Property::kZIRKPUMPE_IMPULS_LAUFZEIT, "ZIRKPUMPE_IMPULS_LAUFZEIT"},
+  {Property::kZIRKPUMPE_IMPULS_SPERRZEIT, "ZIRKPUMPE_IMPULS_SPERRZEIT"},
+  {Property::kVORRANG_TEST_ZEIT, "VORRANG_TEST_ZEIT"},
+  {Property::kVORRANG_TEST_GRADIENT, "VORRANG_TEST_GRADIENT"},
+  {Property::kSTRAHLUNGSSENSOR_FUNKTION, "STRAHLUNGSSENSOR_FUNKTION"},
+  {Property::kSTRAHLUNGSSENSOR_ABGLEICH, "STRAHLUNGSSENSOR_ABGLEICH"},
+  {Property::kSOLAR_KICKPAUSE1, "SOLAR_KICKPAUSE1"},
+  {Property::kSOLAR_KICKDAUER1, "SOLAR_KICKDAUER1"},
+  {Property::kSOLAR_KICKPAUSE2, "SOLAR_KICKPAUSE2"},
+  {Property::kSOLAR_KICKDAUER2, "SOLAR_KICKDAUER2"},
+  {Property::kSOLAR_KICKPROG_EINSCAHLTZEIT, "SOLAR_KICKPROG_EINSCAHLTZEIT"},
+  {Property::kSOLAR_KICKPROG_AUSSCHALTZEIT, "SOLAR_KICKPROG_AUSSCHALTZEIT"},
+  {Property::kSOLAR_KICK_GRADIENTENZEIT1, "SOLAR_KICK_GRADIENTENZEIT1"},
+  {Property::kSOLAR_KICK_GRADIENTENZEIT2, "SOLAR_KICK_GRADIENTENZEIT2"},
+  {Property::kSOLAR_OST_WEST_KOLLEKTOR, "SOLAR_OST_WEST_KOLLEKTOR"},
+  {Property::kSOLAR_DIFFERENZ_KOLLEKTOR1, "SOLAR_DIFFERENZ_KOLLEKTOR1"},
+  {Property::kSOLAR_DIFFERENZ_KOLLEKTOR1_AUS, "SOLAR_DIFFERENZ_KOLLEKTOR1_AUS"},
+  {Property::kSOLAR_DIFFERENZ_KOLLEKTOR2, "SOLAR_DIFFERENZ_KOLLEKTOR2"},
+  {Property::kSOLAR_DIFFERENZ_KOLLEKTOR2_AUS, "SOLAR_DIFFERENZ_KOLLEKTOR2_AUS"},
+  {Property::kSOLAR_THERMOSTAT_KOLLEKTOR1, "SOLAR_THERMOSTAT_KOLLEKTOR1"},
+  {Property::kSOLAR_THERMOSTAT_KOLLEKTOR1_AUS, "SOLAR_THERMOSTAT_KOLLEKTOR1_AUS"},
+  {Property::kSOLAR_THERMOSTAT_KOLLEKTOR2, "SOLAR_THERMOSTAT_KOLLEKTOR2"},
+  {Property::kSOLAR_THERMOSTAT_KOLLEKTOR2_AUS, "SOLAR_THERMOSTAT_KOLLEKTOR2_AUS"},
+  {Property::kSOLAR_KOLLEKTOR1_KUEHL, "SOLAR_KOLLEKTOR1_KUEHL"},
+  {Property::kSOLAR_KOLLEKTOR1_KUEHL_AUS, "SOLAR_KOLLEKTOR1_KUEHL_AUS"},
+  {Property::kSOLAR_KOLLEKTOR2_KUEHL, "SOLAR_KOLLEKTOR2_KUEHL"},
+  {Property::kSOLAR_KOLLEKTOR2_KUEHL_AUS, "SOLAR_KOLLEKTOR2_KUEHL_AUS"},
+  {Property::kSOLAR_KOLLEKTOR1_NOTAUS, "SOLAR_KOLLEKTOR1_NOTAUS"},
+  {Property::kSOLAR_KOLLEKTOR1_WIEDEREIN_NACH_NOTAUS, "SOLAR_KOLLEKTOR1_WIEDEREIN_NACH_NOTAUS"},
+  {Property::kSOLAR_KOLLEKTOR2_NOTAUS, "SOLAR_KOLLEKTOR2_NOTAUS"},
+  {Property::kSOLAR_KOLLEKTOR2_WIEDEREIN_NACH_NOTAUS, "SOLAR_KOLLEKTOR2_WIEDEREIN_NACH_NOTAUS"},
+  {Property::kSOLAR_KOLLEKTOR_KUEHL_SPEICHER_NR, "SOLAR_KOLLEKTOR_KUEHL_SPEICHER_NR"},
+  {Property::kFEUCHTEREGELUNG_EIN_AUS, "FEUCHTEREGELUNG_EIN_AUS"},
+  {Property::kMIN_SOLL_FEUCHTE, "MIN_SOLL_FEUCHTE"},
+  {Property::kMAX_SOLL_FEUCHTE, "MAX_SOLL_FEUCHTE"},
+  {Property::kMAXTEMP_SPEICHER1, "MAXTEMP_SPEICHER1"},
+  {Property::kMAXTEMP_SPEICHER1_WIEDEREIN, "MAXTEMP_SPEICHER1_WIEDEREIN"},
+  {Property::kMAXTEMP_SPEICHER2, "MAXTEMP_SPEICHER2"},
+  {Property::kMAXTEMP_SPEICHER2_WIEDEREIN, "MAXTEMP_SPEICHER2_WIEDEREIN"},
+  {Property::kMAXTEMP_SPEICHER3, "MAXTEMP_SPEICHER3"},
+  {Property::kMAXTEMP_SPEICHER3_WIEDEREIN, "MAXTEMP_SPEICHER3_WIEDEREIN"},
+  {Property::kMAXTEMP_SPEICHER_KUEHLFUNKTION, "MAXTEMP_SPEICHER_KUEHLFUNKTION"},
+  {Property::kLAUFZEIT_SOLAR_HIGH, "LAUFZEIT_SOLAR_HIGH"},
+  {Property::kLAUFZEIT_SOLAR2, "LAUFZEIT_SOLAR2"},
+  {Property::kLAUFZEIT_SOLAR2_HIGH, "LAUFZEIT_SOLAR2_HIGH"},
+  {Property::kLADEZEIT_SPEICHER, "LADEZEIT_SPEICHER"},
+  {Property::kLADEZEIT_SPEICHER_HIGH, "LADEZEIT_SPEICHER_HIGH"},
+  {Property::kLADEZEIT_SPEICHER2, "LADEZEIT_SPEICHER2"},
+  {Property::kLADEZEIT_SPEICHER2_HIGH, "LADEZEIT_SPEICHER2_HIGH"},
+  {Property::kLADEZEIT_SPEICHER3, "LADEZEIT_SPEICHER3"},
+  {Property::kLADEZEIT_SPEICHER3_HIGH, "LADEZEIT_SPEICHER3_HIGH"},
+  {Property::kPELLET_EIN_AUS, "PELLET_EIN_AUS"},
+  {Property::kPELLET_PUFFER_LADETEMP, "PELLET_PUFFER_LADETEMP"},
+  {Property::kPELLET_KUEHLFUNKTION, "PELLET_KUEHLFUNKTION"},
+  {Property::kPELLET_KUEHLFUNKTION_SCHALTTEMP, "PELLET_KUEHLFUNKTION_SCHALTTEMP"},
+  {Property::kPELLET_KUEHLFUNKTION_VORLAUFSOLLTEMP, "PELLET_KUEHLFUNKTION_VORLAUFSOLLTEMP"},
+  {Property::kMAX_PP_GRADIENTEN_TEMP, "MAX_PP_GRADIENTEN_TEMP"},
+  {Property::kMAX_PP_GRADIENT, "MAX_PP_GRADIENT"},
+  {Property::kECO_PUFFERTEMP_ABSOLUT_EIN, "ECO_PUFFERTEMP_ABSOLUT_EIN"},
+  {Property::kECO_PUFFERTEMP_ABSOLUT_AUS, "ECO_PUFFERTEMP_ABSOLUT_AUS"},
+  {Property::kWARMLUFTKOLLEKTOR_WW_MAXTEMP, "WARMLUFTKOLLEKTOR_WW_MAXTEMP"},
+  {Property::kWARMLUFTKOLLEKTOR_WW_WIEDEREIN_NACH_MAXTEMP, "WARMLUFTKOLLEKTOR_WW_WIEDEREIN_NACH_MAXTEMP"},
+  {Property::kSCHWIMMBADREGELUNG_EIN_AUS, "SCHWIMMBADREGELUNG_EIN_AUS"},
+  {Property::kSOLAR_PLAUSI_FEHLERMELDUNGEN_EIN_AUS, "SOLAR_PLAUSI_FEHLERMELDUNGEN_EIN_AUS"},
+  {Property::kSPEICHERLADEPUMPE_PWM_SIGNAL, "SPEICHERLADEPUMPE_PWM_SIGNAL"},
+  {Property::kAKT_SPERRZEIT, "AKT_SPERRZEIT"},
+  {Property::kKASKADEN_SCHALTWERT, "KASKADEN_SCHALTWERT"},
+  {Property::kREGELDIFFERENZ, "REGELDIFFERENZ"},
+  {Property::kSCHALTHYSTERESE_PUFFER, "SCHALTHYSTERESE_PUFFER"},
+  {Property::kPUFFERUEBERHOEHUNGSDIFF, "PUFFERUEBERHOEHUNGSDIFF"},
+  {Property::kMAX_PUFFERTEMPERATUR, "MAX_PUFFERTEMPERATUR"},
+  {Property::kMIN_PUFFERTEMPERATUR, "MIN_PUFFERTEMPERATUR"},
+  {Property::kMAX_SAMMLERTEMPERATUR, "MAX_SAMMLERTEMPERATUR"},
+  {Property::kMIN_SAMMLERTEMPERATUR, "MIN_SAMMLERTEMPERATUR"},
+  {Property::kSAMMLERUEBERHOEHUNGSDIFF, "SAMMLERUEBERHOEHUNGSDIFF"},
+  {Property::kABREGELTEMPERATUR, "ABREGELTEMPERATUR"},
+  {Property::kFOLGEWECHSEL_IN_STD, "FOLGEWECHSEL_IN_STD"},
+  {Property::kSONDERNIVEAU_TEMPERATUR, "SONDERNIVEAU_TEMPERATUR"},
+  {Property::kAUSSEN_FROSTTEMP, "AUSSEN_FROSTTEMP"},
+  {Property::kBRENNER1LAUFZEIT, "BRENNER1LAUFZEIT"},
+  {Property::kBRENNER1STARTS, "BRENNER1STARTS"},
+  {Property::kBRENNER2LAUFZEIT, "BRENNER2LAUFZEIT"},
+  {Property::kBRENNER2STARTS, "BRENNER2STARTS"},
+  {Property::kEINSTELL_SPEICHERSOLLTEMP2, "EINSTELL_SPEICHERSOLLTEMP2"},
+  {Property::kSTATUS_HK_ANZEIGE, "STATUS_HK_ANZEIGE"},
+  {Property::kUEBERLAUF_BRENNER1LAUFZEIT, "UEBERLAUF_BRENNER1LAUFZEIT"},
+  {Property::kUEBERLAUF_BRENNER1STARTS, "UEBERLAUF_BRENNER1STARTS"},
+  {Property::kUEBERLAUF_BRENNER2LAUFZEIT, "UEBERLAUF_BRENNER2LAUFZEIT"},
+  {Property::kUEBERLAUF_BRENNER2STARTS, "UEBERLAUF_BRENNER2STARTS"},
+  {Property::kAUSSENTEMP_MITTEL, "AUSSENTEMP_MITTEL"},
+  {Property::kKEIN_HEIZBEDARF, "KEIN_HEIZBEDARF"},
+  {Property::kSTATUSWAERMEANFORDERUNG, "STATUSWAERMEANFORDERUNG"},
+  {Property::kVARIABLER_VERBRAUCHER, "VARIABLER_VERBRAUCHER"},
+  {Property::kCUST_EEPR_TIMEOUT, "CUST_EEPR_TIMEOUT"},
+  {Property::kHARDWARE_VERSION, "HARDWARE_VERSION"},
+  {Property::kESTRICH_TAG, "ESTRICH_TAG"},
+  {Property::kESTRICH_VORLAUFTEMP, "ESTRICH_VORLAUFTEMP"},
+  {Property::kRAUM_FROSTSCHUTZTEMP, "RAUM_FROSTSCHUTZTEMP"},
+  {Property::kSOLL_TEMP_MODE, "SOLL_TEMP_MODE"},
+  {Property::kMERKER_ECO, "MERKER_ECO"},
+  {Property::kMERKER_ECO_2, "MERKER_ECO_2"},
+  {Property::kMERKER_SOMMER, "MERKER_SOMMER"},
+  {Property::kWCM_GERAET, "WCM_GERAET"},
+  {Property::kAUSSENTEMP_MISCH, "AUSSENTEMP_MISCH"},
+  {Property::kTIMEOUT, "TIMEOUT"},
+  {Property::kVAR_RAUMTHERMOSTAT, "VAR_RAUMTHERMOSTAT"},
+  {Property::kMERKER_RAUMTHERMOSTAT, "MERKER_RAUMTHERMOSTAT"},
+  {Property::kKESSELLEISTUNG, "KESSELLEISTUNG"},
+  {Property::kZEITMASTER, "ZEITMASTER"},
+  {Property::kSAMMEL_RELAISSTATUS, "SAMMEL_RELAISSTATUS"},
+  {Property::kPARAMETER_KONFIGURATION, "PARAMETER_KONFIGURATION"},
+  {Property::kEBUS_STROMUEBERSCHUSS, "EBUS_STROMUEBERSCHUSS"},
+  {Property::kMASTERZUGRIFF, "MASTERZUGRIFF"},
+  {Property::kEBUS_SPERRZAEHLER, "EBUS_SPERRZAEHLER"},
+  {Property::kFEHLERSTRING, "FEHLERSTRING"},
+  {Property::kBUSFEHLER, "BUSFEHLER"},
+  {Property::kDIREKT_EINGANG, "DIREKT_EINGANG"},
+  {Property::kEINGANG0, "EINGANG0"},
+  {Property::kEINGANG1, "EINGANG1"},
+  {Property::kEINGANG2, "EINGANG2"},
+  {Property::kEINGANG3, "EINGANG3"},
+  {Property::kEINGANG4, "EINGANG4"},
+  {Property::kEINGANG5, "EINGANG5"},
+  {Property::kEINGANG6, "EINGANG6"},
+  {Property::kEINGANG7, "EINGANG7"},
+  {Property::kEINGANG8, "EINGANG8"},
+  {Property::kEINGANG9, "EINGANG9"},
+  {Property::kEINGANG10, "EINGANG10"},
+  {Property::kEINGANG11, "EINGANG11"},
+  {Property::kEINGANG12, "EINGANG12"},
+  {Property::kEINGANG13, "EINGANG13"},
+  {Property::kEINGANG14, "EINGANG14"},
+  {Property::kEINGANG15, "EINGANG15"},
+  {Property::kEINGANG16, "EINGANG16"},
+  {Property::kEINGANG17, "EINGANG17"},
+  {Property::kEINGANG18, "EINGANG18"},
+  {Property::kEINGANG19, "EINGANG19"},
+  {Property::kEINGANG20, "EINGANG20"},
+  {Property::kKONFIG_EINGANG0, "KONFIG_EINGANG0"},
+  {Property::kKONFIG_EINGANG1, "KONFIG_EINGANG1"},
+  {Property::kKONFIG_EINGANG2, "KONFIG_EINGANG2"},
+  {Property::kKONFIG_EINGANG3, "KONFIG_EINGANG3"},
+  {Property::kKONFIG_EINGANG4, "KONFIG_EINGANG4"},
+  {Property::kKONFIG_EINGANG5, "KONFIG_EINGANG5"},
+  {Property::kKONFIG_EINGANG6, "KONFIG_EINGANG6"},
+  {Property::kKONFIG_EINGANG7, "KONFIG_EINGANG7"},
+  {Property::kKONFIG_EINGANG8, "KONFIG_EINGANG8"},
+  {Property::kKONFIG_EINGANG9, "KONFIG_EINGANG9"},
+  {Property::kKONFIG_EINGANG10, "KONFIG_EINGANG10"},
+  {Property::kKONFIG_EINGANG11, "KONFIG_EINGANG11"},
+  {Property::kKONFIG_EINGANG12, "KONFIG_EINGANG12"},
+  {Property::kKONFIG_EINGANG13, "KONFIG_EINGANG13"},
+  {Property::kKONFIG_EINGANG14, "KONFIG_EINGANG14"},
+  {Property::kKONFIG_EINGANG15, "KONFIG_EINGANG15"},
+  {Property::kKONFIG_EINGANG16, "KONFIG_EINGANG16"},
+  {Property::kKONFIG_EINGANG17, "KONFIG_EINGANG17"},
+  {Property::kKONFIG_EINGANG18, "KONFIG_EINGANG18"},
+  {Property::kKONFIG_EINGANG19, "KONFIG_EINGANG19"},
+  {Property::kKONFIG_EINGANG20, "KONFIG_EINGANG20"},
+  {Property::kAUSGANG0, "AUSGANG0"},
+  {Property::kAUSGANG1, "AUSGANG1"},
+  {Property::kAUSGANG2, "AUSGANG2"},
+  {Property::kAUSGANG3, "AUSGANG3"},
+  {Property::kAUSGANG4, "AUSGANG4"},
+  {Property::kAUSGANG5, "AUSGANG5"},
+  {Property::kAUSGANG6, "AUSGANG6"},
+  {Property::kAUSGANG7, "AUSGANG7"},
+  {Property::kAUSGANG8, "AUSGANG8"},
+  {Property::kAUSGANG9, "AUSGANG9"},
+  {Property::kAUSGANG10, "AUSGANG10"},
+  {Property::kAUSGANG11, "AUSGANG11"},
+  {Property::kAUSGANG12, "AUSGANG12"},
+  {Property::kAUSGANG13, "AUSGANG13"},
+  {Property::kAUSGANG14, "AUSGANG14"},
+  {Property::kAUSGANG15, "AUSGANG15"},
+  {Property::kAUSGANG16, "AUSGANG16"},
+  {Property::kAUSGANG17, "AUSGANG17"},
+  {Property::kAUSGANG18, "AUSGANG18"},
+  {Property::kAUSGANG19, "AUSGANG19"},
+  {Property::kAUSGANG20, "AUSGANG20"},
+  {Property::kKONFIG_AUSGANG0, "KONFIG_AUSGANG0"},
+  {Property::kKONFIG_AUSGANG1, "KONFIG_AUSGANG1"},
+  {Property::kKONFIG_AUSGANG2, "KONFIG_AUSGANG2"},
+  {Property::kKONFIG_AUSGANG3, "KONFIG_AUSGANG3"},
+  {Property::kKONFIG_AUSGANG4, "KONFIG_AUSGANG4"},
+  {Property::kKONFIG_AUSGANG5, "KONFIG_AUSGANG5"},
+  {Property::kKONFIG_AUSGANG6, "KONFIG_AUSGANG6"},
+  {Property::kKONFIG_AUSGANG7, "KONFIG_AUSGANG7"},
+  {Property::kKONFIG_AUSGANG8, "KONFIG_AUSGANG8"},
+  {Property::kKONFIG_AUSGANG9, "KONFIG_AUSGANG9"},
+  {Property::kKONFIG_AUSGANG10, "KONFIG_AUSGANG10"},
+  {Property::kKONFIG_AUSGANG11, "KONFIG_AUSGANG11"},
+  {Property::kKONFIG_AUSGANG12, "KONFIG_AUSGANG12"},
+  {Property::kKONFIG_AUSGANG13, "KONFIG_AUSGANG13"},
+  {Property::kKONFIG_AUSGANG14, "KONFIG_AUSGANG14"},
+  {Property::kKONFIG_AUSGANG15, "KONFIG_AUSGANG15"},
+  {Property::kKONFIG_AUSGANG16, "KONFIG_AUSGANG16"},
+  {Property::kKONFIG_AUSGANG17, "KONFIG_AUSGANG17"},
+  {Property::kKONFIG_AUSGANG18, "KONFIG_AUSGANG18"},
+  {Property::kKONFIG_AUSGANG19, "KONFIG_AUSGANG19"},
+  {Property::kKONFIG_AUSGANG20, "KONFIG_AUSGANG20"},
+  {Property::kFEHLERSPEICHER_FELDINDEX, "FEHLERSPEICHER_FELDINDEX"},
+  {Property::kFEHLERSPEICHER_FEHLERNUMMER, "FEHLERSPEICHER_FEHLERNUMMER"},
+  {Property::kFEHLERSPEICHER_MODULTYD, "FEHLERSPEICHER_MODULTYD"},
+  {Property::kFEHLERSPEICHER_BUSKENNUNG, "FEHLERSPEICHER_BUSKENNUNG"},
+  {Property::kFEHLERSPEICHER_SEKUNDE, "FEHLERSPEICHER_SEKUNDE"},
+  {Property::kFEHLERSPEICHER_MINUTE, "FEHLERSPEICHER_MINUTE"},
+  {Property::kFEHLERSPEICHER_STUNDE, "FEHLERSPEICHER_STUNDE"},
+  {Property::kFEHLERSPEICHER_TAG, "FEHLERSPEICHER_TAG"},
+  {Property::kFEHLERSPEICHER_MONAT, "FEHLERSPEICHER_MONAT"},
+  {Property::kFEHLERSPEICHER_JAHR, "FEHLERSPEICHER_JAHR"},
+  {Property::kOT_REQUEST_CODE, "OT_REQUEST_CODE"},
+  {Property::kOT_FHB_00, "OT_FHB_00"},
+  {Property::kOT_FHB_01, "OT_FHB_01"},
+  {Property::kOT_FHB_02, "OT_FHB_02"},
+  {Property::kOT_FHB_03, "OT_FHB_03"},
+  {Property::kOT_FHB_04, "OT_FHB_04"},
+  {Property::kOT_FHB_05, "OT_FHB_05"},
+  {Property::kOT_FHB_06, "OT_FHB_06"},
+  {Property::kOT_FHB_07, "OT_FHB_07"},
+  {Property::kOT_FHB_08, "OT_FHB_08"},
+  {Property::kOT_FHB_09, "OT_FHB_09"},
+  {Property::kSTART_BEREICH_INFONUMMERN_OS, "START_BEREICH_INFONUMMERN_OS"},
+  {Property::kFERNSTEUERBETRIEB_TEMPERATURSOLLWERT, "FERNSTEUERBETRIEB_TEMPERATURSOLLWERT"},
+  {Property::kESTB_ISTTEMPERATUR, "ESTB_ISTTEMPERATUR"},
+  {Property::kFESTWERT_HEIZUNGSBETRIEB, "FESTWERT_HEIZUNGSBETRIEB"},
+  {Property::kAUSSENFUEHLERKORREKTURWERT, "AUSSENFUEHLERKORREKTURWERT"},
+  {Property::kHZK_PUMPE_DAUERLAUF, "HZK_PUMPE_DAUERLAUF"},
+  {Property::kPWM_PUMPENMODE, "PWM_PUMPENMODE"},
+  {Property::kPWM_TEMPERATURDIFFERENZREGELUNG_TV_TWEICHE, "PWM_TEMPERATURDIFFERENZREGELUNG_TV_TWEICHE"},
+  {Property::kPWM_TEMPERATURDIFFERENZREGELUNG_TV_TR, "PWM_TEMPERATURDIFFERENZREGELUNG_TV_TR"},
+  {Property::kWARTUNGSINTERVAL_STUNDEN, "WARTUNGSINTERVAL_STUNDEN"},
+  {Property::kPRUEFSTANDSBEFEHL, "PRUEFSTANDSBEFEHL"},
+  {Property::kENDE_BEREICH_INFONUMMERN_OS, "ENDE_BEREICH_INFONUMMERN_OS"},
+  {Property::kSOLAR_KOLLEKTOR_1_P_ANTEIL, "SOLAR_KOLLEKTOR_1_P_ANTEIL"},
+  {Property::kSOLAR_KOLLEKTOR_1_I_ANTEIL, "SOLAR_KOLLEKTOR_1_I_ANTEIL"},
+  {Property::kSOLAR_KOLLEKTOR_2_P_ANTEIL, "SOLAR_KOLLEKTOR_2_P_ANTEIL"},
+  {Property::kSOLAR_KOLLEKTOR_2_I_ANTEIL, "SOLAR_KOLLEKTOR_2_I_ANTEIL"},
+  {Property::kSOLAR_KOLLEKTOR_3_P_ANTEIL, "SOLAR_KOLLEKTOR_3_P_ANTEIL"},
+  {Property::kSOLAR_KOLLEKTOR_3_I_ANTEIL, "SOLAR_KOLLEKTOR_3_I_ANTEIL"},
+  {Property::kFEHLERNUMMER, "FEHLERNUMMER"},
+  {Property::kLARGE_STATUS_AUSGANG, "LARGE_STATUS_AUSGANG"},
+  {Property::kLARGE_KONFIGURATION_AUSGANG, "LARGE_KONFIGURATION_AUSGANG"},
+  {Property::kLARGE_INFO_AN_BEI_AUSGANG, "LARGE_INFO_AN_BEI_AUSGANG"},
+  {Property::kLARGE_SONDERFUNKTIONEN_AUSGANG, "LARGE_SONDERFUNKTIONEN_AUSGANG"},
+  {Property::kLARGE_KONFIGURATION_EINGANG, "LARGE_KONFIGURATION_EINGANG"},
+  {Property::kLARGE_FAKTOR_EINGANG, "LARGE_FAKTOR_EINGANG"},
+  {Property::kLARGE_EINHEIT_EINGANG, "LARGE_EINHEIT_EINGANG"},
+  {Property::kLARGE_KONTAKT_GESCHLOSSEN_EINGANG, "LARGE_KONTAKT_GESCHLOSSEN_EINGANG"},
+  {Property::kLARGE_INFO_AN_BEI_EINGANG, "LARGE_INFO_AN_BEI_EINGANG"},
+  {Property::kLARGE_SMS_ZUSATZTEXT_EINGANG, "LARGE_SMS_ZUSATZTEXT_EINGANG"},
+  {Property::kLARGE_USERNAMER, "LARGE_USERNAMER"},
+  {Property::kLARGE_USERPASSWORD, "LARGE_USERPASSWORD"},
+  {Property::kLARGE_USERGROUP, "LARGE_USERGROUP"},
+  {Property::kLARGE_STATUS_EINGANG, "LARGE_STATUS_EINGANG"},
+  {Property::kLARGE_RESET_COUNTER_EINGANG, "LARGE_RESET_COUNTER_EINGANG"},
+  {Property::kLARGE_SMTP_SERVER, "LARGE_SMTP_SERVER"},
+  {Property::kLARGE_SMTP_LOGINNAME, "LARGE_SMTP_LOGINNAME"},
+  {Property::kLARGE_SMTP_PASSWORT, "LARGE_SMTP_PASSWORT"},
+  {Property::kLARGE_POP3_SERVER, "LARGE_POP3_SERVER"},
+  {Property::kLARGE_POP3_LOGINNAME, "LARGE_POP3_LOGINNAME"},
+  {Property::kLARGE_POP3_PASSWORT, "LARGE_POP3_PASSWORT"},
+  {Property::kLARGE_SMS_TEXT_ADRESSE, "LARGE_SMS_TEXT_ADRESSE"},
+  {Property::kLARGE_EMPFAEGER_KONTAKTDATEN_NAME, "LARGE_EMPFAEGER_KONTAKTDATEN_NAME"},
+  {Property::kLARGE_EMPFAEGER_KONTAKTDATEN_RUFNUMMER, "LARGE_EMPFAEGER_KONTAKTDATEN_RUFNUMMER"},
+  {Property::kLARGE_EMPFAEGER_KONTAKTDATEN_EMAIL, "LARGE_EMPFAEGER_KONTAKTDATEN_EMAIL"},
+  {Property::kLARGE_UEBERTRAGUNGSWEG, "LARGE_UEBERTRAGUNGSWEG"},
+  {Property::kLARGE_TEST_NACHRICHT_SENDEN, "LARGE_TEST_NACHRICHT_SENDEN"},
+  {Property::kGSM_SIGNAL_POWER, "GSM_SIGNAL_POWER"},
+  {Property::kGSM_CONNECTION_STATE, "GSM_CONNECTION_STATE"},
+  {Property::kGSM_SWITCH_OFF, "GSM_SWITCH_OFF"},
+  {Property::kGSM_PIN, "GSM_PIN"},
+  {Property::kGSM_PIN_OFF, "GSM_PIN_OFF"},
+  {Property::kLARGE_ACCESSPOINT, "LARGE_ACCESSPOINT"},
+  {Property::kLARGE_SMS_ADRESSTEXT, "LARGE_SMS_ADRESSTEXT"},
+  {Property::kSMS_24h_REPEAT, "SMS_24h_REPEAT"},
+  {Property::kLARGE_ALARM_KONFIGURATION_1, "LARGE_ALARM_KONFIGURATION_1"},
+  {Property::kLARGE_ALARM_KONFIGURATION_2, "LARGE_ALARM_KONFIGURATION_2"},
+  {Property::kLARGE_ALARM_KONFIGURATION_3, "LARGE_ALARM_KONFIGURATION_3"},
+  {Property::kLARGE_ALARM_KONFIGURATION_4, "LARGE_ALARM_KONFIGURATION_4"},
+  {Property::kLARGE_ALARM_KONFIGURATION_5, "LARGE_ALARM_KONFIGURATION_5"},
+  {Property::kIP_MODE, "IP_MODE"},
+  {Property::kLARGE_IP_ADRESS, "LARGE_IP_ADRESS"},
+  {Property::kLARGE_SUBNET, "LARGE_SUBNET"},
+  {Property::kLARGE_GATEWAY, "LARGE_GATEWAY"},
+  {Property::kLARGE_DEVICENAME, "LARGE_DEVICENAME"},
+  {Property::kLARGE_MAC_ADR, "LARGE_MAC_ADR"},
+  {Property::kBUS_STATUS, "BUS_STATUS"},
+  {Property::kLARGE_EWI_FILTER, "LARGE_EWI_FILTER"},
+  {Property::kLARGE_ERRORLOGDATA, "LARGE_ERRORLOGDATA"},
+  {Property::kKEEP_ALIVE, "KEEP_ALIVE"},
+  {Property::kLARGE_ERRORLOG_DATA, "LARGE_ERRORLOG_DATA"},
+  {Property::kLARGE_EWI_FILTER_CONFIG, "LARGE_EWI_FILTER_CONFIG"},
+  {Property::kLARGE_COCO_CONFIG_PARAMETER, "LARGE_COCO_CONFIG_PARAMETER"},
+  {Property::kLARGE_DATALOGGER_DATA, "LARGE_DATALOGGER_DATA"},
+  {Property::kLARGE_DATALOGGER_DATA_POINTER, "LARGE_DATALOGGER_DATA_POINTER"},
+  {Property::kWE3_TYP, "WE3_TYP"},
+  {Property::kWE4_TYP, "WE4_TYP"},
+  {Property::kSCAN_AKTIV, "SCAN_AKTIV"},
+  {Property::kRUECKLAUFISTTEMP_GES, "RUECKLAUFISTTEMP_GES"},
+  {Property::kSOLARNUTZUNG, "SOLARNUTZUNG"},
+  {Property::kMAX_MODGRAD_WW, "MAX_MODGRAD_WW"},
+  {Property::kZIRKPUMPE_BEI_ANTILEG, "ZIRKPUMPE_BEI_ANTILEG"},
+  {Property::kLARGE_USB_CONF_TCP_IP, "LARGE_USB_CONF_TCP_IP"},
+  {Property::kLARGE_USB_CONF_TCP_IP_INDEX, "LARGE_USB_CONF_TCP_IP_INDEX"},
+  {Property::kMAC_ADR_0, "MAC_ADR_0"},
+  {Property::kMAC_ADR_1, "MAC_ADR_1"},
+  {Property::kMAC_ADR_2, "MAC_ADR_2"},
+  {Property::kMAC_ADR_3, "MAC_ADR_3"},
+  {Property::kMAC_ADR_4, "MAC_ADR_4"},
+  {Property::kMAC_ADR_5, "MAC_ADR_5"},
+  {Property::kCELSIUS_FAHRENHEIT_UMSCH, "CELSIUS_FAHRENHEIT_UMSCH"},
+  {Property::kWP_VERZOEGERUNG, "WP_VERZOEGERUNG"},
+  {Property::kMAX_RL_KUEHLEN, "MAX_RL_KUEHLEN"},
+  {Property::kLARGE_DATALOGGER_HEADER, "LARGE_DATALOGGER_HEADER"},
+  {Property::kHEIZPROG_1, "HEIZPROG_1"},
+  {Property::kHEIZPROG_1_MO, "HEIZPROG_1_MO"},
+  {Property::kHEIZPROG_1_MO_SCHALT_2, "HEIZPROG_1_MO_SCHALT_2"},
+  {Property::kHEIZPROG_1_MO_SCHALT_3, "HEIZPROG_1_MO_SCHALT_3"},
+  {Property::kHEIZPROG_1_DI, "HEIZPROG_1_DI"},
+  {Property::kHEIZPROG_1_DI_SCHALT_2, "HEIZPROG_1_DI_SCHALT_2"},
+  {Property::kHEIZPROG_1_DI_SCHALT_3, "HEIZPROG_1_DI_SCHALT_3"},
+  {Property::kHEIZPROG_1_MI, "HEIZPROG_1_MI"},
+  {Property::kHEIZPROG_1_MI_SCHALT_2, "HEIZPROG_1_MI_SCHALT_2"},
+  {Property::kHEIZPROG_1_MI_SCHALT_3, "HEIZPROG_1_MI_SCHALT_3"},
+  {Property::kHEIZPROG_1_DO, "HEIZPROG_1_DO"},
+  {Property::kHEIZPROG_1_DO_SCHALT_2, "HEIZPROG_1_DO_SCHALT_2"},
+  {Property::kHEIZPROG_1_DO_SCHALT_3, "HEIZPROG_1_DO_SCHALT_3"},
+  {Property::kHEIZPROG_1_FR, "HEIZPROG_1_FR"},
+  {Property::kHEIZPROG_1_FR_SCHALT_2, "HEIZPROG_1_FR_SCHALT_2"},
+  {Property::kHEIZPROG_1_FR_SCHALT_3, "HEIZPROG_1_FR_SCHALT_3"},
+  {Property::kHEIZPROG_1_SA, "HEIZPROG_1_SA"},
+  {Property::kHEIZPROG_1_SA_SCHALT_2, "HEIZPROG_1_SA_SCHALT_2"},
+  {Property::kHEIZPROG_1_SA_SCHALT_3, "HEIZPROG_1_SA_SCHALT_3"},
+  {Property::kHEIZPROG_1_SO, "HEIZPROG_1_SO"},
+  {Property::kHEIZPROG_1_SO_SCHALT_2, "HEIZPROG_1_SO_SCHALT_2"},
+  {Property::kHEIZPROG_1_SO_SCHALT_3, "HEIZPROG_1_SO_SCHALT_3"},
+  {Property::kHEIZPROG_1_MO_FR, "HEIZPROG_1_MO_FR"},
+  {Property::kHEIZPROG_1_MO_FR_SCHALT_2, "HEIZPROG_1_MO_FR_SCHALT_2"},
+  {Property::kHEIZPROG_1_MO_FR_SCHALT_3, "HEIZPROG_1_MO_FR_SCHALT_3"},
+  {Property::kHEIZPROG_1_SA_SO, "HEIZPROG_1_SA_SO"},
+  {Property::kHEIZPROG_1_SA_SO_SCHALT_2, "HEIZPROG_1_SA_SO_SCHALT_2"},
+  {Property::kHEIZPROG_1_SA_SO_SCHALT_3, "HEIZPROG_1_SA_SO_SCHALT_3"},
+  {Property::kHEIZPROG_1_MO_SO, "HEIZPROG_1_MO_SO"},
+  {Property::kHEIZPROG_1_MO_SO_SCHALT_2, "HEIZPROG_1_MO_SO_SCHALT_2"},
+  {Property::kHEIZPROG_1_MO_SO_SCHALT_3, "HEIZPROG_1_MO_SO_SCHALT_3"},
+  {Property::kHEIZPROG_1_MO_DO, "HEIZPROG_1_MO_DO"},
+  {Property::kHEIZPROG_1_MO_DO_SCHALT_2, "HEIZPROG_1_MO_DO_SCHALT_2"},
+  {Property::kHEIZPROG_1_MO_DO_SCHALT_3, "HEIZPROG_1_MO_DO_SCHALT_3"},
+  {Property::kHEIZPROG_2, "HEIZPROG_2"},
+  {Property::kHEIZPROG_2_MO, "HEIZPROG_2_MO"},
+  {Property::kHEIZPROG_2_MO_SCHALT_2, "HEIZPROG_2_MO_SCHALT_2"},
+  {Property::kHEIZPROG_2_MO_SCHALT_3, "HEIZPROG_2_MO_SCHALT_3"},
+  {Property::kHEIZPROG_2_DI, "HEIZPROG_2_DI"},
+  {Property::kHEIZPROG_2_DI_SCHALT_2, "HEIZPROG_2_DI_SCHALT_2"},
+  {Property::kHEIZPROG_2_DI_SCHALT_3, "HEIZPROG_2_DI_SCHALT_3"},
+  {Property::kHEIZPROG_2_MI, "HEIZPROG_2_MI"},
+  {Property::kHEIZPROG_2_MI_SCHALT_2, "HEIZPROG_2_MI_SCHALT_2"},
+  {Property::kHEIZPROG_2_MI_SCHALT_3, "HEIZPROG_2_MI_SCHALT_3"},
+  {Property::kHEIZPROG_2_DO, "HEIZPROG_2_DO"},
+  {Property::kHEIZPROG_2_DO_SCHALT_2, "HEIZPROG_2_DO_SCHALT_2"},
+  {Property::kHEIZPROG_2_DO_SCHALT_3, "HEIZPROG_2_DO_SCHALT_3"},
+  {Property::kHEIZPROG_2_FR, "HEIZPROG_2_FR"},
+  {Property::kHEIZPROG_2_FR_SCHALT_2, "HEIZPROG_2_FR_SCHALT_2"},
+  {Property::kHEIZPROG_2_FR_SCHALT_3, "HEIZPROG_2_FR_SCHALT_3"},
+  {Property::kHEIZPROG_2_SA, "HEIZPROG_2_SA"},
+  {Property::kHEIZPROG_2_SA_SCHALT_2, "HEIZPROG_2_SA_SCHALT_2"},
+  {Property::kHEIZPROG_2_SA_SCHALT_3, "HEIZPROG_2_SA_SCHALT_3"},
+  {Property::kHEIZPROG_2_SO, "HEIZPROG_2_SO"},
+  {Property::kHEIZPROG_2_SO_SCHALT_2, "HEIZPROG_2_SO_SCHALT_2"},
+  {Property::kHEIZPROG_2_SO_SCHALT_3, "HEIZPROG_2_SO_SCHALT_3"},
+  {Property::kHEIZPROG_2_MO_FR, "HEIZPROG_2_MO_FR"},
+  {Property::kHEIZPROG_2_MO_FR_SCHALT_2, "HEIZPROG_2_MO_FR_SCHALT_2"},
+  {Property::kHEIZPROG_2_MO_FR_SCHALT_3, "HEIZPROG_2_MO_FR_SCHALT_3"},
+  {Property::kHEIZPROG_2_SA_SO, "HEIZPROG_2_SA_SO"},
+  {Property::kHEIZPROG_2_SA_SO_SCHALT_2, "HEIZPROG_2_SA_SO_SCHALT_2"},
+  {Property::kHEIZPROG_2_SA_SO_SCHALT_3, "HEIZPROG_2_SA_SO_SCHALT_3"},
+  {Property::kHEIZPROG_2_MO_SO, "HEIZPROG_2_MO_SO"},
+  {Property::kHEIZPROG_2_MO_SO_SCHALT_2, "HEIZPROG_2_MO_SO_SCHALT_2"},
+  {Property::kHEIZPROG_2_MO_SO_SCHALT_3, "HEIZPROG_2_MO_SO_SCHALT_3"},
+  {Property::kHEIZPROG_2_MO_DO, "HEIZPROG_2_MO_DO"},
+  {Property::kHEIZPROG_2_MO_DO_SCHALT_2, "HEIZPROG_2_MO_DO_SCHALT_2"},
+  {Property::kHEIZPROG_2_MO_DO_SCHALT_3, "HEIZPROG_2_MO_DO_SCHALT_3"},
+  {Property::kHEIZPROG_3, "HEIZPROG_3"},
+  {Property::kHEIZPROG_3_MO, "HEIZPROG_3_MO"},
+  {Property::kHEIZPROG_3_MO_SCHALT_2, "HEIZPROG_3_MO_SCHALT_2"},
+  {Property::kHEIZPROG_3_MO_SCHALT_3, "HEIZPROG_3_MO_SCHALT_3"},
+  {Property::kHEIZPROG_3_DI, "HEIZPROG_3_DI"},
+  {Property::kHEIZPROG_3_DI_SCHALT_2, "HEIZPROG_3_DI_SCHALT_2"},
+  {Property::kHEIZPROG_3_DI_SCHALT_3, "HEIZPROG_3_DI_SCHALT_3"},
+  {Property::kHEIZPROG_3_MI, "HEIZPROG_3_MI"},
+  {Property::kHEIZPROG_3_MI_SCHALT_2, "HEIZPROG_3_MI_SCHALT_2"},
+  {Property::kHEIZPROG_3_MI_SCHALT_3, "HEIZPROG_3_MI_SCHALT_3"},
+  {Property::kHEIZPROG_3_DO, "HEIZPROG_3_DO"},
+  {Property::kHEIZPROG_3_DO_SCHALT_2, "HEIZPROG_3_DO_SCHALT_2"},
+  {Property::kHEIZPROG_3_DO_SCHALT_3, "HEIZPROG_3_DO_SCHALT_3"},
+  {Property::kHEIZPROG_3_FR, "HEIZPROG_3_FR"},
+  {Property::kHEIZPROG_3_FR_SCHALT_2, "HEIZPROG_3_FR_SCHALT_2"},
+  {Property::kHEIZPROG_3_FR_SCHALT_3, "HEIZPROG_3_FR_SCHALT_3"},
+  {Property::kHEIZPROG_3_SA, "HEIZPROG_3_SA"},
+  {Property::kHEIZPROG_3_SA_SCHALT_2, "HEIZPROG_3_SA_SCHALT_2"},
+  {Property::kHEIZPROG_3_SA_SCHALT_3, "HEIZPROG_3_SA_SCHALT_3"},
+  {Property::kHEIZPROG_3_SO, "HEIZPROG_3_SO"},
+  {Property::kHEIZPROG_3_SO_SCHALT_2, "HEIZPROG_3_SO_SCHALT_2"},
+  {Property::kHEIZPROG_3_SO_SCHALT_3, "HEIZPROG_3_SO_SCHALT_3"},
+  {Property::kHEIZPROG_3_MO_FR, "HEIZPROG_3_MO_FR"},
+  {Property::kHEIZPROG_3_MO_FR_SCHALT_2, "HEIZPROG_3_MO_FR_SCHALT_2"},
+  {Property::kHEIZPROG_3_MO_FR_SCHALT_3, "HEIZPROG_3_MO_FR_SCHALT_3"},
+  {Property::kHEIZPROG_3_SA_SO, "HEIZPROG_3_SA_SO"},
+  {Property::kHEIZPROG_3_SA_SO_SCHALT_2, "HEIZPROG_3_SA_SO_SCHALT_2"},
+  {Property::kHEIZPROG_3_SA_SO_SCHALT_3, "HEIZPROG_3_SA_SO_SCHALT_3"},
+  {Property::kHEIZPROG_3_MO_SO, "HEIZPROG_3_MO_SO"},
+  {Property::kHEIZPROG_3_MO_SO_SCHALT_2, "HEIZPROG_3_MO_SO_SCHALT_2"},
+  {Property::kHEIZPROG_3_MO_SO_SCHALT_3, "HEIZPROG_3_MO_SO_SCHALT_3"},
+  {Property::kHEIZPROG_3_MO_DO, "HEIZPROG_3_MO_DO"},
+  {Property::kHEIZPROG_3_MO_DO_SCHALT_2, "HEIZPROG_3_MO_DO_SCHALT_2"},
+  {Property::kHEIZPROG_3_MO_DO_SCHALT_3, "HEIZPROG_3_MO_DO_SCHALT_3"},
+  {Property::kW_WASSERPROG_1, "W_WASSERPROG_1"},
+  {Property::kW_WASSERPROG_1_MO, "W_WASSERPROG_1_MO"},
+  {Property::kW_WASSERPROG_1_MO_SCHALT_2, "W_WASSERPROG_1_MO_SCHALT_2"},
+  {Property::kW_WASSERPROG_1_MO_SCHALT_3, "W_WASSERPROG_1_MO_SCHALT_3"},
+  {Property::kW_WASSERPROG_1_DI, "W_WASSERPROG_1_DI"},
+  {Property::kW_WASSERPROG_1_DI_SCHALT_2, "W_WASSERPROG_1_DI_SCHALT_2"},
+  {Property::kW_WASSERPROG_1_DI_SCHALT_3, "W_WASSERPROG_1_DI_SCHALT_3"},
+  {Property::kW_WASSERPROG_1_MI, "W_WASSERPROG_1_MI"},
+  {Property::kW_WASSERPROG_1_MI_SCHALT_2, "W_WASSERPROG_1_MI_SCHALT_2"},
+  {Property::kW_WASSERPROG_1_MI_SCHALT_3, "W_WASSERPROG_1_MI_SCHALT_3"},
+  {Property::kW_WASSERPROG_1_DO, "W_WASSERPROG_1_DO"},
+  {Property::kW_WASSERPROG_1_DO_SCHALT_2, "W_WASSERPROG_1_DO_SCHALT_2"},
+  {Property::kW_WASSERPROG_1_DO_SCHALT_3, "W_WASSERPROG_1_DO_SCHALT_3"},
+  {Property::kW_WASSERPROG_1_FR, "W_WASSERPROG_1_FR"},
+  {Property::kW_WASSERPROG_1_FR_SCHALT_2, "W_WASSERPROG_1_FR_SCHALT_2"},
+  {Property::kW_WASSERPROG_1_FR_SCHALT_3, "W_WASSERPROG_1_FR_SCHALT_3"},
+  {Property::kW_WASSERPROG_1_SA, "W_WASSERPROG_1_SA"},
+  {Property::kW_WASSERPROG_1_SA_SCHALT_2, "W_WASSERPROG_1_SA_SCHALT_2"},
+  {Property::kW_WASSERPROG_1_SA_SCHALT_3, "W_WASSERPROG_1_SA_SCHALT_3"},
+  {Property::kW_WASSERPROG_1_SO, "W_WASSERPROG_1_SO"},
+  {Property::kW_WASSERPROG_1_SO_SCHALT_2, "W_WASSERPROG_1_SO_SCHALT_2"},
+  {Property::kW_WASSERPROG_1_SO_SCHALT_3, "W_WASSERPROG_1_SO_SCHALT_3"},
+  {Property::kW_WASSERPROG_1_MO_FR, "W_WASSERPROG_1_MO_FR"},
+  {Property::kW_WASSERPROG_1_MO_FR_SCHALT_2, "W_WASSERPROG_1_MO_FR_SCHALT_2"},
+  {Property::kW_WASSERPROG_1_MO_FR_SCHALT_3, "W_WASSERPROG_1_MO_FR_SCHALT_3"},
+  {Property::kW_WASSERPROG_1_SA_SO, "W_WASSERPROG_1_SA_SO"},
+  {Property::kW_WASSERPROG_1_SA_SO_SCHALT_2, "W_WASSERPROG_1_SA_SO_SCHALT_2"},
+  {Property::kW_WASSERPROG_1_SA_SO_SCHALT_3, "W_WASSERPROG_1_SA_SO_SCHALT_3"},
+  {Property::kW_WASSERPROG_1_MO_SO, "W_WASSERPROG_1_MO_SO"},
+  {Property::kW_WASSERPROG_1_MO_SO_SCHALT_2, "W_WASSERPROG_1_MO_SO_SCHALT_2"},
+  {Property::kW_WASSERPROG_1_MO_SO_SCHALT_3, "W_WASSERPROG_1_MO_SO_SCHALT_3"},
+  {Property::kW_WASSERPROG_1_MO_DO, "W_WASSERPROG_1_MO_DO"},
+  {Property::kW_WASSERPROG_1_MO_DO_SCHALT_2, "W_WASSERPROG_1_MO_DO_SCHALT_2"},
+  {Property::kW_WASSERPROG_1_MO_DO_SCHALT_3, "W_WASSERPROG_1_MO_DO_SCHALT_3"},
+  {Property::kW_WASSERPROG_2, "W_WASSERPROG_2"},
+  {Property::kW_WASSERPROG_2_MO, "W_WASSERPROG_2_MO"},
+  {Property::kW_WASSERPROG_2_MO_SCHALT_2, "W_WASSERPROG_2_MO_SCHALT_2"},
+  {Property::kW_WASSERPROG_2_MO_SCHALT_3, "W_WASSERPROG_2_MO_SCHALT_3"},
+  {Property::kW_WASSERPROG_2_DI, "W_WASSERPROG_2_DI"},
+  {Property::kW_WASSERPROG_2_DI_SCHALT_2, "W_WASSERPROG_2_DI_SCHALT_2"},
+  {Property::kW_WASSERPROG_2_DI_SCHALT_3, "W_WASSERPROG_2_DI_SCHALT_3"},
+  {Property::kW_WASSERPROG_2_MI, "W_WASSERPROG_2_MI"},
+  {Property::kW_WASSERPROG_2_MI_SCHALT_2, "W_WASSERPROG_2_MI_SCHALT_2"},
+  {Property::kW_WASSERPROG_2_MI_SCHALT_3, "W_WASSERPROG_2_MI_SCHALT_3"},
+  {Property::kW_WASSERPROG_2_DO, "W_WASSERPROG_2_DO"},
+  {Property::kW_WASSERPROG_2_DO_SCHALT_2, "W_WASSERPROG_2_DO_SCHALT_2"},
+  {Property::kW_WASSERPROG_2_DO_SCHALT_3, "W_WASSERPROG_2_DO_SCHALT_3"},
+  {Property::kW_WASSERPROG_2_FR, "W_WASSERPROG_2_FR"},
+  {Property::kW_WASSERPROG_2_FR_SCHALT_2, "W_WASSERPROG_2_FR_SCHALT_2"},
+  {Property::kW_WASSERPROG_2_FR_SCHALT_3, "W_WASSERPROG_2_FR_SCHALT_3"},
+  {Property::kW_WASSERPROG_2_SA, "W_WASSERPROG_2_SA"},
+  {Property::kW_WASSERPROG_2_SA_SCHALT_2, "W_WASSERPROG_2_SA_SCHALT_2"},
+  {Property::kW_WASSERPROG_2_SA_SCHALT_3, "W_WASSERPROG_2_SA_SCHALT_3"},
+  {Property::kW_WASSERPROG_2_SO, "W_WASSERPROG_2_SO"},
+  {Property::kW_WASSERPROG_2_SO_SCHALT_2, "W_WASSERPROG_2_SO_SCHALT_2"},
+  {Property::kW_WASSERPROG_2_SO_SCHALT_3, "W_WASSERPROG_2_SO_SCHALT_3"},
+  {Property::kW_WASSERPROG_2_MO_FR, "W_WASSERPROG_2_MO_FR"},
+  {Property::kW_WASSERPROG_2_MO_FR_SCHALT_2, "W_WASSERPROG_2_MO_FR_SCHALT_2"},
+  {Property::kW_WASSERPROG_2_MO_FR_SCHALT_3, "W_WASSERPROG_2_MO_FR_SCHALT_3"},
+  {Property::kW_WASSERPROG_2_SA_SO, "W_WASSERPROG_2_SA_SO"},
+  {Property::kW_WASSERPROG_2_SA_SO_SCHALT_2, "W_WASSERPROG_2_SA_SO_SCHALT_2"},
+  {Property::kW_WASSERPROG_2_SA_SO_SCHALT_3, "W_WASSERPROG_2_SA_SO_SCHALT_3"},
+  {Property::kW_WASSERPROG_2_MO_SO, "W_WASSERPROG_2_MO_SO"},
+  {Property::kW_WASSERPROG_2_MO_SO_SCHALT_2, "W_WASSERPROG_2_MO_SO_SCHALT_2"},
+  {Property::kW_WASSERPROG_2_MO_SO_SCHALT_3, "W_WASSERPROG_2_MO_SO_SCHALT_3"},
+  {Property::kW_WASSERPROG_2_MO_DO, "W_WASSERPROG_2_MO_DO"},
+  {Property::kW_WASSERPROG_2_MO_DO_SCHALT_2, "W_WASSERPROG_2_MO_DO_SCHALT_2"},
+  {Property::kW_WASSERPROG_2_MO_DO_SCHALT_3, "W_WASSERPROG_2_MO_DO_SCHALT_3"},
+  {Property::kW_WASSERPROG_3, "W_WASSERPROG_3"},
+  {Property::kW_WASSERPROG_3_MO, "W_WASSERPROG_3_MO"},
+  {Property::kW_WASSERPROG_3_MO_SCHALT_2, "W_WASSERPROG_3_MO_SCHALT_2"},
+  {Property::kW_WASSERPROG_3_MO_SCHALT_3, "W_WASSERPROG_3_MO_SCHALT_3"},
+  {Property::kW_WASSERPROG_3_DI, "W_WASSERPROG_3_DI"},
+  {Property::kW_WASSERPROG_3_DI_SCHALT_2, "W_WASSERPROG_3_DI_SCHALT_2"},
+  {Property::kW_WASSERPROG_3_DI_SCHALT_3, "W_WASSERPROG_3_DI_SCHALT_3"},
+  {Property::kW_WASSERPROG_3_MI, "W_WASSERPROG_3_MI"},
+  {Property::kW_WASSERPROG_3_MI_SCHALT_2, "W_WASSERPROG_3_MI_SCHALT_2"},
+  {Property::kW_WASSERPROG_3_MI_SCHALT_3, "W_WASSERPROG_3_MI_SCHALT_3"},
+  {Property::kW_WASSERPROG_3_DO, "W_WASSERPROG_3_DO"},
+  {Property::kW_WASSERPROG_3_DO_SCHALT_2, "W_WASSERPROG_3_DO_SCHALT_2"},
+  {Property::kW_WASSERPROG_3_DO_SCHALT_3, "W_WASSERPROG_3_DO_SCHALT_3"},
+  {Property::kW_WASSERPROG_3_FR, "W_WASSERPROG_3_FR"},
+  {Property::kW_WASSERPROG_3_FR_SCHALT_2, "W_WASSERPROG_3_FR_SCHALT_2"},
+  {Property::kW_WASSERPROG_3_FR_SCHALT_3, "W_WASSERPROG_3_FR_SCHALT_3"},
+  {Property::kW_WASSERPROG_3_SA, "W_WASSERPROG_3_SA"},
+  {Property::kW_WASSERPROG_3_SA_SCHALT_2, "W_WASSERPROG_3_SA_SCHALT_2"},
+  {Property::kW_WASSERPROG_3_SA_SCHALT_3, "W_WASSERPROG_3_SA_SCHALT_3"},
+  {Property::kW_WASSERPROG_3_SO, "W_WASSERPROG_3_SO"},
+  {Property::kW_WASSERPROG_3_SO_SCHALT_2, "W_WASSERPROG_3_SO_SCHALT_2"},
+  {Property::kW_WASSERPROG_3_SO_SCHALT_3, "W_WASSERPROG_3_SO_SCHALT_3"},
+  {Property::kW_WASSERPROG_3_MO_FR, "W_WASSERPROG_3_MO_FR"},
+  {Property::kW_WASSERPROG_3_MO_FR_SCHALT_2, "W_WASSERPROG_3_MO_FR_SCHALT_2"},
+  {Property::kW_WASSERPROG_3_MO_FR_SCHALT_3, "W_WASSERPROG_3_MO_FR_SCHALT_3"},
+  {Property::kW_WASSERPROG_3_SA_SO, "W_WASSERPROG_3_SA_SO"},
+  {Property::kW_WASSERPROG_3_SA_SO_SCHALT_2, "W_WASSERPROG_3_SA_SO_SCHALT_2"},
+  {Property::kW_WASSERPROG_3_SA_SO_SCHALT_3, "W_WASSERPROG_3_SA_SO_SCHALT_3"},
+  {Property::kW_WASSERPROG_3_MO_SO, "W_WASSERPROG_3_MO_SO"},
+  {Property::kW_WASSERPROG_3_MO_SO_SCHALT_2, "W_WASSERPROG_3_MO_SO_SCHALT_2"},
+  {Property::kW_WASSERPROG_3_MO_SO_SCHALT_3, "W_WASSERPROG_3_MO_SO_SCHALT_3"},
+  {Property::kW_WASSERPROG_3_MO_DO, "W_WASSERPROG_3_MO_DO"},
+  {Property::kW_WASSERPROG_3_MO_DO_SCHALT_2, "W_WASSERPROG_3_MO_DO_SCHALT_2"},
+  {Property::kW_WASSERPROG_3_MO_DO_SCHALT_3, "W_WASSERPROG_3_MO_DO_SCHALT_3"},
+  {Property::kZIRKPROG_1, "ZIRKPROG_1"},
+  {Property::kZIRKPROG_1_MO, "ZIRKPROG_1_MO"},
+  {Property::kZIRKPROG_1_MO_SCHALT_2, "ZIRKPROG_1_MO_SCHALT_2"},
+  {Property::kZIRKPROG_1_MO_SCHALT_3, "ZIRKPROG_1_MO_SCHALT_3"},
+  {Property::kZIRKPROG_1_DI, "ZIRKPROG_1_DI"},
+  {Property::kZIRKPROG_1_DI_SCHALT_2, "ZIRKPROG_1_DI_SCHALT_2"},
+  {Property::kZIRKPROG_1_DI_SCHALT_3, "ZIRKPROG_1_DI_SCHALT_3"},
+  {Property::kZIRKPROG_1_MI, "ZIRKPROG_1_MI"},
+  {Property::kZIRKPROG_1_MI_SCHALT_2, "ZIRKPROG_1_MI_SCHALT_2"},
+  {Property::kZIRKPROG_1_MI_SCHALT_3, "ZIRKPROG_1_MI_SCHALT_3"},
+  {Property::kZIRKPROG_1_DO, "ZIRKPROG_1_DO"},
+  {Property::kZIRKPROG_1_DO_SCHALT_2, "ZIRKPROG_1_DO_SCHALT_2"},
+  {Property::kZIRKPROG_1_DO_SCHALT_3, "ZIRKPROG_1_DO_SCHALT_3"},
+  {Property::kZIRKPROG_1_FR, "ZIRKPROG_1_FR"},
+  {Property::kZIRKPROG_1_FR_SCHALT_2, "ZIRKPROG_1_FR_SCHALT_2"},
+  {Property::kZIRKPROG_1_FR_SCHALT_3, "ZIRKPROG_1_FR_SCHALT_3"},
+  {Property::kZIRKPROG_1_SA, "ZIRKPROG_1_SA"},
+  {Property::kZIRKPROG_1_SA_SCHALT_2, "ZIRKPROG_1_SA_SCHALT_2"},
+  {Property::kZIRKPROG_1_SA_SCHALT_3, "ZIRKPROG_1_SA_SCHALT_3"},
+  {Property::kZIRKPROG_1_SO, "ZIRKPROG_1_SO"},
+  {Property::kZIRKPROG_1_SO_SCHALT_2, "ZIRKPROG_1_SO_SCHALT_2"},
+  {Property::kZIRKPROG_1_SO_SCHALT_3, "ZIRKPROG_1_SO_SCHALT_3"},
+  {Property::kZIRKPROG_1_MO_FR, "ZIRKPROG_1_MO_FR"},
+  {Property::kZIRKPROG_1_MO_FR_SCHALT_2, "ZIRKPROG_1_MO_FR_SCHALT_2"},
+  {Property::kZIRKPROG_1_MO_FR_SCHALT_3, "ZIRKPROG_1_MO_FR_SCHALT_3"},
+  {Property::kZIRKPROG_1_SA_SO, "ZIRKPROG_1_SA_SO"},
+  {Property::kZIRKPROG_1_SA_SO_SCHALT_2, "ZIRKPROG_1_SA_SO_SCHALT_2"},
+  {Property::kZIRKPROG_1_SA_SO_SCHALT_3, "ZIRKPROG_1_SA_SO_SCHALT_3"},
+  {Property::kZIRKPROG_1_MO_SO, "ZIRKPROG_1_MO_SO"},
+  {Property::kZIRKPROG_1_MO_SO_SCHALT_2, "ZIRKPROG_1_MO_SO_SCHALT_2"},
+  {Property::kZIRKPROG_1_MO_SO_SCHALT_3, "ZIRKPROG_1_MO_SO_SCHALT_3"},
+  {Property::kZIRKPROG_1_MO_DO, "ZIRKPROG_1_MO_DO"},
+  {Property::kZIRKPROG_1_MO_DO_SCHALT_2, "ZIRKPROG_1_MO_DO_SCHALT_2"},
+  {Property::kZIRKPROG_1_MO_DO_SCHALT_3, "ZIRKPROG_1_MO_DO_SCHALT_3"},
+  {Property::kZIRKPROG_2, "ZIRKPROG_2"},
+  {Property::kZIRKPROG_2_MO, "ZIRKPROG_2_MO"},
+  {Property::kZIRKPROG_2_MO_SCHALT_2, "ZIRKPROG_2_MO_SCHALT_2"},
+  {Property::kZIRKPROG_2_MO_SCHALT_3, "ZIRKPROG_2_MO_SCHALT_3"},
+  {Property::kZIRKPROG_2_DI, "ZIRKPROG_2_DI"},
+  {Property::kZIRKPROG_2_DI_SCHALT_2, "ZIRKPROG_2_DI_SCHALT_2"},
+  {Property::kZIRKPROG_2_DI_SCHALT_3, "ZIRKPROG_2_DI_SCHALT_3"},
+  {Property::kZIRKPROG_2_MI, "ZIRKPROG_2_MI"},
+  {Property::kZIRKPROG_2_MI_SCHALT_2, "ZIRKPROG_2_MI_SCHALT_2"},
+  {Property::kZIRKPROG_2_MI_SCHALT_3, "ZIRKPROG_2_MI_SCHALT_3"},
+  {Property::kZIRKPROG_2_DO, "ZIRKPROG_2_DO"},
+  {Property::kZIRKPROG_2_DO_SCHALT_2, "ZIRKPROG_2_DO_SCHALT_2"},
+  {Property::kZIRKPROG_2_DO_SCHALT_3, "ZIRKPROG_2_DO_SCHALT_3"},
+  {Property::kZIRKPROG_2_FR, "ZIRKPROG_2_FR"},
+  {Property::kZIRKPROG_2_FR_SCHALT_2, "ZIRKPROG_2_FR_SCHALT_2"},
+  {Property::kZIRKPROG_2_FR_SCHALT_3, "ZIRKPROG_2_FR_SCHALT_3"},
+  {Property::kZIRKPROG_2_SA, "ZIRKPROG_2_SA"},
+  {Property::kZIRKPROG_2_SA_SCHALT_2, "ZIRKPROG_2_SA_SCHALT_2"},
+  {Property::kZIRKPROG_2_SA_SCHALT_3, "ZIRKPROG_2_SA_SCHALT_3"},
+  {Property::kZIRKPROG_2_SO, "ZIRKPROG_2_SO"},
+  {Property::kZIRKPROG_2_SO_SCHALT_2, "ZIRKPROG_2_SO_SCHALT_2"},
+  {Property::kZIRKPROG_2_SO_SCHALT_3, "ZIRKPROG_2_SO_SCHALT_3"},
+  {Property::kZIRKPROG_2_MO_FR, "ZIRKPROG_2_MO_FR"},
+  {Property::kZIRKPROG_2_MO_FR_SCHALT_2, "ZIRKPROG_2_MO_FR_SCHALT_2"},
+  {Property::kZIRKPROG_2_MO_FR_SCHALT_3, "ZIRKPROG_2_MO_FR_SCHALT_3"},
+  {Property::kZIRKPROG_2_SA_SO, "ZIRKPROG_2_SA_SO"},
+  {Property::kZIRKPROG_2_SA_SO_SCHALT_2, "ZIRKPROG_2_SA_SO_SCHALT_2"},
+  {Property::kZIRKPROG_2_SA_SO_SCHALT_3, "ZIRKPROG_2_SA_SO_SCHALT_3"},
+  {Property::kZIRKPROG_2_MO_SO, "ZIRKPROG_2_MO_SO"},
+  {Property::kZIRKPROG_2_MO_SO_SCHALT_2, "ZIRKPROG_2_MO_SO_SCHALT_2"},
+  {Property::kZIRKPROG_2_MO_SO_SCHALT_3, "ZIRKPROG_2_MO_SO_SCHALT_3"},
+  {Property::kZIRKPROG_2_MO_DO, "ZIRKPROG_2_MO_DO"},
+  {Property::kZIRKPROG_2_MO_DO_SCHALT_2, "ZIRKPROG_2_MO_DO_SCHALT_2"},
+  {Property::kZIRKPROG_2_MO_DO_SCHALT_3, "ZIRKPROG_2_MO_DO_SCHALT_3"},
+  {Property::kZIRKPROG_3, "ZIRKPROG_3"},
+  {Property::kZIRKPROG_3_MO, "ZIRKPROG_3_MO"},
+  {Property::kZIRKPROG_3_MO_SCHALT_2, "ZIRKPROG_3_MO_SCHALT_2"},
+  {Property::kZIRKPROG_3_MO_SCHALT_3, "ZIRKPROG_3_MO_SCHALT_3"},
+  {Property::kZIRKPROG_3_DI, "ZIRKPROG_3_DI"},
+  {Property::kZIRKPROG_3_DI_SCHALT_2, "ZIRKPROG_3_DI_SCHALT_2"},
+  {Property::kZIRKPROG_3_DI_SCHALT_3, "ZIRKPROG_3_DI_SCHALT_3"},
+  {Property::kZIRKPROG_3_MI, "ZIRKPROG_3_MI"},
+  {Property::kZIRKPROG_3_MI_SCHALT_2, "ZIRKPROG_3_MI_SCHALT_2"},
+  {Property::kZIRKPROG_3_MI_SCHALT_3, "ZIRKPROG_3_MI_SCHALT_3"},
+  {Property::kZIRKPROG_3_DO, "ZIRKPROG_3_DO"},
+  {Property::kZIRKPROG_3_DO_SCHALT_2, "ZIRKPROG_3_DO_SCHALT_2"},
+  {Property::kZIRKPROG_3_DO_SCHALT_3, "ZIRKPROG_3_DO_SCHALT_3"},
+  {Property::kZIRKPROG_3_FR, "ZIRKPROG_3_FR"},
+  {Property::kZIRKPROG_3_FR_SCHALT_2, "ZIRKPROG_3_FR_SCHALT_2"},
+  {Property::kZIRKPROG_3_FR_SCHALT_3, "ZIRKPROG_3_FR_SCHALT_3"},
+  {Property::kZIRKPROG_3_SA, "ZIRKPROG_3_SA"},
+  {Property::kZIRKPROG_3_SA_SCHALT_2, "ZIRKPROG_3_SA_SCHALT_2"},
+  {Property::kZIRKPROG_3_SA_SCHALT_3, "ZIRKPROG_3_SA_SCHALT_3"},
+  {Property::kZIRKPROG_3_SO, "ZIRKPROG_3_SO"},
+  {Property::kZIRKPROG_3_SO_SCHALT_2, "ZIRKPROG_3_SO_SCHALT_2"},
+  {Property::kZIRKPROG_3_SO_SCHALT_3, "ZIRKPROG_3_SO_SCHALT_3"},
+  {Property::kZIRKPROG_3_MO_FR, "ZIRKPROG_3_MO_FR"},
+  {Property::kZIRKPROG_3_MO_FR_SCHALT_2, "ZIRKPROG_3_MO_FR_SCHALT_2"},
+  {Property::kZIRKPROG_3_MO_FR_SCHALT_3, "ZIRKPROG_3_MO_FR_SCHALT_3"},
+  {Property::kZIRKPROG_3_SA_SO, "ZIRKPROG_3_SA_SO"},
+  {Property::kZIRKPROG_3_SA_SO_SCHALT_2, "ZIRKPROG_3_SA_SO_SCHALT_2"},
+  {Property::kZIRKPROG_3_SA_SO_SCHALT_3, "ZIRKPROG_3_SA_SO_SCHALT_3"},
+  {Property::kZIRKPROG_3_MO_SO, "ZIRKPROG_3_MO_SO"},
+  {Property::kZIRKPROG_3_MO_SO_SCHALT_2, "ZIRKPROG_3_MO_SO_SCHALT_2"},
+  {Property::kZIRKPROG_3_MO_SO_SCHALT_3, "ZIRKPROG_3_MO_SO_SCHALT_3"},
+  {Property::kZIRKPROG_3_MO_DO, "ZIRKPROG_3_MO_DO"},
+  {Property::kZIRKPROG_3_MO_DO_SCHALT_2, "ZIRKPROG_3_MO_DO_SCHALT_2"},
+  {Property::kZIRKPROG_3_MO_DO_SCHALT_3, "ZIRKPROG_3_MO_DO_SCHALT_3"},
+  {Property::kZBV_PROG_1, "ZBV_PROG_1"},
+  {Property::kZBV_PROG_1_MO, "ZBV_PROG_1_MO"},
+  {Property::kZBV_PROG_1_MO_SCHALT_2, "ZBV_PROG_1_MO_SCHALT_2"},
+  {Property::kZBV_PROG_1_MO_SCHALT_3, "ZBV_PROG_1_MO_SCHALT_3"},
+  {Property::kZBV_PROG_1_DI, "ZBV_PROG_1_DI"},
+  {Property::kZBV_PROG_1_DI_SCHALT_2, "ZBV_PROG_1_DI_SCHALT_2"},
+  {Property::kZBV_PROG_1_DI_SCHALT_3, "ZBV_PROG_1_DI_SCHALT_3"},
+  {Property::kZBV_PROG_1_MI, "ZBV_PROG_1_MI"},
+  {Property::kZBV_PROG_1_MI_SCHALT_2, "ZBV_PROG_1_MI_SCHALT_2"},
+  {Property::kZBV_PROG_1_MI_SCHALT_3, "ZBV_PROG_1_MI_SCHALT_3"},
+  {Property::kZBV_PROG_1_DO, "ZBV_PROG_1_DO"},
+  {Property::kZBV_PROG_1_DO_SCHALT_2, "ZBV_PROG_1_DO_SCHALT_2"},
+  {Property::kZBV_PROG_1_DO_SCHALT_3, "ZBV_PROG_1_DO_SCHALT_3"},
+  {Property::kZBV_PROG_1_FR, "ZBV_PROG_1_FR"},
+  {Property::kZBV_PROG_1_FR_SCHALT_2, "ZBV_PROG_1_FR_SCHALT_2"},
+  {Property::kZBV_PROG_1_FR_SCHALT_3, "ZBV_PROG_1_FR_SCHALT_3"},
+  {Property::kZBV_PROG_1_SA, "ZBV_PROG_1_SA"},
+  {Property::kZBV_PROG_1_SA_SCHALT_2, "ZBV_PROG_1_SA_SCHALT_2"},
+  {Property::kZBV_PROG_1_SA_SCHALT_3, "ZBV_PROG_1_SA_SCHALT_3"},
+  {Property::kZBV_PROG_1_SO, "ZBV_PROG_1_SO"},
+  {Property::kZBV_PROG_1_SO_SCHALT_2, "ZBV_PROG_1_SO_SCHALT_2"},
+  {Property::kZBV_PROG_1_SO_SCHALT_3, "ZBV_PROG_1_SO_SCHALT_3"},
+  {Property::kZBV_PROG_1_MO_FR, "ZBV_PROG_1_MO_FR"},
+  {Property::kZBV_PROG_1_MO_FR_SCHALT_2, "ZBV_PROG_1_MO_FR_SCHALT_2"},
+  {Property::kZBV_PROG_1_MO_FR_SCHALT_3, "ZBV_PROG_1_MO_FR_SCHALT_3"},
+  {Property::kZBV_PROG_1_SA_SO, "ZBV_PROG_1_SA_SO"},
+  {Property::kZBV_PROG_1_SA_SO_SCHALT_2, "ZBV_PROG_1_SA_SO_SCHALT_2"},
+  {Property::kZBV_PROG_1_SA_SO_SCHALT_3, "ZBV_PROG_1_SA_SO_SCHALT_3"},
+  {Property::kZBV_PROG_1_MO_SO, "ZBV_PROG_1_MO_SO"},
+  {Property::kZBV_PROG_1_MO_SO_SCHALT_2, "ZBV_PROG_1_MO_SO_SCHALT_2"},
+  {Property::kZBV_PROG_1_MO_SO_SCHALT_3, "ZBV_PROG_1_MO_SO_SCHALT_3"},
+  {Property::kZBV_PROG_1_MO_DO, "ZBV_PROG_1_MO_DO"},
+  {Property::kZBV_PROG_1_MO_DO_SCHALT_2, "ZBV_PROG_1_MO_DO_SCHALT_2"},
+  {Property::kZBV_PROG_1_MO_DO_SCHALT_3, "ZBV_PROG_1_MO_DO_SCHALT_3"},
+  {Property::kZBV_PROG_2, "ZBV_PROG_2"},
+  {Property::kZBV_PROG_2_MO, "ZBV_PROG_2_MO"},
+  {Property::kZBV_PROG_2_MO_SCHALT_2, "ZBV_PROG_2_MO_SCHALT_2"},
+  {Property::kZBV_PROG_2_MO_SCHALT_3, "ZBV_PROG_2_MO_SCHALT_3"},
+  {Property::kZBV_PROG_2_DI, "ZBV_PROG_2_DI"},
+  {Property::kZBV_PROG_2_DI_SCHALT_2, "ZBV_PROG_2_DI_SCHALT_2"},
+  {Property::kZBV_PROG_2_DI_SCHALT_3, "ZBV_PROG_2_DI_SCHALT_3"},
+  {Property::kZBV_PROG_2_MI, "ZBV_PROG_2_MI"},
+  {Property::kZBV_PROG_2_MI_SCHALT_2, "ZBV_PROG_2_MI_SCHALT_2"},
+  {Property::kZBV_PROG_2_MI_SCHALT_3, "ZBV_PROG_2_MI_SCHALT_3"},
+  {Property::kZBV_PROG_2_DO, "ZBV_PROG_2_DO"},
+  {Property::kZBV_PROG_2_DO_SCHALT_2, "ZBV_PROG_2_DO_SCHALT_2"},
+  {Property::kZBV_PROG_2_DO_SCHALT_3, "ZBV_PROG_2_DO_SCHALT_3"},
+  {Property::kZBV_PROG_2_FR, "ZBV_PROG_2_FR"},
+  {Property::kZBV_PROG_2_FR_SCHALT_2, "ZBV_PROG_2_FR_SCHALT_2"},
+  {Property::kZBV_PROG_2_FR_SCHALT_3, "ZBV_PROG_2_FR_SCHALT_3"},
+  {Property::kZBV_PROG_2_SA, "ZBV_PROG_2_SA"},
+  {Property::kZBV_PROG_2_SA_SCHALT_2, "ZBV_PROG_2_SA_SCHALT_2"},
+  {Property::kZBV_PROG_2_SA_SCHALT_3, "ZBV_PROG_2_SA_SCHALT_3"},
+  {Property::kZBV_PROG_2_SO, "ZBV_PROG_2_SO"},
+  {Property::kZBV_PROG_2_SO_SCHALT_2, "ZBV_PROG_2_SO_SCHALT_2"},
+  {Property::kZBV_PROG_2_SO_SCHALT_3, "ZBV_PROG_2_SO_SCHALT_3"},
+  {Property::kZBV_PROG_2_MO_FR, "ZBV_PROG_2_MO_FR"},
+  {Property::kZBV_PROG_2_MO_FR_SCHALT_2, "ZBV_PROG_2_MO_FR_SCHALT_2"},
+  {Property::kZBV_PROG_2_MO_FR_SCHALT_3, "ZBV_PROG_2_MO_FR_SCHALT_3"},
+  {Property::kZBV_PROG_2_SA_SO, "ZBV_PROG_2_SA_SO"},
+  {Property::kZBV_PROG_2_SA_SO_SCHALT_2, "ZBV_PROG_2_SA_SO_SCHALT_2"},
+  {Property::kZBV_PROG_2_SA_SO_SCHALT_3, "ZBV_PROG_2_SA_SO_SCHALT_3"},
+  {Property::kZBV_PROG_2_MO_SO, "ZBV_PROG_2_MO_SO"},
+  {Property::kZBV_PROG_2_MO_SO_SCHALT_2, "ZBV_PROG_2_MO_SO_SCHALT_2"},
+  {Property::kZBV_PROG_2_MO_SO_SCHALT_3, "ZBV_PROG_2_MO_SO_SCHALT_3"},
+  {Property::kZBV_PROG_2_MO_DO, "ZBV_PROG_2_MO_DO"},
+  {Property::kZBV_PROG_2_MO_DO_SCHALT_2, "ZBV_PROG_2_MO_DO_SCHALT_2"},
+  {Property::kZBV_PROG_2_MO_DO_SCHALT_3, "ZBV_PROG_2_MO_DO_SCHALT_3"},
+  {Property::kHEIZPROG_1_SCHALTPKT_1, "HEIZPROG_1_SCHALTPKT_1"},
+  {Property::kHEIZPROG_1_SCHALTPKT_2, "HEIZPROG_1_SCHALTPKT_2"},
+  {Property::kHEIZPROG_1_SCHALTPKT_3, "HEIZPROG_1_SCHALTPKT_3"},
+  {Property::kHEIZPROG_1_SCHALTPKT_4, "HEIZPROG_1_SCHALTPKT_4"},
+  {Property::kHEIZPROG_1_SCHALTPKT_5, "HEIZPROG_1_SCHALTPKT_5"},
+  {Property::kHEIZPROG_1_SCHALTPKT_6, "HEIZPROG_1_SCHALTPKT_6"},
+  {Property::kHEIZPROG_1_SCHALTPKT_7, "HEIZPROG_1_SCHALTPKT_7"},
+  {Property::kHEIZPROG_1_SCHALTPKT_8, "HEIZPROG_1_SCHALTPKT_8"},
+  {Property::kHEIZPROG_1_SCHALTPKT_9, "HEIZPROG_1_SCHALTPKT_9"},
+  {Property::kHEIZPROG_1_SCHALTPKT_10, "HEIZPROG_1_SCHALTPKT_10"},
+  {Property::kHEIZPROG_1_SCHALTPKT_11, "HEIZPROG_1_SCHALTPKT_11"},
+  {Property::kHEIZPROG_1_SCHALTPKT_12, "HEIZPROG_1_SCHALTPKT_12"},
+  {Property::kHEIZPROG_1_SCHALTPKT_13, "HEIZPROG_1_SCHALTPKT_13"},
+  {Property::kHEIZPROG_1_SCHALTPKT_14, "HEIZPROG_1_SCHALTPKT_14"},
+  {Property::kHEIZPROG_2_SCHALTPKT_1, "HEIZPROG_2_SCHALTPKT_1"},
+  {Property::kHEIZPROG_2_SCHALTPKT_2, "HEIZPROG_2_SCHALTPKT_2"},
+  {Property::kHEIZPROG_2_SCHALTPKT_3, "HEIZPROG_2_SCHALTPKT_3"},
+  {Property::kHEIZPROG_2_SCHALTPKT_4, "HEIZPROG_2_SCHALTPKT_4"},
+  {Property::kHEIZPROG_2_SCHALTPKT_5, "HEIZPROG_2_SCHALTPKT_5"},
+  {Property::kHEIZPROG_2_SCHALTPKT_6, "HEIZPROG_2_SCHALTPKT_6"},
+  {Property::kHEIZPROG_2_SCHALTPKT_7, "HEIZPROG_2_SCHALTPKT_7"},
+  {Property::kHEIZPROG_2_SCHALTPKT_8, "HEIZPROG_2_SCHALTPKT_8"},
+  {Property::kHEIZPROG_2_SCHALTPKT_9, "HEIZPROG_2_SCHALTPKT_9"},
+  {Property::kHEIZPROG_2_SCHALTPKT_10, "HEIZPROG_2_SCHALTPKT_10"},
+  {Property::kHEIZPROG_2_SCHALTPKT_11, "HEIZPROG_2_SCHALTPKT_11"},
+  {Property::kHEIZPROG_2_SCHALTPKT_12, "HEIZPROG_2_SCHALTPKT_12"},
+  {Property::kHEIZPROG_2_SCHALTPKT_13, "HEIZPROG_2_SCHALTPKT_13"},
+  {Property::kHEIZPROG_2_SCHALTPKT_14, "HEIZPROG_2_SCHALTPKT_14"},
+  {Property::kHEIZPROG_3_SCHALTPKT_1, "HEIZPROG_3_SCHALTPKT_1"},
+  {Property::kHEIZPROG_3_SCHALTPKT_2, "HEIZPROG_3_SCHALTPKT_2"},
+  {Property::kHEIZPROG_3_SCHALTPKT_3, "HEIZPROG_3_SCHALTPKT_3"},
+  {Property::kHEIZPROG_3_SCHALTPKT_4, "HEIZPROG_3_SCHALTPKT_4"},
+  {Property::kHEIZPROG_3_SCHALTPKT_5, "HEIZPROG_3_SCHALTPKT_5"},
+  {Property::kHEIZPROG_3_SCHALTPKT_6, "HEIZPROG_3_SCHALTPKT_6"},
+  {Property::kHEIZPROG_3_SCHALTPKT_7, "HEIZPROG_3_SCHALTPKT_7"},
+  {Property::kHEIZPROG_3_SCHALTPKT_8, "HEIZPROG_3_SCHALTPKT_8"},
+  {Property::kHEIZPROG_3_SCHALTPKT_9, "HEIZPROG_3_SCHALTPKT_9"},
+  {Property::kHEIZPROG_3_SCHALTPKT_10, "HEIZPROG_3_SCHALTPKT_10"},
+  {Property::kHEIZPROG_3_SCHALTPKT_11, "HEIZPROG_3_SCHALTPKT_11"},
+  {Property::kHEIZPROG_3_SCHALTPKT_12, "HEIZPROG_3_SCHALTPKT_12"},
+  {Property::kHEIZPROG_3_SCHALTPKT_13, "HEIZPROG_3_SCHALTPKT_13"},
+  {Property::kHEIZPROG_3_SCHALTPKT_14, "HEIZPROG_3_SCHALTPKT_14"},
+  {Property::kWWROG_1_SCHALTPKT_1, "WWROG_1_SCHALTPKT_1"},
+  {Property::kWWROG_1_SCHALTPKT_2, "WWROG_1_SCHALTPKT_2"},
+  {Property::kWWROG_1_SCHALTPKT_3, "WWROG_1_SCHALTPKT_3"},
+  {Property::kWWROG_1_SCHALTPKT_4, "WWROG_1_SCHALTPKT_4"},
+  {Property::kWWROG_1_SCHALTPKT_5, "WWROG_1_SCHALTPKT_5"},
+  {Property::kWWROG_1_SCHALTPKT_6, "WWROG_1_SCHALTPKT_6"},
+  {Property::kWWROG_1_SCHALTPKT_7, "WWROG_1_SCHALTPKT_7"},
+  {Property::kWWROG_1_SCHALTPKT_8, "WWROG_1_SCHALTPKT_8"},
+  {Property::kWWROG_1_SCHALTPKT_9, "WWROG_1_SCHALTPKT_9"},
+  {Property::kWWROG_1_SCHALTPKT_10, "WWROG_1_SCHALTPKT_10"},
+  {Property::kWWROG_1_SCHALTPKT_11, "WWROG_1_SCHALTPKT_11"},
+  {Property::kWWROG_1_SCHALTPKT_12, "WWROG_1_SCHALTPKT_12"},
+  {Property::kWWROG_1_SCHALTPKT_13, "WWROG_1_SCHALTPKT_13"},
+  {Property::kWWROG_1_SCHALTPKT_14, "WWROG_1_SCHALTPKT_14"},
+  {Property::kWWROG_2_SCHALTPKT_1, "WWROG_2_SCHALTPKT_1"},
+  {Property::kWWROG_2_SCHALTPKT_2, "WWROG_2_SCHALTPKT_2"},
+  {Property::kWWROG_2_SCHALTPKT_3, "WWROG_2_SCHALTPKT_3"},
+  {Property::kWWROG_2_SCHALTPKT_4, "WWROG_2_SCHALTPKT_4"},
+  {Property::kWWROG_2_SCHALTPKT_5, "WWROG_2_SCHALTPKT_5"},
+  {Property::kWWROG_2_SCHALTPKT_6, "WWROG_2_SCHALTPKT_6"},
+  {Property::kWWROG_2_SCHALTPKT_7, "WWROG_2_SCHALTPKT_7"},
+  {Property::kWWROG_2_SCHALTPKT_8, "WWROG_2_SCHALTPKT_8"},
+  {Property::kWWROG_2_SCHALTPKT_9, "WWROG_2_SCHALTPKT_9"},
+  {Property::kWWROG_2_SCHALTPKT_10, "WWROG_2_SCHALTPKT_10"},
+  {Property::kWWROG_2_SCHALTPKT_11, "WWROG_2_SCHALTPKT_11"},
+  {Property::kWWROG_2_SCHALTPKT_12, "WWROG_2_SCHALTPKT_12"},
+  {Property::kWWROG_2_SCHALTPKT_13, "WWROG_2_SCHALTPKT_13"},
+  {Property::kWWROG_2_SCHALTPKT_14, "WWROG_2_SCHALTPKT_14"},
+  {Property::kWWROG_3_SCHALTPKT_1, "WWROG_3_SCHALTPKT_1"},
+  {Property::kWWROG_3_SCHALTPKT_2, "WWROG_3_SCHALTPKT_2"},
+  {Property::kWWROG_3_SCHALTPKT_3, "WWROG_3_SCHALTPKT_3"},
+  {Property::kWWROG_3_SCHALTPKT_4, "WWROG_3_SCHALTPKT_4"},
+  {Property::kWWROG_3_SCHALTPKT_5, "WWROG_3_SCHALTPKT_5"},
+  {Property::kWWROG_3_SCHALTPKT_6, "WWROG_3_SCHALTPKT_6"},
+  {Property::kWWROG_3_SCHALTPKT_7, "WWROG_3_SCHALTPKT_7"},
+  {Property::kWWROG_3_SCHALTPKT_8, "WWROG_3_SCHALTPKT_8"},
+  {Property::kWWROG_3_SCHALTPKT_9, "WWROG_3_SCHALTPKT_9"},
+  {Property::kWWROG_3_SCHALTPKT_10, "WWROG_3_SCHALTPKT_10"},
+  {Property::kWWROG_3_SCHALTPKT_11, "WWROG_3_SCHALTPKT_11"},
+  {Property::kWWROG_3_SCHALTPKT_12, "WWROG_3_SCHALTPKT_12"},
+  {Property::kWWROG_3_SCHALTPKT_13, "WWROG_3_SCHALTPKT_13"},
+  {Property::kWWROG_3_SCHALTPKT_14, "WWROG_3_SCHALTPKT_14"},
+  {Property::kZIRKROG_1_SCHALTPKT_1, "ZIRKROG_1_SCHALTPKT_1"},
+  {Property::kZIRKROG_1_SCHALTPKT_2, "ZIRKROG_1_SCHALTPKT_2"},
+  {Property::kZIRKROG_1_SCHALTPKT_3, "ZIRKROG_1_SCHALTPKT_3"},
+  {Property::kZIRKROG_1_SCHALTPKT_4, "ZIRKROG_1_SCHALTPKT_4"},
+  {Property::kZIRKROG_1_SCHALTPKT_5, "ZIRKROG_1_SCHALTPKT_5"},
+  {Property::kZIRKROG_1_SCHALTPKT_6, "ZIRKROG_1_SCHALTPKT_6"},
+  {Property::kZIRKROG_1_SCHALTPKT_7, "ZIRKROG_1_SCHALTPKT_7"},
+  {Property::kZIRKROG_1_SCHALTPKT_8, "ZIRKROG_1_SCHALTPKT_8"},
+  {Property::kZIRKROG_1_SCHALTPKT_9, "ZIRKROG_1_SCHALTPKT_9"},
+  {Property::kZIRKROG_1_SCHALTPKT_10, "ZIRKROG_1_SCHALTPKT_10"},
+  {Property::kZIRKROG_1_SCHALTPKT_11, "ZIRKROG_1_SCHALTPKT_11"},
+  {Property::kZIRKROG_1_SCHALTPKT_12, "ZIRKROG_1_SCHALTPKT_12"},
+  {Property::kZIRKROG_1_SCHALTPKT_13, "ZIRKROG_1_SCHALTPKT_13"},
+  {Property::kZIRKROG_1_SCHALTPKT_14, "ZIRKROG_1_SCHALTPKT_14"},
+  {Property::kZIRKROG_2_SCHALTPKT_1, "ZIRKROG_2_SCHALTPKT_1"},
+  {Property::kZIRKROG_2_SCHALTPKT_2, "ZIRKROG_2_SCHALTPKT_2"},
+  {Property::kZIRKROG_2_SCHALTPKT_3, "ZIRKROG_2_SCHALTPKT_3"},
+  {Property::kZIRKROG_2_SCHALTPKT_4, "ZIRKROG_2_SCHALTPKT_4"},
+  {Property::kZIRKROG_2_SCHALTPKT_5, "ZIRKROG_2_SCHALTPKT_5"},
+  {Property::kZIRKROG_2_SCHALTPKT_6, "ZIRKROG_2_SCHALTPKT_6"},
+  {Property::kZIRKROG_2_SCHALTPKT_7, "ZIRKROG_2_SCHALTPKT_7"},
+  {Property::kZIRKROG_2_SCHALTPKT_8, "ZIRKROG_2_SCHALTPKT_8"},
+  {Property::kZIRKROG_2_SCHALTPKT_9, "ZIRKROG_2_SCHALTPKT_9"},
+  {Property::kZIRKROG_2_SCHALTPKT_10, "ZIRKROG_2_SCHALTPKT_10"},
+  {Property::kZIRKROG_2_SCHALTPKT_11, "ZIRKROG_2_SCHALTPKT_11"},
+  {Property::kZIRKROG_2_SCHALTPKT_12, "ZIRKROG_2_SCHALTPKT_12"},
+  {Property::kZIRKROG_2_SCHALTPKT_13, "ZIRKROG_2_SCHALTPKT_13"},
+  {Property::kZIRKROG_2_SCHALTPKT_14, "ZIRKROG_2_SCHALTPKT_14"},
+  {Property::kZIRKROG_3_SCHALTPKT_1, "ZIRKROG_3_SCHALTPKT_1"},
+  {Property::kZIRKROG_3_SCHALTPKT_2, "ZIRKROG_3_SCHALTPKT_2"},
+  {Property::kZIRKROG_3_SCHALTPKT_3, "ZIRKROG_3_SCHALTPKT_3"},
+  {Property::kZIRKROG_3_SCHALTPKT_4, "ZIRKROG_3_SCHALTPKT_4"},
+  {Property::kZIRKROG_3_SCHALTPKT_5, "ZIRKROG_3_SCHALTPKT_5"},
+  {Property::kZIRKROG_3_SCHALTPKT_6, "ZIRKROG_3_SCHALTPKT_6"},
+  {Property::kZIRKROG_3_SCHALTPKT_7, "ZIRKROG_3_SCHALTPKT_7"},
+  {Property::kZIRKROG_3_SCHALTPKT_8, "ZIRKROG_3_SCHALTPKT_8"},
+  {Property::kZIRKROG_3_SCHALTPKT_9, "ZIRKROG_3_SCHALTPKT_9"},
+  {Property::kZIRKROG_3_SCHALTPKT_10, "ZIRKROG_3_SCHALTPKT_10"},
+  {Property::kZIRKROG_3_SCHALTPKT_11, "ZIRKROG_3_SCHALTPKT_11"},
+  {Property::kZIRKROG_3_SCHALTPKT_12, "ZIRKROG_3_SCHALTPKT_12"},
+  {Property::kZIRKROG_3_SCHALTPKT_13, "ZIRKROG_3_SCHALTPKT_13"},
+  {Property::kZIRKROG_3_SCHALTPKT_14, "ZIRKROG_3_SCHALTPKT_14"},
+  {Property::kZEITPROG_1, "ZEITPROG_1"},
+  {Property::kZEITPROG_1_MO, "ZEITPROG_1_MO"},
+  {Property::kZEITPROG_1_MO_SCHALT_2, "ZEITPROG_1_MO_SCHALT_2"},
+  {Property::kZEITPROG_1_MO_SCHALT_3, "ZEITPROG_1_MO_SCHALT_3"},
+  {Property::kZEITPROG_1_DI, "ZEITPROG_1_DI"},
+  {Property::kZEITPROG_1_DI_SCHALT_2, "ZEITPROG_1_DI_SCHALT_2"},
+  {Property::kZEITPROG_1_DI_SCHALT_3, "ZEITPROG_1_DI_SCHALT_3"},
+  {Property::kZEITPROG_1_MI, "ZEITPROG_1_MI"},
+  {Property::kZEITPROG_1_MI_SCHALT_2, "ZEITPROG_1_MI_SCHALT_2"},
+  {Property::kZEITPROG_1_MI_SCHALT_3, "ZEITPROG_1_MI_SCHALT_3"},
+  {Property::kZEITPROG_1_DO, "ZEITPROG_1_DO"},
+  {Property::kZEITPROG_1_DO_SCHALT_2, "ZEITPROG_1_DO_SCHALT_2"},
+  {Property::kZEITPROG_1_DO_SCHALT_3, "ZEITPROG_1_DO_SCHALT_3"},
+  {Property::kZEITPROG_1_FR, "ZEITPROG_1_FR"},
+  {Property::kZEITPROG_1_FR_SCHALT_2, "ZEITPROG_1_FR_SCHALT_2"},
+  {Property::kZEITPROG_1_FR_SCHALT_3, "ZEITPROG_1_FR_SCHALT_3"},
+  {Property::kZEITPROG_1_SA, "ZEITPROG_1_SA"},
+  {Property::kZEITPROG_1_SA_SCHALT_2, "ZEITPROG_1_SA_SCHALT_2"},
+  {Property::kZEITPROG_1_SA_SCHALT_3, "ZEITPROG_1_SA_SCHALT_3"},
+  {Property::kZEITPROG_1_SO, "ZEITPROG_1_SO"},
+  {Property::kZEITPROG_1_SO_SCHALT_2, "ZEITPROG_1_SO_SCHALT_2"},
+  {Property::kZEITPROG_1_SO_SCHALT_3, "ZEITPROG_1_SO_SCHALT_3"},
+  {Property::kZEITPROG_1_MO_FR, "ZEITPROG_1_MO_FR"},
+  {Property::kZEITPROG_1_MO_FR_SCHALT_2, "ZEITPROG_1_MO_FR_SCHALT_2"},
+  {Property::kZEITPROG_1_MO_FR_SCHALT_3, "ZEITPROG_1_MO_FR_SCHALT_3"},
+  {Property::kZEITPROG_1_SA_SO, "ZEITPROG_1_SA_SO"},
+  {Property::kZEITPROG_1_SA_SO_SCHALT_2, "ZEITPROG_1_SA_SO_SCHALT_2"},
+  {Property::kZEITPROG_1_SA_SO_SCHALT_3, "ZEITPROG_1_SA_SO_SCHALT_3"},
+  {Property::kZEITPROG_1_MO_SO, "ZEITPROG_1_MO_SO"},
+  {Property::kZEITPROG_1_MO_SO_SCHALT_2, "ZEITPROG_1_MO_SO_SCHALT_2"},
+  {Property::kZEITPROG_1_MO_SO_SCHALT_3, "ZEITPROG_1_MO_SO_SCHALT_3"},
+  {Property::kZEITPROG_1_MO_DO, "ZEITPROG_1_MO_DO"},
+  {Property::kZEITPROG_1_MO_DO_SCHALT_2, "ZEITPROG_1_MO_DO_SCHALT_2"},
+  {Property::kZEITPROG_1_MO_DO_SCHALT_3, "ZEITPROG_1_MO_DO_SCHALT_3"},
+  {Property::kZEITPROG_2, "ZEITPROG_2"},
+  {Property::kZEITPROG_2_MO, "ZEITPROG_2_MO"},
+  {Property::kZEITPROG_2_MO_SCHALT_2, "ZEITPROG_2_MO_SCHALT_2"},
+  {Property::kZEITPROG_2_MO_SCHALT_3, "ZEITPROG_2_MO_SCHALT_3"},
+  {Property::kZEITPROG_2_DI, "ZEITPROG_2_DI"},
+  {Property::kZEITPROG_2_DI_SCHALT_2, "ZEITPROG_2_DI_SCHALT_2"},
+  {Property::kZEITPROG_2_DI_SCHALT_3, "ZEITPROG_2_DI_SCHALT_3"},
+  {Property::kZEITPROG_2_MI, "ZEITPROG_2_MI"},
+  {Property::kZEITPROG_2_MI_SCHALT_2, "ZEITPROG_2_MI_SCHALT_2"},
+  {Property::kZEITPROG_2_MI_SCHALT_3, "ZEITPROG_2_MI_SCHALT_3"},
+  {Property::kZEITPROG_2_DO, "ZEITPROG_2_DO"},
+  {Property::kZEITPROG_2_DO_SCHALT_2, "ZEITPROG_2_DO_SCHALT_2"},
+  {Property::kZEITPROG_2_DO_SCHALT_3, "ZEITPROG_2_DO_SCHALT_3"},
+  {Property::kZEITPROG_2_FR, "ZEITPROG_2_FR"},
+  {Property::kZEITPROG_2_FR_SCHALT_2, "ZEITPROG_2_FR_SCHALT_2"},
+  {Property::kZEITPROG_2_FR_SCHALT_3, "ZEITPROG_2_FR_SCHALT_3"},
+  {Property::kZEITPROG_2_SA, "ZEITPROG_2_SA"},
+  {Property::kZEITPROG_2_SA_SCHALT_2, "ZEITPROG_2_SA_SCHALT_2"},
+  {Property::kZEITPROG_2_SA_SCHALT_3, "ZEITPROG_2_SA_SCHALT_3"},
+  {Property::kZEITPROG_2_SO, "ZEITPROG_2_SO"},
+  {Property::kZEITPROG_2_SO_SCHALT_2, "ZEITPROG_2_SO_SCHALT_2"},
+  {Property::kZEITPROG_2_SO_SCHALT_3, "ZEITPROG_2_SO_SCHALT_3"},
+  {Property::kZEITPROG_2_MO_FR, "ZEITPROG_2_MO_FR"},
+  {Property::kZEITPROG_2_MO_FR_SCHALT_2, "ZEITPROG_2_MO_FR_SCHALT_2"},
+  {Property::kZEITPROG_2_MO_FR_SCHALT_3, "ZEITPROG_2_MO_FR_SCHALT_3"},
+  {Property::kZEITPROG_2_SA_SO, "ZEITPROG_2_SA_SO"},
+  {Property::kZEITPROG_2_SA_SO_SCHALT_2, "ZEITPROG_2_SA_SO_SCHALT_2"},
+  {Property::kZEITPROG_2_SA_SO_SCHALT_3, "ZEITPROG_2_SA_SO_SCHALT_3"},
+  {Property::kZEITPROG_2_MO_SO, "ZEITPROG_2_MO_SO"},
+  {Property::kZEITPROG_2_MO_SO_SCHALT_2, "ZEITPROG_2_MO_SO_SCHALT_2"},
+  {Property::kZEITPROG_2_MO_SO_SCHALT_3, "ZEITPROG_2_MO_SO_SCHALT_3"},
+  {Property::kZEITPROG_2_MO_DO, "ZEITPROG_2_MO_DO"},
+  {Property::kZEITPROG_2_MO_DO_SCHALT_2, "ZEITPROG_2_MO_DO_SCHALT_2"},
+  {Property::kZEITPROG_2_MO_DO_SCHALT_3, "ZEITPROG_2_MO_DO_SCHALT_3"},
+  {Property::kZEITPROG_3, "ZEITPROG_3"},
+  {Property::kZEITPROG_3_MO, "ZEITPROG_3_MO"},
+  {Property::kZEITPROG_3_MO_SCHALT_2, "ZEITPROG_3_MO_SCHALT_2"},
+  {Property::kZEITPROG_3_MO_SCHALT_3, "ZEITPROG_3_MO_SCHALT_3"},
+  {Property::kZEITPROG_3_DI, "ZEITPROG_3_DI"},
+  {Property::kZEITPROG_3_DI_SCHALT_2, "ZEITPROG_3_DI_SCHALT_2"},
+  {Property::kZEITPROG_3_DI_SCHALT_3, "ZEITPROG_3_DI_SCHALT_3"},
+  {Property::kZEITPROG_3_MI, "ZEITPROG_3_MI"},
+  {Property::kZEITPROG_3_MI_SCHALT_2, "ZEITPROG_3_MI_SCHALT_2"},
+  {Property::kZEITPROG_3_MI_SCHALT_3, "ZEITPROG_3_MI_SCHALT_3"},
+  {Property::kZEITPROG_3_DO, "ZEITPROG_3_DO"},
+  {Property::kZEITPROG_3_DO_SCHALT_2, "ZEITPROG_3_DO_SCHALT_2"},
+  {Property::kZEITPROG_3_DO_SCHALT_3, "ZEITPROG_3_DO_SCHALT_3"},
+  {Property::kZEITPROG_3_FR, "ZEITPROG_3_FR"},
+  {Property::kZEITPROG_3_FR_SCHALT_2, "ZEITPROG_3_FR_SCHALT_2"},
+  {Property::kZEITPROG_3_FR_SCHALT_3, "ZEITPROG_3_FR_SCHALT_3"},
+  {Property::kZEITPROG_3_SA, "ZEITPROG_3_SA"},
+  {Property::kZEITPROG_3_SA_SCHALT_2, "ZEITPROG_3_SA_SCHALT_2"},
+  {Property::kZEITPROG_3_SA_SCHALT_3, "ZEITPROG_3_SA_SCHALT_3"},
+  {Property::kZEITPROG_3_SO, "ZEITPROG_3_SO"},
+  {Property::kZEITPROG_3_SO_SCHALT_2, "ZEITPROG_3_SO_SCHALT_2"},
+  {Property::kZEITPROG_3_SO_SCHALT_3, "ZEITPROG_3_SO_SCHALT_3"},
+  {Property::kZEITPROG_3_MO_FR, "ZEITPROG_3_MO_FR"},
+  {Property::kZEITPROG_3_MO_FR_SCHALT_2, "ZEITPROG_3_MO_FR_SCHALT_2"},
+  {Property::kZEITPROG_3_MO_FR_SCHALT_3, "ZEITPROG_3_MO_FR_SCHALT_3"},
+  {Property::kZEITPROG_3_SA_SO, "ZEITPROG_3_SA_SO"},
+  {Property::kZEITPROG_3_SA_SO_SCHALT_2, "ZEITPROG_3_SA_SO_SCHALT_2"},
+  {Property::kZEITPROG_3_SA_SO_SCHALT_3, "ZEITPROG_3_SA_SO_SCHALT_3"},
+  {Property::kZEITPROG_3_MO_SO, "ZEITPROG_3_MO_SO"},
+  {Property::kZEITPROG_3_MO_SO_SCHALT_2, "ZEITPROG_3_MO_SO_SCHALT_2"},
+  {Property::kZEITPROG_3_MO_SO_SCHALT_3, "ZEITPROG_3_MO_SO_SCHALT_3"},
+  {Property::kZEITPROG_3_MO_DO, "ZEITPROG_3_MO_DO"},
+  {Property::kZEITPROG_3_MO_DO_SCHALT_2, "ZEITPROG_3_MO_DO_SCHALT_2"},
+  {Property::kZEITPROG_3_MO_DO_SCHALT_3, "ZEITPROG_3_MO_DO_SCHALT_3"},
+  {Property::kZEITPROG_4, "ZEITPROG_4"},
+  {Property::kZEITPROG_4_MO, "ZEITPROG_4_MO"},
+  {Property::kZEITPROG_4_MO_SCHALT_2, "ZEITPROG_4_MO_SCHALT_2"},
+  {Property::kZEITPROG_4_MO_SCHALT_3, "ZEITPROG_4_MO_SCHALT_3"},
+  {Property::kZEITPROG_4_DI, "ZEITPROG_4_DI"},
+  {Property::kZEITPROG_4_DI_SCHALT_2, "ZEITPROG_4_DI_SCHALT_2"},
+  {Property::kZEITPROG_4_DI_SCHALT_3, "ZEITPROG_4_DI_SCHALT_3"},
+  {Property::kZEITPROG_4_MI, "ZEITPROG_4_MI"},
+  {Property::kZEITPROG_4_MI_SCHALT_2, "ZEITPROG_4_MI_SCHALT_2"},
+  {Property::kZEITPROG_4_MI_SCHALT_3, "ZEITPROG_4_MI_SCHALT_3"},
+  {Property::kZEITPROG_4_DO, "ZEITPROG_4_DO"},
+  {Property::kZEITPROG_4_DO_SCHALT_2, "ZEITPROG_4_DO_SCHALT_2"},
+  {Property::kZEITPROG_4_DO_SCHALT_3, "ZEITPROG_4_DO_SCHALT_3"},
+  {Property::kZEITPROG_4_FR, "ZEITPROG_4_FR"},
+  {Property::kZEITPROG_4_FR_SCHALT_2, "ZEITPROG_4_FR_SCHALT_2"},
+  {Property::kZEITPROG_4_FR_SCHALT_3, "ZEITPROG_4_FR_SCHALT_3"},
+  {Property::kZEITPROG_4_SA, "ZEITPROG_4_SA"},
+  {Property::kZEITPROG_4_SA_SCHALT_2, "ZEITPROG_4_SA_SCHALT_2"},
+  {Property::kZEITPROG_4_SA_SCHALT_3, "ZEITPROG_4_SA_SCHALT_3"},
+  {Property::kZEITPROG_4_SO, "ZEITPROG_4_SO"},
+  {Property::kZEITPROG_4_SO_SCHALT_2, "ZEITPROG_4_SO_SCHALT_2"},
+  {Property::kZEITPROG_4_SO_SCHALT_3, "ZEITPROG_4_SO_SCHALT_3"},
+  {Property::kZEITPROG_4_MO_FR, "ZEITPROG_4_MO_FR"},
+  {Property::kZEITPROG_4_MO_FR_SCHALT_2, "ZEITPROG_4_MO_FR_SCHALT_2"},
+  {Property::kZEITPROG_4_MO_FR_SCHALT_3, "ZEITPROG_4_MO_FR_SCHALT_3"},
+  {Property::kZEITPROG_4_SA_SO, "ZEITPROG_4_SA_SO"},
+  {Property::kZEITPROG_4_SA_SO_SCHALT_2, "ZEITPROG_4_SA_SO_SCHALT_2"},
+  {Property::kZEITPROG_4_SA_SO_SCHALT_3, "ZEITPROG_4_SA_SO_SCHALT_3"},
+  {Property::kZEITPROG_4_MO_SO, "ZEITPROG_4_MO_SO"},
+  {Property::kZEITPROG_4_MO_SO_SCHALT_2, "ZEITPROG_4_MO_SO_SCHALT_2"},
+  {Property::kZEITPROG_4_MO_SO_SCHALT_3, "ZEITPROG_4_MO_SO_SCHALT_3"},
+  {Property::kZEITPROG_4_MO_DO, "ZEITPROG_4_MO_DO"},
+  {Property::kZEITPROG_4_MO_DO_SCHALT_2, "ZEITPROG_4_MO_DO_SCHALT_2"},
+  {Property::kZEITPROG_4_MO_DO_SCHALT_3, "ZEITPROG_4_MO_DO_SCHALT_3"},
+  {Property::kLEISTUNG_AUSLEGUNG_HEIZUNG, "LEISTUNG_AUSLEGUNG_HEIZUNG"},
+  {Property::kABLUFT_LUFTFEUCHTIGKEIT, "ABLUFT_LUFTFEUCHTIGKEIT"},
+  {Property::kABLUFT_TAUPUNKT, "ABLUFT_TAUPUNKT"},
+  {Property::kVERDICHTER_STARTS, "VERDICHTER_STARTS"},
+  {Property::kVERDICHTER_STARTS_K, "VERDICHTER_STARTS_K"},
+  {Property::kHF_MONITOR_TYP, "HF_MONITOR_TYP"},
+  {Property::kSTART_BEREICH_SOFTWARE_SIMULATION, "START_BEREICH_SOFTWARE_SIMULATION"},
+  {Property::kBETRIEBS_STATUS_2, "BETRIEBS_STATUS_2"},
+  {Property::kWAERMEMENGE, "WAERMEMENGE"},
+  {Property::kAUTOMATIK_WARMWASSER, "AUTOMATIK_WARMWASSER"},
+  {Property::kWPSTUFEN_WW, "WPSTUFEN_WW"},
+  {Property::kWW_MIT_2WE, "WW_MIT_2WE"},
+  {Property::kSPERREN_2WE, "SPERREN_2WE"},
+  {Property::kFREIGABE_2WE, "FREIGABE_2WE"},
+  {Property::kDYNAMIK, "DYNAMIK"},
+  {Property::kPARTYSTUNDEN, "PARTYSTUNDEN"},
+  {Property::kMANUELLES_ABTAUEN, "MANUELLES_ABTAUEN"},
+  {Property::kHEIZKREIS_PROGRAMMSCHALTER, "HEIZKREIS_PROGRAMMSCHALTER"},
+  {Property::kMODE_EINGANG2, "MODE_EINGANG2"},
+  {Property::kFUEHLERKENNLINIE, "FUEHLERKENNLINIE"},
+  {Property::kWARTUNG_JAHR, "WARTUNG_JAHR"},
+  {Property::kWARTUNG_MONAT, "WARTUNG_MONAT"},
+  {Property::kWARTUNG_TAG, "WARTUNG_TAG"},
+  {Property::kTHERMOSTATEINGANG_WW, "THERMOSTATEINGANG_WW"},
+  {Property::kBETRIEBSART_HZK_PUMPE, "BETRIEBSART_HZK_PUMPE"},
+  {Property::kANNAHME_LEISTUNGSZWANG, "ANNAHME_LEISTUNGSZWANG"},
+  {Property::kTAG_SOMMER_BEGIN, "TAG_SOMMER_BEGIN"},
+  {Property::kMONAT_SOMMER_BEGIN, "MONAT_SOMMER_BEGIN"},
+  {Property::kTAG_SOMMER_ENDE, "TAG_SOMMER_ENDE"},
+  {Property::kMONAT_SOMMER_ENDE, "MONAT_SOMMER_ENDE"},
+  {Property::kSCHALTHYST_PUFFER, "SCHALTHYST_PUFFER"},
+  {Property::kPUFFERUEBERHOEHUNG, "PUFFERUEBERHOEHUNG"},
+  {Property::kMAX_PUFFERTEMP, "MAX_PUFFERTEMP"},
+  {Property::kMIN_PUFFERTEMP, "MIN_PUFFERTEMP"},
+  {Property::kMAX_SAMMLERTEMP, "MAX_SAMMLERTEMP"},
+  {Property::kMIN_SAMMLERTEMP, "MIN_SAMMLERTEMP"},
+  {Property::kSAMMLERUEBERHOEHUNG, "SAMMLERUEBERHOEHUNG"},
+  {Property::kABREGELPARAMETER, "ABREGELPARAMETER"},
+  {Property::kMAX_MODGRAD, "MAX_MODGRAD"},
+  {Property::kMIN_MODGRAD, "MIN_MODGRAD"},
+  {Property::kFOLGEWECHSEL_STD, "FOLGEWECHSEL_STD"},
+  {Property::kFOLGEWECHSELMODUS, "FOLGEWECHSELMODUS"},
+  {Property::kSONDERNIVEAU_TEMP, "SONDERNIVEAU_TEMP"},
+  {Property::kMODE_EINGANG1, "MODE_EINGANG1"},
+  {Property::kSTATUS_VARIABLER_AUSGANG, "STATUS_VARIABLER_AUSGANG"},
+  {Property::kMODE_VARIABLER_AUSGANG, "MODE_VARIABLER_AUSGANG"},
+  {Property::kSTATUS_MULTIFUNKTIONSAUSGANG, "STATUS_MULTIFUNKTIONSAUSGANG"},
+  {Property::kMODE_MULTIFUNKTIONSAUSGANG, "MODE_MULTIFUNKTIONSAUSGANG"},
+  {Property::kANTILEGIONELLEN_ZEITPUNKT, "ANTILEGIONELLEN_ZEITPUNKT"},
+  {Property::kSOFORT_AUS, "SOFORT_AUS"},
+  {Property::kPROGSTELL_UHR_SONNE_BEREIT, "PROGSTELL_UHR_SONNE_BEREIT"},
+  {Property::kBM_GEFUNDEN, "BM_GEFUNDEN"},
+  {Property::kHEIZTHERME, "HEIZTHERME"},
+  {Property::kRAUMSOLLTEMP_VERSTELLUNG, "RAUMSOLLTEMP_VERSTELLUNG"},
+  {Property::kFUELLSTAND, "FUELLSTAND"},
+  {Property::kBUSVERSORGUNG, "BUSVERSORGUNG"},
+  {Property::kSOLARSYSTEMAUSWAHL, "SOLARSYSTEMAUSWAHL"},
+  {Property::kFUELLSTANDSGEBER, "FUELLSTANDSGEBER"},
+  {Property::kKESSELTYP, "KESSELTYP"},
+  {Property::kMOD_KLAPPENSTATUS, "MOD_KLAPPENSTATUS"},
+  {Property::kENDE_CHAR_BEREICH, "ENDE_CHAR_BEREICH"},
+  };
+
+std::string_view getPropertyName(const Property property) {
+    const auto name = propertyNameMap.find(property);
+    if(name != propertyNameMap.end()) {
+        return name->second;
     }
-    return buffer;
+    else
+    {
+      return std::string_view("Name not mapped.");
+    }
 }
+
 #endif
