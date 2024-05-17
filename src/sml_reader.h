@@ -39,7 +39,13 @@ static constexpr std::array<std::uint8_t, 8U> start_sequence{0x1B, 0x1B, 0x1B, 0
 static constexpr std::array<std::uint8_t, 5U> end_sequence{0x1B, 0x1B, 0x1B, 0x1B, 0x1A};
 }  // namespace
 
-enum class State : std::uint8_t { kWaitingForStartSequence, kWaitingForEndSequence, kParseMessage };
+enum class State : std::uint8_t {
+    kWaitingForStartSequence,
+    kWaitingForEndSequence,
+    kParseFile,
+    kProcessMessages,
+    kPublishReadings
+};
 
 struct Readings {
     float power{0.0f};
@@ -55,15 +61,18 @@ struct Readings {
     float total_incoming{0.0f};
     float total_outgoing{0.0f};
     float frequency{0.0f};
-    
+
     void publishMQTT() const {
         std::ostringstream payload;
         payload.precision(1);
         payload << std::fixed;
         payload << "{\"grid\":{\"power\":" << power << ",";
-        payload << "\"L1\":{\"power\":" << power_l1 <<",\"voltage\":" << voltage_l1 << ",\"current\":" << current_l1 << "},";
-        payload << "\"L2\":{\"power\":" << power_l2 <<",\"voltage\":" << voltage_l2 << ",\"current\":" << current_l2 << "},";
-        payload << "\"L3\":{\"power\":" << power_l3 <<",\"voltage\":" << voltage_l3 << ",\"current\":" << current_l3 << "}}}";
+        payload << "\"L1\":{\"power\":" << power_l1 << ",\"voltage\":" << voltage_l1 << ",\"current\":" << current_l1
+                << "},";
+        payload << "\"L2\":{\"power\":" << power_l2 << ",\"voltage\":" << voltage_l2 << ",\"current\":" << current_l2
+                << "},";
+        payload << "\"L3\":{\"power\":" << power_l3 << ",\"voltage\":" << voltage_l3 << ",\"current\":" << current_l3
+                << "}}}";
         id(mqtt_client).publish("homeassistant/energy/grid", payload.str());
     }
 
@@ -85,22 +94,24 @@ struct Readings {
 };
 
 class SMLReader : public Component, public UARTDevice {
-    std::vector<std::uint8_t> buffer;
-    State current_state{State::kWaitingForStartSequence};
+    std::vector<std::uint8_t> _buffer;
+    State _current_state{State::kWaitingForStartSequence};
+    sml_file* _file;
+    std::optional<Readings> _readings;
 
     template <typename T, typename F>
     void waitForSequence(const T& sequence, F func) {
         while (available()) {
-            if (buffer.size() == buffer.capacity()) {
+            if (_buffer.size() == _buffer.capacity()) {
                 // start over
                 ESP_LOGV("SMLReader", "clearing buffer");
-                buffer.clear();
+                _buffer.clear();
             }
-            buffer.push_back(read());
+            _buffer.push_back(read());
 
             // wait until there are at least as many bytes as the sequence to start comparison
-            if (buffer.size() >= sequence.size()) {
-                if (std::equal(buffer.begin() + buffer.size() - sequence.size(), buffer.end(), sequence.begin())) {
+            if (_buffer.size() >= sequence.size()) {
+                if (std::equal(_buffer.begin() + _buffer.size() - sequence.size(), _buffer.end(), sequence.begin())) {
                     ESP_LOGV("SMLReader", "found sequence");
                     func();
                     return;
@@ -146,25 +157,27 @@ class SMLReader : public Component, public UARTDevice {
         return str;
     }
 
-    void parseMessage() {
-        if (buffer.size() <= 24) {
+    void parseFile() {
+        ESP_LOGV("SMLReader", "parsing file");
+        if (_buffer.size() <= 24) {
             // reset
             ESP_LOGV("SMLReader", "clearing buffer");
-            buffer.clear();
-            current_state = State::kWaitingForStartSequence;
+            _buffer.clear();
+            _current_state = State::kWaitingForStartSequence;
             return;
         }
-        sml_file* file = sml_file_parse(buffer.data(), buffer.size() - end_sequence.size() - 3U);
-        if (file == nullptr) {
+        _file = sml_file_parse(_buffer.data(), _buffer.size() - end_sequence.size() - 3U);
+        if (_file == nullptr) {
             ESP_LOGV("SMLReader", "file is nullptr");
             return;
         }
+    }
 
-        ESP_LOGV("SMLReader", "parsing messages %d", file->messages_len);
-        Readings readings;
-        for (std::uint8_t i{0U}; i < file->messages_len; ++i) {
+    void processMessages() {
+        ESP_LOGV("SMLReader", "processing messages %d", _file->messages_len);
+        for (std::uint8_t i{0U}; i < _file->messages_len; ++i) {
             ESP_LOGV("SMLReader", "next message");
-            sml_message* message = file->messages[i];
+            sml_message* message = _file->messages[i];
             if (message == nullptr) {
                 ESP_LOGV("SMLReader", "message is nullptr");
                 return;
@@ -174,6 +187,7 @@ class SMLReader : public Component, public UARTDevice {
                 sml_list* entry;
                 sml_get_list_response* body;
                 body = (sml_get_list_response*)message->message_body->data;
+                Readings readings;
                 for (entry = body->val_list; entry != nullptr; entry = entry->next) {
                     if (!entry->value) {  // do not crash on null value
                         continue;
@@ -217,37 +231,51 @@ class SMLReader : public Component, public UARTDevice {
                         readings.current_l3 = parseNumeric(entry);
                     }
                 }
-                readings.publishMQTT();
-                readings.publishHA();
+                _readings = readings;
             }
             ESP_LOGV("SMLReader", "is not SML_MESSAGE_GET_LIST_RESPONSE %d", *message->message_body->tag);
         }
+        sml_file_free(_file);
+        _buffer.clear();
+    }
 
+    void publishReadings() {
+        if (_readings.has_value()) {
+            _readings->publishMQTT();
+            _readings->publishHA();
+            _readings.reset();
+        }
         ESP_LOGV("SMLReader", "starting over");
-        sml_file_free(file);
-        buffer.clear();
     }
 
    public:
     SMLReader(UARTComponent* parent) : UARTDevice(parent) {}
 
-    void setup() override { buffer.reserve(4096); }
+    void setup() override { _buffer.reserve(4096); }
 
     void loop() override {
-        switch (current_state) {
+        switch (_current_state) {
             case (State::kWaitingForStartSequence):
                 waitForSequence(start_sequence, [this]() {
-                    current_state = State::kWaitingForEndSequence;
-                    buffer.clear();
+                    _current_state = State::kWaitingForEndSequence;
+                    _buffer.clear();
                 });
                 break;
             case (State::kWaitingForEndSequence):
-                waitForSequence(end_sequence, [this]() { current_state = State::kParseMessage; });
+                waitForSequence(end_sequence, [this]() { _current_state = State::kParseFile; });
                 break;
-            case (State::kParseMessage):
-                parseMessage();
-                buffer.clear();
-                current_state = State::kWaitingForStartSequence;
+            case (State::kParseFile):
+                parseFile();
+                _buffer.clear();
+                _current_state = State::kProcessMessages;
+                break;
+            case (State::kProcessMessages):
+                processMessages();
+                _current_state = State::kPublishReadings;
+                break;
+            case (State::kPublishReadings):
+                publishReadings();
+                _current_state = State::kWaitingForStartSequence;
                 break;
             default:
                 break;
