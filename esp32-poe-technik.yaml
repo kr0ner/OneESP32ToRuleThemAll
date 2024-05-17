@@ -5,6 +5,7 @@ esphome:
     - src/callback_handler.h
     - src/communication.h
     - src/custom_climate.h
+    - src/enum.h
     - src/mapper.h
     - src/mapper.cpp
     - src/property.h
