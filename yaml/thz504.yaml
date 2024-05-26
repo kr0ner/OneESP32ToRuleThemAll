@@ -17,23 +17,22 @@ esphome:
     priority: -100
     then:
       - lambda: |-
-          queueRequest(Kessel, Property::kPROGRAMMSCHALTER);
-          queueRequest(Kessel, Property::kBETRIEBS_STATUS);
-          queueRequest(Kessel, Property::kBETRIEBS_STATUS_2);
-          queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_WW_TAG_WH);
-          queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_WW_TAG_KWH);
-          queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_HEIZ_TAG_WH);
-          queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_HEIZ_TAG_KWH);
-          CallbackHandler::instance().addCallback(std::make_pair(Kessel,Property::kVERDICHTER_STARTS_K),[](const SimpleVariant& value){
-              using type = TypeMapping<Property::kVERDICHTER_STARTS_K>::type;
-              id(gVERDICHTER_STARTS_K) = value.get<type>() * 1000U;
+          queueRequest(Kessel, propertyManager.getPropertyAddress("kPROGRAMMSCHALTER"));
+          queueRequest(Kessel, propertyManager.getPropertyAddress("kBETRIEBS_STATUS"));
+          queueRequest(Kessel, propertyManager.getPropertyAddress("kBETRIEBS_STATUS_2"));
+          queueRequest(Kessel, propertyManager.getPropertyAddress("kEL_AUFNAHMELEISTUNG_WW_TAG_WH"));
+          queueRequest(Kessel, propertyManager.getPropertyAddress("kEL_AUFNAHMELEISTUNG_WW_TAG_KWH"));
+          queueRequest(Kessel, propertyManager.getPropertyAddress("kEL_AUFNAHMELEISTUNG_HEIZ_TAG_WH"));
+          queueRequest(Kessel, propertyManager.getPropertyAddress("kEL_AUFNAHMELEISTUNG_HEIZ_TAG_KWH"));
+          queueRequest(Kessel, propertyManager.getPropertyAddress("kVERDICHTER_STARTS_K"));
+          queueRequest(Kessel, propertyManager.getPropertyAddress("kVERDICHTER_STARTS"));
+
+          CallbackHandler::instance().addCallback(std::make_pair(Kessel,propertyManager.getPropertyAddress("kVERDICHTER_STARTS_K")),[](const SimpleVariant& value){
+             id(gVERDICHTER_STARTS_K) = value.get<std::uint16_t>() * 1000U;
           });
-          CallbackHandler::instance().addCallback(std::make_pair(Kessel,Property::kVERDICHTER_STARTS),[](const SimpleVariant& value){
-              using type = TypeMapping<Property::kVERDICHTER_STARTS>::type;
-              id(VERDICHTER_STARTS).publish_state(id(gVERDICHTER_STARTS_K) + value.get<type>());
+          CallbackHandler::instance().addCallback(std::make_pair(Kessel,propertyManager.getPropertyAddress("kVERDICHTER_STARTS")),[](const SimpleVariant& value){
+              id(VERDICHTER_STARTS).publish_state(id(gVERDICHTER_STARTS_K) + value.get<std::uint16_t>());
           });
-          queueRequest(Kessel, Property::kVERDICHTER_STARTS_K);
-          queueRequest(Kessel, Property::kVERDICHTER_STARTS);
 
 #########################################
 #                                       #
@@ -181,12 +180,12 @@ interval:
           // Send current RAUMISTTEMP
           const auto room_temp = id(gRAUMISTTEMP);
           if(room_temp > 0.0f) {
-            sendData(FEK, Property::kRAUMISTTEMP, static_cast<std::uint16_t>(room_temp * 10.0f));
+            sendData(FEK, propertyManager.getPropertyAddress("kRAUMISTTEMP"), static_cast<std::uint16_t>(room_temp * 10.0f));
           }
           // Send current FEUCHTE
           const auto humidity = id(gFEUCHTE);
           if(humidity > 0.0) {
-            sendData(FEK, Property::kFEUCHTE, static_cast<std::uint16_t>(humidity * 10.0f));
+            sendData(FEK, propertyManager.getPropertyAddress("kFEUCHTE"), static_cast<std::uint16_t>(humidity * 10.0f));
           }
 
 #########################################
@@ -203,10 +202,10 @@ time:
         hours: 1-23
         then:
           - lambda: |-
-              queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_WW_TAG_WH);
-              queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_WW_TAG_KWH);
-              queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_HEIZ_TAG_WH);
-              queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_HEIZ_TAG_KWH);
+              queueRequest(Kessel, propertyManager.getPropertyAddress("kEL_AUFNAHMELEISTUNG_WW_TAG_WH"));
+              queueRequest(Kessel, propertyManager.getPropertyAddress("kEL_AUFNAHMELEISTUNG_WW_TAG_KWH"));
+              queueRequest(Kessel, propertyManager.getPropertyAddress("kEL_AUFNAHMELEISTUNG_HEIZ_TAG_WH"));
+              queueRequest(Kessel, propertyManager.getPropertyAddress("kEL_AUFNAHMELEISTUNG_HEIZ_TAG_KWH"));
       # At midnight reset power consumptions. The helper must not be set!
       - seconds: 0
         minutes: 0
@@ -357,8 +356,8 @@ sensor:
     accuracy_decimals: 0
     update_interval: $interval_very_slow
     lambda: |-
-        queueRequest(Kessel, Property::kVERDICHTER_STARTS_K);
-        queueRequest(Kessel, Property::kVERDICHTER_STARTS);
+        queueRequest(Kessel, propertyManager.getPropertyAddress("kVERDICHTER_STARTS_K"));
+        queueRequest(Kessel, propertyManager.getPropertyAddress("kVERDICHTER_STARTS"));
         return {};
 
 #########################################
@@ -387,7 +386,7 @@ select:
         - lambda: |-
             const auto betriebsartId = Mapper::instance().getBetriebsartId(x);
             if(betriebsartId.has_value()) {
-              sendData(Kessel, Property::kPROGRAMMSCHALTER, betriebsartId.value());
+              sendData(Kessel, propertyManager.getPropertyAddress("kPROGRAMMSCHALTER"), betriebsartId.value());
             }
 
 #########################################
@@ -444,72 +443,65 @@ canbus:
       then:
         - lambda: |-
             const auto property_value_pair = processCanMessage(x);
-            Property property{property_value_pair.first};
+            std::uint16_t property{property_value_pair.first};
             SimpleVariant value{property_value_pair.second};
             auto callback = CallbackHandler::instance().getCallback(std::make_pair(Kessel,property));
-            callback(value);
-
-            switch(property) {
-              case Property::kPROGRAMMSCHALTER:
-                {
+            
+            if (property == propertyManager.getPropertyAddress("kPROGRAMMSCHALTER")){
                   const auto index = id(PROGRAMMSCHALTER).index_of(value.get<std::string>());
                   if(index.has_value()) {
                     id(PROGRAMMSCHALTER).publish_state(value.get<std::string>());
-                  }
-                  break;
-                }
-              case Property::kBETRIEBS_STATUS_2:
-                {
-                  const std::bitset<2U> status_bits{value.get<std::uint16_t>()};
-                  id(SOMMERBETRIEB_AKTIV).publish_state(status_bits.test(0U));
-                  id(OFEN_KAMIN_AKTIV).publish_state(status_bits.test(1U));
-                }
-              case Property::kBETRIEBS_STATUS:
-                {
-                  const std::bitset<15U> status_bits{value.get<std::uint16_t>()};
-                  id(SCHALTPROGRAMM_AKTIV).publish_state(status_bits.test(0U));
-                  id(VERDICHTER).publish_state(status_bits.test(1U));
-                  id(HEIZEN).publish_state(status_bits.test(2U));
-                  id(KUEHLEN).publish_state(status_bits.test(3U));
-                  id(WARMWASSERBEREITUNG).publish_state(status_bits.test(4U));
-                  id(ELEKTRISCHE_NACHERWAERMUNG).publish_state(status_bits.test(5U));
-                  id(SERVICE).publish_state(status_bits.test(6U));
-                  id(EVU_SPERRE).publish_state(status_bits.test(7U));
-                  id(FILTERWECHSEL_BEIDE).publish_state(status_bits.test(8U));
-                  // seems to be broken id(LUEFTUNG).publish_state(status_bits.test(9U));
-                  id(HEIZKREISPUMPE).publish_state(status_bits.test(10U));
-                  id(ABTAUEN_VERDAMPFER).publish_state(status_bits.test(11U));
-                  id(FILTERWECHSEL_ABLUFT).publish_state(status_bits.test(12U));
-                  id(FILTERWECHSEL_ZULUFT).publish_state(status_bits.test(13U));
-                  id(AUFHEIZPROGRAMM_AKTIV).publish_state(status_bits.test(14U));
-                  break;
-                }
-              case Property::kEL_AUFNAHMELEISTUNG_HEIZ_TAG_WH:
-                // This value is never reset, messing up the Energy Dashboard.
-                // The offset is obtained at midnight and subtracted for the next 24 hours..
-                id(EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH).publish_state(value.get<std::uint16_t>());
-                break;
-              case Property::kEL_AUFNAHMELEISTUNG_HEIZ_TAG_KWH:
-                id(EL_AUFNAHMELEISTUNG_HEIZ_SUMME_KWH).publish_state(value.get<float>() + (0.001*(id(EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH).state - id(gOFFSET_EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH))));
-                break;
-              case Property::kEL_AUFNAHMELEISTUNG_WW_TAG_WH:
-                // This value is never reset, messing up the Energy Dashboard.
-                // The offset is obtained at midnight and subtracted for the next 24 hours.
-                id(EL_AUFNAHMELEISTUNG_WW_TAG_WH).publish_state(value.get<std::uint16_t>());
-                break;
-              case Property::kEL_AUFNAHMELEISTUNG_WW_TAG_KWH:
-                id(EL_AUFNAHMELEISTUNG_WW_SUMME_KWH).publish_state(value.get<float>() + (0.001*(id(EL_AUFNAHMELEISTUNG_WW_TAG_WH).state - id(gOFFSET_EL_AUFNAHMELEISTUNG_WW_TAG_WH))));
-                break;
-              case Property::kLUEFT_STUFE_TAG:
-                {
-                  // workaround for broken ninth bit of BETRIEBSSTATUS
-                  const auto fan_speed = std::min(static_cast<std::uint16_t>(3U),value.get<std::uint16_t>());
-                  id(LUEFTUNG).publish_state(fan_speed != 0);
-                  break;
-                }
-              default:
-                break;
+                }}
+            else if (property == propertyManager.getPropertyAddress("kBETRIEBS_STATUS_2")){
+                const std::bitset<2U> status_bits{value.get<std::uint16_t>()};
+                id(SOMMERBETRIEB_AKTIV).publish_state(status_bits.test(0U));
+                id(OFEN_KAMIN_AKTIV).publish_state(status_bits.test(1U));
+              }
+            else if (property == propertyManager.getPropertyAddress("kBETRIEBS_STATUS")){
+                const std::bitset<15U> status_bits{value.get<std::uint16_t>()};
+                id(SCHALTPROGRAMM_AKTIV).publish_state(status_bits.test(0U));
+                id(VERDICHTER).publish_state(status_bits.test(1U));
+                id(HEIZEN).publish_state(status_bits.test(2U));
+                id(KUEHLEN).publish_state(status_bits.test(3U));
+                id(WARMWASSERBEREITUNG).publish_state(status_bits.test(4U));
+                id(ELEKTRISCHE_NACHERWAERMUNG).publish_state(status_bits.test(5U));
+                id(SERVICE).publish_state(status_bits.test(6U));
+                id(EVU_SPERRE).publish_state(status_bits.test(7U));
+                id(FILTERWECHSEL_BEIDE).publish_state(status_bits.test(8U));
+                // seems to be broken id(LUEFTUNG).publish_state(status_bits.test(9U));
+                id(HEIZKREISPUMPE).publish_state(status_bits.test(10U));
+                id(ABTAUEN_VERDAMPFER).publish_state(status_bits.test(11U));
+                id(FILTERWECHSEL_ABLUFT).publish_state(status_bits.test(12U));
+                id(FILTERWECHSEL_ZULUFT).publish_state(status_bits.test(13U));
+                id(AUFHEIZPROGRAMM_AKTIV).publish_state(status_bits.test(14U));
+              }
+            else if (property == propertyManager.getPropertyAddress("kEL_AUFNAHMELEISTUNG_HEIZ_TAG_WH")){
+                          // This value is never reset, messing up the Energy Dashboard.
+              // The offset is obtained at midnight and subtracted for the next 24 hours..
+              id(EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH).publish_state(value.get<std::uint16_t>());
             }
+            else if (property ==  propertyManager.getPropertyAddress("kEL_AUFNAHMELEISTUNG_HEIZ_TAG_KWH")){
+              id(EL_AUFNAHMELEISTUNG_HEIZ_SUMME_KWH).publish_state(value.get<float>() + (0.001*(id(EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH).state - id(gOFFSET_EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH))));
+            }
+            else if (property ==  propertyManager.getPropertyAddress("kEL_AUFNAHMELEISTUNG_WW_TAG_WH")){
+              // This value is never reset, messing up the Energy Dashboard.
+              // The offset is obtained at midnight and subtracted for the next 24 hours.
+              id(EL_AUFNAHMELEISTUNG_WW_TAG_WH).publish_state(value.get<std::uint16_t>());
+            }
+            else if (property ==  propertyManager.getPropertyAddress("kEL_AUFNAHMELEISTUNG_WW_TAG_KWH")){
+              id(EL_AUFNAHMELEISTUNG_WW_SUMME_KWH).publish_state(value.get<float>() + (0.001*(id(EL_AUFNAHMELEISTUNG_WW_TAG_WH).state - id(gOFFSET_EL_AUFNAHMELEISTUNG_WW_TAG_WH))));
+            }
+            else if (property ==  propertyManager.getPropertyAddress("kLUEFT_STUFE_TAG")){
+                // workaround for broken ninth bit of BETRIEBSSTATUS
+                const auto fan_speed = std::min(static_cast<std::uint16_t>(3U),value.get<std::uint16_t>());
+                id(LUEFTUNG).publish_state(fan_speed != 0);
+                callback(value);
+              }
+            else
+            {
+             callback(value);
+            }
+               
 
 #########################################
 #                                       #
@@ -520,7 +512,7 @@ canbus:
       then:
         - lambda: |-
             const auto property_value_pair = processCanMessage(x);
-            Property property{property_value_pair.first};
+            std::uint16_t property{property_value_pair.first};
             SimpleVariant value{property_value_pair.second};
             auto callback = CallbackHandler::instance().getCallback(std::make_pair(HK1,property));
             callback(value);
@@ -534,7 +526,7 @@ canbus:
       then:
         - lambda: |-
             const auto property_value_pair = processCanMessage(x);
-            Property property{property_value_pair.first};
+            std::uint16_t property{property_value_pair.first};
             SimpleVariant value{property_value_pair.second};
             auto callback = CallbackHandler::instance().getCallback(std::make_pair(HK2,property));
             callback(value);
@@ -548,7 +540,7 @@ canbus:
       then:
         - lambda: |-
             const auto property_value_pair = processCanMessage(x);
-            Property property{property_value_pair.first};
+            std::uint16_t property{property_value_pair.first};
             SimpleVariant value{property_value_pair.second};
             auto callback = CallbackHandler::instance().getCallback(std::make_pair(Anfrage,property));
             callback(value);

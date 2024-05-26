@@ -35,7 +35,7 @@
 #include <map>
 #include <optional>
 #include <string>
-#include "property.h"
+#include "property_map.h"
 #include "type.h"
 
 class Mapper {
@@ -46,7 +46,7 @@ class Mapper {
 
     std::optional<std::uint16_t> getBetriebsartId(const std::string& betriebsart) const;
 
-    Type getType(const Property property) const;
+    Type getType(const std::string property) const;
 
     static Mapper& instance() {
         static Mapper mapper;
@@ -57,7 +57,7 @@ class Mapper {
     Mapper();
     std::map<std::uint16_t, std::string> errorMap;
     std::map<std::uint16_t, std::string> betriebsartMap;
-    std::map<Property, Type> propertyMap;
+    std::map<std::string, Type> propertyTypesMap;
 };
 
 #endif

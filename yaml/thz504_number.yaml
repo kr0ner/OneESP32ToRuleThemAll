@@ -18,16 +18,16 @@ number:
       - lambda: |-
           ESP_LOGI("Number", "New value %f", x);
           if(x != NAN) {
-            const auto type = Mapper::instance().getType(Property::k${property});
+            const auto type = propertyManager.findPropertyTypeByName("k${property}");
             switch(type) {
               case Type::et_little_endian: {
                   const auto value{static_cast<std::uint16_t>(x)};
                   const auto raw_value = static_cast<std::uint16_t>((((value >> 8U) & 0xFF) | ((value & 0xff) << 8U)));
-                  sendData(${target}, Property::k${property}, raw_value);
+                  sendData(${target}, propertyManager.getPropertyAddress("k${property}"), raw_value);
                   break;
                 }
               default:
-                sendData(${target}, Property::k${property}, static_cast<std::uint16_t>(round(x / ${step})));
+                sendData(${target}, propertyManager.getPropertyAddress("k${property}"), static_cast<std::uint16_t>(round(x / ${step})));
                 break;
             }
           }
@@ -37,8 +37,7 @@ esphome:
     priority: -100
     then:
       - lambda: |-
-          CallbackHandler::instance().addCallback(std::make_pair(${target},Property::k${property}),[](const SimpleVariant& value){
-              using type = TypeMapping<Property::k${property}>::type;
-              id(${property}).publish_state(value.get<type>());
-          });
-          queueRequest(${target}, Property::k${property});
+          CallbackHandler::instance().addCallback(std::make_pair(${target},propertyManager.getPropertyAddress("k${property}")),[](const SimpleVariant& value) {
+            publishValue(id(${property}), value);
+          });                
+          queueRequest(${target}, propertyManager.getPropertyAddress("k${property}"));

@@ -6,13 +6,13 @@ fan:
     on_speed_set:
       - lambda: |-
           const auto fan_speed = std::min(3, id(${property}).speed);
-          sendData(Kessel, Property::k${property}, fan_speed);
+          sendData(Kessel, propertyManager.getPropertyAddress("k${property}"), fan_speed);
     on_state:
       - lambda: |-
           if(id(${property}).state) {
-            sendData(Kessel, Property::k${property}, id(${property}).speed);
+            sendData(Kessel, propertyManager.getPropertyAddress("k${property}"), id(${property}).speed);
           } else {
-            sendData(Kessel, Property::k${property}, 0U);
+            sendData(Kessel, propertyManager.getPropertyAddress("k${property}"), 0U);
           }
 
 esphome:
@@ -20,7 +20,7 @@ esphome:
     priority: -100
     then:
       - lambda: |-
-          CallbackHandler::instance().addCallback(std::make_pair(Kessel,Property::k${property}),[](const SimpleVariant& value){
+          CallbackHandler::instance().addCallback(std::make_pair(Kessel,propertyManager.getPropertyAddress("k${property}")),[](const SimpleVariant& value){
               const auto fan_speed = std::min(static_cast<std::uint16_t>(3U),value.get<std::uint16_t>());
               if(fan_speed == 0) {
                 auto call = id(${property}).turn_off();
@@ -31,5 +31,5 @@ esphome:
                 call.set_speed(fan_speed);
                 call.perform();
               }
-          });
-          queueRequest(Kessel, Property::k${property});
+          });  
+          queueRequest(Kessel, propertyManager.getPropertyAddress("k${property}"));
