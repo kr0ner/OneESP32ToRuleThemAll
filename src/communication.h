@@ -76,9 +76,29 @@ std::pair<std::uint16_t, SimpleVariant> processCanMessage(const std::vector<std:
 
     const std::uint16_t value{static_cast<std::uint16_t>((byte1 << 8U) | byte2)};
 
+	#if defined(VERBOSE_OUTPUT)
+    //decode value with little endian
+    const std::uint16_t value_le{static_cast<std::uint16_t>((byte2 << 8U) | byte1)};
+    // decode receiver CAN ID 
+    const std::uint16_t receiver_id = (msg[1U] & 0x0F) | ((msg[0U] & 0xF0) << 8U);
+
+    //detect if it is a Read Write or broadcast message
+    if (msg[0] & 0x01) {
+        ESP_LOGI("Communication", "Message received: Read from CAN ID 0x%03x for property 0x%04x %s",
+             receiver_id, property, propertyManager.findPropertyNameByAddress(property).c_str());
+    }
+    else if (msg[0] & 0x02) {
+        ESP_LOGI("Communication", "Message received: Write to CAN ID 0x%03x for property 0x%04x %s with raw value: %d (little endian: %d)",
+             receiver_id, property, propertyManager.findPropertyNameByAddress(property).c_str(), value, value_le);
+    }
+    else ESP_LOGI ("Communication", "Message received: Broadcast to 0x%03x for property 0x%04x %s with raw value: %d (little endian: %d)",
+             receiver_id, property, propertyManager.findPropertyNameByAddress(property).c_str(), value, value_le);
+
+    #else
     ESP_LOGI("Communication", "Message received: Read/Write ID 0x%02x 0x%02x for property 0x%04x with raw value: %d",
              msg[0U], msg[1U], property, value);
-
+    #endif
+	
     const auto type = propertyManager.findPropertyTypeByAddress(property);
     return {property, GetValueByType(value, type)};
 }

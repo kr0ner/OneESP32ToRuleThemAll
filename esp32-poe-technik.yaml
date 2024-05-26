@@ -17,6 +17,7 @@ esphome:
   platformio_options:
     build_flags:
       - "-std=gnu++17"
+      - "-DVERBOSE_OUTPUT"
     build_unflags:
       - "-std=gnu++11"
       - "-fno-rtti"
