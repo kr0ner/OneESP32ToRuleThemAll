@@ -5,10 +5,9 @@ esphome:
     - src/callback_handler.h
     - src/communication.h
     - src/custom_climate.h
-    - src/enum.h
     - src/mapper.h
     - src/mapper.cpp
-    - src/property.h
+    - src/property_map.h
     - src/simple_variant.h
     - src/sml_reader.h
     - src/type.h
@@ -21,6 +20,10 @@ esphome:
     build_unflags:
       - "-std=gnu++11"
       - "-fno-rtti"
+
+# add this build flag if you have a thz 5.5 eco
+#    build_flags:
+#      - "-DTHZ_TYPE_ECO55"
 
 esp32:
   board: esp32-poe

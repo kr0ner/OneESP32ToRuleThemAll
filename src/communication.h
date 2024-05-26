@@ -22,8 +22,7 @@
 #include <string>
 #include <vector>
 
-#include "mapper.h"
-#include "property.h"
+#include "property_map.h"
 #include "type.h"
 
 using CANID = std::uint16_t;
@@ -47,42 +46,45 @@ static const CanMember HK2       {0x302, "HK2",       {0x61, 0x02}, {0x60, 0x02}
 static const CanMember FEK       {0x401, "FEK",       {0x61, 0x01}, {0x60, 0x01}, {0x00, 0x00}};
 // clang-format on
 
-using Request = std::pair<const CanMember, const Property>;
+using Request = std::pair<const CanMember, const std::uint16_t>;
 static std::queue<Request> request_queue;
 
-void queueRequest(const CanMember& member, const Property& property) {
+void queueRequest(const CanMember& member, const std::uint16_t& property) {
     ESP_LOGI("QUEUE", "Requesting data from %s for 0x%04x", member.name.c_str(), property);
     request_queue.push(std::make_pair(member, property));
 }
 
-std::pair<Property, SimpleVariant> processCanMessage(const std::vector<std::uint8_t>& msg) {
-    Property property{Property::kINDEX_NOT_FOUND};
+std::pair<std::uint16_t, SimpleVariant> processCanMessage(const std::vector<std::uint8_t>& msg) {
+    std::uint16_t property = propertyManager.getPropertyAddress("kINDEX_NOT_FOUND");
     std::uint8_t byte1{0U};
     std::uint8_t byte2{0U};
 
     // Return if the message is too small
     if (msg.size() < 7U) {
-        return {Property::kINDEX_NOT_FOUND, {}};
+        return {propertyManager.getPropertyAddress("kINDEX_NOT_FOUND"), {}};
     }
 
     if (msg[2U] == 0xfa) {
         byte1 = msg[5U];
         byte2 = msg[6U];
-        property = static_cast<Property>(msg[4U] | (msg[3U] << 8U));
+        property = msg[4U] | (msg[3U] << 8U);
     } else {
         byte1 = msg[3U];
         byte2 = msg[4U];
-        property = static_cast<Property>(msg[2U]);
+        property = msg[2U];
     }
 
     const std::uint16_t value{static_cast<std::uint16_t>((byte1 << 8U) | byte2)};
+
     ESP_LOGI("Communication", "Message received: Read/Write ID 0x%02x 0x%02x for property 0x%04x with raw value: %d",
              msg[0U], msg[1U], property, value);
-    const auto type = Mapper::instance().getType(property);
+
+    const auto type = propertyManager.findPropertyTypeByAddress(property);
     return {property, GetValueByType(value, type)};
 }
 
-void requestData(const CanMember& member, const Property& property) {
+
+void requestData(const CanMember& member, const std::uint16_t& property) {
     const auto use_extended_id{false};  //No use of extended ID
     const std::uint8_t IdByte1{member.ReadId[0U]};
     const std::uint8_t IdByte2{member.ReadId[1U]};
@@ -95,7 +97,7 @@ void requestData(const CanMember& member, const Property& property) {
     id(my_mcp2515).send_data(ESPClient.CanId, use_extended_id, data);
 }
 
-void sendData(const CanMember& member, const Property property, const std::uint16_t value) {
+void sendData(const CanMember& member, const std::uint16_t property, const std::uint16_t value) {
     const auto use_extended_id{false};  //No use of extended ID
     const std::uint8_t IdByte1{member.WriteId[0U]};
     const std::uint8_t IdByte2{member.WriteId[1U]};

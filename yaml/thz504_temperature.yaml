@@ -16,8 +16,7 @@ esphome:
     priority: -100
     then:
       - lambda: |-
-          CallbackHandler::instance().addCallback(std::make_pair(${target},Property::k${property}),[](const SimpleVariant& value){
-              using type = TypeMapping<Property::k${property}>::type;
-              id(${property}).publish_state(value.get<type>());
-          });
-          queueRequest(${target}, Property::k${property});
+          CallbackHandler::instance().addCallback(std::make_pair(${target},propertyManager.getPropertyAddress("k${property}")),[](const SimpleVariant& value) {
+            publishValue(id(${property}), value);
+          });               
+          queueRequest(${target}, propertyManager.getPropertyAddress("k${property}"));

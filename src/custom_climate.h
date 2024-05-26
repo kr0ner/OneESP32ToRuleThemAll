@@ -1,10 +1,10 @@
 #include "esphome.h"
-#include "property.h"
+#include "property_map.h"
 
 class CustomClimate : public Component, public Climate {
    public:
     CustomClimate(const float min_temp, const float max_temp, const float temp_step, std::set<ClimateMode> modes,
-                  std::set<ClimatePreset> presets, const std::pair<const CanMember, const Property> temperature)
+                  std::set<ClimatePreset> presets, const std::pair<const CanMember, const std::uint16_t> temperature)
         : temperature_(temperature) {
         traits_.set_supported_modes(std::move(modes));
         traits_.set_supported_presets(std::move(presets));
@@ -98,7 +98,7 @@ class CustomClimate : public Component, public Climate {
 
    private:
     climate::ClimateTraits traits_{};
-    const std::pair<const CanMember, const Property> temperature_;
+    const std::pair<const CanMember, const std::uint16_t> temperature_;
     bool isHeating{false};
     bool isCooling{false};
     bool fanRunning{false};
@@ -106,7 +106,7 @@ class CustomClimate : public Component, public Climate {
 
 class HeatingDayNight : public CustomClimate {
    public:
-    HeatingDayNight(const Property temperature)
+    HeatingDayNight(const std::uint16_t temperature)
         : CustomClimate(10.0f, 25.0f, 0.1f,
                         {climate::CLIMATE_MODE_COOL, climate::CLIMATE_MODE_HEAT, climate::CLIMATE_MODE_AUTO,
                          climate::CLIMATE_MODE_FAN_ONLY, climate::CLIMATE_MODE_OFF},
@@ -119,7 +119,7 @@ class HeatingDay : public HeatingDayNight {
     template <typename Sensor, typename BinarySensor>
     HeatingDay(Sensor* current_temperature_sensor, Sensor* target_temperature_sensor, BinarySensor* heating_sensor,
                BinarySensor* cooling_sensor, BinarySensor* fan_sensor)
-        : HeatingDayNight(Property::kRAUMSOLLTEMP_I) {
+        : HeatingDayNight(propertyManager.getPropertyAddress("kRAUMSOLLTEMP_I")) {
         register_current_temperature_callback(current_temperature_sensor);
         register_target_temperature_callback(target_temperature_sensor);
         register_heating_callback(heating_sensor);
@@ -133,7 +133,7 @@ class HeatingNight : public HeatingDayNight {
     template <typename Sensor, typename BinarySensor>
     HeatingNight(Sensor* current_temperature_sensor, Sensor* target_temperature_sensor, BinarySensor* heating_sensor,
                  BinarySensor* cooling_sensor, BinarySensor* fan_sensor)
-        : HeatingDayNight(Property::kRAUMSOLLTEMP_NACHT) {
+        : HeatingDayNight(propertyManager.getPropertyAddress("kRAUMSOLLTEMP_NACHT")) {
         register_current_temperature_callback(current_temperature_sensor);
         register_target_temperature_callback(target_temperature_sensor);
         register_heating_callback(heating_sensor);
@@ -148,7 +148,7 @@ class HotWater : public CustomClimate {
     HotWater(Sensor* current_temperature_sensor, Sensor* target_temperature_sensor, BinarySensor* heating_sensor)
         : CustomClimate(30.0f, 70.0f, 0.5f, {climate::CLIMATE_MODE_HEAT, climate::CLIMATE_MODE_AUTO},
                         {climate::CLIMATE_PRESET_COMFORT, climate::CLIMATE_PRESET_ECO, climate::CLIMATE_PRESET_AWAY},
-                        std::make_pair(Kessel, Property::kEINSTELL_SPEICHERSOLLTEMP)) {
+                        std::make_pair(Kessel, propertyManager.getPropertyAddress("kEINSTELL_SPEICHERSOLLTEMP"))) {
         register_current_temperature_callback(current_temperature_sensor);
         register_target_temperature_callback(target_temperature_sensor);
         register_heating_callback(heating_sensor);
