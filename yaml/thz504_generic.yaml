@@ -24,7 +24,7 @@ esphome:
     then:
       - lambda: |-
           CallbackHandler::instance().addCallback(std::make_pair(${target},Property::k${property}),[](const SimpleVariant& value){
-              using type = TypeMapping<Property::k${property}>::type;
-              id(${property}).publish_state(value.get<type>() * ${scaler});
+            const float scaledValue = value.get<float>() * ${scaler};
+            publishValue(id(${property}), SimpleVariant(scaledValue));
           });
           queueRequest(${target}, Property::k${property});

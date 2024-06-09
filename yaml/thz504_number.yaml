@@ -18,7 +18,7 @@ number:
       - lambda: |-
           ESP_LOGI("Number", "New value %f", x);
           if(x != NAN) {
-            const auto type = Mapper::instance().getType(Property::k${property});
+            const auto type = Property::k${property}.type;
             switch(type) {
               case Type::et_little_endian: {
                   const auto value{static_cast<std::uint16_t>(x)};
@@ -38,7 +38,6 @@ esphome:
     then:
       - lambda: |-
           CallbackHandler::instance().addCallback(std::make_pair(${target},Property::k${property}),[](const SimpleVariant& value){
-              using type = TypeMapping<Property::k${property}>::type;
-              id(${property}).publish_state(value.get<type>());
+           publishValue(id(${property}), value);
           });
           queueRequest(${target}, Property::k${property});

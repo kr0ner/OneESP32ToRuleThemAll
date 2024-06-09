@@ -1,10 +1,10 @@
 #include "esphome.h"
-#include "property.h"
+#include "property_map.h"
 
 class CustomClimate : public Component, public Climate {
    public:
     CustomClimate(const float min_temp, const float max_temp, const float temp_step, std::set<ClimateMode> modes,
-                  std::set<ClimatePreset> presets, const std::pair<const CanMember, const Property> temperature)
+                  std::set<ClimatePreset> presets, const std::pair<const CanMember, const PropertyType> temperature)
         : temperature_(temperature) {
         traits_.set_supported_modes(std::move(modes));
         traits_.set_supported_presets(std::move(presets));
@@ -98,7 +98,7 @@ class CustomClimate : public Component, public Climate {
 
    private:
     climate::ClimateTraits traits_{};
-    const std::pair<const CanMember, const Property> temperature_;
+    const std::pair<const CanMember, const PropertyType> temperature_;
     bool isHeating{false};
     bool isCooling{false};
     bool fanRunning{false};
@@ -106,7 +106,7 @@ class CustomClimate : public Component, public Climate {
 
 class HeatingDayNight : public CustomClimate {
    public:
-    HeatingDayNight(const Property temperature)
+    HeatingDayNight(const PropertyType temperature)
         : CustomClimate(10.0f, 25.0f, 0.1f,
                         {climate::CLIMATE_MODE_COOL, climate::CLIMATE_MODE_HEAT, climate::CLIMATE_MODE_AUTO,
                          climate::CLIMATE_MODE_FAN_ONLY, climate::CLIMATE_MODE_OFF},
