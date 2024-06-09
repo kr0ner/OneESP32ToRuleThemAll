@@ -28,6 +28,7 @@ mqtt:
   broker: !secret mqtt_server
   username: !secret mqtt_user
   password: !secret mqtt_password
+  discovery: false
 
 #########################################
 #                                       #
