@@ -167,7 +167,7 @@ interval:
             request_queue.pop();
             requestData(request_element.first, request_element.second);
           }
-  - interval: 1min
+  - interval: $interval_medium
     then:
       - lambda: |-
           // Send current RAUMISTTEMP
@@ -180,6 +180,10 @@ interval:
           if(humidity > 0.0) {
             sendData(FEK, Property::kFEUCHTE, static_cast<std::uint16_t>(humidity * 10.0f));
           }
+  - interval: $interval_once_in_a_while
+    then:
+      - lambda: |-
+          queueRequest(Kessel, Property::kBETRIEBS_STATUS_2);
 
 #########################################
 #                                       #
