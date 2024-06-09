@@ -8,7 +8,7 @@ esphome:
     - src/enum.h
     - src/mapper.h
     - src/mapper.cpp
-    - src/property.h
+    - src/property_map.h
     - src/simple_variant.h
     - src/sml_reader.h
     - src/type.h
