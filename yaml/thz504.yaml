@@ -25,12 +25,10 @@ esphome:
           queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_HEIZ_TAG_WH);
           queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_HEIZ_TAG_KWH);
           CallbackHandler::instance().addCallback(std::make_pair(Kessel,Property::kVERDICHTER_STARTS_K),[](const SimpleVariant& value){
-              using type = TypeMapping<Property::kVERDICHTER_STARTS_K>::type;
-              id(gVERDICHTER_STARTS_K) = value.get<type>() * 1000U;
+              id(gVERDICHTER_STARTS_K) = static_cast<std::uint16_t>(value) * 1000U;
           });
           CallbackHandler::instance().addCallback(std::make_pair(Kessel,Property::kVERDICHTER_STARTS),[](const SimpleVariant& value){
-              using type = TypeMapping<Property::kVERDICHTER_STARTS>::type;
-              id(VERDICHTER_STARTS).publish_state(id(gVERDICHTER_STARTS_K) + value.get<type>());
+              id(VERDICHTER_STARTS).publish_state(id(gVERDICHTER_STARTS_K) + static_cast<std::uint16_t>(value));
           });
           queueRequest(Kessel, Property::kVERDICHTER_STARTS_K);
           queueRequest(Kessel, Property::kVERDICHTER_STARTS);
@@ -85,12 +83,6 @@ switch:
 #                                       #
 #########################################
 binary_sensor:
-
-#########################################
-#                                       #
-#   Betriebstatus Sensors               #
-#                                       #
-#########################################
   - platform: template
     name: "SCHALTPROGRAMM_AKTIV"
     id: SCHALTPROGRAMM_AKTIV
@@ -460,13 +452,13 @@ canbus:
                 }
               case Property::kBETRIEBS_STATUS_2:
                 {
-                  const std::bitset<2U> status_bits{value.get<std::uint16_t>()};
+                  const std::bitset<2U> status_bits{static_cast<std::uint16_t>(value)};
                   id(SOMMERBETRIEB_AKTIV).publish_state(status_bits.test(0U));
                   id(OFEN_KAMIN_AKTIV).publish_state(status_bits.test(1U));
                 }
               case Property::kBETRIEBS_STATUS:
                 {
-                  const std::bitset<15U> status_bits{value.get<std::uint16_t>()};
+                  const std::bitset<15U> status_bits{static_cast<std::uint16_t>(value)};
                   id(SCHALTPROGRAMM_AKTIV).publish_state(status_bits.test(0U));
                   id(VERDICHTER).publish_state(status_bits.test(1U));
                   id(HEIZEN).publish_state(status_bits.test(2U));
@@ -487,23 +479,23 @@ canbus:
               case Property::kEL_AUFNAHMELEISTUNG_HEIZ_TAG_WH:
                 // This value is never reset, messing up the Energy Dashboard.
                 // The offset is obtained at midnight and subtracted for the next 24 hours..
-                id(EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH).publish_state(value.get<std::uint16_t>());
+                id(EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH).publish_state(value);
                 break;
               case Property::kEL_AUFNAHMELEISTUNG_HEIZ_TAG_KWH:
-                id(EL_AUFNAHMELEISTUNG_HEIZ_SUMME_KWH).publish_state(value.get<float>() + (0.001*(id(EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH).state - id(gOFFSET_EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH))));
+                id(EL_AUFNAHMELEISTUNG_HEIZ_SUMME_KWH).publish_state(static_cast<std::uint16_t>(value) + (0.001*(id(EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH).state - id(gOFFSET_EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH))));
                 break;
               case Property::kEL_AUFNAHMELEISTUNG_WW_TAG_WH:
                 // This value is never reset, messing up the Energy Dashboard.
                 // The offset is obtained at midnight and subtracted for the next 24 hours.
-                id(EL_AUFNAHMELEISTUNG_WW_TAG_WH).publish_state(value.get<std::uint16_t>());
+                id(EL_AUFNAHMELEISTUNG_WW_TAG_WH).publish_state(value);
                 break;
               case Property::kEL_AUFNAHMELEISTUNG_WW_TAG_KWH:
-                id(EL_AUFNAHMELEISTUNG_WW_SUMME_KWH).publish_state(value.get<float>() + (0.001*(id(EL_AUFNAHMELEISTUNG_WW_TAG_WH).state - id(gOFFSET_EL_AUFNAHMELEISTUNG_WW_TAG_WH))));
+                id(EL_AUFNAHMELEISTUNG_WW_SUMME_KWH).publish_state(static_cast<std::uint16_t>(value) + (0.001*(id(EL_AUFNAHMELEISTUNG_WW_TAG_WH).state - id(gOFFSET_EL_AUFNAHMELEISTUNG_WW_TAG_WH))));
                 break;
               case Property::kLUEFT_STUFE_TAG:
                 {
                   // workaround for broken ninth bit of BETRIEBSSTATUS
-                  const auto fan_speed = std::min(static_cast<std::uint16_t>(3U),value.get<std::uint16_t>());
+                  const auto fan_speed = std::min(static_cast<std::uint16_t>(3U),static_cast<std::uint16_t>(value));
                   id(LUEFTUNG).publish_state(fan_speed != 0);
                   break;
                 }

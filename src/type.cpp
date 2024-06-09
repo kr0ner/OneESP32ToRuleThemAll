@@ -26,15 +26,15 @@ SimpleVariant GetValueByType(const std::uint16_t value, const Type type) {
     char buffer[32U];
     switch (type) {
         case Type::et_byte:
-            return (static_cast<std::uint8_t>(value & 0xFF));
+            return (static_cast<float>(value & 0xFF));
         case Type::et_dec_val:
-            return (static_cast<std::int16_t>(value) / 10.0f);
+            return (value / 10.0f);
         case Type::et_cent_val:
-            return (static_cast<std::int16_t>(value) / 100.0f);
+            return (value / 100.0f);
         case Type::et_mil_val:
-            return (static_cast<std::int16_t>(value) / 1000.0f);
+            return (value / 1000.0f);
         case Type::et_little_endian:
-            return static_cast<std::uint16_t>((((value >> 8U) & 0xFF) | ((value & 0xff) << 8U)));
+            return static_cast<float>((((value >> 8U) & 0xFF) | ((value & 0xff) << 8U)));
         case Type::et_little_bool:
             return (value == 0x0100) ? true : false;
         case Type::et_bool:
