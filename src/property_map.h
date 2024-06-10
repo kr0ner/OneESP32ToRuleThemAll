@@ -3690,45 +3690,38 @@ static constexpr PropertyType kINFOBLOCK_5 = PropertyType("kINFOBLOCK_5",0xfe06,
 static constexpr PropertyType kINFOBLOCK_6 = PropertyType("kINFOBLOCK_6",0xfe07,et_default);
 };
 
-// Property class definition
 class PropertyList {
 private:
-    // List to store PropertyType values at runtime
-    std::vector<PropertyType> properties;
+    // Map to store PropertyType values for quick lookup by address
+    std::unordered_map<uint16_t, PropertyType> propertiesByAddress;
+
+    // Private constructor to initialize the maps with predefined values
+    PropertyList();
 
 public:
-
     static PropertyList& instance() {
         static PropertyList list;
         return list;
     }
 
-    // Method to add a PropertyType to the list
+    // Method to add a PropertyType to the maps
     void addProperty(const PropertyType& property) {
-        properties.push_back(property);
-    }
-
-    // Method to get a reference to a PropertyType by name
-    PropertyType& getPropertyByName(const char* name) {
-        for (auto& property : properties) {
-            if (strcmp(property.name, name) == 0) {
-                return property;
-            }
+        if (propertiesByAddress.find(property.address) != propertiesByAddress.end()) {
+            ESP_LOGW("PROPERTY", "Property %s with address 0x%04x is already included in Property List.", property.name, property.address);
+            return; // Property already exists, skip adding
         }
-        ESP_LOGW("PROPERTY","Property with the name %s not registered by CallbackHandler.", name);
-        return const_cast<PropertyType&>(Property::kINDEX_NOT_FOUND); 
+
+        propertiesByAddress[property.address] = property;
     }
 
     // Method to get a reference to a PropertyType by address
     PropertyType& getPropertyByAddress(uint16_t address) {
-        for (auto& property : properties) {
-            if (property.address == address) {
-                return property;
-            }
+        auto it = propertiesByAddress.find(address);
+        if (it != propertiesByAddress.end()) {
+            return it->second;
         }
-        ESP_LOGW("PROPERTY","Property with address 0x%04x not registered by CallbackHandler.", address);
+        ESP_LOGW("PROPERTY", "Property with address 0x%04x not included in Property List. Maybe there was no callback registered?", address);
         return const_cast<PropertyType&>(Property::kINDEX_NOT_FOUND); 
     }
 };
-
 #endif
