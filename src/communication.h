@@ -23,7 +23,7 @@
 #include <vector>
 
 #include "mapper.h"
-#include "property.h"
+#include "property_map.h"
 #include "type.h"
 
 using CANID = std::uint16_t;
@@ -47,16 +47,16 @@ static const CanMember HK2       {0x302, "HK2",       {0x61, 0x02}, {0x60, 0x02}
 static const CanMember FEK       {0x401, "FEK",       {0x61, 0x01}, {0x60, 0x01}, {0x00, 0x00}};
 // clang-format on
 
-using Request = std::pair<const CanMember, const Property>;
+using Request = std::pair<const CanMember, const PropertyType>;
 static std::queue<Request> request_queue;
 
-void queueRequest(const CanMember& member, const Property& property) {
-    ESP_LOGI("QUEUE", "Requesting data from %s for 0x%04x", member.name.c_str(), property);
+void queueRequest(const CanMember& member, const PropertyType& property) {
+    ESP_LOGI("QUEUE", "Requesting data from %s for 0x%04x", member.name.c_str(), property.address);
     request_queue.push(std::make_pair(member, property));
 }
 
-std::pair<Property, SimpleVariant> processCanMessage(const std::vector<std::uint8_t>& msg) {
-    Property property{Property::kINDEX_NOT_FOUND};
+std::pair<PropertyType, SimpleVariant> processCanMessage(const std::vector<std::uint8_t>& msg) {
+    PropertyType property{Property::kINDEX_NOT_FOUND};
     std::uint8_t byte1{0U};
     std::uint8_t byte2{0U};
 
@@ -68,26 +68,25 @@ std::pair<Property, SimpleVariant> processCanMessage(const std::vector<std::uint
     if (msg[2U] == 0xfa) {
         byte1 = msg[5U];
         byte2 = msg[6U];
-        property = static_cast<Property>(msg[4U] | (msg[3U] << 8U));
+        property = PropertyList::instance().getPropertyByAddress(msg[4U] | (msg[3U] << 8U));
     } else {
         byte1 = msg[3U];
         byte2 = msg[4U];
-        property = static_cast<Property>(msg[2U]);
+        property = PropertyList::instance().getPropertyByAddress(msg[2U]);
     }
 
     const std::uint16_t value{static_cast<std::uint16_t>((byte1 << 8U) | byte2)};
     ESP_LOGI("Communication", "Message received: Read/Write ID 0x%02x 0x%02x for property 0x%04x with raw value: %d",
-             msg[0U], msg[1U], property, value);
-    const auto type = Mapper::instance().getType(property);
-    return {property, GetValueByType(value, type)};
+             msg[0U], msg[1U], property.address, value);
+    return {property, GetValueByType(value, property.type)};
 }
 
-void requestData(const CanMember& member, const Property& property) {
+void requestData(const CanMember& member, const PropertyType& property) {
     const auto use_extended_id{false};  //No use of extended ID
     const std::uint8_t IdByte1{member.ReadId[0U]};
     const std::uint8_t IdByte2{member.ReadId[1U]};
-    const std::uint8_t IndexByte1{static_cast<std::uint8_t>((property >> 8U) & 0xff)};
-    const std::uint8_t IndexByte2{static_cast<std::uint8_t>(property & 0xff)};
+    const std::uint8_t IndexByte1{static_cast<std::uint8_t>((property.address >> 8U) & 0xff)};
+    const std::uint8_t IndexByte2{static_cast<std::uint8_t>(property.address & 0xff)};
     std::vector<std::uint8_t> data;
 
     data.insert(data.end(), {IdByte1, IdByte2, 0xfa, IndexByte1, IndexByte2, 0x00, 0x00});
@@ -95,12 +94,12 @@ void requestData(const CanMember& member, const Property& property) {
     id(my_mcp2515).send_data(ESPClient.CanId, use_extended_id, data);
 }
 
-void sendData(const CanMember& member, const Property property, const std::uint16_t value) {
+void sendData(const CanMember& member, const PropertyType property, const std::uint16_t value) {
     const auto use_extended_id{false};  //No use of extended ID
     const std::uint8_t IdByte1{member.WriteId[0U]};
     const std::uint8_t IdByte2{member.WriteId[1U]};
-    const std::uint8_t IndexByte1{static_cast<std::uint8_t>((property >> 8U) & 0xff)};
-    const std::uint8_t IndexByte2{static_cast<std::uint8_t>(property & 0xff)};
+    const std::uint8_t IndexByte1{static_cast<std::uint8_t>((property.address >> 8U) & 0xff)};
+    const std::uint8_t IndexByte2{static_cast<std::uint8_t>(property.address & 0xff)};
     const std::uint8_t ValueByte1{static_cast<std::uint8_t>((value >> 8U) & 0xff)};
     const std::uint8_t ValueByte2{static_cast<std::uint8_t>(value & 0xff)};
     std::vector<std::uint8_t> data;
