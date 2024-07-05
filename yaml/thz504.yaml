@@ -77,6 +77,17 @@ switch:
     id: evu_sperre
     pin: $evu_pin
 
+  - platform: template
+    name: "KUEHLUNG HK1"
+    id: KUEHLUNGHK1
+    optimistic: true
+    turn_on_action:
+      - lambda: |-
+          sendData(HK1, Property::kKUEHLMODE, static_cast<std::uint16_t>(true));
+    turn_off_action:
+      - lambda: |-
+          sendData(HK1, Property::kKUEHLMODE, static_cast<std::uint16_t>(false));
+
 #########################################
 #                                       #
 #   Binary Sensors                      #
@@ -244,20 +255,21 @@ packages:
   WAERMEERTRAG_HEIZ_SUM_MWH:      !include { file: thz504_energy.yaml, vars: { property: "WAERMEERTRAG_HEIZ_SUM_MWH"     , unit: "MWh" }}
 
   # SOLL values are always actively changed and transmitted. Seems that sometimes a value is missed so we poll periodically.
-  SPEICHERSOLLTEMP:               !include { file: thz504_temperature_polled_throttled.yaml, vars: { property: "SPEICHERSOLLTEMP"          }}
-  VERSTELLTE_RAUMSOLLTEMP:        !include { file: thz504_temperature_polled_throttled.yaml, vars: { property: "VERSTELLTE_RAUMSOLLTEMP"  , target: "HK1" }}
-  RAUMSOLLTEMP_I:                 !include { file: thz504_temperature_polled_throttled.yaml, vars: { property: "RAUMSOLLTEMP_I"           , target: "HK1" }}
-  EINSTELL_SPEICHERSOLLTEMP:      !include { file: thz504_temperature_polled_throttled.yaml, vars: { property: "EINSTELL_SPEICHERSOLLTEMP" }}
-  VORLAUFSOLLTEMP:                !include { file: thz504_temperature_polled_throttled.yaml, vars: { property: "VORLAUFSOLLTEMP"  , target: "HK1"    }}
+  SPEICHERSOLLTEMP:               !include { file: thz504_temperature_polled.yaml, vars: { property: "SPEICHERSOLLTEMP"          }}
+  VERSTELLTE_RAUMSOLLTEMP:        !include { file: thz504_temperature_polled.yaml, vars: { property: "VERSTELLTE_RAUMSOLLTEMP"  , target: "HK1" }}
+  RAUMSOLLTEMP_I:                 !include { file: thz504_temperature_polled.yaml, vars: { property: "RAUMSOLLTEMP_I"           , target: "HK1" }}
+  EINSTELL_SPEICHERSOLLTEMP:      !include { file: thz504_temperature_polled.yaml, vars: { property: "EINSTELL_SPEICHERSOLLTEMP" }}
+  VORLAUFSOLLTEMP:                !include { file: thz504_temperature_polled.yaml, vars: { property: "VORLAUFSOLLTEMP"  , target: "HK1"    }}
+  KUEHL_RAUMSOLL_TAG:             !include { file: thz504_temperature_polled.yaml, vars: { property: "KUEHL_RAUMSOLL_TAG"  , target: "HK1"    }}
 
   # IST values can change at any time, but we want to limit the updates to not flood the database. Still update if delta is too big.
-  RAUMISTTEMP:                    !include { file: thz504_temperature_polled_throttled.yaml, vars: { property: "RAUMISTTEMP"      , target: "HK1"    }}
-  SPEICHERISTTEMP:                !include { file: thz504_temperature_polled_throttled.yaml, vars: { property: "SPEICHERISTTEMP"  }}
-  AUSSENTEMP:                     !include { file: thz504_temperature_polled_throttled.yaml, vars: { property: "AUSSENTEMP"       }}
-  SAMMLERISTTEMP:                 !include { file: thz504_temperature_polled_throttled.yaml, vars: { property: "SAMMLERISTTEMP"   }}
-  VERDAMPFERTEMP:                 !include { file: thz504_temperature_polled_throttled.yaml, vars: { property: "VERDAMPFERTEMP"   }}
-  RUECKLAUFISTTEMP:               !include { file: thz504_temperature_polled_throttled.yaml, vars: { property: "RUECKLAUFISTTEMP" }}
-  VORLAUFISTTEMP:                 !include { file: thz504_temperature_polled_throttled.yaml, vars: { property: "VORLAUFISTTEMP"   , target: "HK1"    }}
+  RAUMISTTEMP:                    !include { file: thz504_temperature_polled.yaml, vars: { property: "RAUMISTTEMP"      , target: "HK1"    }}
+  SPEICHERISTTEMP:                !include { file: thz504_temperature_polled.yaml, vars: { property: "SPEICHERISTTEMP"  }}
+  AUSSENTEMP:                     !include { file: thz504_temperature_polled.yaml, vars: { property: "AUSSENTEMP"       }}
+  SAMMLERISTTEMP:                 !include { file: thz504_temperature_polled.yaml, vars: { property: "SAMMLERISTTEMP"   }}
+  VERDAMPFERTEMP:                 !include { file: thz504_temperature_polled.yaml, vars: { property: "VERDAMPFERTEMP"   }}
+  RUECKLAUFISTTEMP:               !include { file: thz504_temperature_polled.yaml, vars: { property: "RUECKLAUFISTTEMP" }}
+  VORLAUFISTTEMP:                 !include { file: thz504_temperature_polled.yaml, vars: { property: "VORLAUFISTTEMP"   , target: "HK1"    }}
 
   LUEFT_STUFE_TAG:                !include { file: thz504_ventilation.yaml, vars: { property: "LUEFT_STUFE_TAG"   }}
   LUEFT_STUFE_NACHT:              !include { file: thz504_ventilation.yaml, vars: { property: "LUEFT_STUFE_NACHT" }}
@@ -283,6 +295,7 @@ packages:
   VOLUMENSTROM:                   !include { file: thz504_airflow.yaml, vars: { property: "VOLUMENSTROM", unit_of_measurement: "l/min"  }}
 
   LEISTUNG_AUSLEGUNG_HEIZUNG:     !include { file: thz504_number.yaml, vars: { property: "LEISTUNG_AUSLEGUNG_HEIZUNG" }}
+  LEISTUNG_AUSLEGUNG_KUEHLEN:     !include { file: thz504_number.yaml, vars: { property: "LEISTUNG_AUSLEGUNG_KUEHLEN" }}
   PUMPENDREHZAHL_HEIZEN:          !include { file: thz504_number.yaml, vars: { property: "PUMPENDREHZAHL_HEIZEN"      , step:   "0.1" }}
   RAUMEINFLUSS:                   !include { file: thz504_number.yaml, vars: { property: "RAUMEINFLUSS"               , target: "HK1" }}
 
@@ -394,27 +407,45 @@ select:
 climate:
   - platform: custom
     lambda: |-
-      auto heating = new HeatingDay(id(RAUMISTTEMP),id(VERSTELLTE_RAUMSOLLTEMP), id(HEIZEN), id(KUEHLEN), id(LUEFTUNG));
+      auto heating = new HeatingDayNight(id(RAUMISTTEMP),id(VERSTELLTE_RAUMSOLLTEMP), id(HEIZEN), id(KUEHLEN), id(LUEFTUNG), Property::kRAUMSOLLTEMP_I, Property::kKUEHL_RAUMSOLL_TAG);
       App.register_component(heating);
       return {heating};
     climates:
-      - name: "Heating Day"
+      name: "Heating Day"
+      visual:
+        min_temperature: 10.0
+        max_temperature: 25.0
+        temperature_step:
+          target_temperature: 0.1
+          current_temperature: 0.1
 
   - platform: custom
     lambda: |-
-      auto heating = new HeatingNight(id(RAUMISTTEMP),id(VERSTELLTE_RAUMSOLLTEMP), id(HEIZEN), id(KUEHLEN), id(LUEFTUNG));
+      auto heating = new HeatingDayNight(id(RAUMISTTEMP),id(VERSTELLTE_RAUMSOLLTEMP), id(HEIZEN), id(KUEHLEN), id(LUEFTUNG), Property::kRAUMSOLLTEMP_NACHT, kKUEHL_RAUMSOLL_NACHT);
       App.register_component(heating);
       return {heating};
     climates:
-      - name: "Heating Night"
+      name: "Heating Night"
+      visual:
+        min_temperature: 10.0
+        max_temperature: 25.0
+        temperature_step:
+          target_temperature: 0.1
+          current_temperature: 0.1
 
   - platform: custom
     lambda: |-
-      auto hot_water = new HotWater(id(SPEICHERISTTEMP),id(EINSTELL_SPEICHERSOLLTEMP), id(WARMWASSERBEREITUNG));
+      auto hot_water = new HotWater(id(SPEICHERISTTEMP),id(EINSTELL_SPEICHERSOLLTEMP), id(WARMWASSERBEREITUNG), Property::kEINSTELL_SPEICHERSOLLTEMP);
       App.register_component(hot_water);
       return {hot_water};
     climates:
-      - name: "Hot Water"
+      name: "Hot Water"
+      visual:
+        min_temperature: 30.0
+        max_temperature: 75.0
+        temperature_step:
+          target_temperature: 1.0
+          current_temperature: 0.1
 
 #########################################
 #                                       #

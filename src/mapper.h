@@ -46,6 +46,10 @@ class Mapper {
 
     std::optional<std::uint16_t> getBetriebsartId(const std::string& betriebsart) const;
 
+    std::optional<std::string> getKuehlmodus(const std::uint16_t id) const;
+
+    std::optional<std::uint16_t> getKuehlmodusId(const std::string& kuehlmodus) const;
+
     Type getType(const Property property) const;
 
     static Mapper& instance() {
@@ -57,6 +61,7 @@ class Mapper {
     Mapper();
     std::map<std::uint16_t, std::string> errorMap;
     std::map<std::uint16_t, std::string> betriebsartMap;
+    std::map<std::uint16_t, std::string> kuehlmodusMap;
     std::map<Property, Type> propertyMap;
 };
 
