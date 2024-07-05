@@ -1,6 +1,6 @@
 defaults:
   interval: $interval_very_slow
-  delta: "10%"
+  delta: "5%"
   target: "Kessel"
   unit_of_measurement: "m³/h"
 
