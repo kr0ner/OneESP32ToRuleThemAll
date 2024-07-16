@@ -51,7 +51,7 @@ using Request = std::pair<const CanMember, const Property>;
 static std::queue<Request> request_queue;
 
 void queueRequest(const CanMember& member, const Property& property) {
-    ESP_LOGI("QUEUE", "Requesting data from %s for 0x%04x", member.name.c_str(), property);
+    ESP_LOGI("QUEUE", "Requesting data from %s for %s", member.name.c_str(), getName(property).c_str());
     request_queue.push(std::make_pair(member, property));
 }
 
@@ -76,8 +76,8 @@ std::pair<Property, SimpleVariant> processCanMessage(const std::vector<std::uint
     }
 
     const std::uint16_t value{static_cast<std::uint16_t>((byte1 << 8U) | byte2)};
-    ESP_LOGI("Communication", "Message received: Read/Write ID 0x%02x 0x%02x for property 0x%04x with raw value: %d",
-             msg[0U], msg[1U], property, value);
+    ESP_LOGI("Communication", "Message received: Read/Write ID 0x%02x 0x%02x for property %s with raw value: %d",
+             msg[0U], msg[1U], getName(property).c_str(), value);
     const auto type = Mapper::instance().getType(property);
     return {property, GetValueByType(value, type)};
 }

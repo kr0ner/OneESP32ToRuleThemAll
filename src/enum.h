@@ -18,7 +18,10 @@
         os << static_cast<T>(enumTmp);                                                          \
         return os;                                                                              \
     }                                                                                           \
-    inline std::string_view getName(E enumTmp) { return E##MapName[static_cast<T>(enumTmp)]; }
+    inline std::string getName(E enumTmp) {                                                     \
+        const auto name{std::string(E##MapName[static_cast<T>(enumTmp)])};                      \
+        return name.empty() ? std::to_string(static_cast<T>(enumTmp)) : name;                   \
+    }
 // clang-format on
 
 template <typename T>
