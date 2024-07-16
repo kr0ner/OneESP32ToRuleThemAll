@@ -296,6 +296,10 @@ packages:
   ANZEIGE_NIEDERDRUCK:            !include { file: thz504_generic.yaml, vars: { property: "ANZEIGE_NIEDERDRUCK"      , accuracy_decimals: "2" }}
   PUMPENZYKLEN_MIN_AUSSENT:       !include { file: thz504_generic.yaml, vars: { property: "PUMPENZYKLEN_MIN_AUSSENT" }}
   FEUCHTE:                        !include { file: thz504_generic.yaml, vars: { property: "FEUCHTE"                  , icon: "mdi:water-percent", target: "HK1", interval: $interval_very_slow, unit: "%",  accuracy_decimals: "1" }}
+  MOTORSTROM:                     !include { file: thz504_generic.yaml, vars: { property: "MOTORSTROM"               , interval: $interval_medium, unit: "A" }}
+  MOTORSPANNUNG:                  !include { file: thz504_generic.yaml, vars: { property: "MOTORSPANNUNG"            , interval: $interval_medium, unit: "V" }}
+  MOTORLEISTUNG:                  !include { file: thz504_generic.yaml, vars: { property: "MOTORLEISTUNG"            , interval: $interval_medium, unit: "kW", accuracy_decimals: "2" }}
+  HEIZ_KUEHL_LEISTUNG:            !include { file: thz504_generic.yaml, vars: { property: "HEIZ_KUEHL_LEISTUNG"      , interval: $interval_medium, unit: "kW", accuracy_decimals: "2" }}
 
   ABLUFT_IST:                     !include { file: thz504_frequency.yaml, vars: { property: "ABLUFT_IST"    }}
   FORTLUFT_IST:                   !include { file: thz504_frequency.yaml, vars: { property: "FORTLUFT_IST"  }}

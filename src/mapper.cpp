@@ -104,6 +104,7 @@ Mapper::Mapper() {
                    {Property::kKUEHL_RAUMSOLL_ABWESEND, Type::et_dec_val},
                    {Property::kKUEHL_RAUMSOLL_NACHT, Type::et_dec_val},
                    {Property::kDRUCK_HEIZKREIS, Type::et_dec_val},
+                   {Property::kMOTORLEISTUNG, et_cent_val},
                    {Property::kANZEIGE_NIEDERDRUCK, Type::et_dec_val},
                    {Property::kEL_AUFNAHMELEISTUNG_WW_TAG_KWH, Type::et_double_val},
                    {Property::kEL_AUFNAHMELEISTUNG_WW_SUM_MWH, Type::et_double_val},
@@ -116,5 +117,6 @@ Mapper::Mapper() {
                    {Property::kWAERMEERTRAG_WW_TAG_KWH, Type::et_double_val},
                    {Property::kWAERMEERTRAG_WW_SUM_MWH, Type::et_double_val},
                    {Property::kWAERMEERTRAG_HEIZ_TAG_KWH, Type::et_double_val},
-                   {Property::kWAERMEERTRAG_HEIZ_SUM_MWH, Type::et_double_val}};
+                   {Property::kWAERMEERTRAG_HEIZ_SUM_MWH, Type::et_double_val},
+                   {Property::kHEIZ_KUEHL_LEISTUNG, et_cent_val}};
 }
