@@ -1,3 +1,9 @@
+esphome:
+  includes:
+    - src/sml_reader.h
+  libraries:
+    - git+https://github.com/volkszaehler/libsml
+
 #########################################
 #                                       #
 #   UART configuration                  #

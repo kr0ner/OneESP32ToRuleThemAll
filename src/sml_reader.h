@@ -10,11 +10,11 @@
 
 namespace {
 struct ObisIdentifier {
-    const std::uint8_t medium;
-    const std::uint8_t channel;
-    const std::uint8_t measured_parameter;
-    const std::uint8_t measurement_type;
-    const std::uint8_t tariff;
+    const std::uint8_t medium{0U};
+    const std::uint8_t channel{0U};
+    const std::uint8_t measured_parameter{0U};
+    const std::uint8_t measurement_type{0U};
+    const std::uint8_t tariff{0U};
     bool operator==(const ObisIdentifier& other) const {
         return std::tie(medium, channel, measured_parameter, measurement_type, tariff) ==
                std::tie(other.medium, other.channel, other.measured_parameter, other.measurement_type, other.tariff);
@@ -159,7 +159,7 @@ class SMLReader : public Component, public UARTDevice {
 
     void parseFile() {
         ESP_LOGV("SMLReader", "parsing file");
-        if (_buffer.size() <= 24) {
+        if (_buffer.size() <= 24U) {
             // reset
             ESP_LOGV("SMLReader", "clearing buffer");
             _buffer.clear();
@@ -251,7 +251,7 @@ class SMLReader : public Component, public UARTDevice {
    public:
     SMLReader(UARTComponent* parent) : UARTDevice(parent) {}
 
-    void setup() override { _buffer.reserve(4096); }
+    void setup() override { _buffer.reserve(4096U); }
 
     void loop() override {
         switch (_current_state) {

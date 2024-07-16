@@ -7,12 +7,23 @@ defaults:
   entity_room_temperature: "sensor.durchschnittstemperatur_haus_ohne_keller"
   entity_humidity: "sensor.durchschnitt_luftfeuchtigkeit_haus"
 
+esphome:
+  includes:
+    - src/callback_handler.h
+    - src/communication.h
+    - src/custom_climate.h
+    - src/enum.h
+    - src/mapper.h
+    - src/mapper.cpp
+    - src/property.h
+    - src/simple_variant.h
+    - src/type.h
+    - src/type.cpp
 #########################################
 #                                       #
 #   Obtain initial states               #
 #                                       #
 #########################################
-esphome:
   on_boot:
     priority: -100
     then:
@@ -421,7 +432,7 @@ climate:
 
   - platform: custom
     lambda: |-
-      auto heating = new HeatingDayNight(id(RAUMISTTEMP),id(VERSTELLTE_RAUMSOLLTEMP), id(HEIZEN), id(KUEHLEN), id(LUEFTUNG), Property::kRAUMSOLLTEMP_NACHT, kKUEHL_RAUMSOLL_NACHT);
+      auto heating = new HeatingDayNight(id(RAUMISTTEMP),id(VERSTELLTE_RAUMSOLLTEMP), id(HEIZEN), id(KUEHLEN), id(LUEFTUNG), Property::kRAUMSOLLTEMP_NACHT, Property::kKUEHL_RAUMSOLL_NACHT);
       App.register_component(heating);
       return {heating};
     climates:
