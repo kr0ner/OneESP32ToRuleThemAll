@@ -32,7 +32,7 @@
 #define MAPPER_H
 
 #include <cstdint>
-#include <map>
+#include <unordered_map>
 #include <optional>
 #include <string>
 #include "property.h"
@@ -50,8 +50,6 @@ class Mapper {
 
     std::optional<std::uint16_t> getKuehlmodusId(const std::string& kuehlmodus) const;
 
-    Type getType(const Property property) const;
-
     static Mapper& instance() {
         static Mapper mapper;
         return mapper;
@@ -59,10 +57,9 @@ class Mapper {
 
    private:
     Mapper();
-    std::map<std::uint16_t, std::string> errorMap;
-    std::map<std::uint16_t, std::string> betriebsartMap;
-    std::map<std::uint16_t, std::string> kuehlmodusMap;
-    std::map<Property, Type> propertyMap;
+    std::unordered_map<std::uint16_t, std::string> errorMap;
+    std::unordered_map<std::uint16_t, std::string> betriebsartMap;
+    std::unordered_map<std::uint16_t, std::string> kuehlmodusMap;
 };
 
 #endif

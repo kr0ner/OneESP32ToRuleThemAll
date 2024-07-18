@@ -42,15 +42,6 @@ std::optional<std::uint16_t> Mapper::getKuehlmodusId(const std::string& kuehlmod
     return {};
 }
 
-Type Mapper::getType(const Property property) const {
-    const auto it = propertyMap.find(property);
-    if (it != propertyMap.end()) {
-        return it->second;
-    } else {
-        return Type::et_default;
-    }
-}
-
 Mapper::Mapper() {
     errorMap = {{0x0002, "Schuetz klebt"},
                 {0x0003, "ERR HD-SENSOR"},
@@ -82,41 +73,4 @@ Mapper::Mapper() {
                       {0x0E00, "Handbetrieb"}};
 
     kuehlmodusMap = {{0x0000, "Flaechenkuehlung"}, {0x0001, "Geblaesekuehlung"}};
-
-    propertyMap = {{Property::kSPEICHERSOLLTEMP, Type::et_dec_val},
-                   {Property::kVORLAUFSOLLTEMP, Type::et_dec_val},
-                   {Property::kRAUMSOLLTEMP_I, Type::et_dec_val},
-                   {Property::kAUSSENTEMP, Type::et_dec_val},
-                   {Property::kSAMMLERISTTEMP, Type::et_dec_val},
-                   {Property::kSPEICHERISTTEMP, Type::et_dec_val},
-                   {Property::kVORLAUFISTTEMP, Type::et_dec_val},
-                   {Property::kRAUMISTTEMP, Type::et_dec_val},
-                   {Property::kVERSTELLTE_RAUMSOLLTEMP, Type::et_dec_val},
-                   {Property::kEINSTELL_SPEICHERSOLLTEMP, Type::et_dec_val},
-                   {Property::kVERDAMPFERTEMP, Type::et_dec_val},
-                   {Property::kRUECKLAUFISTTEMP, Type::et_dec_val},
-                   {Property::kFEUCHTE, Type::et_dec_val},
-                   {Property::kRAUMEINFLUSS, Type::et_little_endian},
-                   {Property::kPROGRAMMSCHALTER, Type::et_betriebsart},
-                   {Property::kVOLUMENSTROM, Type::et_dec_val},
-                   {Property::kPUMPENDREHZAHL_HEIZEN, Type::et_dec_val},
-                   {Property::kKUEHL_RAUMSOLL_TAG, Type::et_dec_val},
-                   {Property::kKUEHL_RAUMSOLL_ABWESEND, Type::et_dec_val},
-                   {Property::kKUEHL_RAUMSOLL_NACHT, Type::et_dec_val},
-                   {Property::kDRUCK_HEIZKREIS, Type::et_dec_val},
-                   {Property::kMOTORLEISTUNG, et_cent_val},
-                   {Property::kANZEIGE_NIEDERDRUCK, Type::et_dec_val},
-                   {Property::kEL_AUFNAHMELEISTUNG_WW_TAG_KWH, Type::et_double_val},
-                   {Property::kEL_AUFNAHMELEISTUNG_WW_SUM_MWH, Type::et_double_val},
-                   {Property::kEL_AUFNAHMELEISTUNG_HEIZ_TAG_KWH, Type::et_double_val},
-                   {Property::kEL_AUFNAHMELEISTUNG_HEIZ_SUM_MWH, Type::et_double_val},
-                   {Property::kWAERMEERTRAG_2WE_WW_TAG_KWH, Type::et_double_val},
-                   {Property::kWAERMEERTRAG_2WE_WW_SUM_MWH, Type::et_double_val},
-                   {Property::kWAERMEERTRAG_2WE_HEIZ_TAG_KWH, Type::et_double_val},
-                   {Property::kWAERMEERTRAG_2WE_HEIZ_SUM_MWH, Type::et_double_val},
-                   {Property::kWAERMEERTRAG_WW_TAG_KWH, Type::et_double_val},
-                   {Property::kWAERMEERTRAG_WW_SUM_MWH, Type::et_double_val},
-                   {Property::kWAERMEERTRAG_HEIZ_TAG_KWH, Type::et_double_val},
-                   {Property::kWAERMEERTRAG_HEIZ_SUM_MWH, Type::et_double_val},
-                   {Property::kHEIZ_KUEHL_LEISTUNG, et_cent_val}};
 }

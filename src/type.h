@@ -2,7 +2,6 @@
 #define TYPE_H
 
 #include <cstdint>
-#include "property.h"
 #include "simple_variant.h"
 
 enum Type : std::uint8_t {
