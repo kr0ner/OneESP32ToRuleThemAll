@@ -76,8 +76,9 @@ std::pair<Property, SimpleVariant> processCanMessage(const std::vector<std::uint
     }
 
     const std::uint16_t value{static_cast<std::uint16_t>((byte1 << 8U) | byte2)};
-    ESP_LOGI("Communication", "Message received: Read/Write ID 0x%02x 0x%02x for property %s with raw value: %d",
-             msg[0U], msg[1U], std::string(property.name).c_str(), value);
+    ESP_LOGI("Communication",
+             "Message received: Read/Write ID 0x%02x 0x%02x for property %s (0x%04x) with raw value: %d", msg[0U],
+             msg[1U], std::string(property.name).c_str(), property.id, value);
     return {property, GetValueByType(value, property.type)};
 }
 

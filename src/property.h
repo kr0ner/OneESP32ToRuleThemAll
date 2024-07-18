@@ -42,9 +42,7 @@ struct Property : public Mapper {
         if (auto it = map.find(id); it != map.end()) {
             return *(it->second);
         }
-        std::stringstream stream;
-        stream << std::hex << id;
-        return {std::string_view(stream.str()), id};
+        return {"UNKNOWN", id};
     }
 };
 
