@@ -266,20 +266,22 @@ packages:
 
   # SOLL values are always actively changed and transmitted. Seems that sometimes a value is missed so we poll periodically.
   SPEICHERSOLLTEMP:               !include { file: thz504_temperature_polled.yaml, vars: { property: "SPEICHERSOLLTEMP"          }}
+  EINSTELL_SPEICHERSOLLTEMP:      !include { file: thz504_temperature_polled.yaml, vars: { property: "EINSTELL_SPEICHERSOLLTEMP" }}
   VERSTELLTE_RAUMSOLLTEMP:        !include { file: thz504_temperature_polled.yaml, vars: { property: "VERSTELLTE_RAUMSOLLTEMP"  , target: "HK1" }}
   RAUMSOLLTEMP_I:                 !include { file: thz504_temperature_polled.yaml, vars: { property: "RAUMSOLLTEMP_I"           , target: "HK1" }}
-  EINSTELL_SPEICHERSOLLTEMP:      !include { file: thz504_temperature_polled.yaml, vars: { property: "EINSTELL_SPEICHERSOLLTEMP" }}
-  VORLAUFSOLLTEMP:                !include { file: thz504_temperature_polled.yaml, vars: { property: "VORLAUFSOLLTEMP"  , target: "HK1"    }}
-  KUEHL_RAUMSOLL_TAG:             !include { file: thz504_temperature_polled.yaml, vars: { property: "KUEHL_RAUMSOLL_TAG"  , target: "HK1"    }}
+  VORLAUFSOLLTEMP:                !include { file: thz504_temperature_polled.yaml, vars: { property: "VORLAUFSOLLTEMP"          , target: "HK1" }}
+  KUEHL_RAUMSOLL_TAG:             !include { file: thz504_temperature_polled.yaml, vars: { property: "KUEHL_RAUMSOLL_TAG"       , target: "HK1" }}
 
   # IST values can change at any time, but we want to limit the updates to not flood the database. Still update if delta is too big.
-  RAUMISTTEMP:                    !include { file: thz504_temperature_polled.yaml, vars: { property: "RAUMISTTEMP"      , target: "HK1"    }}
   SPEICHERISTTEMP:                !include { file: thz504_temperature_polled.yaml, vars: { property: "SPEICHERISTTEMP"  }}
   AUSSENTEMP:                     !include { file: thz504_temperature_polled.yaml, vars: { property: "AUSSENTEMP"       }}
+  ABLUFTTEMP:                     !include { file: thz504_temperature_polled.yaml, vars: { property: "ABLUFTTEMP"       }}
   SAMMLERISTTEMP:                 !include { file: thz504_temperature_polled.yaml, vars: { property: "SAMMLERISTTEMP"   }}
   VERDAMPFERTEMP:                 !include { file: thz504_temperature_polled.yaml, vars: { property: "VERDAMPFERTEMP"   }}
   RUECKLAUFISTTEMP:               !include { file: thz504_temperature_polled.yaml, vars: { property: "RUECKLAUFISTTEMP" }}
-  VORLAUFISTTEMP:                 !include { file: thz504_temperature_polled.yaml, vars: { property: "VORLAUFISTTEMP"   , target: "HK1"    }}
+  VORLAUFISTTEMP:                 !include { file: thz504_temperature_polled.yaml, vars: { property: "VORLAUFISTTEMP"   , target: "HK1" }}
+  TAUPUNKT_HK1:                   !include { file: thz504_temperature_polled.yaml, vars: { property: "TAUPUNKT_HK1"     , target: "HK1" }}
+  RAUMISTTEMP:                    !include { file: thz504_temperature_polled.yaml, vars: { property: "RAUMISTTEMP"      , target: "HK1" }}
 
   LUEFT_STUFE_TAG:                !include { file: thz504_ventilation.yaml, vars: { property: "LUEFT_STUFE_TAG"   }}
   LUEFT_STUFE_NACHT:              !include { file: thz504_ventilation.yaml, vars: { property: "LUEFT_STUFE_NACHT" }}
@@ -295,6 +297,7 @@ packages:
   ANZEIGE_NIEDERDRUCK:            !include { file: thz504_generic.yaml, vars: { property: "ANZEIGE_NIEDERDRUCK"      , accuracy_decimals: "2" }}
   PUMPENZYKLEN_MIN_AUSSENT:       !include { file: thz504_generic.yaml, vars: { property: "PUMPENZYKLEN_MIN_AUSSENT" }}
   FEUCHTE:                        !include { file: thz504_generic.yaml, vars: { property: "FEUCHTE"                  , icon: "mdi:water-percent", target: "HK1", interval: $interval_very_slow, unit: "%",  accuracy_decimals: "1" }}
+  ABLUFTFEUCHTE:                  !include { file: thz504_generic.yaml, vars: { property: "ABLUFTFEUCHTE"            , icon: "mdi:water-percent", interval: $interval_very_slow, unit: "%"}}
   MOTORSTROM:                     !include { file: thz504_generic.yaml, vars: { property: "MOTORSTROM"               , interval: $interval_medium, unit: "A" }}
   MOTORSPANNUNG:                  !include { file: thz504_generic.yaml, vars: { property: "MOTORSPANNUNG"            , interval: $interval_medium, unit: "V" }}
   MOTORLEISTUNG:                  !include { file: thz504_generic.yaml, vars: { property: "MOTORLEISTUNG"            , interval: $interval_medium, unit: "kW", accuracy_decimals: "2" }}
