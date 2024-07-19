@@ -40,6 +40,9 @@ substitutions:
   interval_very_slow: 15min
   interval_once_in_a_while: 1h
 
+button:
+  - platform: restart
+    name: "Restart ESP32-PoE Technik"
 #########################################
 #                                       #
 #   ETHERNET Konfiguration              #
