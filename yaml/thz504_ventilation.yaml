@@ -7,13 +7,16 @@ fan:
     on_speed_set:
       - lambda: |-
           const auto fan_speed = std::min(3, x);
+          ESP_LOGI("fan", "Speed set %d", fan_speed);
           sendData(Kessel, Property::k${property}, fan_speed);
     on_turn_off:
       - lambda: |-
-          ESP_LOGI("fan", "Fan Turned Off!");
+          ESP_LOGI("fan", "Fan turned off!");
           sendData(Kessel, Property::k${property}, 0U);
     on_turn_on:
-      - logger.log: "Fan Turned On!"
+      - lambda: |-
+          ESP_LOGI("fan", "Fan turned on!");
+          sendData(Kessel, Property::k${property}, id(${property}).speed);
 
 esphome:
   on_boot:
@@ -22,10 +25,15 @@ esphome:
       - lambda: |-
           CallbackHandler::instance().addCallback(std::make_pair(Kessel,Property::k${property}),[](const SimpleVariant& value){
               const auto fan_speed = std::min(static_cast<std::uint16_t>(3U),static_cast<std::uint16_t>(value));
+              // only speeds between 1 and speed_count are allowed
               if(fan_speed == 0) {
                 id(${property}).turn_off().perform();
               } else {
-                // only speeds between 1 and speed_count are allowed
+                /*
+                 * enable once https://github.com/esphome/esphome/pull/7113 is merged
+                 * id(${property}).turn_on().set_speed(fan_speed).perform();
+                 * delete code below
+                 */
                 id(${property}).make_call().set_speed(fan_speed).perform();
                 // do not change the order, otherwise fan will be set to 100% the first time
                 id(${property}).turn_on().perform();
