@@ -42,6 +42,23 @@ std::optional<std::uint16_t> Mapper::getKuehlmodusId(const std::string& kuehlmod
     return {};
 }
 
+std::optional<std::string> Mapper::getPassivkuehlung(const std::uint16_t id) const {
+    const auto it = passivkuehlungMap.find(id);
+    if (it != passivkuehlungMap.end()) {
+        return it->second;
+    }
+    return {};
+}
+
+std::optional<std::uint16_t> Mapper::getPassivkuehlungId(const std::string& passivkuehlung) const {
+    for (const auto& element : passivkuehlungMap) {
+        if (element.second == passivkuehlung) {
+            return element.first;
+        }
+    }
+    return {};
+}
+
 Mapper::Mapper() {
     errorMap = {{0x0002, "Schuetz klebt"},
                 {0x0003, "ERR HD-SENSOR"},
@@ -73,4 +90,7 @@ Mapper::Mapper() {
                       {0x0E00, "Handbetrieb"}};
 
     kuehlmodusMap = {{0x0000, "Flaechenkuehlung"}, {0x0001, "Geblaesekuehlung"}};
+
+    passivkuehlungMap = {
+        {0x0000, "Aus"}, {0x0001, "Ablüften"}, {0x0002, "Zulüften"}, {0x0003, "Bypass"}, {0x0004, "Sommerkassette"}};
 }

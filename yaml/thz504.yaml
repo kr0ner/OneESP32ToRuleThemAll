@@ -28,6 +28,7 @@ esphome:
     then:
       - lambda: |-
           queueRequest(Kessel, Property::kPROGRAMMSCHALTER);
+          queueRequest(Kessel, Property::kPASSIVKUEHLUNG);
           queueRequest(Kessel, Property::kBETRIEBS_STATUS);
           queueRequest(Kessel, Property::kBETRIEBS_STATUS_2);
           queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_WW_TAG_WH);
@@ -264,24 +265,22 @@ packages:
   WAERMEERTRAG_HEIZ_SUM_KWH:      !include { file: thz504_energy.yaml, vars: { property: "WAERMEERTRAG_HEIZ_SUM_KWH"     , unit: "kWh" }}
   WAERMEERTRAG_HEIZ_SUM_MWH:      !include { file: thz504_energy.yaml, vars: { property: "WAERMEERTRAG_HEIZ_SUM_MWH"     , unit: "MWh" }}
 
-  # SOLL values are always actively changed and transmitted. Seems that sometimes a value is missed so we poll periodically.
-  SPEICHERSOLLTEMP:               !include { file: thz504_temperature_polled.yaml, vars: { property: "SPEICHERSOLLTEMP"          }}
-  EINSTELL_SPEICHERSOLLTEMP:      !include { file: thz504_temperature_polled.yaml, vars: { property: "EINSTELL_SPEICHERSOLLTEMP" }}
-  VERSTELLTE_RAUMSOLLTEMP:        !include { file: thz504_temperature_polled.yaml, vars: { property: "VERSTELLTE_RAUMSOLLTEMP"  , target: "HK1" }}
-  RAUMSOLLTEMP_I:                 !include { file: thz504_temperature_polled.yaml, vars: { property: "RAUMSOLLTEMP_I"           , target: "HK1" }}
-  VORLAUFSOLLTEMP:                !include { file: thz504_temperature_polled.yaml, vars: { property: "VORLAUFSOLLTEMP"          , target: "HK1" }}
-  KUEHL_RAUMSOLL_TAG:             !include { file: thz504_temperature_polled.yaml, vars: { property: "KUEHL_RAUMSOLL_TAG"       , target: "HK1" }}
+  SPEICHERSOLLTEMP:               !include { file: thz504_temperature.yaml, vars: { property: "SPEICHERSOLLTEMP"          }}
+  EINSTELL_SPEICHERSOLLTEMP:      !include { file: thz504_temperature.yaml, vars: { property: "EINSTELL_SPEICHERSOLLTEMP" }}
+  SPEICHERISTTEMP:                !include { file: thz504_temperature.yaml, vars: { property: "SPEICHERISTTEMP"  }}
+  AUSSENTEMP:                     !include { file: thz504_temperature.yaml, vars: { property: "AUSSENTEMP"       }}
+  ABLUFTTEMP:                     !include { file: thz504_temperature.yaml, vars: { property: "ABLUFTTEMP"       }}
+  SAMMLERISTTEMP:                 !include { file: thz504_temperature.yaml, vars: { property: "SAMMLERISTTEMP"   }}
+  VERDAMPFERTEMP:                 !include { file: thz504_temperature.yaml, vars: { property: "VERDAMPFERTEMP"   }}
+  RUECKLAUFISTTEMP:               !include { file: thz504_temperature.yaml, vars: { property: "RUECKLAUFISTTEMP" }}
 
-  # IST values can change at any time, but we want to limit the updates to not flood the database. Still update if delta is too big.
-  SPEICHERISTTEMP:                !include { file: thz504_temperature_polled.yaml, vars: { property: "SPEICHERISTTEMP"  }}
-  AUSSENTEMP:                     !include { file: thz504_temperature_polled.yaml, vars: { property: "AUSSENTEMP"       }}
-  ABLUFTTEMP:                     !include { file: thz504_temperature_polled.yaml, vars: { property: "ABLUFTTEMP"       }}
-  SAMMLERISTTEMP:                 !include { file: thz504_temperature_polled.yaml, vars: { property: "SAMMLERISTTEMP"   }}
-  VERDAMPFERTEMP:                 !include { file: thz504_temperature_polled.yaml, vars: { property: "VERDAMPFERTEMP"   }}
-  RUECKLAUFISTTEMP:               !include { file: thz504_temperature_polled.yaml, vars: { property: "RUECKLAUFISTTEMP" }}
-  VORLAUFISTTEMP:                 !include { file: thz504_temperature_polled.yaml, vars: { property: "VORLAUFISTTEMP"   , target: "HK1" }}
-  TAUPUNKT_HK1:                   !include { file: thz504_temperature_polled.yaml, vars: { property: "TAUPUNKT_HK1"     , target: "HK1" }}
-  RAUMISTTEMP:                    !include { file: thz504_temperature_polled.yaml, vars: { property: "RAUMISTTEMP"      , target: "HK1" }}
+  VORLAUFISTTEMP:                 !include { file: thz504_temperature.yaml, vars: { property: "VORLAUFISTTEMP"           , target: "HK1" }}
+  TAUPUNKT_HK1:                   !include { file: thz504_temperature.yaml, vars: { property: "TAUPUNKT_HK1"             , target: "HK1" }}
+  RAUMISTTEMP:                    !include { file: thz504_temperature.yaml, vars: { property: "RAUMISTTEMP"              , target: "HK1" }}
+  VERSTELLTE_RAUMSOLLTEMP:        !include { file: thz504_temperature.yaml, vars: { property: "VERSTELLTE_RAUMSOLLTEMP"  , target: "HK1" }}
+  RAUMSOLLTEMP_I:                 !include { file: thz504_temperature.yaml, vars: { property: "RAUMSOLLTEMP_I"           , target: "HK1" }}
+  VORLAUFSOLLTEMP:                !include { file: thz504_temperature.yaml, vars: { property: "VORLAUFSOLLTEMP"          , target: "HK1" }}
+  KUEHL_RAUMSOLL_TAG:             !include { file: thz504_temperature.yaml, vars: { property: "KUEHL_RAUMSOLL_TAG"       , target: "HK1" }}
 
   LUEFT_STUFE_TAG:                !include { file: thz504_ventilation.yaml, vars: { property: "LUEFT_STUFE_TAG"   }}
   LUEFT_STUFE_NACHT:              !include { file: thz504_ventilation.yaml, vars: { property: "LUEFT_STUFE_NACHT" }}
@@ -296,20 +295,19 @@ packages:
   MINUTE:                         !include { file: thz504_generic.yaml, vars: { property: "MINUTE"                   , icon: "mdi:calendar-clock" }}
   ANZEIGE_NIEDERDRUCK:            !include { file: thz504_generic.yaml, vars: { property: "ANZEIGE_NIEDERDRUCK"      , accuracy_decimals: "2" }}
   PUMPENZYKLEN_MIN_AUSSENT:       !include { file: thz504_generic.yaml, vars: { property: "PUMPENZYKLEN_MIN_AUSSENT" }}
-  FEUCHTE:                        !include { file: thz504_generic.yaml, vars: { property: "FEUCHTE"                  , icon: "mdi:water-percent", target: "HK1", interval: $interval_very_slow, unit: "%",  accuracy_decimals: "1" }}
-  ABLUFTFEUCHTE:                  !include { file: thz504_generic.yaml, vars: { property: "ABLUFTFEUCHTE"            , icon: "mdi:water-percent", interval: $interval_very_slow, unit: "%"}}
+  FEUCHTE:                        !include { file: thz504_generic.yaml, vars: { property: "FEUCHTE"                  , interval: $interval_very_slow, unit: "%", icon: "mdi:water-percent", target: "HK1", accuracy_decimals: "1" }}
+  ABLUFTFEUCHTE:                  !include { file: thz504_generic.yaml, vars: { property: "ABLUFTFEUCHTE"            , interval: $interval_very_slow, unit: "%", icon: "mdi:water-percent"}}
   MOTORSTROM:                     !include { file: thz504_generic.yaml, vars: { property: "MOTORSTROM"               , interval: $interval_medium, unit: "A" }}
   MOTORSPANNUNG:                  !include { file: thz504_generic.yaml, vars: { property: "MOTORSPANNUNG"            , interval: $interval_medium, unit: "V" }}
   MOTORLEISTUNG:                  !include { file: thz504_generic.yaml, vars: { property: "MOTORLEISTUNG"            , interval: $interval_medium, unit: "kW", accuracy_decimals: "2" }}
   HEIZ_KUEHL_LEISTUNG:            !include { file: thz504_generic.yaml, vars: { property: "HEIZ_KUEHL_LEISTUNG"      , interval: $interval_medium, unit: "kW", accuracy_decimals: "2" }}
-
-  ABLUFT_IST:                     !include { file: thz504_frequency.yaml, vars: { property: "ABLUFT_IST"    }}
-  FORTLUFT_IST:                   !include { file: thz504_frequency.yaml, vars: { property: "FORTLUFT_IST"  }}
-  ZULUFT_IST:                     !include { file: thz504_frequency.yaml, vars: { property: "ZULUFT_IST"    }}
-  ABLUFT_SOLL:                    !include { file: thz504_airflow.yaml, vars: { property: "ABLUFT_SOLL"   }}
-  FORTLUFT_SOLL:                  !include { file: thz504_airflow.yaml, vars: { property: "FORTLUFT_SOLL" }}
-  ZULUFT_SOLL:                    !include { file: thz504_airflow.yaml, vars: { property: "ZULUFT_SOLL"   }}
-  VOLUMENSTROM:                   !include { file: thz504_airflow.yaml, vars: { property: "VOLUMENSTROM", unit_of_measurement: "l/min"  }}
+  ABLUFT_IST:                     !include { file: thz504_generic.yaml, vars: { property: "ABLUFT_IST"               , interval: $interval_slow  , unit: "Hz"   , icon: "mdi:fan"   }}
+  FORTLUFT_IST:                   !include { file: thz504_generic.yaml, vars: { property: "FORTLUFT_IST"             , interval: $interval_slow  , unit: "Hz"   , icon: "mdi:fan"   }}
+  ZULUFT_IST:                     !include { file: thz504_generic.yaml, vars: { property: "ZULUFT_IST"               , interval: $interval_slow  , unit: "Hz"   , icon: "mdi:fan"   }}
+  ABLUFT_SOLL:                    !include { file: thz504_generic.yaml, vars: { property: "ABLUFT_SOLL"              , interval: $interval_slow  , unit: "l/min", icon: "mdi:pump"  }}
+  FORTLUFT_SOLL:                  !include { file: thz504_generic.yaml, vars: { property: "FORTLUFT_SOLL"            , interval: $interval_slow  , unit: "l/min", icon: "mdi:pump"  }}
+  ZULUFT_SOLL:                    !include { file: thz504_generic.yaml, vars: { property: "ZULUFT_SOLL"              , interval: $interval_slow  , unit: "l/min", icon: "mdi:pump"  }}
+  VOLUMENSTROM:                   !include { file: thz504_generic.yaml, vars: { property: "VOLUMENSTROM"             , interval: $interval_slow  , unit: "l/min", icon: "mdi:pump"  }}
 
   LEISTUNG_AUSLEGUNG_HEIZUNG:     !include { file: thz504_number.yaml, vars: { property: "LEISTUNG_AUSLEGUNG_HEIZUNG" }}
   LEISTUNG_AUSLEGUNG_KUEHLEN:     !include { file: thz504_number.yaml, vars: { property: "LEISTUNG_AUSLEGUNG_KUEHLEN" }}
@@ -416,6 +414,27 @@ select:
               sendData(Kessel, Property::kPROGRAMMSCHALTER, betriebsartId.value());
             }
 
+  - platform: template
+    name: "PASSIVKUEHLUNG"
+    id: PASSIVKUEHLUNG
+    options:
+      - "Aus"
+      - "Ablüften"
+      - "Zulüften"
+      - "Bypass"
+      - "Sommerkassette"
+      - "Unbekannt"
+    initial_option: "Unbekannt"
+    optimistic: true
+    setup_priority: 100
+    set_action:
+      then:
+        - lambda: |-
+            const auto passivkuehlungId = Mapper::instance().getPassivkuehlungId(x);
+            if(passivkuehlungId.has_value()) {
+              sendData(Kessel, Property::kPASSIVKUEHLUNG, passivkuehlungId.value());
+            }
+
 #########################################
 #                                       #
 #   Custom climates                     #
@@ -496,12 +515,22 @@ canbus:
             switch(property) {
               case Property::kPROGRAMMSCHALTER:
                 {
-                  const auto index = id(PROGRAMMSCHALTER).index_of(value.get<std::string>());
+                  const auto stringValue{value.get<std::string>()};
+                  const auto index = id(PROGRAMMSCHALTER).index_of(stringValue);
                   if(index.has_value()) {
-                    id(PROGRAMMSCHALTER).publish_state(value.get<std::string>());
+                    id(PROGRAMMSCHALTER).publish_state(stringValue);
                   }
                   break;
                 }
+                case Property::kPASSIVKUEHLUNG:
+                  {
+                    const auto stringValue{Mapper::instance().getPassivkuehlung(value).value_or("Unbekannt")};
+                    const auto index = id(PASSIVKUEHLUNG).index_of(stringValue);
+                    if(index.has_value()) {
+                      id(PASSIVKUEHLUNG).publish_state(stringValue);
+                    }
+                    break;
+                  }
               case Property::kBETRIEBS_STATUS_2:
                 {
                   const std::bitset<2U> status_bits{static_cast<std::uint16_t>(value)};

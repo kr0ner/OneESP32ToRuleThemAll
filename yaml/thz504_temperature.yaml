@@ -1,4 +1,5 @@
 defaults:
+  interval: $interval_very_slow
   target: "Kessel"
 
 sensor:
@@ -10,6 +11,10 @@ sensor:
     device_class: "temperature"
     state_class: "measurement"
     accuracy_decimals: 1
+    update_interval: ${interval}
+    lambda: |-
+        queueRequest(${target}, Property::k${property});
+        return {};
 
 esphome:
   on_boot:
