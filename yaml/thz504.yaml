@@ -267,7 +267,7 @@ packages:
 
   SPEICHERSOLLTEMP:               !include { file: thz504_temperature.yaml, vars: { property: "SPEICHERSOLLTEMP"          }}
   EINSTELL_SPEICHERSOLLTEMP:      !include { file: thz504_temperature.yaml, vars: { property: "EINSTELL_SPEICHERSOLLTEMP" }}
-  SPEICHERISTTEMP:                !include { file: thz504_temperature.yaml, vars: { property: "SPEICHERISTTEMP"  }}
+  SPEICHERISTTEMP:                !include { file: thz504_temperature.yaml, vars: { property: "SPEICHERISTTEMP"          , interval: $interval_medium}}
   AUSSENTEMP:                     !include { file: thz504_temperature.yaml, vars: { property: "AUSSENTEMP"       }}
   ABLUFTTEMP:                     !include { file: thz504_temperature.yaml, vars: { property: "ABLUFTTEMP"       }}
   SAMMLERISTTEMP:                 !include { file: thz504_temperature.yaml, vars: { property: "SAMMLERISTTEMP"   }}
@@ -308,11 +308,14 @@ packages:
   FORTLUFT_SOLL:                  !include { file: thz504_generic.yaml, vars: { property: "FORTLUFT_SOLL"            , interval: $interval_slow  , unit: "l/min", icon: "mdi:pump"  }}
   ZULUFT_SOLL:                    !include { file: thz504_generic.yaml, vars: { property: "ZULUFT_SOLL"              , interval: $interval_slow  , unit: "l/min", icon: "mdi:pump"  }}
   VOLUMENSTROM:                   !include { file: thz504_generic.yaml, vars: { property: "VOLUMENSTROM"             , interval: $interval_slow  , unit: "l/min", icon: "mdi:pump"  }}
+  LAUFZEIT_FILTER:                !include { file: thz504_generic.yaml, vars: { property: "LAUFZEIT_FILTER"          , interval: $interval_once_in_a_while , unit: "%", icon: "mdi:calendar"  }}
 
   LEISTUNG_AUSLEGUNG_HEIZUNG:     !include { file: thz504_number.yaml, vars: { property: "LEISTUNG_AUSLEGUNG_HEIZUNG" }}
   LEISTUNG_AUSLEGUNG_KUEHLEN:     !include { file: thz504_number.yaml, vars: { property: "LEISTUNG_AUSLEGUNG_KUEHLEN" }}
   PUMPENDREHZAHL_HEIZEN:          !include { file: thz504_number.yaml, vars: { property: "PUMPENDREHZAHL_HEIZEN"      , step:   "0.1" }}
   RAUMEINFLUSS:                   !include { file: thz504_number.yaml, vars: { property: "RAUMEINFLUSS"               , target: "HK1" }}
+  HYSTERESE_WW:                   !include { file: thz504_number.yaml, vars: { property: "HYSTERESE_WW"               , min: "2.0", max: "10.0", step:   "0.1", unit: "°C"}}
+  NE_STUFE_WW:                    !include { file: thz504_number.yaml, vars: { property: "NE_STUFE_WW"                , min: "0", max: "3" }}
 
 #########################################
 #                                       #

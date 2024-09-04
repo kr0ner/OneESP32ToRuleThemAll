@@ -1,33 +1,4 @@
 
-/*
- *  Copyright (C) 2023 Bastian Stahmer, based heavily on the great work of Jürg Müller, CH-5524 (see below)
- *  Copyright (C) 2014 Jürg Müller, CH-5524
- *
- *  This file is part of ha-stiebel-control.
- *  ha-stiebel-control is free software: : you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser General Public License as published by
- *  the Free Software Foundation version 3 of the License.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU Lesser General Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser General Public License
- *  along with this program. If not, see http://www.gnu.org/licenses/ .
- */
-
-// Achtung: Die Tabelle befindet sich im Aufbau! Nicht alle Indizes sind korrekt.
-//
-// Die Indizes muessen zwingend vor einem produktiven Einsatz ueberprueft werden.
-// Die beste Ueberpruefung erhaelt man mit der ComfortSoft und der Simulation
-// der eigenen WP. Da werden die Telegramme der Schnittstelle protokolliert.
-//
-// Die Indizes, die ich mittels ComfortSoft zu meiner WP ueberpruefen konnte,
-// sind korrekt. Da ich eine WPL33 ohne PV nutze, gibt es viele Indizes, die Ihr
-// selbst ueberpruefen muesst.
-
-// 19.10.2014: et_double_val und et_triple_val umgestellt
 #if !defined(MAPPER_H)
 #define MAPPER_H
 

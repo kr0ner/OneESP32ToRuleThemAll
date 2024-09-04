@@ -1,20 +1,3 @@
-/*
- *  Copyright (C) 2023 Bastian Stahmer
- * 
- *  This file is part of ha-stiebel-control.
- *  ha-stiebel-control is free software: : you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser General Public License as published by
- *  the Free Software Foundation version 3 of the License.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- *  GNU Lesser General Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser General Public License
- *  along with this program. If not, see http://www.gnu.org/licenses/ .
- */
-
 #if !defined(COMMUNICATION_H)
 #define COMMUNICATION_H
 #include <cstdint>
@@ -35,6 +18,8 @@ struct CanMember {
     std::uint8_t WriteId[2U];
     std::uint8_t ConfirmationId[2U];
     bool operator<(const CanMember& other) const { return CanId < other.CanId; }
+    std::uint16_t getWriteId() const { return (WriteId[1U] | (WriteId[0U] << 8U)); }
+    std::uint16_t getReadId() const { return (ReadId[1U] | (ReadId[0U] << 8U)); }
 };
 
 // clang-format off
@@ -50,11 +35,32 @@ static const CanMember FEK       {0x401, "FEK",       {0x61, 0x01}, {0x60, 0x01}
 using Request = std::pair<const CanMember, const Property>;
 static std::queue<Request> request_queue;
 
+/**
+ * @brief Checks if the message is a request, sent by another CAN participant.
+ */
+bool isRequest(const std::vector<std::uint8_t>& msg) {
+    const auto id{msg[1U] | (msg[0U] << 8U)};
+    const std::vector<CanMember> members = {ESPClient, Anfrage, Kessel, HK1, HK2, FEK};
+    const auto it =
+        std::find_if(members.cbegin(), members.cend(), [id](const auto& member) { return member.getWriteId() == id; });
+    return it != members.cend();
+}
+
+/**
+ * @brief Puts a request towards the \c member for the given \c property in the request queue.
+ *        This will effectively prevent that requests are all sent at the same time, which might
+ *        cause issues. The time inbetween actual requests is defined in yaml.
+ */
 void queueRequest(const CanMember& member, const Property& property) {
     ESP_LOGI("QUEUE", "Requesting data from %s for %s", member.name.c_str(), std::string(property.name).c_str());
     request_queue.push(std::make_pair(member, property));
 }
 
+/**
+ * @brief Attempts to parse the CAN message and extracts the property and the value. The value will
+ *        be converted to the correct type automatically, based the type that was defined for this
+ *        entity in \c property.h
+ */
 std::pair<Property, SimpleVariant> processCanMessage(const std::vector<std::uint8_t>& msg) {
     Property property{Property::kINDEX_NOT_FOUND};
     std::uint8_t byte1{0U};
@@ -79,6 +85,9 @@ std::pair<Property, SimpleVariant> processCanMessage(const std::vector<std::uint
     ESP_LOGI("Communication",
              "Message received: Read/Write ID 0x%02x 0x%02x for property %s (0x%04x) with raw value: %d", msg[0U],
              msg[1U], std::string(property.name).c_str(), property.id, value);
+    if (isRequest(msg)) {
+        return {Property::kINDEX_NOT_FOUND, value};
+    }
     return {property, GetValueByType(value, property.type)};
 }
 
@@ -95,6 +104,12 @@ void requestData(const CanMember& member, const Property& property) {
     id(my_mcp2515).send_data(ESPClient.CanId, use_extended_id, data);
 }
 
+/**
+ * @brief Publishes a new \c value for the given \c property on the CAN bus. The message is sent
+ *        with the CAN id of the \c member.
+ * @todo  Instead of passing value as std:.uint16_t, pass a SimpleVariant and automatically convert
+ *        the type.
+ */
 void sendData(const CanMember& member, const Property property, const std::uint16_t value) {
     const auto use_extended_id{false};  //No use of extended ID
     const std::uint8_t IdByte1{member.WriteId[0U]};

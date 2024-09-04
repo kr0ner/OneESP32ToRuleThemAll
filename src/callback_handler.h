@@ -12,21 +12,37 @@
 
 class CallbackHandler {
    public:
+    /**
+     * @brief Adds a callback that will be executed every time a CAN message with the specified
+     *        \c Property is received for the given \c CanMember. The callback usually takes care of
+     *        publishing the value to Home Assistant and is registered once during the startup.
+     */
     void addCallback(const std::pair<CanMember, Property> key, std::function<void(const SimpleVariant&)> value) {
         callbacks.insert({std::move(key), std::move(value)});
     }
 
+    /**
+     * @brief Obtains the callback that has been registered for a specific \c Property and
+     *        \c CanMember. If no callback could be found, it will return an empty lambda.
+     * @note  Unknown property ids will be silently ignored.
+     */
     std::function<void(const SimpleVariant&)> getCallback(const std::pair<CanMember, Property> key) const {
-        auto it = callbacks.find(key);
-        if (it != callbacks.end()) {
-            return it->second;
+        if (key.second != Property::kINDEX_NOT_FOUND) {
+            auto it = callbacks.find(key);
+            if (it != callbacks.end()) {
+                return it->second;
+            }
+            ESP_LOGI("CallbackHandler", "Callback not found for %s %s (0x%04x)", key.first.name.c_str(),
+                     std::string(key.second.name).c_str(), key.second.id);
         }
-        ESP_LOGI("CallbackHandler", "Callback not found for %s %s (0x%04x)", key.first.name.c_str(),
-                 std::string(key.second.name).c_str(), key.second.id);
         return [](const SimpleVariant&) -> void {
         };
     }
 
+    /**
+     * @brief This implements the singleton pattern for the \c CallbackHandler. Ensures that there
+     *        will be only one instance available.
+     */
     static CallbackHandler& instance() {
         static CallbackHandler c;
         return c;

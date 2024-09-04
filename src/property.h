@@ -80,12 +80,13 @@ struct Property : public detail::Property {
     PROPERTY(FEUCHTE, 0x0075, Type::et_dec_val);
     PROPERTY(RAUMEINFLUSS, 0x010f, Type::et_little_endian);
     PROPERTY(PROGRAMMSCHALTER, 0x0112, Type::et_betriebsart);
-    PROPERTY(WOCHENTAG, 0x0121);
-    PROPERTY(TAG, 0x0122);
-    PROPERTY(MONAT, 0x0123);
-    PROPERTY(JAHR, 0x0124);
-    PROPERTY(STUNDE, 0x0125);
-    PROPERTY(MINUTE, 0x0126);
+    PROPERTY(WOCHENTAG, 0x0121, Type::et_little_endian);
+    PROPERTY(TAG, 0x0122, Type::et_little_endian);
+    PROPERTY(MONAT, 0x0123, Type::et_little_endian);
+    PROPERTY(JAHR, 0x0124, Type::et_little_endian);
+    PROPERTY(STUNDE, 0x0125, Type::et_little_endian);
+    PROPERTY(MINUTE, 0x0126, Type::et_little_endian);
+    PROPERTY(HYSTERESE_WW, 0x0140,et_dec_val);
     PROPERTY(BETRIEBS_STATUS, 0x0176);
     PROPERTY(VOLUMENSTROM, 0x01da, Type::et_dec_val);
     PROPERTY(TAUPUNKT_HK1, 0x0264, Type::et_dec_val);
@@ -102,6 +103,7 @@ struct Property : public detail::Property {
     PROPERTY(LUEFT_STUFE_NACHT, 0x056d);
     PROPERTY(LUEFT_STUFE_PARTY, 0x0570);
     PROPERTY(PASSIVKUEHLUNG, 0x0575);
+    PROPERTY(NE_STUFE_WW, 0x058a);
     PROPERTY(ZULUFT_SOLL, 0x0596);
     PROPERTY(ZULUFT_IST, 0x0597);
     PROPERTY(ABLUFT_SOLL, 0x0598);
@@ -146,6 +148,7 @@ struct Property : public detail::Property {
     PROPERTY(LEISTUNG_AUSLEGUNG_HEIZUNG, 0xc0f1);
     PROPERTY(VERDICHTER_STARTS, 0xc0f4);
     PROPERTY(VERDICHTER_STARTS_K, 0xc0f5);
+    PROPERTY(LAUFZEIT_FILTER, 0xc111);
     PROPERTY(BETRIEBS_STATUS_2, 0xc356);
 };
 

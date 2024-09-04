@@ -5,10 +5,10 @@
 #include "simple_variant.h"
 
 enum Type : std::uint8_t {
-    et_default = 0,
-    et_dec_val,   // Auflösung: xx.x / auch neg. Werte sind möglich
-    et_cent_val,  // x.xx
-    et_mil_val,   // x.xxx
+    et_default = 0,  //   + x
+    et_dec_val,      // +/- xx.x
+    et_cent_val,     // +/- x.xx
+    et_mil_val,      // +/- x.xxx
     et_byte,
     et_bool,         // 0x0000 und 0x0001
     et_little_bool,  // 0x0000 und 0x0100
@@ -24,9 +24,17 @@ enum Type : std::uint8_t {
     et_dev_id
 };
 
+/**
+ * @brief Helper to get the parameter type of a given function that can then be
+ *        used during compile time to decide which conversion function to call.
+ */
 template <typename C, typename T>
 T getParamType(void (C::*)(T));
 
+/**
+ * @brief The raw std::uint16_t value is converted to the corresponding type and
+ *        returned as \c SimpleVariant.
+ */
 SimpleVariant GetValueByType(const std::uint16_t value, const Type type);
 
 #endif

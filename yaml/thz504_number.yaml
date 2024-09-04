@@ -2,14 +2,16 @@ defaults:
   interval: $interval_very_slow
   target: "Kessel"
   step: "1"
+  min: "0"
+  max: "100"
 
 number:
   - platform: template
     name: ${property}
     id: ${property}
     icon: "mdi:valve"
-    min_value: 0
-    max_value: 100
+    min_value: ${min}
+    max_value: ${max}
     step: ${step}
     initial_value: NAN
     optimistic: true
