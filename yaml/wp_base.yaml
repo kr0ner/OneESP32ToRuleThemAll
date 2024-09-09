@@ -252,8 +252,8 @@ packages:
   WAERMEERTRAG_RUECKGE_TAG_KWH:   !include { file: wp_energy.yaml, vars: { property: "WAERMEERTRAG_RUECKGE_TAG_KWH"  , unit: "kWh" }}
   WAERMEERTRAG_2WE_WW_SUM_KWH:    !include { file: wp_energy.yaml, vars: { property: "WAERMEERTRAG_2WE_WW_SUM_KWH"   , unit: "kWh" }}
   WAERMEERTRAG_2WE_WW_SUM_MWH:    !include { file: wp_energy.yaml, vars: { property: "WAERMEERTRAG_2WE_WW_SUM_MWH"   , unit: "MWh" }}
-  WAERMEERTRAG_2WE_HEIZ_TAG_WH:   !include { file: wp_energy.yaml, vars: { property: "WAERMEERTRAG_2WE_HEIZ_TAG_WH"  , unit: "Wh"  }}
-  WAERMEERTRAG_2WE_HEIZ_TAG_KWH:  !include { file: wp_energy.yaml, vars: { property: "WAERMEERTRAG_2WE_HEIZ_TAG_KWH" , unit: "kWh" }}
+  # WAERMEERTRAG_2WE_HEIZ_TAG_WH:   !include { file: wp_energy.yaml, vars: { property: "WAERMEERTRAG_2WE_HEIZ_TAG_WH"  , unit: "Wh"  }} # NA THZ404
+  # WAERMEERTRAG_2WE_HEIZ_TAG_KWH:  !include { file: wp_energy.yaml, vars: { property: "WAERMEERTRAG_2WE_HEIZ_TAG_KWH" , unit: "kWh" }} # NA THZ404
   WAERMEERTRAG_2WE_HEIZ_SUM_KWH:  !include { file: wp_energy.yaml, vars: { property: "WAERMEERTRAG_2WE_HEIZ_SUM_KWH" , unit: "kWh" }}
   WAERMEERTRAG_2WE_HEIZ_SUM_MWH:  !include { file: wp_energy.yaml, vars: { property: "WAERMEERTRAG_2WE_HEIZ_SUM_MWH" , unit: "MWh" }}
   WAERMEERTRAG_WW_TAG_WH:         !include { file: wp_energy.yaml, vars: { property: "WAERMEERTRAG_WW_TAG_WH"        , unit: "Wh"  }}
@@ -269,10 +269,12 @@ packages:
   EINSTELL_SPEICHERSOLLTEMP:      !include { file: wp_temperature.yaml, vars: { property: "EINSTELL_SPEICHERSOLLTEMP" }}
   SPEICHERISTTEMP:                !include { file: wp_temperature.yaml, vars: { property: "SPEICHERISTTEMP"          , interval: $interval_medium}}
   AUSSENTEMP:                     !include { file: wp_temperature.yaml, vars: { property: "AUSSENTEMP"       }}
-  ABLUFTTEMP:                     !include { file: wp_temperature.yaml, vars: { property: "ABLUFTTEMP"       }}
+  #ABLUFTTEMP:                     !include { file: wp_temperature.yaml, vars: { property: "ABLUFTTEMP"       }} # NA THZ404
   SAMMLERISTTEMP:                 !include { file: wp_temperature.yaml, vars: { property: "SAMMLERISTTEMP"   }}
   VERDAMPFERTEMP:                 !include { file: wp_temperature.yaml, vars: { property: "VERDAMPFERTEMP"   }}
   RUECKLAUFISTTEMP:               !include { file: wp_temperature.yaml, vars: { property: "RUECKLAUFISTTEMP" }}
+  HEISSGAS_TEMP:                  !include { file: wp_temperature.yaml, vars: { property: "HEISSGAS_TEMP"    }}
+  VERFLUESSIGER_TEMP:             !include { file: wp_temperature.yaml, vars: { property: "VERFLUESSIGER_TEMP"}}
 
   VORLAUFISTTEMP:                 !include { file: wp_temperature.yaml, vars: { property: "VORLAUFISTTEMP"           , target: "HK1" }}
   TAUPUNKT_HK1:                   !include { file: wp_temperature.yaml, vars: { property: "TAUPUNKT_HK1"             , target: "HK1" }}
@@ -294,12 +296,13 @@ packages:
   STUNDE:                         !include { file: wp_generic.yaml, vars: { property: "STUNDE"                   , icon: "mdi:calendar-clock" }}
   MINUTE:                         !include { file: wp_generic.yaml, vars: { property: "MINUTE"                   , icon: "mdi:calendar-clock" }}
   ANZEIGE_NIEDERDRUCK:            !include { file: wp_generic.yaml, vars: { property: "ANZEIGE_NIEDERDRUCK"      , accuracy_decimals: "2" }}
-  PUMPENZYKLEN_MIN_AUSSENT:       !include { file: wp_generic.yaml, vars: { property: "PUMPENZYKLEN_MIN_AUSSENT" }}
+  ANZEIGE_HOCHDRUCK:              !include { file: wp_generic.yaml, vars: { property: "ANZEIGE_HOCHDRUCK"      , accuracy_decimals: "2" }}
+  #PUMPENZYKLEN_MIN_AUSSENT:       !include { file: wp_generic.yaml, vars: { property: "PUMPENZYKLEN_MIN_AUSSENT" }} # THZ404 -> AKTIVE_HEIZSTUFEN
   FEUCHTE:                        !include { file: wp_generic.yaml, vars: { property: "FEUCHTE"                  , interval: $interval_very_slow, unit: "%", icon: "mdi:water-percent", target: "HK1", accuracy_decimals: "1" }}
   ABLUFTFEUCHTE:                  !include { file: wp_generic.yaml, vars: { property: "ABLUFTFEUCHTE"            , interval: $interval_very_slow, unit: "%", icon: "mdi:water-percent"}}
-  MOTORSTROM:                     !include { file: wp_generic.yaml, vars: { property: "MOTORSTROM"               , interval: $interval_medium, unit: "A" }}
-  MOTORSPANNUNG:                  !include { file: wp_generic.yaml, vars: { property: "MOTORSPANNUNG"            , interval: $interval_medium, unit: "V" }}
-  MOTORLEISTUNG:                  !include { file: wp_generic.yaml, vars: { property: "MOTORLEISTUNG"            , interval: $interval_medium, unit: "kW", accuracy_decimals: "2" }}
+  #MOTORSTROM:                     !include { file: wp_generic.yaml, vars: { property: "MOTORSTROM"               , interval: $interval_medium, unit: "A" }} # NA THZ404
+  #MOTORSPANNUNG:                  !include { file: wp_generic.yaml, vars: { property: "MOTORSPANNUNG"            , interval: $interval_medium, unit: "V" }} # NA THZ404
+  #MOTORLEISTUNG:                  !include { file: wp_generic.yaml, vars: { property: "MOTORLEISTUNG"            , interval: $interval_medium, unit: "kW", accuracy_decimals: "2" }} # NA THZ404
   HEIZ_KUEHL_LEISTUNG:            !include { file: wp_generic.yaml, vars: { property: "HEIZ_KUEHL_LEISTUNG"      , interval: $interval_medium, unit: "kW", accuracy_decimals: "2" }}
   ABLUFT_IST:                     !include { file: wp_generic.yaml, vars: { property: "ABLUFT_IST"               , interval: $interval_slow  , unit: "Hz"   , icon: "mdi:fan"   }}
   FORTLUFT_IST:                   !include { file: wp_generic.yaml, vars: { property: "FORTLUFT_IST"             , interval: $interval_slow  , unit: "Hz"   , icon: "mdi:fan"   }}
@@ -307,15 +310,22 @@ packages:
   ABLUFT_SOLL:                    !include { file: wp_generic.yaml, vars: { property: "ABLUFT_SOLL"              , interval: $interval_slow  , unit: "l/min", icon: "mdi:pump"  }}
   FORTLUFT_SOLL:                  !include { file: wp_generic.yaml, vars: { property: "FORTLUFT_SOLL"            , interval: $interval_slow  , unit: "l/min", icon: "mdi:pump"  }}
   ZULUFT_SOLL:                    !include { file: wp_generic.yaml, vars: { property: "ZULUFT_SOLL"              , interval: $interval_slow  , unit: "l/min", icon: "mdi:pump"  }}
-  VOLUMENSTROM:                   !include { file: wp_generic.yaml, vars: { property: "VOLUMENSTROM"             , interval: $interval_slow  , unit: "l/min", icon: "mdi:pump"  }}
+  VOLUMENSTROM:                   !include { file: wp_generic.yaml, vars: { property: "VOLUMENSTROM"             , interval: $interval_slow  , unit: "l/min", icon: "mdi:pump", accuracy_decimals: "1"  }} # bearbeitet
+  DRUCK_HEIZKREIS:                !include { file: wp_generic.yaml, vars: { property: "DRUCK_HEIZKREIS"          , interval: $interval_slow  , unit: "bar",   icon: "mdi:gauge" , accuracy_decimals: "1" }} # neu
   LAUFZEIT_FILTER:                !include { file: wp_generic.yaml, vars: { property: "LAUFZEIT_FILTER"          , interval: $interval_once_in_a_while , unit: "%", icon: "mdi:calendar"  }}
+  AKTIVE_HEIZSTUFEN:              !include { file: wp_generic.yaml, vars: { property: "AKTIVE_HEIZSTUFEN"        , interval: $interval_medium, icon: "mdi:heat-pump-outline" }}
 
-  LEISTUNG_AUSLEGUNG_HEIZUNG:     !include { file: wp_number.yaml, vars: { property: "LEISTUNG_AUSLEGUNG_HEIZUNG" }}
-  LEISTUNG_AUSLEGUNG_KUEHLEN:     !include { file: wp_number.yaml, vars: { property: "LEISTUNG_AUSLEGUNG_KUEHLEN" }}
+  #LEISTUNG_AUSLEGUNG_HEIZUNG:     !include { file: wp_number.yaml, vars: { property: "LEISTUNG_AUSLEGUNG_HEIZUNG" }} # NA THZ404
+  #LEISTUNG_AUSLEGUNG_KUEHLEN:     !include { file: wp_number.yaml, vars: { property: "LEISTUNG_AUSLEGUNG_KUEHLEN" }} # NA THZ404
   PUMPENDREHZAHL_HEIZEN:          !include { file: wp_number.yaml, vars: { property: "PUMPENDREHZAHL_HEIZEN"      , step:   "0.1" }}
   RAUMEINFLUSS:                   !include { file: wp_number.yaml, vars: { property: "RAUMEINFLUSS"               , target: "HK1" }}
   HYSTERESE_WW:                   !include { file: wp_number.yaml, vars: { property: "HYSTERESE_WW"               , min: "2.0", max: "10.0", step:   "0.1", unit: "°C"}}
   NE_STUFE_WW:                    !include { file: wp_number.yaml, vars: { property: "NE_STUFE_WW"                , min: "0", max: "3" }}
+
+  LAUFZEIT_VERDICHTER_HEIZEN:     !include { file: wp_generic.yaml, vars: { property: "LAUFZEIT_VERDICHTER_HEIZEN", icon: "mdi:calendar-clock", interval: $interval_slow }}
+  LAUFZEIT_VERDICHTER_WW:         !include { file: wp_generic.yaml, vars: { property: "LAUFZEIT_VERDICHTER_WW", icon: "mdi:calendar-clock",     interval: $interval_slow }}
+  LAUFZEIT_NHZ_HEIZEN:            !include { file: wp_generic.yaml, vars: { property: "LAUFZEIT_NHZ_HEIZEN", icon: "mdi:calendar-clock",        interval: $interval_slow }}
+  LAUFZEIT_NHZ_WW:                !include { file: wp_generic.yaml, vars: { property: "LAUFZEIT_NHZ_WW", icon: "mdi:calendar-clock",            interval: $interval_slow }}
 
 #########################################
 #                                       #
