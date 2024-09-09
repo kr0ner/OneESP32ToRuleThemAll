@@ -1,0 +1,630 @@
+defaults:
+  clk_pin: "GPIO14"
+  mosi_pin: "GPIO13"
+  miso_pin: "GPIO4"
+  cs_pin: "GPIO15"
+  evu_pin: "GPIO5"
+  entity_room_temperature: "sensor.durchschnittstemperatur_haus_ohne_keller"
+  entity_humidity: "sensor.durchschnitt_luftfeuchtigkeit_haus"
+
+esphome:
+  includes:
+    - src/callback_handler.h
+    - src/communication.h
+    - src/custom_climate.h
+    - src/mapper.h
+    - src/mapper.cpp
+    - src/property.h
+    - src/simple_variant.h
+    - src/type.h
+    - src/type.cpp
+#########################################
+#                                       #
+#   Obtain initial states               #
+#                                       #
+#########################################
+  on_boot:
+    priority: -100
+    then:
+      - lambda: |-
+          queueRequest(Kessel, Property::kPROGRAMMSCHALTER);
+          queueRequest(Kessel, Property::kPASSIVKUEHLUNG);
+          queueRequest(Kessel, Property::kBETRIEBS_STATUS);
+          queueRequest(Kessel, Property::kBETRIEBS_STATUS_2);
+          queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_WW_TAG_WH);
+          queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_WW_TAG_KWH);
+          queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_HEIZ_TAG_WH);
+          queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_HEIZ_TAG_KWH);
+          CallbackHandler::instance().addCallback(std::make_pair(Kessel,Property::kVERDICHTER_STARTS_K),[](const SimpleVariant& value){
+              id(gVERDICHTER_STARTS_K) = static_cast<std::uint16_t>(value) * 1000U;
+          });
+          CallbackHandler::instance().addCallback(std::make_pair(Kessel,Property::kVERDICHTER_STARTS),[](const SimpleVariant& value){
+              id(VERDICHTER_STARTS).publish_state(id(gVERDICHTER_STARTS_K) + static_cast<std::uint16_t>(value));
+          });
+          queueRequest(Kessel, Property::kVERDICHTER_STARTS_K);
+          queueRequest(Kessel, Property::kVERDICHTER_STARTS);
+
+#########################################
+#                                       #
+#   Global variables                    #
+#                                       #
+#########################################
+globals:
+  - id: gOFFSET_EL_AUFNAHMELEISTUNG_WW_TAG_WH
+    type: int
+    initial_value: "0"
+  - id: gOFFSET_EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH
+    type: int
+    initial_value: "0"
+  - id: gVERDICHTER_STARTS_K
+    type: int
+    initial_value: "0"
+  - id: gRAUMISTTEMP
+    type: float
+    initial_value: "0.0"
+  - id: gFEUCHTE
+    type: float
+    initial_value: "0.0"
+
+#########################################
+#                                       #
+#   SPI configuration                   #
+#                                       #
+#########################################
+spi:
+  id: McpSpi
+  clk_pin: $clk_pin
+  mosi_pin: $mosi_pin
+  miso_pin: $miso_pin
+
+#########################################
+#                                       #
+#   EVU Sperre                          #
+#                                       #
+#########################################
+switch:
+  - platform: gpio
+    name: "EVU Sperre"
+    id: evu_sperre
+    pin: $evu_pin
+
+  - platform: template
+    name: "KUEHLUNG HK1"
+    id: KUEHLUNGHK1
+    optimistic: true
+    turn_on_action:
+      - lambda: |-
+          sendData(HK1, Property::kKUEHLMODE, static_cast<std::uint16_t>(true));
+    turn_off_action:
+      - lambda: |-
+          sendData(HK1, Property::kKUEHLMODE, static_cast<std::uint16_t>(false));
+
+#########################################
+#                                       #
+#   Binary Sensors                      #
+#                                       #
+#########################################
+binary_sensor:
+  - platform: template
+    name: "SCHALTPROGRAMM_AKTIV"
+    id: SCHALTPROGRAMM_AKTIV
+
+  - platform: template
+    name: "VERDICHTER"
+    id: VERDICHTER
+
+  - platform: template
+    name: "HEIZEN"
+    id: HEIZEN
+
+  - platform: template
+    name: "KUEHLEN"
+    id: KUEHLEN
+
+  - platform: template
+    name: "WARMWASSERBEREITUNG"
+    id: WARMWASSERBEREITUNG
+
+  - platform: template
+    name: "ELEKTRISCHE_NACHERWAERMUNG"
+    id: ELEKTRISCHE_NACHERWAERMUNG
+
+  - platform: template
+    name: "SERVICE"
+    id: SERVICE
+
+  - platform: template
+    name: "EVU_SPERRE"
+    id: EVU_SPERRE
+
+  - platform: template
+    name: "FILTERWECHSEL_BEIDE"
+    id: FILTERWECHSEL_BEIDE
+
+  - platform: template
+    name: "LUEFTUNG"
+    id: LUEFTUNG
+
+  - platform: template
+    name: "HEIZKREISPUMPE"
+    id: HEIZKREISPUMPE
+
+  - platform: template
+    name: "ABTAUEN_VERDAMPFER"
+    id: ABTAUEN_VERDAMPFER
+
+  - platform: template
+    name: "FILTERWECHSEL_ABLUFT"
+    id: FILTERWECHSEL_ABLUFT
+
+  - platform: template
+    name: "FILTERWECHSEL_ZULUFT"
+    id: FILTERWECHSEL_ZULUFT
+
+  - platform: template
+    name: "AUFHEIZPROGRAMM_AKTIV"
+    id: AUFHEIZPROGRAMM_AKTIV
+
+  - platform: template
+    name: "SOMMERBETRIEB_AKTIV"
+    id: SOMMERBETRIEB_AKTIV
+
+  - platform: template
+    name: "OFEN_KAMIN_AKTIV"
+    id: OFEN_KAMIN_AKTIV
+
+#########################################
+#                                       #
+#   Intervals                           #
+#                                       #
+#########################################
+interval:
+  - interval: 250ms
+    then:
+      - lambda: |-
+          // Request sensor value one after another.
+          if(!request_queue.empty()) {
+            constexpr auto use_extended_id{false};
+            const auto request_element = request_queue.front();
+            request_queue.pop();
+            requestData(request_element.first, request_element.second);
+          }
+  - interval: $interval_medium
+    then:
+      - lambda: |-
+          // Send current RAUMISTTEMP
+          const auto room_temp = id(gRAUMISTTEMP);
+          if(room_temp > 0.0f) {
+            sendData(FEK, Property::kRAUMISTTEMP, static_cast<std::uint16_t>(room_temp * 10.0f));
+          }
+          // Send current FEUCHTE
+          const auto humidity = id(gFEUCHTE);
+          if(humidity > 0.0) {
+            sendData(FEK, Property::kFEUCHTE, static_cast<std::uint16_t>(humidity * 10.0f));
+          }
+  - interval: $interval_once_in_a_while
+    then:
+      - lambda: |-
+          queueRequest(Kessel, Property::kBETRIEBS_STATUS_2);
+
+#########################################
+#                                       #
+#   Time triggers                       #
+#                                       #
+#########################################
+time:
+  - platform: sntp
+    on_time:
+      # Every hour except midnight. Helper will be set when the response is received
+      - seconds: 0
+        minutes: 0
+        hours: 1-23
+        then:
+          - lambda: |-
+              queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_WW_TAG_WH);
+              queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_WW_TAG_KWH);
+              queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_HEIZ_TAG_WH);
+              queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_HEIZ_TAG_KWH);
+      # At midnight reset power consumptions. The helper must not be set!
+      - seconds: 0
+        minutes: 0
+        hours: 0
+        then:
+          - lambda: |-
+              id(gOFFSET_EL_AUFNAHMELEISTUNG_WW_TAG_WH) = id(EL_AUFNAHMELEISTUNG_WW_TAG_WH).state;
+          - sensor.template.publish:
+              id: EL_AUFNAHMELEISTUNG_WW_SUMME_KWH
+              state: 0.0
+          - lambda: |-
+                id(gOFFSET_EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH) = id(EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH).state;
+          - sensor.template.publish:
+              id: EL_AUFNAHMELEISTUNG_HEIZ_SUMME_KWH
+              state: 0.0
+
+#########################################
+#                                       #
+#   Packages                            #
+#                                       #
+#########################################
+packages:
+  WAERMEERTRAG_RUECKGE_SUMME_KWH: !include { file: wp_energy.yaml, vars: { property: "WAERMEERTRAG_RUECKGE_SUMME_KWH", unit: "kWh" }}
+  WAERMEERTRAG_RUECKGE_TAG_WH:    !include { file: wp_energy.yaml, vars: { property: "WAERMEERTRAG_RUECKGE_TAG_WH"   , unit: "Wh"  }}
+  WAERMEERTRAG_RUECKGE_TAG_KWH:   !include { file: wp_energy.yaml, vars: { property: "WAERMEERTRAG_RUECKGE_TAG_KWH"  , unit: "kWh" }}
+  WAERMEERTRAG_2WE_WW_SUM_KWH:    !include { file: wp_energy.yaml, vars: { property: "WAERMEERTRAG_2WE_WW_SUM_KWH"   , unit: "kWh" }}
+  WAERMEERTRAG_2WE_WW_SUM_MWH:    !include { file: wp_energy.yaml, vars: { property: "WAERMEERTRAG_2WE_WW_SUM_MWH"   , unit: "MWh" }}
+  WAERMEERTRAG_2WE_HEIZ_TAG_WH:   !include { file: wp_energy.yaml, vars: { property: "WAERMEERTRAG_2WE_HEIZ_TAG_WH"  , unit: "Wh"  }}
+  WAERMEERTRAG_2WE_HEIZ_TAG_KWH:  !include { file: wp_energy.yaml, vars: { property: "WAERMEERTRAG_2WE_HEIZ_TAG_KWH" , unit: "kWh" }}
+  WAERMEERTRAG_2WE_HEIZ_SUM_KWH:  !include { file: wp_energy.yaml, vars: { property: "WAERMEERTRAG_2WE_HEIZ_SUM_KWH" , unit: "kWh" }}
+  WAERMEERTRAG_2WE_HEIZ_SUM_MWH:  !include { file: wp_energy.yaml, vars: { property: "WAERMEERTRAG_2WE_HEIZ_SUM_MWH" , unit: "MWh" }}
+  WAERMEERTRAG_WW_TAG_WH:         !include { file: wp_energy.yaml, vars: { property: "WAERMEERTRAG_WW_TAG_WH"        , unit: "Wh"  }}
+  WAERMEERTRAG_WW_TAG_KWH:        !include { file: wp_energy.yaml, vars: { property: "WAERMEERTRAG_WW_TAG_KWH"       , unit: "kWh" }}
+  WAERMEERTRAG_WW_SUM_KWH:        !include { file: wp_energy.yaml, vars: { property: "WAERMEERTRAG_WW_SUM_KWH"       , unit: "kWh" }}
+  WAERMEERTRAG_WW_SUM_MWH:        !include { file: wp_energy.yaml, vars: { property: "WAERMEERTRAG_WW_SUM_MWH"       , unit: "MWh" }}
+  WAERMEERTRAG_HEIZ_TAG_WH:       !include { file: wp_energy.yaml, vars: { property: "WAERMEERTRAG_HEIZ_TAG_WH"      , unit: "Wh"  }}
+  WAERMEERTRAG_HEIZ_TAG_KWH:      !include { file: wp_energy.yaml, vars: { property: "WAERMEERTRAG_HEIZ_TAG_KWH"     , unit: "kWh" }}
+  WAERMEERTRAG_HEIZ_SUM_KWH:      !include { file: wp_energy.yaml, vars: { property: "WAERMEERTRAG_HEIZ_SUM_KWH"     , unit: "kWh" }}
+  WAERMEERTRAG_HEIZ_SUM_MWH:      !include { file: wp_energy.yaml, vars: { property: "WAERMEERTRAG_HEIZ_SUM_MWH"     , unit: "MWh" }}
+
+  SPEICHERSOLLTEMP:               !include { file: wp_temperature.yaml, vars: { property: "SPEICHERSOLLTEMP"          }}
+  EINSTELL_SPEICHERSOLLTEMP:      !include { file: wp_temperature.yaml, vars: { property: "EINSTELL_SPEICHERSOLLTEMP" }}
+  SPEICHERISTTEMP:                !include { file: wp_temperature.yaml, vars: { property: "SPEICHERISTTEMP"          , interval: $interval_medium}}
+  AUSSENTEMP:                     !include { file: wp_temperature.yaml, vars: { property: "AUSSENTEMP"       }}
+  ABLUFTTEMP:                     !include { file: wp_temperature.yaml, vars: { property: "ABLUFTTEMP"       }}
+  SAMMLERISTTEMP:                 !include { file: wp_temperature.yaml, vars: { property: "SAMMLERISTTEMP"   }}
+  VERDAMPFERTEMP:                 !include { file: wp_temperature.yaml, vars: { property: "VERDAMPFERTEMP"   }}
+  RUECKLAUFISTTEMP:               !include { file: wp_temperature.yaml, vars: { property: "RUECKLAUFISTTEMP" }}
+
+  VORLAUFISTTEMP:                 !include { file: wp_temperature.yaml, vars: { property: "VORLAUFISTTEMP"           , target: "HK1" }}
+  TAUPUNKT_HK1:                   !include { file: wp_temperature.yaml, vars: { property: "TAUPUNKT_HK1"             , target: "HK1" }}
+  RAUMISTTEMP:                    !include { file: wp_temperature.yaml, vars: { property: "RAUMISTTEMP"              , target: "HK1" }}
+  VERSTELLTE_RAUMSOLLTEMP:        !include { file: wp_temperature.yaml, vars: { property: "VERSTELLTE_RAUMSOLLTEMP"  , target: "HK1" }}
+  RAUMSOLLTEMP_I:                 !include { file: wp_temperature.yaml, vars: { property: "RAUMSOLLTEMP_I"           , target: "HK1" }}
+  VORLAUFSOLLTEMP:                !include { file: wp_temperature.yaml, vars: { property: "VORLAUFSOLLTEMP"          , target: "HK1" }}
+  KUEHL_RAUMSOLL_TAG:             !include { file: wp_temperature.yaml, vars: { property: "KUEHL_RAUMSOLL_TAG"       , target: "HK1" }}
+
+  LUEFT_STUFE_TAG:                !include { file: wp_ventilation.yaml, vars: { property: "LUEFT_STUFE_TAG"   }}
+  LUEFT_STUFE_NACHT:              !include { file: wp_ventilation.yaml, vars: { property: "LUEFT_STUFE_NACHT" }}
+  LUEFT_STUFE_PARTY:              !include { file: wp_ventilation.yaml, vars: { property: "LUEFT_STUFE_PARTY" }}
+
+  FEHLERMELDUNG:                  !include { file: wp_generic.yaml, vars: { property: "FEHLERMELDUNG"            , icon: "mdi:alert-circle" }}
+  JAHR:                           !include { file: wp_generic.yaml, vars: { property: "JAHR"                     , icon: "mdi:calendar" }}
+  MONAT:                          !include { file: wp_generic.yaml, vars: { property: "MONAT"                    , icon: "mdi:calendar" }}
+  WOCHENTAG:                      !include { file: wp_generic.yaml, vars: { property: "WOCHENTAG"                , icon: "mdi:calendar-today" }}
+  TAG:                            !include { file: wp_generic.yaml, vars: { property: "TAG"                      , icon: "mdi:calendar-today" }}
+  STUNDE:                         !include { file: wp_generic.yaml, vars: { property: "STUNDE"                   , icon: "mdi:calendar-clock" }}
+  MINUTE:                         !include { file: wp_generic.yaml, vars: { property: "MINUTE"                   , icon: "mdi:calendar-clock" }}
+  ANZEIGE_NIEDERDRUCK:            !include { file: wp_generic.yaml, vars: { property: "ANZEIGE_NIEDERDRUCK"      , accuracy_decimals: "2" }}
+  PUMPENZYKLEN_MIN_AUSSENT:       !include { file: wp_generic.yaml, vars: { property: "PUMPENZYKLEN_MIN_AUSSENT" }}
+  FEUCHTE:                        !include { file: wp_generic.yaml, vars: { property: "FEUCHTE"                  , interval: $interval_very_slow, unit: "%", icon: "mdi:water-percent", target: "HK1", accuracy_decimals: "1" }}
+  ABLUFTFEUCHTE:                  !include { file: wp_generic.yaml, vars: { property: "ABLUFTFEUCHTE"            , interval: $interval_very_slow, unit: "%", icon: "mdi:water-percent"}}
+  MOTORSTROM:                     !include { file: wp_generic.yaml, vars: { property: "MOTORSTROM"               , interval: $interval_medium, unit: "A" }}
+  MOTORSPANNUNG:                  !include { file: wp_generic.yaml, vars: { property: "MOTORSPANNUNG"            , interval: $interval_medium, unit: "V" }}
+  MOTORLEISTUNG:                  !include { file: wp_generic.yaml, vars: { property: "MOTORLEISTUNG"            , interval: $interval_medium, unit: "kW", accuracy_decimals: "2" }}
+  HEIZ_KUEHL_LEISTUNG:            !include { file: wp_generic.yaml, vars: { property: "HEIZ_KUEHL_LEISTUNG"      , interval: $interval_medium, unit: "kW", accuracy_decimals: "2" }}
+  ABLUFT_IST:                     !include { file: wp_generic.yaml, vars: { property: "ABLUFT_IST"               , interval: $interval_slow  , unit: "Hz"   , icon: "mdi:fan"   }}
+  FORTLUFT_IST:                   !include { file: wp_generic.yaml, vars: { property: "FORTLUFT_IST"             , interval: $interval_slow  , unit: "Hz"   , icon: "mdi:fan"   }}
+  ZULUFT_IST:                     !include { file: wp_generic.yaml, vars: { property: "ZULUFT_IST"               , interval: $interval_slow  , unit: "Hz"   , icon: "mdi:fan"   }}
+  ABLUFT_SOLL:                    !include { file: wp_generic.yaml, vars: { property: "ABLUFT_SOLL"              , interval: $interval_slow  , unit: "l/min", icon: "mdi:pump"  }}
+  FORTLUFT_SOLL:                  !include { file: wp_generic.yaml, vars: { property: "FORTLUFT_SOLL"            , interval: $interval_slow  , unit: "l/min", icon: "mdi:pump"  }}
+  ZULUFT_SOLL:                    !include { file: wp_generic.yaml, vars: { property: "ZULUFT_SOLL"              , interval: $interval_slow  , unit: "l/min", icon: "mdi:pump"  }}
+  VOLUMENSTROM:                   !include { file: wp_generic.yaml, vars: { property: "VOLUMENSTROM"             , interval: $interval_slow  , unit: "l/min", icon: "mdi:pump"  }}
+  LAUFZEIT_FILTER:                !include { file: wp_generic.yaml, vars: { property: "LAUFZEIT_FILTER"          , interval: $interval_once_in_a_while , unit: "%", icon: "mdi:calendar"  }}
+
+  LEISTUNG_AUSLEGUNG_HEIZUNG:     !include { file: wp_number.yaml, vars: { property: "LEISTUNG_AUSLEGUNG_HEIZUNG" }}
+  LEISTUNG_AUSLEGUNG_KUEHLEN:     !include { file: wp_number.yaml, vars: { property: "LEISTUNG_AUSLEGUNG_KUEHLEN" }}
+  PUMPENDREHZAHL_HEIZEN:          !include { file: wp_number.yaml, vars: { property: "PUMPENDREHZAHL_HEIZEN"      , step:   "0.1" }}
+  RAUMEINFLUSS:                   !include { file: wp_number.yaml, vars: { property: "RAUMEINFLUSS"               , target: "HK1" }}
+  HYSTERESE_WW:                   !include { file: wp_number.yaml, vars: { property: "HYSTERESE_WW"               , min: "2.0", max: "10.0", step:   "0.1", unit: "°C"}}
+  NE_STUFE_WW:                    !include { file: wp_number.yaml, vars: { property: "NE_STUFE_WW"                , min: "0", max: "3" }}
+
+#########################################
+#                                       #
+#   Sensors                             #
+#                                       #
+#########################################
+sensor:
+  - platform: homeassistant
+    name: "Temperature Sensor From Home Assistant"
+    entity_id: $entity_room_temperature
+    on_value:
+      then:
+        - lambda: |-
+            ESP_LOGI("SET", "gRAUMISTTEMP set to %f", x);
+            id(gRAUMISTTEMP) = x;
+
+  - platform: homeassistant
+    name: "Humidity Sensor From Home Assistant"
+    entity_id: $entity_humidity
+    on_value:
+      then:
+        - lambda: |-
+            ESP_LOGI("SET", "gFEUCHTE set to %f", x);
+            id(gFEUCHTE) = x;
+
+  - platform: template
+    name: "EL_AUFNAHMELEISTUNG_WW_TAG_WH"
+    id: EL_AUFNAHMELEISTUNG_WW_TAG_WH
+    unit_of_measurement: "Wh"
+    icon: "mdi:power"
+    state_class: "measurement"
+    accuracy_decimals: 0
+    internal: true
+
+  - platform: template
+    name: "EL_AUFNAHMELEISTUNG_WW_SUMME_KWH"
+    id: EL_AUFNAHMELEISTUNG_WW_SUMME_KWH
+    unit_of_measurement: "kWh"
+    icon: "mdi:power"
+    accuracy_decimals: 2
+    device_class: energy
+    state_class: total_increasing
+
+  - platform: template
+    name: "EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH"
+    id: EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH
+    unit_of_measurement: "Wh"
+    icon: "mdi:power"
+    state_class: "measurement"
+    accuracy_decimals: 0
+    internal: true
+
+  - platform: template
+    name: "EL_AUFNAHMELEISTUNG_HEIZ_SUMME_KWH"
+    id: EL_AUFNAHMELEISTUNG_HEIZ_SUMME_KWH
+    unit_of_measurement: "kWh"
+    icon: "mdi:power"
+    accuracy_decimals: 2
+    state_class: total_increasing
+    device_class: energy
+
+  - platform: template
+    name: "VERDICHTER_STARTS"
+    id: VERDICHTER_STARTS
+    icon: "mdi:counter"
+    accuracy_decimals: 0
+    update_interval: $interval_very_slow
+    lambda: |-
+        queueRequest(Kessel, Property::kVERDICHTER_STARTS_K);
+        queueRequest(Kessel, Property::kVERDICHTER_STARTS);
+        return {};
+
+#########################################
+#                                       #
+#   Selects                             #
+#                                       #
+#########################################
+select:
+  - platform: template
+    name: "PROGRAMMSCHALTER"
+    id: PROGRAMMSCHALTER
+    options:
+      - "Notbetrieb"
+      - "Bereitschaft"
+      - "Automatik"
+      - "Tagbetrieb"
+      - "Absenkbetrieb"
+      - "Warmwasser"
+      - "Handbetrieb"
+      - "Unbekannt"
+    initial_option: "Unbekannt"
+    optimistic: true
+    setup_priority: 100
+    set_action:
+      then:
+        - lambda: |-
+            const auto betriebsartId = Mapper::instance().getBetriebsartId(x);
+            if(betriebsartId.has_value()) {
+              sendData(Kessel, Property::kPROGRAMMSCHALTER, betriebsartId.value());
+            }
+
+  - platform: template
+    name: "PASSIVKUEHLUNG"
+    id: PASSIVKUEHLUNG
+    options:
+      - "Aus"
+      - "Ablüften"
+      - "Zulüften"
+      - "Bypass"
+      - "Sommerkassette"
+      - "Unbekannt"
+    initial_option: "Unbekannt"
+    optimistic: true
+    setup_priority: 100
+    set_action:
+      then:
+        - lambda: |-
+            const auto passivkuehlungId = Mapper::instance().getPassivkuehlungId(x);
+            if(passivkuehlungId.has_value()) {
+              sendData(Kessel, Property::kPASSIVKUEHLUNG, passivkuehlungId.value());
+            }
+
+#########################################
+#                                       #
+#   Custom climates                     #
+#                                       #
+#########################################
+climate:
+  - platform: custom
+    lambda: |-
+      auto heating = new HeatingDayNight(id(RAUMISTTEMP),id(VERSTELLTE_RAUMSOLLTEMP), id(HEIZEN), id(KUEHLEN), id(LUEFTUNG), Property::kRAUMSOLLTEMP_I, Property::kKUEHL_RAUMSOLL_TAG);
+      App.register_component(heating);
+      return {heating};
+    climates:
+      name: "Heating Day"
+      visual:
+        min_temperature: 10.0
+        max_temperature: 25.0
+        temperature_step:
+          target_temperature: 0.1
+          current_temperature: 0.1
+
+  - platform: custom
+    lambda: |-
+      auto heating = new HeatingDayNight(id(RAUMISTTEMP),id(VERSTELLTE_RAUMSOLLTEMP), id(HEIZEN), id(KUEHLEN), id(LUEFTUNG), Property::kRAUMSOLLTEMP_NACHT, Property::kKUEHL_RAUMSOLL_NACHT);
+      App.register_component(heating);
+      return {heating};
+    climates:
+      name: "Heating Night"
+      visual:
+        min_temperature: 10.0
+        max_temperature: 25.0
+        temperature_step:
+          target_temperature: 0.1
+          current_temperature: 0.1
+
+  - platform: custom
+    lambda: |-
+      auto hot_water = new HotWater(id(SPEICHERISTTEMP),id(EINSTELL_SPEICHERSOLLTEMP), id(WARMWASSERBEREITUNG), Property::kEINSTELL_SPEICHERSOLLTEMP);
+      App.register_component(hot_water);
+      return {hot_water};
+    climates:
+      name: "Hot Water"
+      visual:
+        min_temperature: 30.0
+        max_temperature: 75.0
+        temperature_step:
+          target_temperature: 1.0
+          current_temperature: 0.1
+
+#########################################
+#                                       #
+#   CANbus configuration                #
+#                                       #
+#########################################
+canbus:
+  - platform: mcp2515
+    id: my_mcp2515
+    spi_id: McpSpi
+    cs_pin: $cs_pin
+    can_id: 680
+    use_extended_id: false
+    bit_rate: 20kbps
+    on_frame:
+
+#########################################
+#                                       #
+#   KESSEL messages                     #
+#                                       #
+#########################################
+    - can_id: 0x180
+      then:
+        - lambda: |-
+            const auto property_value_pair = processCanMessage(x);
+            Property property{property_value_pair.first};
+            SimpleVariant value{property_value_pair.second};
+            auto callback = CallbackHandler::instance().getCallback(std::make_pair(Kessel,property));
+            callback(value);
+
+            switch(property) {
+              case Property::kPROGRAMMSCHALTER:
+                {
+                  const auto stringValue{value.get<std::string>()};
+                  const auto index = id(PROGRAMMSCHALTER).index_of(stringValue);
+                  if(index.has_value()) {
+                    id(PROGRAMMSCHALTER).publish_state(stringValue);
+                  }
+                  break;
+                }
+                case Property::kPASSIVKUEHLUNG:
+                  {
+                    const auto stringValue{Mapper::instance().getPassivkuehlung(value).value_or("Unbekannt")};
+                    const auto index = id(PASSIVKUEHLUNG).index_of(stringValue);
+                    if(index.has_value()) {
+                      id(PASSIVKUEHLUNG).publish_state(stringValue);
+                    }
+                    break;
+                  }
+              case Property::kBETRIEBS_STATUS_2:
+                {
+                  const std::bitset<2U> status_bits{static_cast<std::uint16_t>(value)};
+                  id(SOMMERBETRIEB_AKTIV).publish_state(status_bits.test(0U));
+                  id(OFEN_KAMIN_AKTIV).publish_state(status_bits.test(1U));
+                }
+              case Property::kBETRIEBS_STATUS:
+                {
+                  const std::bitset<15U> status_bits{static_cast<std::uint16_t>(value)};
+                  id(SCHALTPROGRAMM_AKTIV).publish_state(status_bits.test(0U));
+                  id(VERDICHTER).publish_state(status_bits.test(1U));
+                  id(HEIZEN).publish_state(status_bits.test(2U));
+                  id(KUEHLEN).publish_state(status_bits.test(3U));
+                  id(WARMWASSERBEREITUNG).publish_state(status_bits.test(4U));
+                  id(ELEKTRISCHE_NACHERWAERMUNG).publish_state(status_bits.test(5U));
+                  id(SERVICE).publish_state(status_bits.test(6U));
+                  id(EVU_SPERRE).publish_state(status_bits.test(7U));
+                  id(FILTERWECHSEL_BEIDE).publish_state(status_bits.test(8U));
+                  // seems to be broken id(LUEFTUNG).publish_state(status_bits.test(9U));
+                  id(HEIZKREISPUMPE).publish_state(status_bits.test(10U));
+                  id(ABTAUEN_VERDAMPFER).publish_state(status_bits.test(11U));
+                  id(FILTERWECHSEL_ABLUFT).publish_state(status_bits.test(12U));
+                  id(FILTERWECHSEL_ZULUFT).publish_state(status_bits.test(13U));
+                  id(AUFHEIZPROGRAMM_AKTIV).publish_state(status_bits.test(14U));
+                  break;
+                }
+              case Property::kEL_AUFNAHMELEISTUNG_HEIZ_TAG_WH:
+                // This value is never reset, messing up the Energy Dashboard.
+                // The offset is obtained at midnight and subtracted for the next 24 hours..
+                id(EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH).publish_state(value);
+                break;
+              case Property::kEL_AUFNAHMELEISTUNG_HEIZ_TAG_KWH:
+                id(EL_AUFNAHMELEISTUNG_HEIZ_SUMME_KWH).publish_state(static_cast<std::uint16_t>(value) + (0.001*(id(EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH).state - id(gOFFSET_EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH))));
+                break;
+              case Property::kEL_AUFNAHMELEISTUNG_WW_TAG_WH:
+                // This value is never reset, messing up the Energy Dashboard.
+                // The offset is obtained at midnight and subtracted for the next 24 hours.
+                id(EL_AUFNAHMELEISTUNG_WW_TAG_WH).publish_state(value);
+                break;
+              case Property::kEL_AUFNAHMELEISTUNG_WW_TAG_KWH:
+                id(EL_AUFNAHMELEISTUNG_WW_SUMME_KWH).publish_state(static_cast<std::uint16_t>(value) + (0.001*(id(EL_AUFNAHMELEISTUNG_WW_TAG_WH).state - id(gOFFSET_EL_AUFNAHMELEISTUNG_WW_TAG_WH))));
+                break;
+              case Property::kLUEFT_STUFE_TAG:
+                {
+                  // workaround for broken ninth bit of BETRIEBSSTATUS
+                  const auto fan_speed = std::min(static_cast<std::uint16_t>(3U),static_cast<std::uint16_t>(value));
+                  id(LUEFTUNG).publish_state(fan_speed != 0);
+                  break;
+                }
+              default:
+                break;
+            }
+
+#########################################
+#                                       #
+#   HK1 messages                        #
+#                                       #
+#########################################
+    - can_id: 0x301
+      then:
+        - lambda: |-
+            const auto property_value_pair = processCanMessage(x);
+            Property property{property_value_pair.first};
+            SimpleVariant value{property_value_pair.second};
+            auto callback = CallbackHandler::instance().getCallback(std::make_pair(HK1,property));
+            callback(value);
+
+#########################################
+#                                       #
+#   HK2 messages                        #
+#                                       #
+#########################################
+    - can_id: 0x302
+      then:
+        - lambda: |-
+            const auto property_value_pair = processCanMessage(x);
+            Property property{property_value_pair.first};
+            SimpleVariant value{property_value_pair.second};
+            auto callback = CallbackHandler::instance().getCallback(std::make_pair(HK2,property));
+            callback(value);
+
+#########################################
+#                                       #
+#   Message requests                    #
+#                                       #
+#########################################
+    - can_id: 0x6a1
+      then:
+        - lambda: |-
+            const auto property_value_pair = processCanMessage(x);
+            Property property{property_value_pair.first};
+            SimpleVariant value{property_value_pair.second};
+            auto callback = CallbackHandler::instance().getCallback(std::make_pair(Anfrage,property));
+            callback(value);
