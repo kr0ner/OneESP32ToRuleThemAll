@@ -65,5 +65,7 @@ packages:
   energymeter: !include yaml/energymeter.yaml
   watermeter: !include yaml/watermeter.yaml
   sensors: !include yaml/sensors.yaml
+# thz404: !include yaml/thz404.yaml
   thz504: !include yaml/thz504.yaml
+# thz55eco: !include yaml/thz5_5_eco.yaml
   kondensatpumpe: !include yaml/kondensatpumpe.yaml

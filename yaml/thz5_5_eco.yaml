@@ -1,7 +1,7 @@
 esphome:
   platformio_options:
     build_flags:
-      - "-DTHZ_504"
+      - "-DTHZ_5_5_ECO"
 
 packages:
   BASE: !include { file: wp_base.yaml}
