@@ -496,7 +496,7 @@ canbus:
     id: my_mcp2515
     spi_id: McpSpi
     cs_pin: $cs_pin
-    can_id: 680
+    can_id: 0x680
     use_extended_id: false
     bit_rate: 20kbps
     on_frame:
