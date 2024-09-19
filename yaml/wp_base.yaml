@@ -215,9 +215,9 @@ interval:
 time:
   - platform: sntp
     on_time:
-      # Every hour except midnight. Helper will be set when the response is received
+      # Every hour, every 5 muinutes except midnight. Helper will be set when the response is received
       - seconds: 0
-        minutes: 0
+        minutes: /5
         hours: 1-23
         then:
           - lambda: |-
@@ -236,7 +236,7 @@ time:
               id: EL_AUFNAHMELEISTUNG_WW_SUMME_KWH
               state: 0.0
           - lambda: |-
-                id(gOFFSET_EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH) = id(EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH).state;
+              id(gOFFSET_EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH) = id(EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH).state;
           - sensor.template.publish:
               id: EL_AUFNAHMELEISTUNG_HEIZ_SUMME_KWH
               state: 0.0
