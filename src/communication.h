@@ -14,22 +14,23 @@ using CANID = std::uint16_t;
 struct CanMember {
     CANID CanId;
     std::string name;
-    std::uint8_t ReadId[2U];
-    std::uint8_t WriteId[2U];
-    std::uint8_t ConfirmationId[2U];
     bool operator<(const CanMember& other) const { return CanId < other.CanId; }
-    std::uint16_t getWriteId() const { return (WriteId[1U] | (WriteId[0U] << 8U)); }
-    std::uint16_t getReadId() const { return (ReadId[1U] | (ReadId[0U] << 8U)); }
+    std::uint16_t getWriteId() const { return (getWriteId1() | (getWriteId2() << 8U)); }
+    std::uint16_t getReadId() const { return (getReadId2() | (getReadId1() << 8U)); }
+    std::uint8_t getReadId1() const { return (CanId >> 3) + 1;} // divide by 8 and + 1 for reading a register
+    std::uint8_t getReadId2() const { return (CanId & 0xF);} // + last hex digit of Can ID
+    std::uint8_t getWriteId1() const { return (CanId >> 3) + 0;} // divide by 8 and + 0 for writing a register
+    std::uint8_t getWriteId2() const { return (CanId & 0xF);} // + last hex digit of Can ID
 };
 
 // clang-format off
-//  Name                          CanId  Name          ReadId        WriteId       ConfirmationID
-static const CanMember ESPClient {0x6a2, "ESPClient", {0x00, 0x00}, {0x00, 0x00}, {0xE2, 0x00}};
-static const CanMember Anfrage   {0x6a1, "Anfrage",   {0x00, 0x00}, {0xd2, 0x21}, {0x00, 0x00}};
-static const CanMember Kessel    {0x180, "Kessel",    {0x31, 0x00}, {0x30, 0x00}, {0x00, 0x00}};
-static const CanMember HK1       {0x301, "HK1",       {0x61, 0x01}, {0x60, 0x01}, {0x00, 0x00}};
-static const CanMember HK2       {0x302, "HK2",       {0x61, 0x02}, {0x60, 0x02}, {0x00, 0x00}};
-static const CanMember FEK       {0x401, "FEK",       {0x61, 0x01}, {0x60, 0x01}, {0x00, 0x00}};
+//  Name                          CanId  Name
+static const CanMember ESPClient {0x6a2, "ESPClient"};
+static const CanMember Anfrage   {0x6a1, "Anfrage"};
+static const CanMember Kessel    {0x180, "Kessel"};
+static const CanMember HK1       {0x301, "HK1"};
+static const CanMember HK2       {0x302, "HK2"};
+static const CanMember FEK       {0x401, "FEK"};
 // clang-format on
 
 using Request = std::pair<const CanMember, const Property>;
@@ -93,13 +94,11 @@ std::pair<Property, SimpleVariant> processCanMessage(const std::vector<std::uint
 
 void requestData(const CanMember& member, const Property& property) {
     const auto use_extended_id{false};  //No use of extended ID
-    const std::uint8_t IdByte1{member.ReadId[0U]};
-    const std::uint8_t IdByte2{member.ReadId[1U]};
     const std::uint8_t IndexByte1{static_cast<std::uint8_t>((property >> 8U) & 0xff)};
     const std::uint8_t IndexByte2{static_cast<std::uint8_t>(property & 0xff)};
     std::vector<std::uint8_t> data;
 
-    data.insert(data.end(), {IdByte1, IdByte2, 0xfa, IndexByte1, IndexByte2, 0x00, 0x00});
+    data.insert(data.end(), {member.getReadId1(), member.getReadId2(), 0xfa, IndexByte1, IndexByte2, 0x00, 0x00});
 
     id(my_mcp2515).send_data(ESPClient.CanId, use_extended_id, data);
 }
@@ -112,15 +111,13 @@ void requestData(const CanMember& member, const Property& property) {
  */
 void sendData(const CanMember& member, const Property property, const std::uint16_t value) {
     const auto use_extended_id{false};  //No use of extended ID
-    const std::uint8_t IdByte1{member.WriteId[0U]};
-    const std::uint8_t IdByte2{member.WriteId[1U]};
     const std::uint8_t IndexByte1{static_cast<std::uint8_t>((property >> 8U) & 0xff)};
     const std::uint8_t IndexByte2{static_cast<std::uint8_t>(property & 0xff)};
     const std::uint8_t ValueByte1{static_cast<std::uint8_t>((value >> 8U) & 0xff)};
     const std::uint8_t ValueByte2{static_cast<std::uint8_t>(value & 0xff)};
     std::vector<std::uint8_t> data;
 
-    data.insert(data.end(), {IdByte1, IdByte2, 0xfa, IndexByte1, IndexByte2, ValueByte1, ValueByte2});
+    data.insert(data.end(), {member.getWriteId1(), member.getWriteId2(), 0xfa, IndexByte1, IndexByte2, ValueByte1, ValueByte2});
 
     id(my_mcp2515).send_data(ESPClient.CanId, use_extended_id, data);
 }
