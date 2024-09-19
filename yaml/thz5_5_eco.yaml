@@ -5,3 +5,14 @@ esphome:
 
 packages:
   BASE: !include { file: wp_base.yaml}
+  
+  LUEFT_STUFE_BEREITSCHAFT:       !include { file: wp_ventilation.yaml, vars: { property: "LUEFT_STUFE_BEREITSCHAFT" }}
+  LUEFT_STUFE_HAND:               !include { file: wp_ventilation.yaml, vars: { property: "LUEFT_STUFE_HAND" }}
+  LUEFT_ZULUFT_STUFE1:            !include { file: wp_generic.yaml, vars: { property: "LUEFT_ZULUFT_STUFE1",icon: "mdi:pump", unit: "l/min", interval: $interval_medium  }}
+  LUEFT_ZULUFT_STUFE2:            !include { file: wp_generic.yaml, vars: { property: "LUEFT_ZULUFT_STUFE2",icon: "mdi:pump", unit: "l/min", interval: $interval_medium  }}
+  LUEFT_ZULUFT_STUFE3:            !include { file: wp_generic.yaml, vars: { property: "LUEFT_ZULUFT_STUFE3",icon: "mdi:pump", unit: "l/min", interval: $interval_medium  }}
+  LUEFT_ABLUFT_STUFE1:            !include { file: wp_generic.yaml, vars: { property: "LUEFT_ABLUFT_STUFE1",icon: "mdi:pump", unit: "l/min", interval: $interval_medium  }}
+  LUEFT_ABLUFT_STUFE2:            !include { file: wp_generic.yaml, vars: { property: "LUEFT_ABLUFT_STUFE2",icon: "mdi:pump", unit: "l/min", interval: $interval_medium  }}
+  LUEFT_ABLUFT_STUFE3:            !include { file: wp_generic.yaml, vars: { property: "LUEFT_ABLUFT_STUFE3",icon: "mdi:pump", unit: "l/min", interval: $interval_medium  }}
+  LAUFZEIT_FILTER_TAGE:           !include { file: wp_generic.yaml, vars: { property: "LAUFZEIT_FILTER_TAGE",icon: "mdi:air-filter", unit: "d", interval: $interval_once_in_a_while  }}
+

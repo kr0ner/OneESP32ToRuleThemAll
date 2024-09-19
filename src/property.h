@@ -80,6 +80,9 @@ struct Property : public detail::Property {
     PROPERTY(FEUCHTE, 0x0075, Type::et_dec_val);
     PROPERTY(RAUMEINFLUSS, 0x010f, Type::et_little_endian);
     PROPERTY(PROGRAMMSCHALTER, 0x0112, Type::et_betriebsart);
+    #if defined(THZ_5_5_ECO)
+        PROPERTY(SOMMERBETRIEB_TEMP, 0x0116, Type::et_dec_val);
+    #endif
     PROPERTY(WOCHENTAG, 0x0121, Type::et_little_endian);
     PROPERTY(TAG, 0x0122, Type::et_little_endian);
     PROPERTY(MONAT, 0x0123, Type::et_little_endian);
@@ -92,6 +95,9 @@ struct Property : public detail::Property {
     PROPERTY(TAUPUNKT_HK1, 0x0264, Type::et_dec_val);
     PROPERTY(KUEHLMODE, 0x0287);
     PROPERTY(PUMPENDREHZAHL_HEIZEN, 0x02cb, Type::et_dec_val);
+    #if defined(THZ_5_5_ECO)
+        PROPERTY(LAUFZEIT_FILTER_TAGE,0x0341);
+    #endif
     PROPERTY(WAERMEERTRAG_RUECKGE_TAG_WH, 0x03ae);
     PROPERTY(WAERMEERTRAG_RUECKGE_TAG_KWH, 0x03af);
     PROPERTY(WAERMEERTRAG_RUECKGE_SUMME_KWH, 0x03b0);
@@ -101,8 +107,24 @@ struct Property : public detail::Property {
     PROPERTY(KUEHL_RAUMSOLL_NACHT, 0x056b, Type::et_dec_val);
     PROPERTY(LUEFT_STUFE_TAG, 0x056c);
     PROPERTY(LUEFT_STUFE_NACHT, 0x056d);
+    #if defined(THZ_5_5_ECO)
+        PROPERTY(LUEFT_STUFE_BEREITSCHAFT,0x056f);
+    #endif
     PROPERTY(LUEFT_STUFE_PARTY, 0x0570);
+    #if defined(THZ_5_5_ECO)
+        PROPERTY(LUEFT_ZEIT_AUSSERPLAN_STUFE1,0x0572);
+        PROPERTY(LUEFT_ZEIT_AUSSERPLAN_STUFE2,0x0573);
+        PROPERTY(LUEFT_ZEIT_AUSSERPLAN_STUFE3,0x0574,);
+    #endif
     PROPERTY(PASSIVKUEHLUNG, 0x0575);
+    #if defined(THZ_5_5_ECO)
+        PROPERTY(LUEFT_ZULUFT_STUFE1,0x0576);
+        PROPERTY(LUEFT_ZULUFT_STUFE2,0x0577);
+        PROPERTY(LUEFT_ZULUFT_STUFE3,0x0578);
+        PROPERTY(LUEFT_ABLUFT_STUFE1,0x0579);
+        PROPERTY(LUEFT_ABLUFT_STUFE2,0x057a);
+        PROPERTY(LUEFT_ABLUFT_STUFE3,0x057b);
+    #endif
     PROPERTY(NE_STUFE_WW, 0x058a);
     PROPERTY(ZULUFT_SOLL, 0x0596);
     PROPERTY(ZULUFT_IST, 0x0597);
@@ -110,7 +132,13 @@ struct Property : public detail::Property {
     PROPERTY(ABLUFT_IST, 0x0599);
     PROPERTY(FORTLUFT_SOLL, 0x059a);
     PROPERTY(FORTLUFT_IST, 0x059b);
+    #if defined(THZ_5_5_ECO)
+        PROPERTY(SOMMERBETRIEB_HYSTERESE, 0x05a2, Type::et_dec_val);
+    #endif
     PROPERTY(PUMPENZYKLEN_MIN_AUSSENT, 0x05bb);
+    #if defined(THZ_5_5_ECO)
+        PROPERTY(LUEFT_STUFE_HAND,0x0612);
+    #endif
     PROPERTY(KUEHLSYSTEM, 0x0613);
     PROPERTY(DRUCK_HEIZKREIS, 0x064a, Type::et_dec_val);
     PROPERTY(LEISTUNG_AUSLEGUNG_KUEHLEN, 0x0692);
@@ -145,6 +173,9 @@ struct Property : public detail::Property {
     PROPERTY(WAERMEERTRAG_HEIZ_SUM_MWH, 0x0931, Type::et_double_val);
     PROPERTY(HEIZ_KUEHL_LEISTUNG, 0xc0ee, Type::et_cent_val);
     PROPERTY(ABLUFTFEUCHTE, 0xc0ef);
+    #if defined(THZ_5_5_ECO)
+        PROPERTY(ABLUFT_TAUPUNKT, 0xc0f6,Type::et_dec_val);
+    #endif
     PROPERTY(LEISTUNG_AUSLEGUNG_HEIZUNG, 0xc0f1);
     PROPERTY(VERDICHTER_STARTS, 0xc0f4);
     PROPERTY(VERDICHTER_STARTS_K, 0xc0f5);
