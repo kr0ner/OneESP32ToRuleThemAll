@@ -247,23 +247,35 @@ time:
 #                                       #
 #########################################
 packages:
-  WAERMEERTRAG_RUECKGE_SUMME_KWH: !include { file: wp_energy.yaml, vars: { property: "WAERMEERTRAG_RUECKGE_SUMME_KWH", unit: "kWh" }}
-  WAERMEERTRAG_RUECKGE_TAG_WH:    !include { file: wp_energy.yaml, vars: { property: "WAERMEERTRAG_RUECKGE_TAG_WH"   , unit: "Wh"  }}
-  WAERMEERTRAG_RUECKGE_TAG_KWH:   !include { file: wp_energy.yaml, vars: { property: "WAERMEERTRAG_RUECKGE_TAG_KWH"  , unit: "kWh" }}
-  WAERMEERTRAG_2WE_WW_SUM_KWH:    !include { file: wp_energy.yaml, vars: { property: "WAERMEERTRAG_2WE_WW_SUM_KWH"   , unit: "kWh" }}
-  WAERMEERTRAG_2WE_WW_SUM_MWH:    !include { file: wp_energy.yaml, vars: { property: "WAERMEERTRAG_2WE_WW_SUM_MWH"   , unit: "MWh" }}
-  WAERMEERTRAG_2WE_HEIZ_TAG_WH:   !include { file: wp_energy.yaml, vars: { property: "WAERMEERTRAG_2WE_HEIZ_TAG_WH"  , unit: "Wh"  }}
-  WAERMEERTRAG_2WE_HEIZ_TAG_KWH:  !include { file: wp_energy.yaml, vars: { property: "WAERMEERTRAG_2WE_HEIZ_TAG_KWH" , unit: "kWh" }}
-  WAERMEERTRAG_2WE_HEIZ_SUM_KWH:  !include { file: wp_energy.yaml, vars: { property: "WAERMEERTRAG_2WE_HEIZ_SUM_KWH" , unit: "kWh" }}
-  WAERMEERTRAG_2WE_HEIZ_SUM_MWH:  !include { file: wp_energy.yaml, vars: { property: "WAERMEERTRAG_2WE_HEIZ_SUM_MWH" , unit: "MWh" }}
-  WAERMEERTRAG_WW_TAG_WH:         !include { file: wp_energy.yaml, vars: { property: "WAERMEERTRAG_WW_TAG_WH"        , unit: "Wh"  }}
-  WAERMEERTRAG_WW_TAG_KWH:        !include { file: wp_energy.yaml, vars: { property: "WAERMEERTRAG_WW_TAG_KWH"       , unit: "kWh" }}
-  WAERMEERTRAG_WW_SUM_KWH:        !include { file: wp_energy.yaml, vars: { property: "WAERMEERTRAG_WW_SUM_KWH"       , unit: "kWh" }}
-  WAERMEERTRAG_WW_SUM_MWH:        !include { file: wp_energy.yaml, vars: { property: "WAERMEERTRAG_WW_SUM_MWH"       , unit: "MWh" }}
-  WAERMEERTRAG_HEIZ_TAG_WH:       !include { file: wp_energy.yaml, vars: { property: "WAERMEERTRAG_HEIZ_TAG_WH"      , unit: "Wh"  }}
-  WAERMEERTRAG_HEIZ_TAG_KWH:      !include { file: wp_energy.yaml, vars: { property: "WAERMEERTRAG_HEIZ_TAG_KWH"     , unit: "kWh" }}
-  WAERMEERTRAG_HEIZ_SUM_KWH:      !include { file: wp_energy.yaml, vars: { property: "WAERMEERTRAG_HEIZ_SUM_KWH"     , unit: "kWh" }}
-  WAERMEERTRAG_HEIZ_SUM_MWH:      !include { file: wp_energy.yaml, vars: { property: "WAERMEERTRAG_HEIZ_SUM_MWH"     , unit: "MWh" }}
+  WAERMEERTRAG_RUECKGE_SUMME_MWH: !include { file: wp_energy.yaml, vars: { property: "WAERMEERTRAG_RUECKGE_SUMME_MWH", unit: "MWh" , disabled_by_default: "true" }}
+  WAERMEERTRAG_RUECKGE_SUMME_KWH: !include { file: wp_energy.yaml, vars: { property: "WAERMEERTRAG_RUECKGE_SUMME_KWH", unit: "kWh" , disabled_by_default: "true" }}
+  WAERMEERTRAG_RUECKGE_TAG_WH:    !include { file: wp_energy.yaml, vars: { property: "WAERMEERTRAG_RUECKGE_TAG_WH"   , unit: "Wh"  , disabled_by_default: "true" }}
+  WAERMEERTRAG_RUECKGE_TAG_KWH:   !include { file: wp_energy.yaml, vars: { property: "WAERMEERTRAG_RUECKGE_TAG_KWH"  , unit: "kWh" , disabled_by_default: "true" }}
+  WAERMEERTRAG_2WE_WW_SUM_KWH:    !include { file: wp_energy.yaml, vars: { property: "WAERMEERTRAG_2WE_WW_SUM_KWH"   , unit: "kWh" , disabled_by_default: "true" }}
+  WAERMEERTRAG_2WE_WW_SUM_MWH:    !include { file: wp_energy.yaml, vars: { property: "WAERMEERTRAG_2WE_WW_SUM_MWH"   , unit: "MWh" , disabled_by_default: "true" }}
+  WAERMEERTRAG_2WE_HEIZ_TAG_WH:   !include { file: wp_energy.yaml, vars: { property: "WAERMEERTRAG_2WE_HEIZ_TAG_WH"  , unit: "Wh"  , disabled_by_default: "true" }}
+  WAERMEERTRAG_2WE_HEIZ_TAG_KWH:  !include { file: wp_energy.yaml, vars: { property: "WAERMEERTRAG_2WE_HEIZ_TAG_KWH" , unit: "kWh" , disabled_by_default: "true" }}
+  WAERMEERTRAG_2WE_HEIZ_SUM_KWH:  !include { file: wp_energy.yaml, vars: { property: "WAERMEERTRAG_2WE_HEIZ_SUM_KWH" , unit: "kWh" , disabled_by_default: "true" }}
+  WAERMEERTRAG_2WE_HEIZ_SUM_MWH:  !include { file: wp_energy.yaml, vars: { property: "WAERMEERTRAG_2WE_HEIZ_SUM_MWH" , unit: "MWh" , disabled_by_default: "true" }}
+  WAERMEERTRAG_WW_TAG_WH:         !include { file: wp_energy.yaml, vars: { property: "WAERMEERTRAG_WW_TAG_WH"        , unit: "Wh"  , disabled_by_default: "true" }}
+  WAERMEERTRAG_WW_TAG_KWH:        !include { file: wp_energy.yaml, vars: { property: "WAERMEERTRAG_WW_TAG_KWH"       , unit: "kWh" , disabled_by_default: "true" }}
+  WAERMEERTRAG_WW_SUM_KWH:        !include { file: wp_energy.yaml, vars: { property: "WAERMEERTRAG_WW_SUM_KWH"       , unit: "kWh" , disabled_by_default: "true" }}
+  WAERMEERTRAG_WW_SUM_MWH:        !include { file: wp_energy.yaml, vars: { property: "WAERMEERTRAG_WW_SUM_MWH"       , unit: "MWh" , disabled_by_default: "true" }}
+  WAERMEERTRAG_HEIZ_TAG_WH:       !include { file: wp_energy.yaml, vars: { property: "WAERMEERTRAG_HEIZ_TAG_WH"      , unit: "Wh"  , disabled_by_default: "true" }}
+  WAERMEERTRAG_HEIZ_TAG_KWH:      !include { file: wp_energy.yaml, vars: { property: "WAERMEERTRAG_HEIZ_TAG_KWH"     , unit: "kWh" , disabled_by_default: "true" }}
+  WAERMEERTRAG_HEIZ_SUM_KWH:      !include { file: wp_energy.yaml, vars: { property: "WAERMEERTRAG_HEIZ_SUM_KWH"     , unit: "kWh" , disabled_by_default: "true" }}
+  WAERMEERTRAG_HEIZ_SUM_MWH:      !include { file: wp_energy.yaml, vars: { property: "WAERMEERTRAG_HEIZ_SUM_MWH"     , unit: "MWh" , disabled_by_default: "true" }}
+
+  WAERMEERTRAG_WRG_SUMME_TAG_KWH:       !include { file: wp_energy_meter.yaml, vars: { property: "WAERMEERTRAG_WRG_SUMME_TAG_KWH"          }}
+  WAERMEERTRAG_HEIZ_SUMME_TAG_KWH:      !include { file: wp_energy_meter.yaml, vars: { property: "WAERMEERTRAG_HEIZ_SUMME_TAG_KWH"         }}
+  WAERMEERTRAG_WW_SUMME_TAG_KWH:        !include { file: wp_energy_meter.yaml, vars: { property: "WAERMEERTRAG_WW_SUMME_TAG_KWH"           }}
+  WAERMEERTRAG_WW_SUMME_MWH:            !include { file: wp_energy_meter.yaml, vars: { property: "WAERMEERTRAG_WW_SUMME_MWH"   , unit: "MWh"           }}
+  WAERMEERTRAG_WRG_SUMME_MWH:           !include { file: wp_energy_meter.yaml, vars: { property: "WAERMEERTRAG_WRG_SUMME_MWH"  , unit: "MWh"           }}
+  WAERMEERTRAG_HEIZ_SUMME_MWH:          !include { file: wp_energy_meter.yaml, vars: { property: "WAERMEERTRAG_HEIZ_SUMME_MWH" , unit: "MWh"           }}
+  EL_AUFNAHMELEISTUNG_WW_TAG_WH:        !include { file: wp_energy_meter.yaml, vars: { property: "EL_AUFNAHMELEISTUNG_WW_TAG_WH" , unit: "Wh", internal: "true", accuracy_decimals: "0", icon: "mdi:power", state_class: "measurement"    }}
+  EL_AUFNAHMELEISTUNG_WW_SUMME_KWH:     !include { file: wp_energy_meter.yaml, vars: { property: "EL_AUFNAHMELEISTUNG_WW_SUMME_KWH" , icon: "mdi:power"    }}
+  EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH:      !include { file: wp_energy_meter.yaml, vars: { property: "EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH" , unit: "Wh", internal: "true", accuracy_decimals: "0", icon: "mdi:power", state_class: "measurement"  }}
+  EL_AUFNAHMELEISTUNG_HEIZ_SUMME_KWH:   !include { file: wp_energy_meter.yaml, vars: { property: "EL_AUFNAHMELEISTUNG_HEIZ_SUMME_KWH" , icon: "mdi:power"  }}
 
   SPEICHERSOLLTEMP:               !include { file: wp_temperature.yaml, vars: { property: "SPEICHERSOLLTEMP"          }}
   EINSTELL_SPEICHERSOLLTEMP:      !include { file: wp_temperature.yaml, vars: { property: "EINSTELL_SPEICHERSOLLTEMP" }}
@@ -340,42 +352,6 @@ sensor:
         - lambda: |-
             ESP_LOGI("SET", "gFEUCHTE set to %f", x);
             id(gFEUCHTE) = x;
-
-  - platform: template
-    name: "EL_AUFNAHMELEISTUNG_WW_TAG_WH"
-    id: EL_AUFNAHMELEISTUNG_WW_TAG_WH
-    unit_of_measurement: "Wh"
-    icon: "mdi:power"
-    state_class: "measurement"
-    accuracy_decimals: 0
-    internal: true
-
-  - platform: template
-    name: "EL_AUFNAHMELEISTUNG_WW_SUMME_KWH"
-    id: EL_AUFNAHMELEISTUNG_WW_SUMME_KWH
-    unit_of_measurement: "kWh"
-    icon: "mdi:power"
-    accuracy_decimals: 2
-    device_class: energy
-    state_class: total_increasing
-
-  - platform: template
-    name: "EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH"
-    id: EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH
-    unit_of_measurement: "Wh"
-    icon: "mdi:power"
-    state_class: "measurement"
-    accuracy_decimals: 0
-    internal: true
-
-  - platform: template
-    name: "EL_AUFNAHMELEISTUNG_HEIZ_SUMME_KWH"
-    id: EL_AUFNAHMELEISTUNG_HEIZ_SUMME_KWH
-    unit_of_measurement: "kWh"
-    icon: "mdi:power"
-    accuracy_decimals: 2
-    state_class: total_increasing
-    device_class: energy
 
   - platform: template
     name: "VERDICHTER_STARTS"
@@ -525,15 +501,15 @@ canbus:
                   }
                   break;
                 }
-                case Property::kPASSIVKUEHLUNG:
-                  {
-                    const auto stringValue{Mapper::instance().getPassivkuehlung(value).value_or("Unbekannt")};
-                    const auto index = id(PASSIVKUEHLUNG).index_of(stringValue);
-                    if(index.has_value()) {
-                      id(PASSIVKUEHLUNG).publish_state(stringValue);
+              case Property::kPASSIVKUEHLUNG:
+                {
+                  const auto stringValue{Mapper::instance().getPassivkuehlung(value).value_or("Unbekannt")};
+                  const auto index = id(PASSIVKUEHLUNG).index_of(stringValue);
+                  if(index.has_value()) {
+                    id(PASSIVKUEHLUNG).publish_state(stringValue);
                     }
                     break;
-                  }
+                }
               case Property::kBETRIEBS_STATUS_2:
                 {
                   const std::bitset<2U> status_bits{static_cast<std::uint16_t>(value)};
@@ -561,21 +537,59 @@ canbus:
                   break;
                 }
               case Property::kEL_AUFNAHMELEISTUNG_HEIZ_TAG_WH:
-                // This value is never reset, messing up the Energy Dashboard.
-                // The offset is obtained at midnight and subtracted for the next 24 hours..
-                id(EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH).publish_state(value);
-                break;
+                {
+                  // This value is never reset, messing up the Energy Dashboard.
+                  // The offset is obtained at midnight and subtracted for the next 24 hours..
+                  id(EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH).publish_state(value);
+                  break;
+                }
               case Property::kEL_AUFNAHMELEISTUNG_HEIZ_TAG_KWH:
-                id(EL_AUFNAHMELEISTUNG_HEIZ_SUMME_KWH).publish_state(static_cast<std::uint16_t>(value) + (0.001*(id(EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH).state - id(gOFFSET_EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH))));
-                break;
+                {
+                  id(EL_AUFNAHMELEISTUNG_HEIZ_SUMME_KWH).publish_state(static_cast<std::uint16_t>(value) + (0.001*(id(EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH).state - id(gOFFSET_EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH))));
+                  break;
+                }
               case Property::kEL_AUFNAHMELEISTUNG_WW_TAG_WH:
-                // This value is never reset, messing up the Energy Dashboard.
-                // The offset is obtained at midnight and subtracted for the next 24 hours.
-                id(EL_AUFNAHMELEISTUNG_WW_TAG_WH).publish_state(value);
-                break;
+                {
+                  // This value is never reset, messing up the Energy Dashboard.
+                  // The offset is obtained at midnight and subtracted for the next 24 hours.
+                  id(EL_AUFNAHMELEISTUNG_WW_TAG_WH).publish_state(value);
+                  break;
+                }
               case Property::kEL_AUFNAHMELEISTUNG_WW_TAG_KWH:
-                id(EL_AUFNAHMELEISTUNG_WW_SUMME_KWH).publish_state(static_cast<std::uint16_t>(value) + (0.001*(id(EL_AUFNAHMELEISTUNG_WW_TAG_WH).state - id(gOFFSET_EL_AUFNAHMELEISTUNG_WW_TAG_WH))));
-                break;
+                {
+                  id(EL_AUFNAHMELEISTUNG_WW_SUMME_KWH).publish_state(static_cast<std::uint16_t>(value) + (0.001*(id(EL_AUFNAHMELEISTUNG_WW_TAG_WH).state - id(gOFFSET_EL_AUFNAHMELEISTUNG_WW_TAG_WH))));
+                  break;
+                }
+              case Property::kWAERMEERTRAG_WW_TAG_KWH:
+                {
+                  id(WAERMEERTRAG_WW_SUMME_TAG_KWH).publish_state(static_cast<std::uint16_t>(value) + (0.001*(id(WAERMEERTRAG_WW_TAG_WH).state)));
+                  break;
+                }
+              case Property::kWAERMEERTRAG_WW_SUM_MWH:
+                {
+                  id(WAERMEERTRAG_WW_SUMME_MWH).publish_state(static_cast<std::uint16_t>(value) + (0.001*(id(WAERMEERTRAG_WW_SUM_KWH).state)));
+                  break;
+                }
+              case Property::kWAERMEERTRAG_HEIZ_TAG_KWH:
+                {
+                  id(WAERMEERTRAG_HEIZ_SUMME_TAG_KWH).publish_state(static_cast<std::uint16_t>(value) + (0.001*(id(WAERMEERTRAG_HEIZ_TAG_WH).state)));
+                  break;
+                }
+              case Property::kWAERMEERTRAG_HEIZ_SUM_MWH:
+                {
+                  id(WAERMEERTRAG_HEIZ_SUMME_MWH).publish_state(static_cast<std::uint16_t>(value) + (0.001*(id(WAERMEERTRAG_HEIZ_SUM_KWH).state)));
+                  break;
+                }
+              case Property::kWAERMEERTRAG_RUECKGE_TAG_KWH:
+                {
+                  id(WAERMEERTRAG_WRG_SUMME_TAG_KWH).publish_state(static_cast<std::uint16_t>(value) + (0.001*(id(WAERMEERTRAG_RUECKGE_TAG_WH).state)));
+                  break;
+                }
+              case Property::kWAERMEERTRAG_RUECKGE_SUMME_MWH:
+                {
+                  id(WAERMEERTRAG_WRG_SUMME_MWH).publish_state(static_cast<std::uint16_t>(value) + (0.001*(id(WAERMEERTRAG_RUECKGE_SUMME_KWH).state)));
+                  break;
+                }
               case Property::kLUEFT_STUFE_TAG:
                 {
                   // workaround for broken ninth bit of BETRIEBSSTATUS
