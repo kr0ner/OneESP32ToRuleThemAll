@@ -1,5 +1,7 @@
 defaults:
   target: "Kessel"
+  internal: "false"
+  disabled_by_default: "false"
 
 sensor:
   - platform: template
@@ -7,7 +9,9 @@ sensor:
     id: ${property}
     unit_of_measurement: ${unit}
     icon: "mdi:heating-coil"
-    state_class: "measurement"
+    state_class: measurement
+    internal: ${internal}
+    disabled_by_default: ${disabled_by_default}
     accuracy_decimals: 0
     update_interval: $interval_once_in_a_while
     filters:
