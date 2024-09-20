@@ -1,0 +1,20 @@
+defaults:
+  internal: "false"
+  disabled_by_default: "false"
+  unit: "kWh"
+  state_class: "total_increasing"
+  accuracy_decimals: "3"
+  icon: "mdi:calculator"
+  
+
+sensor:
+  - platform: template
+    name: ${property}
+    id: ${property}
+    unit_of_measurement: ${unit}
+    icon: ${icon}
+    state_class: ${state_class}
+    device_class: energy
+    internal: ${internal}
+    disabled_by_default: ${disabled_by_default}
+    accuracy_decimals: ${accuracy_decimals}
