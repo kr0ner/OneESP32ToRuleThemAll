@@ -240,6 +240,15 @@ time:
           - sensor.template.publish:
               id: EL_AUFNAHMELEISTUNG_HEIZ_SUMME_KWH
               state: 0.0
+          - sensor.template.publish:
+              id: WAERMEERTRAG_WW_SUMME_TAG_KWH
+              state: 0.0
+          - sensor.template.publish:
+              id: WAERMEERTRAG_HEIZ_SUMME_TAG_KWH
+              state: 0.0
+          - sensor.template.publish:
+              id: WAERMEERTRAG_WRG_SUMME_TAG_KWH
+              state: 0.0          
 
 #########################################
 #                                       #
