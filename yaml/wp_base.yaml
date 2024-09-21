@@ -18,6 +18,7 @@ esphome:
     - src/simple_variant.h
     - src/type.h
     - src/type.cpp
+
 #########################################
 #                                       #
 #   Obtain initial states               #
@@ -31,10 +32,6 @@ esphome:
           queueRequest(Kessel, Property::kPASSIVKUEHLUNG);
           queueRequest(Kessel, Property::kBETRIEBS_STATUS);
           queueRequest(Kessel, Property::kBETRIEBS_STATUS_2);
-          queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_WW_TAG_WH);
-          queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_WW_TAG_KWH);
-          queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_HEIZ_TAG_WH);
-          queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_HEIZ_TAG_KWH);
           CallbackHandler::instance().addCallback(std::make_pair(Kessel,Property::kVERDICHTER_STARTS_K),[](const SimpleVariant& value){
               id(gVERDICHTER_STARTS_K) = static_cast<std::uint16_t>(value) * 1000U;
           });
@@ -50,12 +47,6 @@ esphome:
 #                                       #
 #########################################
 globals:
-  - id: gOFFSET_EL_AUFNAHMELEISTUNG_WW_TAG_WH
-    type: int
-    initial_value: "0"
-  - id: gOFFSET_EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH
-    type: int
-    initial_value: "0"
   - id: gVERDICHTER_STARTS_K
     type: int
     initial_value: "0"
@@ -209,40 +200,6 @@ interval:
 
 #########################################
 #                                       #
-#   Time triggers                       #
-#                                       #
-#########################################
-time:
-  - platform: sntp
-    on_time:
-      # Every hour, every 5 muinutes except midnight. Helper will be set when the response is received
-      - seconds: 0
-        minutes: /5
-        hours: 1-23
-        then:
-          - lambda: |-
-              queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_WW_TAG_WH);
-              queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_WW_TAG_KWH);
-              queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_HEIZ_TAG_WH);
-              queueRequest(Kessel, Property::kEL_AUFNAHMELEISTUNG_HEIZ_TAG_KWH);
-      # At midnight reset power consumptions. The helper must not be set!
-      - seconds: 0
-        minutes: 0
-        hours: 0
-        then:
-          - lambda: |-
-              id(gOFFSET_EL_AUFNAHMELEISTUNG_WW_TAG_WH) = id(EL_AUFNAHMELEISTUNG_WW_TAG_WH).state;
-          - sensor.template.publish:
-              id: EL_AUFNAHMELEISTUNG_WW_SUMME_KWH
-              state: 0.0
-          - lambda: |-
-              id(gOFFSET_EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH) = id(EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH).state;
-          - sensor.template.publish:
-              id: EL_AUFNAHMELEISTUNG_HEIZ_SUMME_KWH
-              state: 0.0
-
-#########################################
-#                                       #
 #   Packages                            #
 #                                       #
 #########################################
@@ -314,8 +271,11 @@ packages:
   LEISTUNG_AUSLEGUNG_KUEHLEN:     !include { file: wp_number.yaml, vars: { property: "LEISTUNG_AUSLEGUNG_KUEHLEN" }}
   PUMPENDREHZAHL_HEIZEN:          !include { file: wp_number.yaml, vars: { property: "PUMPENDREHZAHL_HEIZEN"      , step:   "0.1" }}
   RAUMEINFLUSS:                   !include { file: wp_number.yaml, vars: { property: "RAUMEINFLUSS"               , target: "HK1" }}
-  HYSTERESE_WW:                   !include { file: wp_number.yaml, vars: { property: "HYSTERESE_WW"               , min: "2.0", max: "10.0", step:   "0.1", unit: "°C"}}
+  HYSTERESE_WW:                   !include { file: wp_number.yaml, vars: { property: "HYSTERESE_WW"               , min: "2.0", max: "10.0", step:   "0.1", unit: "°C" }}
   NE_STUFE_WW:                    !include { file: wp_number.yaml, vars: { property: "NE_STUFE_WW"                , min: "0", max: "3" }}
+
+  EL_AUFNAHMELEISTUNG_WW_SUMME_KWH:   !include { file: wp_energy_combined.yaml, vars: { sensor_name: "EL_AUFNAHMELEISTUNG_WW_SUMME_KWH"  , property_wh: "EL_AUFNAHMELEISTUNG_WW_TAG_WH"  , property_kwh : "EL_AUFNAHMELEISTUNG_WW_TAG_KWH"   }}
+  EL_AUFNAHMELEISTUNG_HEIZ_SUMME_KWH: !include { file: wp_energy_combined.yaml, vars: { sensor_name: "EL_AUFNAHMELEISTUNG_HEIZ_SUMME_KWH", property_wh: "EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH", property_kwh : "EL_AUFNAHMELEISTUNG_HEIZ_TAG_KWH" }}
 
 #########################################
 #                                       #
@@ -340,42 +300,6 @@ sensor:
         - lambda: |-
             ESP_LOGI("SET", "gFEUCHTE set to %f", x);
             id(gFEUCHTE) = x;
-
-  - platform: template
-    name: "EL_AUFNAHMELEISTUNG_WW_TAG_WH"
-    id: EL_AUFNAHMELEISTUNG_WW_TAG_WH
-    unit_of_measurement: "Wh"
-    icon: "mdi:power"
-    state_class: "measurement"
-    accuracy_decimals: 0
-    internal: true
-
-  - platform: template
-    name: "EL_AUFNAHMELEISTUNG_WW_SUMME_KWH"
-    id: EL_AUFNAHMELEISTUNG_WW_SUMME_KWH
-    unit_of_measurement: "kWh"
-    icon: "mdi:power"
-    accuracy_decimals: 2
-    device_class: energy
-    state_class: total_increasing
-
-  - platform: template
-    name: "EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH"
-    id: EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH
-    unit_of_measurement: "Wh"
-    icon: "mdi:power"
-    state_class: "measurement"
-    accuracy_decimals: 0
-    internal: true
-
-  - platform: template
-    name: "EL_AUFNAHMELEISTUNG_HEIZ_SUMME_KWH"
-    id: EL_AUFNAHMELEISTUNG_HEIZ_SUMME_KWH
-    unit_of_measurement: "kWh"
-    icon: "mdi:power"
-    accuracy_decimals: 2
-    state_class: total_increasing
-    device_class: energy
 
   - platform: template
     name: "VERDICHTER_STARTS"
@@ -525,15 +449,15 @@ canbus:
                   }
                   break;
                 }
-                case Property::kPASSIVKUEHLUNG:
-                  {
-                    const auto stringValue{Mapper::instance().getPassivkuehlung(value).value_or("Unbekannt")};
-                    const auto index = id(PASSIVKUEHLUNG).index_of(stringValue);
-                    if(index.has_value()) {
-                      id(PASSIVKUEHLUNG).publish_state(stringValue);
-                    }
-                    break;
+              case Property::kPASSIVKUEHLUNG:
+                {
+                  const auto stringValue{Mapper::instance().getPassivkuehlung(value).value_or("Unbekannt")};
+                  const auto index = id(PASSIVKUEHLUNG).index_of(stringValue);
+                  if(index.has_value()) {
+                    id(PASSIVKUEHLUNG).publish_state(stringValue);
                   }
+                  break;
+                }
               case Property::kBETRIEBS_STATUS_2:
                 {
                   const std::bitset<2U> status_bits{static_cast<std::uint16_t>(value)};
@@ -560,22 +484,6 @@ canbus:
                   id(AUFHEIZPROGRAMM_AKTIV).publish_state(status_bits.test(14U));
                   break;
                 }
-              case Property::kEL_AUFNAHMELEISTUNG_HEIZ_TAG_WH:
-                // This value is never reset, messing up the Energy Dashboard.
-                // The offset is obtained at midnight and subtracted for the next 24 hours..
-                id(EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH).publish_state(value);
-                break;
-              case Property::kEL_AUFNAHMELEISTUNG_HEIZ_TAG_KWH:
-                id(EL_AUFNAHMELEISTUNG_HEIZ_SUMME_KWH).publish_state(static_cast<std::uint16_t>(value) + (0.001*(id(EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH).state - id(gOFFSET_EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH))));
-                break;
-              case Property::kEL_AUFNAHMELEISTUNG_WW_TAG_WH:
-                // This value is never reset, messing up the Energy Dashboard.
-                // The offset is obtained at midnight and subtracted for the next 24 hours.
-                id(EL_AUFNAHMELEISTUNG_WW_TAG_WH).publish_state(value);
-                break;
-              case Property::kEL_AUFNAHMELEISTUNG_WW_TAG_KWH:
-                id(EL_AUFNAHMELEISTUNG_WW_SUMME_KWH).publish_state(static_cast<std::uint16_t>(value) + (0.001*(id(EL_AUFNAHMELEISTUNG_WW_TAG_WH).state - id(gOFFSET_EL_AUFNAHMELEISTUNG_WW_TAG_WH))));
-                break;
               case Property::kLUEFT_STUFE_TAG:
                 {
                   // workaround for broken ninth bit of BETRIEBSSTATUS
