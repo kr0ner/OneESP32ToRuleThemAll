@@ -150,6 +150,8 @@ struct Property : public detail::Property {
     PROPERTY(VERDICHTER_STARTS_K, 0xc0f5);
     PROPERTY(LAUFZEIT_FILTER, 0xc111);
     PROPERTY(BETRIEBS_STATUS_2, 0xc356);
+    PROPERTY(DIFFERENZDRUCK, 0xc11e);
+    PROPERTY(ABLUFTTAUPUNKT, 0xc0f6, Type::et_dec_val);
 };
 
 #endif
