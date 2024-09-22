@@ -7,4 +7,4 @@ packages:
   BASE: !include { file: wp_base.yaml}
   
   ABLUFTTAUPUNKT:                 !include { file: thz504_temperature.yaml, vars: { property: "ABLUFTTAUPUNKT" }} 
-  DIFFERENZDRUCK:                 !include { file: thz504_generic.yaml, vars: { property: "DIFFERENZDRUCK" , interval: $interval_slow  , unit: "PA", icon: "mdi:pump"  }} 
+  DIFFERENZDRUCK:                 !include { file: thz504_generic.yaml, vars: { property: "DIFFERENZDRUCK" , interval: $interval_slow  , unit: "Pa", icon: "mdi:pump"  }} 
