@@ -15,7 +15,7 @@ struct CanMember {
     CANID CanId;
     std::string name;
     bool operator<(const CanMember& other) const { return CanId < other.CanId; }
-    std::uint16_t getWriteId() const { return (getWriteId1() | (getWriteId2() << 8U)); }
+    std::uint16_t getWriteId() const { return (getWriteId2() | (getWriteId1() << 8U)); }
     std::uint16_t getReadId() const { return (getReadId2() | (getReadId1() << 8U)); }
     std::uint8_t getReadId1() const { return (CanId >> 3) + 1;} // divide by 8 and + 1 for reading a register
     std::uint8_t getReadId2() const { return (CanId & 0xF);} // + last hex digit of Can ID
