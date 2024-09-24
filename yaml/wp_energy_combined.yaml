@@ -40,7 +40,7 @@ esphome:
             id(${property_wh}).publish_state(value);
           });
           CallbackHandler::instance().addCallback(std::make_pair(${target},Property::k${property_kwh}),[](const SimpleVariant& value){
-            id(${sensor_name}).publish_state(static_cast<std::uint16_t>(value) + id(${property_wh}).state - id(gOFFSET_EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH));
+            id(${sensor_name}).publish_state(static_cast<std::uint16_t>(value) + id(${property_wh}).state);
           });
           // initial queueing of the Wh and kWh value
           queueRequest(${target}, Property::k${property_wh});
