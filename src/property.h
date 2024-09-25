@@ -182,13 +182,10 @@ struct Property : public detail::Property {
     PROPERTY(WAERMEERTRAG_HEIZ_SUM_MWH, 0x0931, Type::et_double_val);
     PROPERTY(HEIZ_KUEHL_LEISTUNG, 0xc0ee, Type::et_cent_val);
     PROPERTY(ABLUFTFEUCHTE, 0xc0ef);
-    #if defined(THZ_5_5_ECO)
-        PROPERTY(ABLUFT_TAUPUNKT, 0xc0f6,Type::et_dec_val);
-    #endif
     PROPERTY(LEISTUNG_AUSLEGUNG_HEIZUNG, 0xc0f1);
     PROPERTY(VERDICHTER_STARTS, 0xc0f4);
     PROPERTY(VERDICHTER_STARTS_K, 0xc0f5);
-    PROPERTY(ABLUFTTAUPUNKT, 0xc0f6, Type::et_dec_val);
+    PROPERTY(ABLUFT_TAUPUNKT, 0xc0f6,Type::et_dec_val);
     PROPERTY(DIFFERENZDRUCK, 0xc11e);
     PROPERTY(LAUFZEIT_FILTER, 0xc111);
     PROPERTY(BETRIEBS_STATUS_2, 0xc356);
