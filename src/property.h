@@ -83,7 +83,7 @@ struct Property : public detail::Property {
     #if defined(THZ_5_5_ECO)
         PROPERTY(SOMMERBETRIEB_TEMP, 0x0116, Type::et_dec_val);
     #endif
-    PROPERTY(WOCHENTAG, 0x0121);
+    PROPERTY(WOCHENTAG, 0x0121, Type::et_little_endian);
     PROPERTY(TAG, 0x0122, Type::et_little_endian);
     PROPERTY(MONAT, 0x0123, Type::et_little_endian);
     PROPERTY(JAHR, 0x0124, Type::et_little_endian);
@@ -93,7 +93,7 @@ struct Property : public detail::Property {
     PROPERTY(BETRIEBS_STATUS, 0x0176);
     PROPERTY(VOLUMENSTROM, 0x01da, Type::et_dec_val);
     PROPERTY(TAUPUNKT_HK1, 0x0264, Type::et_dec_val);
-    PROPERTY(HEIZGASTEMPERATUR, 0x0265); 
+    PROPERTY(HEIZGASTEMPERATUR, 0x0265, Type::et_dec_val); 
     PROPERTY(KUEHLMODE, 0x0287);
     PROPERTY(PUMPENDREHZAHL_HEIZEN, 0x02cb, Type::et_dec_val);
     #if defined(THZ_5_5_ECO)
