@@ -17,6 +17,10 @@ This project aims to provide all kinds of useful features for your Home Assistan
 2. Navigate through the menu of the display, mounted to your heat pump
 4. Try to match the values (e.g. 237) to the values you see in the display (23.7°)
 5. Use the existing templates to add new sensors
+5.1 Add the newly added ids along with their types to property.h
+5.2 Guard the newly added ids with e.g. #if defined(THZ_5_5_ECO) ... #endif to express that it was tested with that version
+    once it is confirmed for the others, the guards can be removed
+5.3 Add the entities to the respective yaml and use the already existing templates  
 6. profit
 
 ## Troubleshooting
