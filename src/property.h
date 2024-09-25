@@ -83,16 +83,17 @@ struct Property : public detail::Property {
     #if defined(THZ_5_5_ECO)
         PROPERTY(SOMMERBETRIEB_TEMP, 0x0116, Type::et_dec_val);
     #endif
-    PROPERTY(WOCHENTAG, 0x0121, Type::et_little_endian);
+    PROPERTY(WOCHENTAG, 0x0121);
     PROPERTY(TAG, 0x0122, Type::et_little_endian);
     PROPERTY(MONAT, 0x0123, Type::et_little_endian);
     PROPERTY(JAHR, 0x0124, Type::et_little_endian);
     PROPERTY(STUNDE, 0x0125, Type::et_little_endian);
     PROPERTY(MINUTE, 0x0126, Type::et_little_endian);
-    PROPERTY(HYSTERESE_WW, 0x0140,et_dec_val);
+    PROPERTY(HYSTERESE_WW, 0x0140, Type::et_dec_val);
     PROPERTY(BETRIEBS_STATUS, 0x0176);
     PROPERTY(VOLUMENSTROM, 0x01da, Type::et_dec_val);
     PROPERTY(TAUPUNKT_HK1, 0x0264, Type::et_dec_val);
+    PROPERTY(HEIZGASTEMPERATUR, 0x0265); 
     PROPERTY(KUEHLMODE, 0x0287);
     PROPERTY(PUMPENDREHZAHL_HEIZEN, 0x02cb, Type::et_dec_val);
     #if defined(THZ_5_5_ECO)
@@ -135,6 +136,12 @@ struct Property : public detail::Property {
     #if defined(THZ_5_5_ECO)
         PROPERTY(SOMMERBETRIEB_HYSTERESE, 0x05a2, Type::et_dec_val);
     #endif
+    PROPERTY(VERFLUESSIGERTEMPERATUR, 0x059c, Type::et_dec_val);
+    PROPERTY(VERDICHTER_HEIZEN, 0x05a4); 
+    PROPERTY(VERDICHTER_KUEHLEN, 0x05a5); 
+    PROPERTY(VERDICHTER_WW, 0x05a6); 
+    PROPERTY(EL_NE_HEIZEN, 0x05a7); 
+    PROPERTY(EL_NE_WW, 0x05a8); 
     PROPERTY(PUMPENZYKLEN_MIN_AUSSENT, 0x05bb);
     #if defined(THZ_5_5_ECO)
         PROPERTY(LUEFT_STUFE_HAND,0x0612);
@@ -145,8 +152,10 @@ struct Property : public detail::Property {
     PROPERTY(MOTORSTROM, 0x069f);
     PROPERTY(MOTORLEISTUNG, 0x06a0, Type::et_cent_val);
     PROPERTY(MOTORSPANNUNG, 0x06a1);
+    PROPERTY(OELSUMPFTEMPERATUR, 0x0693c, Type::et_dec_val); 
     PROPERTY(ABLUFTTEMP, 0x0694, Type::et_dec_val);
-    PROPERTY(ANZEIGE_NIEDERDRUCK, 0x07a7, Type::et_dec_val);
+    PROPERTY(HOCHDRUCK, 0x07a6, Type::et_cent_val); 
+    PROPERTY(NIEDERDRUCK, 0x07a7, Type::et_cent_val); 
     PROPERTY(EL_AUFNAHMELEISTUNG_WW_TAG_WH, 0x091a);
     PROPERTY(EL_AUFNAHMELEISTUNG_WW_TAG_KWH, 0x091b, Type::et_double_val);
     PROPERTY(EL_AUFNAHMELEISTUNG_WW_SUM_KWH, 0x091c);
@@ -179,6 +188,8 @@ struct Property : public detail::Property {
     PROPERTY(LEISTUNG_AUSLEGUNG_HEIZUNG, 0xc0f1);
     PROPERTY(VERDICHTER_STARTS, 0xc0f4);
     PROPERTY(VERDICHTER_STARTS_K, 0xc0f5);
+    PROPERTY(ABLUFTTAUPUNKT, 0xc0f6, Type::et_dec_val);
+    PROPERTY(DIFFERENZDRUCK, 0xc11e);
     PROPERTY(LAUFZEIT_FILTER, 0xc111);
     PROPERTY(BETRIEBS_STATUS_2, 0xc356);
 };
