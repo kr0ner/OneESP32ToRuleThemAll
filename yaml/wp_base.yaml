@@ -1,12 +1,3 @@
-defaults:
-  clk_pin: "GPIO14"
-  mosi_pin: "GPIO13"
-  miso_pin: "GPIO4"
-  cs_pin: "GPIO15"
-  evu_pin: "GPIO5"
-  entity_room_temperature: "sensor.durchschnittstemperatur_haus_ohne_keller"
-  entity_humidity: "sensor.durchschnitt_luftfeuchtigkeit_haus"
-
 esphome:
   includes:
     - src/callback_handler.h

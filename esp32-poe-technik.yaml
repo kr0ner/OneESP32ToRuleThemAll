@@ -40,6 +40,14 @@ substitutions:
   interval_very_slow: 15min
   interval_once_in_a_while: 1h
 
+  clk_pin: "GPIO14"
+  mosi_pin: "GPIO13"
+  miso_pin: "GPIO4"
+  cs_pin: "GPIO15"
+  evu_pin: "GPIO5"
+  entity_room_temperature: "sensor.durchschnittstemperatur_haus_ohne_keller"
+  entity_humidity: "sensor.durchschnitt_luftfeuchtigkeit_haus"
+
 button:
   - platform: restart
     name: "Restart ESP32-PoE Technik"
