@@ -152,7 +152,7 @@ struct Property : public detail::Property {
     PROPERTY(MOTORSTROM, 0x069f);
     PROPERTY(MOTORLEISTUNG, 0x06a0, Type::et_cent_val);
     PROPERTY(MOTORSPANNUNG, 0x06a1);
-    PROPERTY(OELSUMPFTEMPERATUR, 0x0693c, Type::et_dec_val); 
+    PROPERTY(OELSUMPFTEMPERATUR, 0x0693, Type::et_dec_val); 
     PROPERTY(ABLUFTTEMP, 0x0694, Type::et_dec_val);
     PROPERTY(HOCHDRUCK, 0x07a6, Type::et_cent_val); 
     PROPERTY(NIEDERDRUCK, 0x07a7, Type::et_cent_val); 
