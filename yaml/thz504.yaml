@@ -6,5 +6,16 @@ esphome:
 packages:
   BASE: !include { file: wp_base.yaml}
   
-  ABLUFTTAUPUNKT:                 !include { file: thz504_temperature.yaml, vars: { property: "ABLUFTTAUPUNKT" }} 
-  DIFFERENZDRUCK:                 !include { file: thz504_generic.yaml, vars: { property: "DIFFERENZDRUCK" , interval: $interval_slow  , unit: "Pa", icon: "mdi:pump"  }} 
+  ABLUFTTAUPUNKT:                 !include { file: wp_temperature.yaml, vars: { property: "ABLUFTTAUPUNKT"   }}
+  HEIZGASTEMPERATUR:              !include { file: wp_temperature.yaml, vars: { property: "HEIZGASTEMPERATUR" }} 
+  VERFLUESSIGERTEMPERATUR:        !include { file: wp_temperature.yaml, vars: { property: "VERFLUESSIGERTEMPERATUR" }} 
+  OELSUMPFTEMPERATUR:             !include { file: wp_temperature.yaml, vars: { property: "OELSUMPFTEMPERATUR" }} 
+
+  DRUCK_HEIZKREIS:                !include { file: wp_generic.yaml, vars: { property: "DRUCK_HEIZKREIS"          , interval: $interval_slow  , unit: "bar"  , icon: "mdi:gauge" , accuracy_decimals: "2" }}
+  HOCHDRUCK:                      !include { file: wp_generic.yaml, vars: { property: "HOCHDRUCK"                , interval: $interval_slow  , unit: "bar"  , icon: "mdi:gauge" , accuracy_decimals: "2" }}
+  DIFFERENZDRUCK:                 !include { file: wp_generic.yaml, vars: { property: "DIFFERENZDRUCK"           , interval: $interval_slow  , unit: "PA"   , icon: "mdi:pump"  }} 
+  VERDICHTER_HEIZEN:              !include { file: wp_generic.yaml, vars: { property: "VERDICHTER_HEIZEN"        , interval: $interval_slow  , unit: "h"    , icon: "mdi:clock"  }}
+  VERDICHTER_KUEHLEN:             !include { file: wp_generic.yaml, vars: { property: "VERDICHTER_KUEHLEN"       , interval: $interval_slow  , unit: "h"    , icon: "mdi:clock"  }}
+  VERDICHTER_WW:                  !include { file: wp_generic.yaml, vars: { property: "VERDICHTER_WW"            , interval: $interval_slow  , unit: "h"    , icon: "mdi:clock"  }}
+  EL_NE_HEIZEN:                   !include { file: wp_generic.yaml, vars: { property: "EL_NE_HEIZEN"             , interval: $interval_slow  , unit: "h"    , icon: "mdi:clock"  }}
+  EL_NE_WW:                       !include { file: wp_generic.yaml, vars: { property: "EL_NE_WW"                 , interval: $interval_slow  , unit: "h"    , icon: "mdi:clock"  }}

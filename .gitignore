@@ -7,3 +7,4 @@
 **/lib/
 **/platformio.ini
 /secrets.yaml
+/settings.json
