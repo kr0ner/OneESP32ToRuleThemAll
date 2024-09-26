@@ -1,5 +1,4 @@
 defaults:
-  interval: $interval_very_slow
   target: "Kessel"
   step: "1"
   min: "0"
@@ -15,7 +14,6 @@ number:
     step: ${step}
     initial_value: NAN
     optimistic: true
-    update_interval: ${interval}
     set_action:
       - lambda: |-
           ESP_LOGI("Number", "New value %f", x);
