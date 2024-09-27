@@ -1,0 +1,42 @@
+defaults:
+  target: "Kessel"
+  scaler: "0.001"
+  interval: $interval_very_slow
+
+sensor:
+  - platform: template
+    name: ${scaled_property}
+    id: ${scaled_property}
+    state_class: "measurement"
+    accuracy_decimals: 3
+    internal: true
+    filters:
+      - multiply: ${scaler}
+      
+  - platform: template
+    name: ${sensor_name}
+    id: ${sensor_name}
+    unit_of_measurement: ${unit}
+    icon: ${icon}
+    accuracy_decimals: ${accuracy_decimals}
+    update_interval: ${interval}
+    lambda: |-
+        queueRequest(${target}, Property::k${scaled_property});
+        queueRequest(${target}, Property::k${property});
+        return {};
+
+esphome:
+  on_boot:
+    priority: -100
+    then:
+      - lambda: |-
+          // Handle the values received from the heat pump. Scaled property value is just stored in an internal sensor and published together with the property value on reception.
+          CallbackHandler::instance().addCallback(std::make_pair(${target},Property::k${scaled_property}),[](const SimpleVariant& value){
+            id(${scaled_property}).publish_state(value.get<std::uint16_t>());
+          });
+          CallbackHandler::instance().addCallback(std::make_pair(${target},Property::k${property}),[](const SimpleVariant& value){
+            id(${sensor_name}).publish_state(value.get<std::uint16_t>() + id(${scaled_property}).state);
+          });
+          // initial queueing of the values
+          queueRequest(${target}, Property::k${scaled_property});
+          queueRequest(${target}, Property::k${property});
