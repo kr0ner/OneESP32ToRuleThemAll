@@ -11,6 +11,7 @@ globals:
     restore_value: yes
     initial_value: "0.0"
 
+
 sensor:
   - platform: template
     name: ${property_wh}
