@@ -2,6 +2,8 @@ defaults:
   icon: "mdi:lightning-bolt"
   accuracy_decimals: "2"
   target: "Kessel"
+  interval: "5"
+  unit: "kWh"
 
 globals:
   - id: gOFFSET_${property_wh}
@@ -13,7 +15,6 @@ sensor:
   - platform: template
     name: ${property_wh}
     id: ${property_wh}
-    unit_of_measurement: "Wh"
     state_class: "measurement"
     accuracy_decimals: 0
     internal: true
@@ -25,7 +26,7 @@ sensor:
   - platform: template
     name: ${sensor_name}
     id: ${sensor_name}
-    unit_of_measurement: "kWh"
+    unit_of_measurement: ${unit}
     icon: ${icon}
     accuracy_decimals: ${accuracy_decimals}
     device_class: energy
@@ -50,9 +51,9 @@ esphome:
 time:
   - platform: sntp
     on_time:
-      # Every hour, every 5 minutes except midnight.
+      # Every hour, every ${interval} minutes except midnight.
       - seconds: 0
-        minutes: 5/5
+        minutes: ${interval}/${interval}
         hours: 0-23
         then:
           - lambda: |-
