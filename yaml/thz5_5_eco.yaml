@@ -15,4 +15,4 @@ packages:
   LUEFT_ABLUFT_STUFE2:            !include { file: wp_generic.yaml, vars: { property: "LUEFT_ABLUFT_STUFE2",icon: "mdi:pump", unit: "l/min", interval: $interval_medium  }}
   LUEFT_ABLUFT_STUFE3:            !include { file: wp_generic.yaml, vars: { property: "LUEFT_ABLUFT_STUFE3",icon: "mdi:pump", unit: "l/min", interval: $interval_medium  }}
   LAUFZEIT_FILTER_TAGE:           !include { file: wp_generic.yaml, vars: { property: "LAUFZEIT_FILTER_TAGE",icon: "mdi:air-filter", unit: "d", interval: $interval_once_in_a_while  }}
-
+  SOMMERBETRIEB_TEMP:             !include { file: wp_number.yaml, vars:  { property: "SOMMERBETRIEB_TEMP", icon: "mdi:sun-thermometer", min: "15.0", max: "25.0", step: "1.0", unit: "°C"  }}
