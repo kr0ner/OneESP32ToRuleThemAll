@@ -1,6 +1,7 @@
 defaults:
   interval: $interval_very_slow
   target: "Kessel"
+  disabled_by_default: "false"
 
 sensor:
   - platform: template
@@ -12,6 +13,7 @@ sensor:
     state_class: "measurement"
     accuracy_decimals: 1
     update_interval: ${interval}
+    disabled_by_default: ${disabled_by_default}
     lambda: |-
         queueRequest(${target}, Property::k${property});
         return {};

@@ -93,7 +93,9 @@ struct Property : public detail::Property {
     PROPERTY(BETRIEBS_STATUS, 0x0176);
     PROPERTY(VOLUMENSTROM, 0x01da, Type::et_dec_val);
     PROPERTY(TAUPUNKT_HK1, 0x0264, Type::et_dec_val);
+    #if defined(THZ_504)
     PROPERTY(HEIZGASTEMPERATUR, 0x0265, Type::et_dec_val); 
+    #endif
     PROPERTY(KUEHLMODE, 0x0287);
     PROPERTY(PUMPENDREHZAHL_HEIZEN, 0x02cb, Type::et_dec_val);
     #if defined(THZ_5_5_ECO)
@@ -136,26 +138,34 @@ struct Property : public detail::Property {
     #if defined(THZ_5_5_ECO)
         PROPERTY(SOMMERBETRIEB_HYSTERESE, 0x05a2, Type::et_dec_val);
     #endif
+    #if defined(THZ_504)
     PROPERTY(VERFLUESSIGERTEMPERATUR, 0x059c, Type::et_dec_val);
     PROPERTY(VERDICHTER_HEIZEN, 0x05a4); 
     PROPERTY(VERDICHTER_KUEHLEN, 0x05a5); 
     PROPERTY(VERDICHTER_WW, 0x05a6); 
     PROPERTY(EL_NE_HEIZEN, 0x05a7); 
     PROPERTY(EL_NE_WW, 0x05a8); 
+    #endif
     PROPERTY(PUMPENZYKLEN_MIN_AUSSENT, 0x05bb);
     #if defined(THZ_5_5_ECO)
         PROPERTY(LUEFT_STUFE_HAND,0x0612);
     #endif
     PROPERTY(KUEHLSYSTEM, 0x0613);
+    #if defined(THZ_504)
     PROPERTY(DRUCK_HEIZKREIS, 0x064a, Type::et_dec_val);
+    #endif
     PROPERTY(LEISTUNG_AUSLEGUNG_KUEHLEN, 0x0692);
     PROPERTY(MOTORSTROM, 0x069f);
     PROPERTY(MOTORLEISTUNG, 0x06a0, Type::et_cent_val);
     PROPERTY(MOTORSPANNUNG, 0x06a1);
+    #if defined(THZ_504)
     PROPERTY(OELSUMPFTEMPERATUR, 0x0693, Type::et_dec_val); 
+    #endif
     PROPERTY(ABLUFTTEMP, 0x0694, Type::et_dec_val);
+    #if defined(THZ_504)
     PROPERTY(HOCHDRUCK, 0x07a6, Type::et_cent_val); 
     PROPERTY(NIEDERDRUCK, 0x07a7, Type::et_cent_val); 
+    #endif
     PROPERTY(EL_AUFNAHMELEISTUNG_WW_TAG_WH, 0x091a);
     PROPERTY(EL_AUFNAHMELEISTUNG_WW_TAG_KWH, 0x091b, Type::et_double_val);
     PROPERTY(EL_AUFNAHMELEISTUNG_WW_SUM_KWH, 0x091c);
@@ -185,8 +195,10 @@ struct Property : public detail::Property {
     PROPERTY(LEISTUNG_AUSLEGUNG_HEIZUNG, 0xc0f1);
     PROPERTY(VERDICHTER_STARTS, 0xc0f4);
     PROPERTY(VERDICHTER_STARTS_K, 0xc0f5);
-    PROPERTY(ABLUFT_TAUPUNKT, 0xc0f6,Type::et_dec_val);
+    #if defined(THZ_504)
     PROPERTY(DIFFERENZDRUCK, 0xc11e);
+    #endif
+    PROPERTY(ABLUFT_TAUPUNKT, 0xc0f6,Type::et_dec_val);
     PROPERTY(LAUFZEIT_FILTER, 0xc111);
     PROPERTY(BETRIEBS_STATUS_2, 0xc356);
 };
