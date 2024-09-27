@@ -13,9 +13,8 @@ sensor:
   - platform: template
     name: ${property_wh}
     id: ${property_wh}
-    unit_of_measurement: "Wh"
     state_class: "measurement"
-    accuracy_decimals: 0
+    accuracy_decimals: 3
     internal: true
     filters:
       - multiply: 0.001
@@ -37,7 +36,7 @@ esphome:
       - lambda: |-
           // Handle the values received from the heat pump. Wh value is just stored in an internal sensor and published together with the kWh value on reception.
           CallbackHandler::instance().addCallback(std::make_pair(${target},Property::k${property_wh}),[](const SimpleVariant& value){
-            id(${property_wh}).publish_state(value);
+            id(${property_wh}).publish_state(value.get<std::uint16_t>());
           });
           CallbackHandler::instance().addCallback(std::make_pair(${target},Property::k${property_kwh}),[](const SimpleVariant& value){
             id(${sensor_name}).publish_state(value.get<std::uint16_t>() + id(${property_wh}).state);
