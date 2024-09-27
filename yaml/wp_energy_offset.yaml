@@ -1,13 +1,20 @@
-   defaults:
+  defaults:
     icon: "mdi:lightning-bolt"
     target: "Kessel"
+    interval: "5"
     unit_numerator: "kWh"
     unit_minor: "Wh"
     property_minor: $property_minor
     property_numerator: $property_numerator
     state_class: "total_increasing"
     device_class: "energy"
-    interval: "5"
+
+  globals:
+  # Used to store the offset
+    - id: gOFFSET_${property_minor}
+      type: float
+      restore_value: yes
+      initial_value: "0.0"
 
   sensor: 
   # Create sensor for minor entity
@@ -18,10 +25,11 @@
       icon: ${icon}
       state_class: $state_class
       device_class: ${device_class}
-      internal: false
+      internal: true
       accuracy_decimals: 3
       filters:
         - multiply: 0.001
+        - lambda: return x - id(gOFFSET_${property_minor});
         - clamp:
             min_value: 0
 
@@ -70,4 +78,15 @@
             - lambda: |-
                 queueRequest(${target}, Property::k${property_minor});
                 queueRequest(${target}, Property::k${property_numerator});
-
+        # At midnight reset power consumptions. And save offset for the next day.
+        - seconds: 0
+          minutes: 0
+          hours: 0
+          then:
+            - lambda: |-
+                // set the current Wh value as offset for the next day
+                id(gOFFSET_${property_minor}) = id(${property_minor}).state;
+                // reset the value at mightnight
+            - sensor.template.publish:
+                id: ${property_numerator}
+                state: 0.0

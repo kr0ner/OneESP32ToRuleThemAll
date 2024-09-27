@@ -195,17 +195,22 @@ interval:
 #                                       #
 #########################################
 packages:
-  WAERMEERTRAG_RUECKGE_TAG_SUMME_KWH:  !include { file: wp_energy_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_RUECKGE_TAG_SUMME_KWH" , property_wh: "WAERMEERTRAG_RUECKGE_TAG_WH"  , property_kwh: "WAERMEERTRAG_RUECKGE_TAG_KWH" , interval: "5" }}
-  WAERMEERTRAG_RUECKGE_SUMME_MWH:      !include { file: wp_energy_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_RUECKGE_SUMME_MWH"     , property_wh: "WAERMEERTRAG_RUECKGE_SUM_KWH" , property_kwh: "WAERMEERTRAG_RUECKGE_SUM_MWH" , interval: "5", unit: "MWh", accuracy_decimals: "3" }}
-  WAERMEERTRAG_2WE_WW_TAG_SUMME_KWH:   !include { file: wp_energy_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_2WE_WW_TAG_SUMME_KWH"  , property_wh: "WAERMEERTRAG_2WE_WW_TAG_WH"   , property_kwh: "WAERMEERTRAG_2WE_WW_TAG_KWH"  , interval: "5" }}
-  WAERMEERTRAG_2WE_WW_SUMME_MWH:       !include { file: wp_energy_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_2WE_WW_SUMME_MWH"      , property_wh: "WAERMEERTRAG_2WE_WW_SUM_KWH"  , property_kwh: "WAERMEERTRAG_2WE_WW_SUM_MWH"  , interval: "5", unit: "MWh", accuracy_decimals: "3" }}
-  WAERMEERTRAG_2WE_HEIZ_TAG_SUMME_KWH: !include { file: wp_energy_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_2WE_HEIZ_TAG_SUMME_KWH", property_wh: "WAERMEERTRAG_2WE_HEIZ_TAG_WH" , property_kwh: "WAERMEERTRAG_2WE_HEIZ_TAG_KWH", interval: "5" }}
-  WAERMEERTRAG_2WE_HEIZ_SUMME_MWH:     !include { file: wp_energy_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_2WE_HEIZ_SUMME_MWH"    , property_wh: "WAERMEERTRAG_2WE_HEIZ_SUM_KWH", property_kwh: "WAERMEERTRAG_2WE_HEIZ_SUM_MWH", interval: "5", unit: "MWh", accuracy_decimals: "3" }}
-  WAERMEERTRAG_WW_TAG_SUMME_KWH:       !include { file: wp_energy_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_WW_TAG_SUMME_KWH"      , property_wh: "WAERMEERTRAG_WW_TAG_WH"       , property_kwh: "WAERMEERTRAG_WW_TAG_KWH"      , interval: "5" }}
-  WAERMEERTRAG_WW_SUMME_MWH:           !include { file: wp_energy_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_WW_SUMME_MWH"          , property_wh: "WAERMEERTRAG_WW_SUM_KWH"      , property_kwh: "WAERMEERTRAG_WW_SUM_MWH"      , interval: "5", unit: "MWh", accuracy_decimals: "3" }}
-  WAERMEERTRAG_HEIZ_TAG_SUMME_KWH:     !include { file: wp_energy_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_HEIZ_TAG_SUMME_KWH"    , property_wh: "WAERMEERTRAG_HEIZ_TAG_WH"     , property_kwh: "WAERMEERTRAG_HEIZ_TAG_KWH"    , interval: "5" }}
-  WAERMEERTRAG_HEIZ_SUMME_MWH:         !include { file: wp_energy_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_HEIZ_SUMME_MWH"        , property_wh: "WAERMEERTRAG_HEIZ_SUM_KWH"    , property_kwh: "WAERMEERTRAG_HEIZ_SUM_MWH"    , interval: "5", unit: "MWh", accuracy_decimals: "3" }}
+  EL_AUFNAHMELEISTUNG_WW_SUM:     !include { file: wp_energy.yaml, vars: { property_numerator: "EL_AUFNAHMELEISTUNG_WW_SUM_MWH",   property_minor: "EL_AUFNAHMELEISTUNG_WW_SUM_KWH",   unit_numerator: "mWh", unit_minor: "kWh" }} 
+  EL_AUFNAHMELEISTUNG_HEIZ_SUM:   !include { file: wp_energy.yaml, vars: { property_numerator: "EL_AUFNAHMELEISTUNG_HEIZ_SUM_MWH", property_minor: "EL_AUFNAHMELEISTUNG_HEIZ_SUM_KWH", unit_numerator: "mWh", unit_minor: "kWh" }} 
+  WAERMEERTRAG_WRG_SUM:           !include { file: wp_energy.yaml, vars: { property_numerator: "WAERMEERTRAG_WRG_SUM_MWH",         property_minor: "WAERMEERTRAG_WRG_SUM_KWH",         unit_numerator: "mWh", unit_minor: "kWh" }} 
+  WAERMEERTRAG_HEIZ_SUM:          !include { file: wp_energy.yaml, vars: { property_numerator: "WAERMEERTRAG_HEIZ_SUM_MWH",        property_minor: "WAERMEERTRAG_HEIZ_SUM_KWH",        unit_numerator: "mWh", unit_minor: "kWh" }} 
+  WAERMEERTRAG_WW_SUM:            !include { file: wp_energy.yaml, vars: { property_numerator: "WAERMEERTRAG_WW_SUM_MWH",          property_minor: "WAERMEERTRAG_WW_SUM_KWH",          unit_numerator: "mWh", unit_minor: "kWh" }} 
+  WAERMEERTRAG_2WE_HEIZ_SUM:      !include { file: wp_energy.yaml, vars: { property_numerator: "WAERMEERTRAG_2WE_HEIZ_SUM_MWH",    property_minor: "WAERMEERTRAG_2WE_HEIZ_SUM_KWH",    unit_numerator: "mWh", unit_minor: "kWh" }} 
+  WAERMEERTRAG_2WE_WW_SUM:        !include { file: wp_energy.yaml, vars: { property_numerator: "WAERMEERTRAG_2WE_WW_SUM_MWH",    property_minor: "WAERMEERTRAG_2WE_WW_SUM_KWH",    unit_numerator: "mWh", unit_minor: "kWh" }} 
 
+  EL_AUFNAHMELEISTUNG_WW_TAG:     !include { file: wp_energy_offset.yaml, vars: { property_numerator: "EL_AUFNAHMELEISTUNG_WW_TAG_KWH",   property_minor: "EL_AUFNAHMELEISTUNG_WW_TAG_WH"   }} 
+  EL_AUFNAHMELEISTUNG_HEIZ_TAG:   !include { file: wp_energy_offset.yaml, vars: { property_numerator: "EL_AUFNAHMELEISTUNG_HEIZ_TAG_KWH", property_minor: "EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH" }} 
+  WAERMEERTRAG_WRG_TAG:           !include { file: wp_energy_offset.yaml, vars: { property_numerator: "WAERMEERTRAG_WRG_TAG_KWH",         property_minor: "WAERMEERTRAG_WRG_TAG_WH"         }} 
+  WAERMEERTRAG_HEIZ_TAG:          !include { file: wp_energy_offset.yaml, vars: { property_numerator: "WAERMEERTRAG_HEIZ_TAG_KWH",        property_minor: "WAERMEERTRAG_HEIZ_TAG_WH"        }} 
+  WAERMEERTRAG_WW_TAG:            !include { file: wp_energy_offset.yaml, vars: { property_numerator: "WAERMEERTRAG_WW_TAG_KWH",          property_minor: "WAERMEERTRAG_WW_TAG_WH"          }} 
+  #WAERMEERTRAG_2WE_HEIZ_TAG:      !include { file: wp_energy_offset.yaml, vars: { property_numerator: "WAERMEERTRAG_2WE_HEIZ_TAG_KWH",    property_minor: "WAERMEERTRAG_2WE_HEIZ_TAG_WH"    }}  # Issue: Deactivated because my ESP compiles but fails to connect when it is activated
+  #WAERMEERTRAG_2WE_WW_TAG:        !include { file: wp_energy_offset.yaml, vars: { property_numerator: "WAERMEERTRAG_2WE_WW_TAG_KWH",      property_minor: "WAERMEERTRAG_2WE_WW_TAG_WH"      }}  # Issue: Deactivated because my ESP compiles but fails to connect when it is activated
+  
   SPEICHERSOLLTEMP:               !include { file: wp_temperature.yaml, vars: { property: "SPEICHERSOLLTEMP"          }}
   EINSTELL_SPEICHERSOLLTEMP:      !include { file: wp_temperature.yaml, vars: { property: "EINSTELL_SPEICHERSOLLTEMP" }}
   SPEICHERISTTEMP:                !include { file: wp_temperature.yaml, vars: { property: "SPEICHERISTTEMP"          , interval: $interval_medium}}
