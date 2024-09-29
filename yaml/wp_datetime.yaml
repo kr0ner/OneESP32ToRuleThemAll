@@ -1,0 +1,56 @@
+esphome:
+  on_boot:
+    priority: -100
+    then:
+      - lambda: |-
+            id(HEATPUMP_DATETIME).state = "2024-01-01 12:34";
+            auto updateTime = [](auto&& updateTimeFragment){
+                ESPTime timeToSet{};
+                // get the datetime as string and parse to ESPTime object
+                if(const auto success = ESPTime::strptime(id(HEATPUMP_DATETIME).state, timeToSet); !success) {
+                  ESP_LOGE("DATETIME", "Error parsing datetime string %s", id(HEATPUMP_DATETIME).state.c_str());
+                  return;
+                }
+                // update the part that belongs to this sensor
+                updateTimeFragment(timeToSet);
+                // convert the time back to string and directly save it to the state of the datetime sensor
+                timeToSet.strftime(id(HEATPUMP_DATETIME).state.data(), 20, "%Y-%m-%d %H:%M");
+                // publish the value
+                id(HEATPUMP_DATETIME).publish_state(id(HEATPUMP_DATETIME).state);
+            };
+            CallbackHandler::instance().addCallback(std::make_pair(Kessel,Property::kJAHR),[updateTime](const SimpleVariant& value){
+              updateTime([&value](ESPTime& timeToSet){
+                timeToSet.year = 2000U + static_cast<std::uint16_t>(value);
+              });
+            });
+            CallbackHandler::instance().addCallback(std::make_pair(Kessel,Property::kMONAT),[updateTime](const SimpleVariant& value){
+              updateTime([&value](ESPTime& timeToSet){
+                timeToSet.month = static_cast<std::uint16_t>(value);
+              });
+            });
+            CallbackHandler::instance().addCallback(std::make_pair(Kessel,Property::kTAG),[updateTime](const SimpleVariant& value){
+              updateTime([&value](ESPTime& timeToSet){
+                timeToSet.day_of_month = static_cast<std::uint16_t>(value);
+              });
+            });
+            CallbackHandler::instance().addCallback(std::make_pair(Kessel,Property::kSTUNDE),[updateTime](const SimpleVariant& value){
+              updateTime([&value](ESPTime& timeToSet){
+                timeToSet.hour = static_cast<std::uint16_t>(value);
+              });
+            });
+            CallbackHandler::instance().addCallback(std::make_pair(Kessel,Property::kMINUTE),[updateTime](const SimpleVariant& value){
+              updateTime([&value](ESPTime& timeToSet){
+                timeToSet.minute = static_cast<std::uint16_t>(value);
+              });
+            });
+            queueRequest(Kessel, Property::kJAHR);
+            queueRequest(Kessel, Property::kMONAT);
+            queueRequest(Kessel, Property::kTAG);
+            queueRequest(Kessel, Property::kSTUNDE);
+            queueRequest(Kessel, Property::kMINUTE);
+
+text_sensor:
+  - platform: template
+    name: "HEATPUMP_DATETIME"
+    id: HEATPUMP_DATETIME
+    update_interval: never
