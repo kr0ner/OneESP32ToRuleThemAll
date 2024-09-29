@@ -156,12 +156,6 @@ packages:
   LUEFT_STUFE_PARTY:              !include { file: wp_ventilation.yaml, vars: { property: "LUEFT_STUFE_PARTY" }}
 
   FEHLERMELDUNG:                  !include { file: wp_generic.yaml, vars: { property: "FEHLERMELDUNG"            , icon: "mdi:alert-circle" }}
-  JAHR:                           !include { file: wp_generic.yaml, vars: { property: "JAHR"                     , icon: "mdi:calendar" }}
-  MONAT:                          !include { file: wp_generic.yaml, vars: { property: "MONAT"                    , icon: "mdi:calendar" }}
-  WOCHENTAG:                      !include { file: wp_generic.yaml, vars: { property: "WOCHENTAG"                , icon: "mdi:calendar-today" }}
-  TAG:                            !include { file: wp_generic.yaml, vars: { property: "TAG"                      , icon: "mdi:calendar-today" }}
-  STUNDE:                         !include { file: wp_generic.yaml, vars: { property: "STUNDE"                   , icon: "mdi:calendar-clock" }}
-  MINUTE:                         !include { file: wp_generic.yaml, vars: { property: "MINUTE"                   , icon: "mdi:calendar-clock" }}
   ANZEIGE_NIEDERDRUCK:            !include { file: wp_generic.yaml, vars: { property: "ANZEIGE_NIEDERDRUCK"      , accuracy_decimals: "2" }}
   PUMPENZYKLEN_MIN_AUSSENT:       !include { file: wp_generic.yaml, vars: { property: "PUMPENZYKLEN_MIN_AUSSENT" }}
   FEUCHTE:                        !include { file: wp_generic.yaml, vars: { property: "FEUCHTE"                  , interval: $interval_very_slow, unit: "%", icon: "mdi:water-percent", target: "HK1", accuracy_decimals: "1" }}
@@ -193,6 +187,9 @@ packages:
   WAERMEERTRAG_2WE_HEIZ_TAG_SUMME_KWH: !include { file: wp_daily_energy_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_2WE_HEIZ_TAG_SUMME_KWH", property_wh: "WAERMEERTRAG_2WE_HEIZ_TAG_WH"   , property_kwh: "WAERMEERTRAG_2WE_HEIZ_TAG_KWH"    }}
   WAERMEERTRAG_WW_TAG_SUMME_KWH:       !include { file: wp_daily_energy_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_WW_TAG_SUMME_KWH"      , property_wh: "WAERMEERTRAG_WW_TAG_WH"         , property_kwh: "WAERMEERTRAG_WW_TAG_KWH"          }}
   WAERMEERTRAG_HEIZ_TAG_SUMME_KWH:     !include { file: wp_daily_energy_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_HEIZ_TAG_SUMME_KWH"    , property_wh: "WAERMEERTRAG_HEIZ_TAG_WH"       , property_kwh: "WAERMEERTRAG_HEIZ_TAG_KWH"        }}
+
+  HEATPUMP_DATETIME: !include { file: wp_datetime.yaml }
+
 #########################################
 #                                       #
 #   Sensors                             #
