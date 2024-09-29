@@ -72,80 +72,6 @@ switch:
 
 #########################################
 #                                       #
-#   Binary Sensors                      #
-#                                       #
-#########################################
-binary_sensor:
-  - platform: template
-    name: "SCHALTPROGRAMM_AKTIV"
-    id: SCHALTPROGRAMM_AKTIV
-
-  - platform: template
-    name: "VERDICHTER"
-    id: VERDICHTER
-
-  - platform: template
-    name: "HEIZEN"
-    id: HEIZEN
-
-  - platform: template
-    name: "KUEHLEN"
-    id: KUEHLEN
-
-  - platform: template
-    name: "WARMWASSERBEREITUNG"
-    id: WARMWASSERBEREITUNG
-
-  - platform: template
-    name: "ELEKTRISCHE_NACHERWAERMUNG"
-    id: ELEKTRISCHE_NACHERWAERMUNG
-
-  - platform: template
-    name: "SERVICE"
-    id: SERVICE
-
-  - platform: template
-    name: "EVU_SPERRE"
-    id: EVU_SPERRE
-
-  - platform: template
-    name: "FILTERWECHSEL_BEIDE"
-    id: FILTERWECHSEL_BEIDE
-
-  - platform: template
-    name: "LUEFTUNG"
-    id: LUEFTUNG
-
-  - platform: template
-    name: "HEIZKREISPUMPE"
-    id: HEIZKREISPUMPE
-
-  - platform: template
-    name: "ABTAUEN_VERDAMPFER"
-    id: ABTAUEN_VERDAMPFER
-
-  - platform: template
-    name: "FILTERWECHSEL_ABLUFT"
-    id: FILTERWECHSEL_ABLUFT
-
-  - platform: template
-    name: "FILTERWECHSEL_ZULUFT"
-    id: FILTERWECHSEL_ZULUFT
-
-  - platform: template
-    name: "AUFHEIZPROGRAMM_AKTIV"
-    id: AUFHEIZPROGRAMM_AKTIV
-
-  - platform: template
-    name: "SOMMERBETRIEB_AKTIV"
-    id: SOMMERBETRIEB_AKTIV
-
-  - platform: template
-    name: "OFEN_KAMIN_AKTIV"
-    id: OFEN_KAMIN_AKTIV
-
-#########################################
-#                                       #
 #   Intervals                           #
 #                                       #
 #########################################
@@ -184,6 +110,24 @@ interval:
 #                                       #
 #########################################
 packages:
+  SCHALTPROGRAMM_AKTIV:       !include { file: wp_binary.yaml, vars: { name: "SCHALTPROGRAMM_AKTIV" }}
+  VERDICHTER:                 !include { file: wp_binary.yaml, vars: { name: "VERDICHTER" }}
+  WARMWASSERBEREITUNG:        !include { file: wp_binary.yaml, vars: { name: "WARMWASSERBEREITUNG" }}
+  ELEKTRISCHE_NACHERWAERMUNG: !include { file: wp_binary.yaml, vars: { name: "ELEKTRISCHE_NACHERWAERMUNG" }}
+  SERVICE:                    !include { file: wp_binary.yaml, vars: { name: "SERVICE" }}
+  HEIZEN:                     !include { file: wp_binary.yaml, vars: { name: "HEIZEN" }}
+  KUEHLEN:                    !include { file: wp_binary.yaml, vars: { name: "KUEHLEN" }}
+  LUEFTUNG:                   !include { file: wp_binary.yaml, vars: { name: "LUEFTUNG" }}
+  EVU_SPERRE:                 !include { file: wp_binary.yaml, vars: { name: "EVU_SPERRE" }}
+  FILTERWECHSEL_BEIDE:        !include { file: wp_binary.yaml, vars: { name: "FILTERWECHSEL_BEIDE" }}
+  HEIZKREISPUMPE:             !include { file: wp_binary.yaml, vars: { name: "HEIZKREISPUMPE" }}
+  ABTAUEN_VERDAMPFER:         !include { file: wp_binary.yaml, vars: { name: "ABTAUEN_VERDAMPFER" }}
+  FILTERWECHSEL_ABLUFT:       !include { file: wp_binary.yaml, vars: { name: "FILTERWECHSEL_ABLUFT" }}
+  FILTERWECHSEL_ZULUFT:       !include { file: wp_binary.yaml, vars: { name: "FILTERWECHSEL_ZULUFT" }}
+  AUFHEIZPROGRAMM_AKTIV:      !include { file: wp_binary.yaml, vars: { name: "AUFHEIZPROGRAMM_AKTIV" }}
+  SOMMERBETRIEB_AKTIV:        !include { file: wp_binary.yaml, vars: { name: "SOMMERBETRIEB_AKTIV" }}
+  OFEN_KAMIN_AKTIV:           !include { file: wp_binary.yaml, vars: { name: "OFEN_KAMIN_AKTIV" }}
+
   VERDICHTER_STARTS:               !include { file: wp_generic_combined.yaml, vars: { sensor_name: "VERDICHTER_STARTS"                  , scaled_property: "VERDICHTER_STARTS_K"          , property: "VERDICHTER_STARTS"            , unit: ""   , accuracy_decimals: "0", scaler: "1000", icon: "mdi:counter" }}
   WAERMEERTRAG_RUECKGE_SUMME_MWH:  !include { file: wp_generic_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_RUECKGE_SUMME_MWH"     , scaled_property: "WAERMEERTRAG_RUECKGE_SUM_KWH" , property: "WAERMEERTRAG_RUECKGE_SUM_MWH" , unit: "MWh", accuracy_decimals: "3", icon: "mdi:fire"  }}
   WAERMEERTRAG_2WE_WW_SUMME_MWH:   !include { file: wp_generic_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_2WE_WW_SUMME_MWH"      , scaled_property: "WAERMEERTRAG_2WE_WW_SUM_KWH"  , property: "WAERMEERTRAG_2WE_WW_SUM_MWH"  , unit: "MWh", accuracy_decimals: "3", icon: "mdi:fire"  }}
