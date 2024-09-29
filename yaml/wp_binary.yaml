@@ -1,0 +1,4 @@
+binary_sensor:
+  - platform: template
+    name: ${name}
+    id: ${name}
