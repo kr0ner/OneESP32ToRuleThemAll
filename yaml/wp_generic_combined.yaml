@@ -20,6 +20,7 @@ sensor:
     icon: ${icon}
     accuracy_decimals: ${accuracy_decimals}
     update_interval: ${interval}
+    state_class: "total_increasing"
     lambda: |-
         queueRequest(${target}, Property::k${scaled_property});
         queueRequest(${target}, Property::k${property});
