@@ -166,12 +166,14 @@ interval:
           // Send current RAUMISTTEMP
           const auto room_temp = id(gRAUMISTTEMP);
           if(room_temp > 0.0f) {
-            sendData(FEK, Property::kRAUMISTTEMP, static_cast<std::uint16_t>(room_temp * 10.0f));
+            ESP_LOGI("SET", "Sending cached room temperature %f to heatpump", room_temp);
+            sendData(HK1, Property::kRAUMISTTEMP, static_cast<std::uint16_t>(room_temp * 10.0f));
           }
           // Send current FEUCHTE
           const auto humidity = id(gFEUCHTE);
           if(humidity > 0.0) {
-            sendData(FEK, Property::kFEUCHTE, static_cast<std::uint16_t>(humidity * 10.0f));
+            ESP_LOGI("SET", "Sending cached humidity %f to heatpump", humidity);
+            sendData(HK1, Property::kFEUCHTE, static_cast<std::uint16_t>(humidity * 10.0f));
           }
   - interval: $interval_once_in_a_while
     then:
@@ -261,7 +263,7 @@ sensor:
     on_value:
       then:
         - lambda: |-
-            ESP_LOGI("SET", "gRAUMISTTEMP set to %f", x);
+            ESP_LOGI("SET", "Updating room temperature to %f", x);
             id(gRAUMISTTEMP) = x;
 
   - platform: homeassistant
@@ -270,7 +272,7 @@ sensor:
     on_value:
       then:
         - lambda: |-
-            ESP_LOGI("SET", "gFEUCHTE set to %f", x);
+            ESP_LOGI("SET", "Updating humidity to %f", x);
             id(gFEUCHTE) = x;
 
 #########################################
