@@ -139,13 +139,13 @@ packages:
 
   SPEICHERSOLLTEMP:               !include { file: wp_temperature.yaml, vars: { property: "SPEICHERSOLLTEMP"          }}
   EINSTELL_SPEICHERSOLLTEMP:      !include { file: wp_temperature.yaml, vars: { property: "EINSTELL_SPEICHERSOLLTEMP" }}
-  SPEICHERISTTEMP:                !include { file: wp_temperature.yaml, vars: { property: "SPEICHERISTTEMP"          , interval: $interval_medium}}
+  SPEICHERISTTEMP:                !include { file: wp_temperature.yaml, vars: { property: "SPEICHERISTTEMP"          , interval: $interval_medium }}
   AUSSENTEMP:                     !include { file: wp_temperature.yaml, vars: { property: "AUSSENTEMP"       }}
   ABLUFTTEMP:                     !include { file: wp_temperature.yaml, vars: { property: "ABLUFTTEMP"       }}
-  SAMMLERISTTEMP:                 !include { file: wp_temperature.yaml, vars: { property: "SAMMLERISTTEMP"   }}
+  SAMMLERISTTEMP:                 !include { file: wp_temperature.yaml, vars: { property: "SAMMLERISTTEMP"           , interval: $interval_medium }}
   VERDAMPFERTEMP:                 !include { file: wp_temperature.yaml, vars: { property: "VERDAMPFERTEMP"   }}
-  RUECKLAUFISTTEMP:               !include { file: wp_temperature.yaml, vars: { property: "RUECKLAUFISTTEMP" }}
-  VORLAUFISTTEMP:                 !include { file: wp_temperature.yaml, vars: { property: "VORLAUFISTTEMP"           , target: "HK1" }}
+  RUECKLAUFISTTEMP:               !include { file: wp_temperature.yaml, vars: { property: "RUECKLAUFISTTEMP"         , interval: $interval_medium }}
+  VORLAUFISTTEMP:                 !include { file: wp_temperature.yaml, vars: { property: "VORLAUFISTTEMP"           , interval: $interval_medium, target: "HK1" }}
   TAUPUNKT_HK1:                   !include { file: wp_temperature.yaml, vars: { property: "TAUPUNKT_HK1"             , target: "HK1" }}
   RAUMISTTEMP:                    !include { file: wp_temperature.yaml, vars: { property: "RAUMISTTEMP"              , target: "HK1" }}
   VERSTELLTE_RAUMSOLLTEMP:        !include { file: wp_temperature.yaml, vars: { property: "VERSTELLTE_RAUMSOLLTEMP"  , target: "HK1" }}
@@ -177,9 +177,9 @@ packages:
 
   LEISTUNG_AUSLEGUNG_HEIZUNG:     !include { file: wp_number.yaml, vars: { property: "LEISTUNG_AUSLEGUNG_HEIZUNG" }}
   LEISTUNG_AUSLEGUNG_KUEHLEN:     !include { file: wp_number.yaml, vars: { property: "LEISTUNG_AUSLEGUNG_KUEHLEN" }}
-  PUMPENDREHZAHL_HEIZEN:          !include { file: wp_number.yaml, vars: { property: "PUMPENDREHZAHL_HEIZEN"      , step:   "0.1" }}
+  PUMPENDREHZAHL_HEIZEN:          !include { file: wp_number.yaml, vars: { property: "PUMPENDREHZAHL_HEIZEN"      , step: "0.1" }}
   RAUMEINFLUSS:                   !include { file: wp_number.yaml, vars: { property: "RAUMEINFLUSS"               , target: "HK1" }}
-  HYSTERESE_WW:                   !include { file: wp_number.yaml, vars: { property: "HYSTERESE_WW"               , min: "2.0", max: "10.0", step:   "0.1", unit: "°C" }}
+  HYSTERESE_WW:                   !include { file: wp_number.yaml, vars: { property: "HYSTERESE_WW"               , min: "2.0", max: "10.0", step: "0.1", unit: "°C" }}
   NE_STUFE_WW:                    !include { file: wp_number.yaml, vars: { property: "NE_STUFE_WW"                , min: "0", max: "3" }}
 
   EL_AUFNAHMELEISTUNG_WW_SUMME_KWH:    !include { file: wp_daily_energy_combined.yaml, vars: { sensor_name: "EL_AUFNAHMELEISTUNG_WW_SUMME_KWH"   , property_wh: "EL_AUFNAHMELEISTUNG_WW_TAG_WH"  , property_kwh: "EL_AUFNAHMELEISTUNG_WW_TAG_KWH"   }}

@@ -6,5 +6,6 @@ esphome:
 packages:
   BASE: !include { file: wp_base.yaml}
 
-  ABLUFT_TAUPUNKT: !include { file: wp_temperature.yaml, vars: { property: "ABLUFT_TAUPUNKT"  }}
-  DIFFERENZDRUCK:  !include { file: wp_generic.yaml, vars: { property: "DIFFERENZDRUCK", interval: $interval_medium, unit: "Pa", icon: "mdi:air-filter"  }}
+  ABLUFT_TAUPUNKT:      !include { file: wp_temperature.yaml, vars: { property: "ABLUFT_TAUPUNKT"  }}
+  DIFFERENZDRUCK:       !include { file: wp_generic.yaml, vars: { property: "DIFFERENZDRUCK", interval: $interval_medium, unit: "Pa", icon: "mdi:air-filter"  }}
+  LAUFZEIT_FILTER_TAGE: !include { file: wp_generic.yaml, vars: { property: "LAUFZEIT_FILTER_TAGE",icon: "mdi:air-filter", unit: "d", interval: $interval_once_in_a_while  }}
