@@ -95,7 +95,7 @@ void requestData(const CanMember& member, const Property& property) {
 
     data.insert(data.end(), {IdByte1, IdByte2, 0xfa, IndexByte1, IndexByte2, 0x00, 0x00});
 
-    id(my_mcp2515).send_data(ESPClient.CanId, use_extended_id, data);
+    id(wp_can).send_data(ESPClient.CanId, use_extended_id, data);
 }
 
 /**
@@ -116,7 +116,7 @@ void sendData(const CanMember& member, const Property property, const std::uint1
 
     data.insert(data.end(), {IdByte1, IdByte2, 0xfa, IndexByte1, IndexByte2, ValueByte1, ValueByte2});
 
-    id(my_mcp2515).send_data(ESPClient.CanId, use_extended_id, data);
+    id(wp_can).send_data(ESPClient.CanId, use_extended_id, data);
 }
 
 #endif

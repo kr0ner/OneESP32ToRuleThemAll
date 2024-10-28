@@ -48,6 +48,12 @@ substitutions:
   entity_room_temperature: "sensor.durchschnittstemperatur_haus_ohne_keller"
   entity_humidity: "sensor.durchschnitt_luftfeuchtigkeit_haus"
 
+canbus:
+  - id: !extend wp_can
+    platform: mcp2515
+    spi_id: McpSpi
+    cs_pin: GPIO15
+
 button:
   - platform: restart
     name: "Restart ESP32-PoE Technik"
