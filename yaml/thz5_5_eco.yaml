@@ -4,7 +4,8 @@ esphome:
       - "-DTHZ_5_5_ECO"
 
 packages:
-  BASE: !include { file: wp_base.yaml}
+  COMMON: !include { file: common.yaml}
+  BASE:   !include { file: wp_base.yaml}
   
   LUEFT_STUFE_BEREITSCHAFT:       !include { file: wp_ventilation.yaml, vars: { property: "LUEFT_STUFE_BEREITSCHAFT" }}
   LUEFT_STUFE_HAND:               !include { file: wp_ventilation.yaml, vars: { property: "LUEFT_STUFE_HAND" }}

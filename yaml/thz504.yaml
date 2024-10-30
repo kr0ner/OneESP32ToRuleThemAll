@@ -4,7 +4,8 @@ esphome:
       - "-DTHZ_504"
 
 packages:
-  BASE: !include { file: wp_base.yaml}
+  COMMON: !include { file: common.yaml}
+  BASE:   !include { file: wp_base.yaml}
 
   ABLUFT_TAUPUNKT:      !include { file: wp_temperature.yaml, vars: { property: "ABLUFT_TAUPUNKT"  }}
   DIFFERENZDRUCK:       !include { file: wp_generic.yaml, vars: { property: "DIFFERENZDRUCK", interval: $interval_medium, unit: "Pa", icon: "mdi:air-filter"  }}

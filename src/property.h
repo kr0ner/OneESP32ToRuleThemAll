@@ -92,6 +92,9 @@ struct Property : public detail::Property {
     PROPERTY(HYSTERESE_WW, 0x0140, Type::et_dec_val);
     PROPERTY(BETRIEBS_STATUS, 0x0176);
     PROPERTY(VOLUMENSTROM, 0x01da, Type::et_dec_val);
+    #if defined(TTF_07_C)
+        PROPERTY(QUELLE_IST, 0x01d4, Type::et_dec_val);
+    #endif
     PROPERTY(TAUPUNKT_HK1, 0x0264, Type::et_dec_val);
     PROPERTY(KUEHLMODE, 0x0287);
     PROPERTY(PUMPENDREHZAHL_HEIZEN, 0x02cb, Type::et_dec_val);
