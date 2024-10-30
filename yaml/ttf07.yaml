@@ -1,0 +1,21 @@
+esphome:
+  platformio_options:
+    build_flags:
+      - "-DTTF_07_C"
+
+packages:
+  COMMON: !include { file: common.yaml}
+  
+  QUELLE_IST:                     !include { file: wp_temperature.yaml, vars: { property: "QUELLE_IST"       }}
+
+binary_sensor:
+  - id: !extend LUEFTUNG
+    internal: true
+  - id: !extend EVU_SPERRE
+    internal: true
+  - id: !extend FILTERWECHSEL_BEIDE
+    internal: true
+  - id: !extend FILTERWECHSEL_ABLUFT
+    internal: true
+  - id: !extend FILTERWECHSEL_ZULUFT
+    internal: true
