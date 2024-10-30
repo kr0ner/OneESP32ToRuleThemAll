@@ -40,26 +40,43 @@ substitutions:
   interval_very_slow: 15min
   interval_once_in_a_while: 1h
 
-  clk_pin: "GPIO14"
-  mosi_pin: "GPIO13"
-  miso_pin: "GPIO4"
-  cs_pin: "GPIO15"
-  evu_pin: "GPIO5"
   entity_room_temperature: "sensor.durchschnittstemperatur_haus_ohne_keller"
   entity_humidity: "sensor.durchschnitt_luftfeuchtigkeit_haus"
 
+#########################################
+#                                       #
+#   SPI configuration                   #
+#                                       #
+#########################################
+spi:
+  id: McpSpi
+  clk_pin: GPIO14
+  mosi_pin: GPIO13
+  miso_pin: GPIO4
+
+#########################################
+#                                       #
+#   CAN configuration                   #
+#                                       #
+#########################################
 canbus:
   - id: !extend wp_can
     platform: mcp2515
     spi_id: McpSpi
     cs_pin: GPIO15
 
+#########################################
+#                                       #
+#   Buttons                             #
+#                                       #
+#########################################
 button:
   - platform: restart
     name: "Restart ESP32-PoE Technik"
+
 #########################################
 #                                       #
-#   ETHERNET Konfiguration              #
+#   Ethernet Konfiguration              #
 #                                       #
 #########################################
 ethernet:
@@ -82,4 +99,16 @@ packages:
 # thz404: !include yaml/thz404.yaml
   thz504: !include yaml/thz504.yaml
 # thz55eco: !include yaml/thz5_5_eco.yaml
+# ttf07: !include yaml/ttf07.yaml
   kondensatpumpe: !include yaml/kondensatpumpe.yaml
+
+#########################################
+#                                       #
+#   EVU Sperre                          #
+#                                       #
+#########################################
+switch:
+  - platform: gpio
+    name: "EVU Sperre"
+    id: evu_sperre
+    pin: GPIO5
