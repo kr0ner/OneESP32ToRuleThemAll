@@ -3,6 +3,8 @@
 
 #include <cstdint>
 #include <tuple>
+#include <string>
+#include <type_traits>
 
 template <typename T>
 struct is_string
