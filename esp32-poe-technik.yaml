@@ -93,14 +93,14 @@ ethernet:
 #                                       #
 #########################################
 packages:
-  energymeter: !include yaml/energymeter.yaml
-  watermeter: !include yaml/watermeter.yaml
-  sensors: !include yaml/sensors.yaml
-# thz404: !include yaml/thz404.yaml
-  thz504: !include yaml/thz504.yaml
-# thz55eco: !include yaml/thz5_5_eco.yaml
-# ttf07: !include yaml/ttf07.yaml
-  kondensatpumpe: !include yaml/kondensatpumpe.yaml
+  energymeter: !include OneESP32ToRuleThemAll/yaml/energymeter.yaml
+  watermeter: !include OneESP32ToRuleThemAll/yaml/watermeter.yaml
+  sensors: !include OneESP32ToRuleThemAll/yaml/sensors.yaml
+# thz404: !include OneESP32ToRuleThemAll/yaml/thz404.yaml
+  thz504: !include OneESP32ToRuleThemAll/yaml/thz504.yaml
+# thz55eco: !include OneESP32ToRuleThemAll/yaml/thz5_5_eco.yaml
+# ttf07: !include OneESP32ToRuleThemAll/yaml/ttf07.yaml
+  kondensatpumpe: !include OneESP32ToRuleThemAll/yaml/kondensatpumpe.yaml
 
 #########################################
 #                                       #

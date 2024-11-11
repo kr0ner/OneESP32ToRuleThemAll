@@ -2,8 +2,8 @@
 #define SIMPLE_VARIANT_H
 
 #include <cstdint>
-#include <tuple>
 #include <string>
+#include <tuple>
 #include <type_traits>
 
 template <typename T>

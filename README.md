@@ -11,20 +11,26 @@ This project aims to provide all kinds of useful features for your Home Assistan
   - A working Home Assistant installation [https://www.home-assistant.io/]
   - ESPHome AddOn installed [https://www.home-assistant.io/integrations/esphome/]
 
+## HowTo:
+
+1. navigate to your esphome folder
+2. clone the repo (git clone https://github.com/kr0ner/OneESP32ToRuleThemAll.git)
+3. copy or symlink OneESP32ToRuleThemAll/esp32-poe-technik.yaml to your esphome folder
+4. change board type if needed
+5. comment out packages you don't want/need
+6. add Wifi if necessary
+7. change pins for SPI/CAN if needed
+8. provide HA entities for temperature and humidity
+
 ## Add new readings from heat pump / adopt to your device
 
-1. Change the log level in esp32-poe-technik.yaml to DEBUG or VERBOSE to see what exactly is sent on the CAN bus
-2. Navigate through the menu of the display, mounted to your heat pump
-4. Try to match the values (e.g. 237) to the values you see in the display (23.7°)
-5. Use the existing templates to add new sensors
-
-5.1. Add the newly added ids along with their types to property.h
-
-5.2. Guard the newly added ids with e.g. #if defined(THZ_5_5_ECO) ... #endif to express that it was tested with that version once it is confirmed for the others, the guards can be removed
-
-5.3. Add the entities to the respective yaml and use the already existing templates. For config values that can be set, use the wp_number.yaml. For sensors that are updated automatically chose the template that fits best.
-
-6. profit
+1. Navigate through the menu of the display, mounted to your heat pump
+2. Try to match the values (e.g. 237) to the values you see in the display (23.7°)
+3. Use the existing templates to add new sensors
+4. Add the newly added ids along with their types to property.h
+5. Guard the newly added ids with e.g. #if defined(THZ_5_5_ECO) ... #endif to express that it was tested with that version once it is confirmed for the others, the guards can be removed
+6. Add the entities to the respective yaml and use the already existing templates. For config values that can be set, use the wp_number.yaml. For sensors that are updated automatically chose the template that fits best.
+7. profit
 
 ## Troubleshooting
 ### You are not able to control your heat pump

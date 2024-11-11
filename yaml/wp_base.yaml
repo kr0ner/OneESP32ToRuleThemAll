@@ -4,18 +4,18 @@ esphome:
     then:
       - lambda: |-
           CallbackHandler::instance().addCallback(std::make_pair(Kessel,Property::kPASSIVKUEHLUNG),[](const SimpleVariant& value){
-              const auto stringValue{Mapper::instance().getPassivkuehlung(value).value_or("Unbekannt")};
-              const auto index = id(PASSIVKUEHLUNG).index_of(stringValue);
-              if(index.has_value()) {
-                id(PASSIVKUEHLUNG).publish_state(stringValue);
-              }
+            const auto stringValue{Mapper::instance().getPassivkuehlung(value).value_or("Unbekannt")};
+            const auto index = id(PASSIVKUEHLUNG).index_of(stringValue);
+            if(index.has_value()) {
+              id(PASSIVKUEHLUNG).publish_state(stringValue);
+            }
           });
           queueRequest(Kessel, Property::kPASSIVKUEHLUNG);
 
-          CallbackHandler::instance().addCallback(std::make_pair(Kessel,Property::kLUEFT_STUFE_TAG),[](const SimpleVariant& value){
-              // workaround for broken ninth bit of BETRIEBSSTATUS
-              const auto fan_speed = std::min(static_cast<std::uint16_t>(3U),static_cast<std::uint16_t>(value));
-              id(LUEFTUNG).publish_state(fan_speed != 0);
+          CallbackHandler::instance().addCallback(std::make_pair(Kessel,Property::kZULUFT_SOLL),[](const SimpleVariant& value){
+            // workaround for broken ninth bit of BETRIEBSSTATUS
+            const auto zuluftSoll = static_cast<std::uint16_t>(value);
+            id(LUEFTUNG).publish_state(zuluftSoll > 0U);
           });
 
 #########################################

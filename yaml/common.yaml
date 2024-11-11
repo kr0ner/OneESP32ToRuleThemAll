@@ -1,14 +1,14 @@
 esphome:
   includes:
-    - src/callback_handler.h
-    - src/communication.h
-    - src/custom_climate.h
-    - src/mapper.h
-    - src/mapper.cpp
-    - src/property.h
-    - src/simple_variant.h
-    - src/type.h
-    - src/type.cpp
+    - OneESP32ToRuleThemAll/src/callback_handler.h
+    - OneESP32ToRuleThemAll/src/communication.h
+    - OneESP32ToRuleThemAll/src/custom_climate.h
+    - OneESP32ToRuleThemAll/src/mapper.h
+    - OneESP32ToRuleThemAll/src/mapper.cpp
+    - OneESP32ToRuleThemAll/src/property.h
+    - OneESP32ToRuleThemAll/src/simple_variant.h
+    - OneESP32ToRuleThemAll/src/type.h
+    - OneESP32ToRuleThemAll/src/type.cpp
 
 #########################################
 #                                       #
@@ -114,6 +114,7 @@ packages:
   RAUMISTTEMP:                    !include { file: wp_temperature.yaml, vars: { property: "RAUMISTTEMP"              , target: "HK1" }}
   VERSTELLTE_RAUMSOLLTEMP:        !include { file: wp_temperature.yaml, vars: { property: "VERSTELLTE_RAUMSOLLTEMP"  , target: "HK1" }}
   RAUMSOLLTEMP_I:                 !include { file: wp_temperature.yaml, vars: { property: "RAUMSOLLTEMP_I"           , target: "HK1" }}
+  RAUMSOLLTEMP_NACHT:             !include { file: wp_temperature.yaml, vars: { property: "RAUMSOLLTEMP_NACHT"       , target: "HK1" }}
   VORLAUFSOLLTEMP:                !include { file: wp_temperature.yaml, vars: { property: "VORLAUFSOLLTEMP"          , target: "HK1" }}
   KUEHL_RAUMSOLL_TAG:             !include { file: wp_temperature.yaml, vars: { property: "KUEHL_RAUMSOLL_TAG"       , target: "HK1" }}
 
@@ -198,7 +199,7 @@ select:
 climate:
   - platform: custom
     lambda: |-
-      auto heating = new HeatingDayNight(id(RAUMISTTEMP),id(VERSTELLTE_RAUMSOLLTEMP), id(HEIZEN), id(KUEHLEN), id(LUEFTUNG), Property::kRAUMSOLLTEMP_I, Property::kKUEHL_RAUMSOLL_TAG);
+      auto heating = new HeatingDayNight(id(RAUMISTTEMP),id(RAUMSOLLTEMP_I), id(HEIZEN), id(KUEHLEN), id(LUEFTUNG), Property::kRAUMSOLLTEMP_I, Property::kKUEHL_RAUMSOLL_TAG);
       App.register_component(heating);
       return {heating};
     climates:
@@ -212,7 +213,7 @@ climate:
 
   - platform: custom
     lambda: |-
-      auto heating = new HeatingDayNight(id(RAUMISTTEMP),id(VERSTELLTE_RAUMSOLLTEMP), id(HEIZEN), id(KUEHLEN), id(LUEFTUNG), Property::kRAUMSOLLTEMP_NACHT, Property::kKUEHL_RAUMSOLL_NACHT);
+      auto heating = new HeatingDayNight(id(RAUMISTTEMP),id(RAUMSOLLTEMP_NACHT), id(HEIZEN), id(KUEHLEN), id(LUEFTUNG), Property::kRAUMSOLLTEMP_NACHT, Property::kKUEHL_RAUMSOLL_NACHT);
       App.register_component(heating);
       return {heating};
     climates:
