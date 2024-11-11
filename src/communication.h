@@ -75,10 +75,11 @@ std::pair<Property, SimpleVariant> processCanMessage(const std::vector<std::uint
         property = static_cast<Property>(msg[2U]);
     }
 
-    const std::uint16_t value{static_cast<std::uint16_t>((byte1 << 8U) | byte2)};
+    const auto value{static_cast<std::uint16_t>((byte1 << 8U) | byte2)};
+    const auto canId{static_cast<std::uint16_t>(((msg[0U] & 0xfc) << 3) | (msg[1U] & 0x3f))};
     ESP_LOGI("Communication",
-             "Message received: Read/Write ID 0x%02x 0x%02x for property %s (0x%04x) with raw value: %d", msg[0U],
-             msg[1U], std::string(property.name).c_str(), property.id, value);
+             "Message received: Read/Write ID 0x%02x 0x%02x(0x%04x) for property %s (0x%04x) with raw value: %d", msg[0U],
+             msg[1U], canId, std::string(property.name).c_str(), property.id, value);
     if (isRequest(msg)) {
         return {Property::kINDEX_NOT_FOUND, value};
     }
