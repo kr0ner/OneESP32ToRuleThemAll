@@ -6,7 +6,15 @@ esphome:
 packages:
   COMMON: !include { file: common.yaml}
   
-  QUELLE_IST:                     !include { file: wp_temperature.yaml, vars: { property: "QUELLE_IST"       }}
+  QUELLE_IST:                     !include { file: wp_temperature.yaml, vars: { property: "QUELLE_IST" }}
+  HKSOLLTEMP:                     !include { file: wp_temperature.yaml, vars: { property: "HKSOLLTEMP", update_interval: "never" }}
+  HKISTTEMP:                      !include { file: wp_temperature.yaml, vars: { property: "HKISTTEMP" }}
+  PUFFERISTTEMP:                  !include { file: wp_temperature.yaml, vars: { property: "PUFFERISTTEMP" }}
+  PUFFERSOLLTEMP:                 !include { file: wp_temperature.yaml, vars: { property: "PUFFERSOLLTEMP" }}
+
+  DRUCK_HEIZKREIS:                !include { file: wp_generic.yaml, vars: { property: "DRUCK_HEIZKREIS", interval: "never", unit: "bar"  , icon: "mdi:water-pressure", accuracy_decimals: "1" }}
+  QUELLENDRUCK:                   !include { file: wp_generic.yaml, vars: { property: "QUELLENDRUCK"   , interval: "never", unit: "bar"  , icon: "mdi:water-pressure", accuracy_decimals: "1" }}
+  VOLUMENSTROM:                   !include { file: wp_generic.yaml, vars: { property: "VOLUMENSTROM"   , interval: "never", unit: "l/min", icon: "mdi:flow"          , accuracy_decimals: "1" }}
 
 binary_sensor:
   - id: !extend LUEFTUNG
