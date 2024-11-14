@@ -71,15 +71,22 @@ struct Property : public detail::Property {
     PROPERTY(AUSSENTEMP, 0x000c, Type::et_dec_val);
     PROPERTY(SAMMLERISTTEMP, 0x000d, Type::et_dec_val);
     PROPERTY(SPEICHERISTTEMP, 0x000e, Type::et_dec_val);
+#if !defined(TTF_07_C)
     PROPERTY(VORLAUFISTTEMP, 0x000f, Type::et_dec_val);
+#endif
     PROPERTY(RAUMISTTEMP, 0x0011, Type::et_dec_val);
     PROPERTY(VERSTELLTE_RAUMSOLLTEMP, 0x0012, Type::et_dec_val);
     PROPERTY(EINSTELL_SPEICHERSOLLTEMP, 0x0013, Type::et_dec_val);
     PROPERTY(VERDAMPFERTEMP, 0x0014, Type::et_dec_val);
     PROPERTY(RUECKLAUFISTTEMP, 0x0016, Type::et_dec_val);
     PROPERTY(FEUCHTE, 0x0075, Type::et_dec_val);
+#if defined(TTF_07_C)
+    PROPERTY(PUFFERISTTEMP, 0x0078, Type::et_dec_val);
+#endif
     PROPERTY(RAUMEINFLUSS, 0x010f, Type::et_little_endian);
+#if !defined(TTF_07_C)
     PROPERTY(PROGRAMMSCHALTER, 0x0112, Type::et_betriebsart);
+#endif
 #if defined(THZ_5_5_ECO)
     PROPERTY(SOMMERBETRIEB_TEMP, 0x0116, Type::et_dec_val);
 #endif
@@ -91,12 +98,23 @@ struct Property : public detail::Property {
     PROPERTY(MINUTE, 0x0126, Type::et_little_endian);
     PROPERTY(HYSTERESE_WW, 0x0140, Type::et_dec_val);
     PROPERTY(BETRIEBS_STATUS, 0x0176);
+#if !defined(TTF_07_C)
     PROPERTY(VOLUMENSTROM, 0x01da, Type::et_dec_val);
+#endif
 #if defined(TTF_07_C)
     PROPERTY(QUELLE_IST, 0x01d4, Type::et_dec_val);
+    PROPERTY(PUFFERSOLLTEMP, 0x01d5, Type::et_dec_val);
+    PROPERTY(HKSOLLTEMP, 0x01d7, Type::et_dec_val);
 #endif
     PROPERTY(TAUPUNKT_HK1, 0x0264, Type::et_dec_val);
+#if defined(TTF_07_C)
+    PROPERTY(HEIZGASTEMP, 0x0265, Type::et_dec_val);
+    PROPERTY(DRUCK_HOCHDRUCK, 0x0268, Type::et_dec_val);
+#endif
     PROPERTY(KUEHLMODE, 0x0287);
+#if defined(TTF_07_C)
+    PROPERTY(HKISTTEMP, 0x02ca, Type::et_dec_val);
+#endif
     PROPERTY(PUMPENDREHZAHL_HEIZEN, 0x02cb, Type::et_dec_val);
     PROPERTY(LAUFZEIT_FILTER_TAGE, 0x0341);
     PROPERTY(WAERMEERTRAG_RUECKGE_TAG_WH, 0x03ae);
@@ -115,7 +133,7 @@ struct Property : public detail::Property {
 #if defined(THZ_5_5_ECO)
     PROPERTY(LUEFT_ZEIT_AUSSERPLAN_STUFE1, 0x0572);
     PROPERTY(LUEFT_ZEIT_AUSSERPLAN_STUFE2, 0x0573);
-    PROPERTY(LUEFT_ZEIT_AUSSERPLAN_STUFE3, 0x0574, );
+    PROPERTY(LUEFT_ZEIT_AUSSERPLAN_STUFE3, 0x0574);
 #endif
     PROPERTY(PASSIVKUEHLUNG, 0x0575);
 #if defined(THZ_5_5_ECO)
@@ -141,13 +159,34 @@ struct Property : public detail::Property {
     PROPERTY(LUEFT_STUFE_HAND, 0x0612);
 #endif
     PROPERTY(KUEHLSYSTEM, 0x0613);
+#if !defined(TTF_07_C)
     PROPERTY(DRUCK_HEIZKREIS, 0x064a, Type::et_dec_val);
+#endif
+#if defined(TTF_07_C)
+    PROPERTY(VOLUMENSTROM, 0x0673, Type::et_cent_val);
+    PROPERTY(DRUCK_HEIZKREIS, 0x0674, Type::et_cent_val);
+    PROPERTY(QUELLENDRUCK, 0x0675, Type::et_cent_val);
+#endif
     PROPERTY(LEISTUNG_AUSLEGUNG_KUEHLEN, 0x0692);
     PROPERTY(MOTORSTROM, 0x069f);
     PROPERTY(MOTORLEISTUNG, 0x06a0, Type::et_cent_val);
+#if defined(TTF_07_C)
+    PROPERTY(VORLAUFISTTEMP, 0x06a1, Type::et_dec_val);
+#else
     PROPERTY(MOTORSPANNUNG, 0x06a1);
+#endif
     PROPERTY(ABLUFTTEMP, 0x0694, Type::et_dec_val);
+#if defined(TTF_07_C)
+    PROPERTY(VERDICHTER_STARTS, 0x071d);
+    PROPERTY(VERDICHTER_STARTS_K, 0x071c);
+    PROPERTY(DRUCK_NIEDERDRUCK, 0x07a5, Type::et_dec_val);
+#endif
     PROPERTY(ANZEIGE_NIEDERDRUCK, 0x07a7, Type::et_dec_val);
+#if defined(TTF_07_C)
+    PROPERTY(HEIZEN, 0x07fc);
+    PROPERTY(KUEHLEN, 0x07ff);
+    PROPERTY(WARMWASSER, 0x0802);
+#endif
     PROPERTY(EL_AUFNAHMELEISTUNG_WW_TAG_WH, 0x091a);
     PROPERTY(EL_AUFNAHMELEISTUNG_WW_TAG_KWH, 0x091b, Type::et_double_val);
     PROPERTY(EL_AUFNAHMELEISTUNG_WW_SUM_KWH, 0x091c);
@@ -172,11 +211,17 @@ struct Property : public detail::Property {
     PROPERTY(WAERMEERTRAG_HEIZ_TAG_KWH, 0x092f, Type::et_double_val);
     PROPERTY(WAERMEERTRAG_HEIZ_SUM_KWH, 0x0930);
     PROPERTY(WAERMEERTRAG_HEIZ_SUM_MWH, 0x0931, Type::et_double_val);
+#if defined(TTF_07_C)
+    PROPERTY(ANLAGENFROST, 0x0a00, Type::et_dec_val);
+    PROPERTY(WW_ECO, 0x0a06, Type::et_dec_val);
+#endif
     PROPERTY(HEIZ_KUEHL_LEISTUNG, 0xc0ee, Type::et_cent_val);
     PROPERTY(ABLUFTFEUCHTE, 0xc0ef);
     PROPERTY(LEISTUNG_AUSLEGUNG_HEIZUNG, 0xc0f1);
+#if !defined(TTF_07_C)
     PROPERTY(VERDICHTER_STARTS, 0xc0f4);
     PROPERTY(VERDICHTER_STARTS_K, 0xc0f5);
+#endif
     PROPERTY(ABLUFT_TAUPUNKT, 0xc0f6, Type::et_dec_val);
     PROPERTY(LAUFZEIT_FILTER, 0xc111);
     PROPERTY(DIFFERENZDRUCK, 0xc11e);
