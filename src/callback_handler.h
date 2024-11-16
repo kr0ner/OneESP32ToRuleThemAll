@@ -16,9 +16,25 @@ class CallbackHandler {
      * @brief Adds a callback that will be executed every time a CAN message with the specified
      *        \c Property is received for the given \c CanMember. The callback usually takes care of
      *        publishing the value to Home Assistant and is registered once during the startup.
+     *        Registering multiple callbacks is possible. They are executed in the same order as they
+     *        were added.
      */
-    void addCallback(const std::pair<CanMember, Property> key, std::function<void(const SimpleVariant&)> value) {
-        callbacks.insert({std::move(key), std::move(value)});
+    void addCallback(const std::pair<CanMember, Property> key, std::function<void(const SimpleVariant&)> callback) {
+        // check if callback already exists
+        auto it = callbacks.find(key);
+        if (it == callbacks.end()) {
+            // add callback
+            callbacks.insert({std::move(key), std::move(callback)});
+        } else {
+            // merge with existing callback
+            auto existingCallback = getCallback(key);
+            callbacks.insert_or_assign(
+                std::move(key), [existingCallback = std::move(existingCallback),
+                                  newCallback = std::move(callback)](const SimpleVariant& value) {
+                     existingCallback(value);
+                     newCallback(value);
+                 });
+        }
     }
 
     /**

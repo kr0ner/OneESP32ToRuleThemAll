@@ -12,10 +12,10 @@ esphome:
           });
           queueRequest(Kessel, Property::kPASSIVKUEHLUNG);
 
-          CallbackHandler::instance().addCallback(std::make_pair(Kessel,Property::kZULUFT_SOLL),[](const SimpleVariant& value){
+          CallbackHandler::instance().addCallback(std::make_pair(Kessel,Property::kZULUFT_IST),[](const SimpleVariant& value){
             // workaround for broken ninth bit of BETRIEBSSTATUS
-            const auto zuluftSoll = static_cast<std::uint16_t>(value);
-            id(LUEFTUNG).publish_state(zuluftSoll > 0U);
+            const auto zuluftIst = static_cast<std::uint16_t>(value);
+            id(LUEFTUNG).publish_state(zuluftIst > 0U);
           });
 
 #########################################
