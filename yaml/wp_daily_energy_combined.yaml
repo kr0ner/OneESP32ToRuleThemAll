@@ -16,6 +16,7 @@ sensor:
     state_class: "measurement"
     accuracy_decimals: 3
     internal: true
+    update_interval: never
     filters:
       - multiply: 0.001
       - lambda: return x - id(gOFFSET_${property_wh});
@@ -28,6 +29,7 @@ sensor:
     accuracy_decimals: ${accuracy_decimals}
     device_class: energy
     state_class: total_increasing
+    update_interval: never
 
 esphome:
   on_boot:
