@@ -28,11 +28,11 @@ SimpleVariant GetValueByType(const std::uint16_t value, const Type type) {
         case Type::et_byte:
             return (static_cast<float>(value & 0xFF));
         case Type::et_dec_val:
-            return (value / 10.0f);
+            return (static_cast<std::int16_t>(value) / 10.0f);
         case Type::et_cent_val:
-            return (value / 100.0f);
+            return (static_cast<std::int16_t>(value) / 100.0f);
         case Type::et_mil_val:
-            return (value / 1000.0f);
+            return (static_cast<std::int16_t>(value) / 1000.0f);
         case Type::et_little_endian:
             return static_cast<float>((((value >> 8U) & 0xFF) | ((value & 0xff) << 8U)));
         case Type::et_little_bool:
@@ -81,7 +81,7 @@ SimpleVariant GetValueByType(const std::uint16_t value, const Type type) {
         // just convert to float and handle the decimals in yaml
         case Type::et_double_val:
         case Type::et_triple_val:
-            return value * 1.0f;
+            return static_cast<std::int16_t>(value) * 1.0f;
         case Type::et_default:
         default:
             return value;

@@ -75,7 +75,7 @@ struct SimpleVariant {
     }
 
    private:
-    std::tuple<bool, std::uint16_t, float, std::string> t;
+    std::tuple<bool, float, std::string> t;
     const std::type_info& type_id;
 };
 
