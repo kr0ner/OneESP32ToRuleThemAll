@@ -1,0 +1,17 @@
+name: Build
+
+on:
+  issue_comment:                                     
+    types: [created, edited]
+
+permissions:
+  pull-requests: write
+  statuses: write
+  checks: write
+
+jobs:
+  build:
+    if: (contains(github.event.comment.html_url, '/pull/') && contains(github.event.comment.body, '/test'))
+    uses: kr0ner/workflows/.github/workflows/build.yml@main
+    with:
+      files: esphome/esp32-poe-technik.yaml
