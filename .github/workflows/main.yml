@@ -3,6 +3,9 @@ name: Build
 on:
   issue_comment:                                     
     types: [created, edited]
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
 
 permissions:
   pull-requests: write
@@ -11,7 +14,7 @@ permissions:
 
 jobs:
   build:
-    if: (contains(github.event.comment.html_url, '/pull/') && contains(github.event.comment.body, '/test'))
+    if: (contains(github.event.comment.html_url, '/pull/') && contains(github.event.comment.body, 'retest')) || github.event_name == 'pull_request'
     uses: kr0ner/workflows/.github/workflows/build.yml@main
     with:
       files: esphome/esp32-poe-technik.yaml
