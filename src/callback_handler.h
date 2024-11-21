@@ -28,12 +28,11 @@ class CallbackHandler {
         } else {
             // merge with existing callback
             auto existingCallback = getCallback(key);
-            callbacks.insert_or_assign(
-                std::move(key), [existingCallback = std::move(existingCallback),
-                                  newCallback = std::move(callback)](const SimpleVariant& value) {
-                     existingCallback(value);
-                     newCallback(value);
-                 });
+            callbacks.insert_or_assign(std::move(key), [existingCallback = std::move(existingCallback),
+                                                        newCallback = std::move(callback)](const SimpleVariant& value) {
+                existingCallback(value);
+                newCallback(value);
+            });
         }
     }
 
