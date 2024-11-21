@@ -79,6 +79,9 @@ struct Property : public detail::Property {
     PROPERTY(EINSTELL_SPEICHERSOLLTEMP, 0x0013, Type::et_dec_val);
     PROPERTY(VERDAMPFERTEMP, 0x0014, Type::et_dec_val);
     PROPERTY(RUECKLAUFISTTEMP, 0x0016, Type::et_dec_val);
+#if defined(TTF_07_C)
+    PROPERTY(PROGRAMMSCHALTER, 0x005a);
+#endif
     PROPERTY(FEUCHTE, 0x0075, Type::et_dec_val);
 #if defined(TTF_07_C)
     PROPERTY(PUFFERISTTEMP, 0x0078, Type::et_dec_val);
