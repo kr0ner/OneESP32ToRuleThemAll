@@ -29,14 +29,7 @@ esphome:
               if(fan_speed == 0) {
                 id(${property}).turn_off().perform();
               } else {
-                /*
-                 * enable once https://github.com/esphome/esphome/pull/7113 is merged
-                 * id(${property}).turn_on().set_speed(fan_speed).perform();
-                 * delete code below
-                 */
-                id(${property}).make_call().set_speed(fan_speed).perform();
-                // do not change the order, otherwise fan will be set to 100% the first time
-                id(${property}).turn_on().perform();
+                id(${property}).turn_on().set_speed(fan_speed).perform();
               }
           });
           queueRequest(Kessel, Property::k${property});
