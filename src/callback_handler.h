@@ -13,6 +13,18 @@
 class CallbackHandler {
    public:
     /**
+     * @brief For every given key adds a callback that will be executed every time a CAN message
+     *        with the specified \c Property is received for the given \c CanMember. The callback
+     *        needs to ensure that only one source is actively handled at a time to prevent toggling.
+     */
+    void addCallbacks(const std::vector<std::pair<CanMember, Property>>& keys,
+                      std::function<void(const SimpleVariant&)> callback) {
+        for (const auto& key : keys) {
+            addCallback(key, callback);
+        }
+    }
+
+    /**
      * @brief Adds a callback that will be executed every time a CAN message with the specified
      *        \c Property is received for the given \c CanMember. The callback usually takes care of
      *        publishing the value to Home Assistant and is registered once during the startup.

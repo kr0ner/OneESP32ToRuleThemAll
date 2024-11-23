@@ -9,14 +9,20 @@ fan:
           const auto fan_speed = std::min(3, x);
           ESP_LOGI("fan", "Speed set %d", fan_speed);
           sendData(Kessel, Property::k${property}, fan_speed);
+          queueRequest(Kessel, Property::kZULUFT_SOLL);
+          queueRequest(Kessel, Property::kABLUFT_SOLL);
     on_turn_off:
       - lambda: |-
           ESP_LOGI("fan", "Fan turned off!");
           sendData(Kessel, Property::k${property}, 0U);
+          queueRequest(Kessel, Property::kZULUFT_SOLL);
+          queueRequest(Kessel, Property::kABLUFT_SOLL);
     on_turn_on:
       - lambda: |-
           ESP_LOGI("fan", "Fan turned on!");
           sendData(Kessel, Property::k${property}, id(${property}).speed);
+          queueRequest(Kessel, Property::kZULUFT_SOLL);
+          queueRequest(Kessel, Property::kABLUFT_SOLL);
 
 esphome:
   on_boot:
