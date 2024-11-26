@@ -6,6 +6,7 @@ esphome:
     - OneESP32ToRuleThemAll/src/mapper.h
     - OneESP32ToRuleThemAll/src/mapper.cpp
     - OneESP32ToRuleThemAll/src/property.h
+    - OneESP32ToRuleThemAll/src/property.cpp
     - OneESP32ToRuleThemAll/src/simple_variant.h
     - OneESP32ToRuleThemAll/src/type.h
     - OneESP32ToRuleThemAll/src/type.cpp
