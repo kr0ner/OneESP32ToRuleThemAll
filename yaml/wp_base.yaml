@@ -1,4 +1,6 @@
 esphome:
+  includes:
+    - OneESP32ToRuleThemAll/src/custom_climate.h
   on_boot:
     priority: -100
     then:
@@ -42,6 +44,42 @@ esphome:
             id(ELECTRIC_HEATING_POWER).publish_state(electricHeatingPower);
           });
 
+          CallbackHandler::instance().addCallback(std::make_pair(Kessel,Property::kPROGRAMMSCHALTER),[](const SimpleVariant& value){
+            const auto stringValue{value.get<std::string>()};
+            const auto index = id(PROGRAMMSCHALTER).index_of(stringValue);
+            if(index.has_value()) {
+              id(PROGRAMMSCHALTER).publish_state(stringValue);
+            }
+          });
+          queueRequest(Kessel, Property::kPROGRAMMSCHALTER);
+
+          CallbackHandler::instance().addCallback(std::make_pair(Kessel,Property::kBETRIEBS_STATUS_2),[](const SimpleVariant& value){
+            const std::bitset<2U> status_bits{static_cast<std::uint16_t>(value)};
+            id(SOMMERBETRIEB_AKTIV).publish_state(status_bits.test(0U));
+            id(OFEN_KAMIN_AKTIV).publish_state(status_bits.test(1U));
+          });
+          queueRequest(Kessel, Property::kBETRIEBS_STATUS_2);
+
+          CallbackHandler::instance().addCallback(std::make_pair(Kessel,Property::kBETRIEBS_STATUS),[](const SimpleVariant& value){
+            const std::bitset<15U> status_bits{static_cast<std::uint16_t>(value)};
+            id(SCHALTPROGRAMM_AKTIV).publish_state(status_bits.test(0U));
+            id(VERDICHTER).publish_state(status_bits.test(1U));
+            id(HEIZEN).publish_state(status_bits.test(2U));
+            id(KUEHLEN).publish_state(status_bits.test(3U));
+            id(WARMWASSERBEREITUNG).publish_state(status_bits.test(4U));
+            id(ELEKTRISCHE_NACHERWAERMUNG).publish_state(status_bits.test(5U));
+            id(SERVICE).publish_state(status_bits.test(6U));
+            id(EVU_SPERRE).publish_state(status_bits.test(7U));
+            id(FILTERWECHSEL_BEIDE).publish_state(status_bits.test(8U));
+            // seems to be broken id(LUEFTUNG).publish_state(status_bits.test(9U));
+            id(HEIZKREISPUMPE).publish_state(status_bits.test(10U));
+            id(ABTAUEN_VERDAMPFER).publish_state(status_bits.test(11U));
+            id(FILTERWECHSEL_ABLUFT).publish_state(status_bits.test(12U));
+            id(FILTERWECHSEL_ZULUFT).publish_state(status_bits.test(13U));
+            id(AUFHEIZPROGRAMM_AKTIV).publish_state(status_bits.test(14U));
+          });
+          queueRequest(Kessel, Property::kBETRIEBS_STATUS);
+
 #########################################
 #                                       #
 #   Selects                             #
@@ -67,6 +105,29 @@ select:
             const auto passivkuehlungId = Mapper::instance().getPassivkuehlungId(x);
             if(passivkuehlungId.has_value()) {
               sendData(Kessel, Property::kPASSIVKUEHLUNG, passivkuehlungId.value());
+            }
+
+  - platform: template
+    name: "PROGRAMMSCHALTER"
+    id: PROGRAMMSCHALTER
+    options:
+      - "Notbetrieb"
+      - "Bereitschaft"
+      - "Automatik"
+      - "Tagbetrieb"
+      - "Absenkbetrieb"
+      - "Warmwasser"
+      - "Handbetrieb"
+      - "Unbekannt"
+    initial_option: "Unbekannt"
+    optimistic: true
+    setup_priority: 100
+    set_action:
+      then:
+        - lambda: |-
+            const auto betriebsartId = Mapper::instance().getBetriebsartId(x);
+            if(betriebsartId.has_value()) {
+              sendData(Kessel, Property::kPROGRAMMSCHALTER, betriebsartId.value());
             }
 
 #########################################
@@ -107,13 +168,96 @@ sensor:
 
 #########################################
 #                                       #
+#   Custom climates                     #
+#                                       #
+#########################################
+climate:
+  - platform: custom
+    lambda: |-
+      auto heating = new HeatingDayNight(id(RAUMISTTEMP),id(RAUMSOLLTEMP_I), id(HEIZEN), id(KUEHLEN), id(LUEFTUNG), Property::kRAUMSOLLTEMP_I, Property::kKUEHL_RAUMSOLL_TAG);
+      App.register_component(heating);
+      return {heating};
+    climates:
+      name: "Heating Day"
+      visual:
+        min_temperature: 10.0
+        max_temperature: 25.0
+        temperature_step:
+          target_temperature: 0.1
+          current_temperature: 0.1
+
+  - platform: custom
+    lambda: |-
+      auto heating = new HeatingDayNight(id(RAUMISTTEMP),id(RAUMSOLLTEMP_NACHT), id(HEIZEN), id(KUEHLEN), id(LUEFTUNG), Property::kRAUMSOLLTEMP_NACHT, Property::kKUEHL_RAUMSOLL_NACHT);
+      App.register_component(heating);
+      return {heating};
+    climates:
+      name: "Heating Night"
+      visual:
+        min_temperature: 10.0
+        max_temperature: 25.0
+        temperature_step:
+          target_temperature: 0.1
+          current_temperature: 0.1
+
+  - platform: custom
+    lambda: |-
+      auto hot_water = new HotWater(id(SPEICHERISTTEMP),id(EINSTELL_SPEICHERSOLLTEMP), id(WARMWASSERBEREITUNG), Property::kEINSTELL_SPEICHERSOLLTEMP);
+      App.register_component(hot_water);
+      return {hot_water};
+    climates:
+      name: "Hot Water"
+      visual:
+        min_temperature: 30.0
+        max_temperature: 75.0
+        temperature_step:
+          target_temperature: 1.0
+          current_temperature: 0.1
+
+#########################################
+#                                       #
+#   Intervals                           #
+#                                       #
+#########################################
+interval:
+  - interval: $interval_once_in_a_while
+    then:
+    - lambda: |-
+        queueRequest(Kessel, Property::kBETRIEBS_STATUS_2);
+
+#########################################
+#                                       #
 #   Packages                            #
 #                                       #
 #########################################
 packages:
+  SCHALTPROGRAMM_AKTIV:       !include { file: wp_binary.yaml, vars: { name: "SCHALTPROGRAMM_AKTIV" }}
+  VERDICHTER:                 !include { file: wp_binary.yaml, vars: { name: "VERDICHTER" }}
+  WARMWASSERBEREITUNG:        !include { file: wp_binary.yaml, vars: { name: "WARMWASSERBEREITUNG" }}
+  ELEKTRISCHE_NACHERWAERMUNG: !include { file: wp_binary.yaml, vars: { name: "ELEKTRISCHE_NACHERWAERMUNG" }}
+  SERVICE:                    !include { file: wp_binary.yaml, vars: { name: "SERVICE" }}
+  HEIZEN:                     !include { file: wp_binary.yaml, vars: { name: "HEIZEN" }}
+  KUEHLEN:                    !include { file: wp_binary.yaml, vars: { name: "KUEHLEN" }}
+  LUEFTUNG:                   !include { file: wp_binary.yaml, vars: { name: "LUEFTUNG" }}
+  EVU_SPERRE:                 !include { file: wp_binary.yaml, vars: { name: "EVU_SPERRE" }}
+  FILTERWECHSEL_BEIDE:        !include { file: wp_binary.yaml, vars: { name: "FILTERWECHSEL_BEIDE" }}
+  HEIZKREISPUMPE:             !include { file: wp_binary.yaml, vars: { name: "HEIZKREISPUMPE" }}
+  ABTAUEN_VERDAMPFER:         !include { file: wp_binary.yaml, vars: { name: "ABTAUEN_VERDAMPFER" }}
+  FILTERWECHSEL_ABLUFT:       !include { file: wp_binary.yaml, vars: { name: "FILTERWECHSEL_ABLUFT" }}
+  FILTERWECHSEL_ZULUFT:       !include { file: wp_binary.yaml, vars: { name: "FILTERWECHSEL_ZULUFT" }}
+  AUFHEIZPROGRAMM_AKTIV:      !include { file: wp_binary.yaml, vars: { name: "AUFHEIZPROGRAMM_AKTIV" }}
+  SOMMERBETRIEB_AKTIV:        !include { file: wp_binary.yaml, vars: { name: "SOMMERBETRIEB_AKTIV" }}
+  OFEN_KAMIN_AKTIV:           !include { file: wp_binary.yaml, vars: { name: "OFEN_KAMIN_AKTIV" }}
+
   WAERMEERTRAG_RUECKGE_SUMME_MWH:  !include { file: wp_generic_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_RUECKGE_SUMME_MWH"     , scaled_property: "WAERMEERTRAG_RUECKGE_SUM_KWH" , property: "WAERMEERTRAG_RUECKGE_SUM_MWH" , unit: "MWh", accuracy_decimals: "3", icon: "mdi:fire"  }}
 
-  ABLUFTTEMP:                     !include { file: wp_temperature.yaml, vars: { property: "ABLUFTTEMP"       }}
+  ABLUFTTEMP:                     !include { file: wp_temperature.yaml, vars: { property: "ABLUFTTEMP"                }}
+  EINSTELL_SPEICHERSOLLTEMP:      !include { file: wp_temperature.yaml, vars: { property: "EINSTELL_SPEICHERSOLLTEMP" }}
+  SAMMLERISTTEMP:                 !include { file: wp_temperature.yaml, vars: { property: "SAMMLERISTTEMP"           , interval: $interval_medium }}
+  TAUPUNKT_HK1:                   !include { file: wp_temperature.yaml, vars: { property: "TAUPUNKT_HK1"             , target: "HK1" }}
+  RAUMSOLLTEMP_I:                 !include { file: wp_temperature.yaml, vars: { property: "RAUMSOLLTEMP_I"           , target: "HK1" }}
+  RAUMSOLLTEMP_NACHT:             !include { file: wp_temperature.yaml, vars: { property: "RAUMSOLLTEMP_NACHT"       , target: "HK1" }}
+  KUEHL_RAUMSOLL_TAG:             !include { file: wp_temperature.yaml, vars: { property: "KUEHL_RAUMSOLL_TAG"       , target: "HK1" }}
 
   LUEFT_STUFE_TAG:                !include { file: wp_ventilation.yaml, vars: { property: "LUEFT_STUFE_TAG"   }}
   LUEFT_STUFE_NACHT:              !include { file: wp_ventilation.yaml, vars: { property: "LUEFT_STUFE_NACHT" }}
@@ -132,7 +276,13 @@ packages:
   ZULUFT_SOLL:                    !include { file: wp_generic.yaml, vars: { property: "ZULUFT_SOLL"              , interval: $interval_slow  , unit: "l/min", icon: "mdi:pump"  }}
   VOLUMENSTROM:                   !include { file: wp_generic.yaml, vars: { property: "VOLUMENSTROM"             , interval: $interval_slow  , unit: "l/min", icon: "mdi:pump"  }}
   LAUFZEIT_FILTER:                !include { file: wp_generic.yaml, vars: { property: "LAUFZEIT_FILTER"          , interval: $interval_once_in_a_while , unit: "%", icon: "mdi:calendar"  }}
+  ANZEIGE_NIEDERDRUCK:            !include { file: wp_generic.yaml, vars: { property: "ANZEIGE_NIEDERDRUCK"      , accuracy_decimals: "2" }}
+  PUMPENZYKLEN_MIN_AUSSENT:       !include { file: wp_generic.yaml, vars: { property: "PUMPENZYKLEN_MIN_AUSSENT" }}
 
   NE_STUFE_WW:                    !include { file: wp_number.yaml, vars: { property: "NE_STUFE_WW"                , min: "0", max: "3" }}
+  LEISTUNG_AUSLEGUNG_HEIZUNG:     !include { file: wp_number.yaml, vars: { property: "LEISTUNG_AUSLEGUNG_HEIZUNG" }}
+  LEISTUNG_AUSLEGUNG_KUEHLEN:     !include { file: wp_number.yaml, vars: { property: "LEISTUNG_AUSLEGUNG_KUEHLEN" }}
+  PUMPENDREHZAHL_HEIZEN:          !include { file: wp_number.yaml, vars: { property: "PUMPENDREHZAHL_HEIZEN"      , step: "0.1" }}
+  HYSTERESE_WW:                   !include { file: wp_number.yaml, vars: { property: "HYSTERESE_WW"               , min: "2.0", max: "10.0", step: "0.1", unit: "°C" }}
 
   WAERMEERTRAG_RUECKGE_TAG_SUMME_KWH:  !include { file: wp_daily_energy_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_RUECKGE_TAG_SUMME_KWH" , property_wh: "WAERMEERTRAG_RUECKGE_TAG_WH"    , property_kwh: "WAERMEERTRAG_RUECKGE_TAG_KWH"     }}
