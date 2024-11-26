@@ -15,15 +15,3 @@ packages:
   DRUCK_HEIZKREIS:                !include { file: wp_generic.yaml, vars: { property: "DRUCK_HEIZKREIS", interval: "never", unit: "bar"  , icon: "mdi:water-pressure", accuracy_decimals: "1" }}
   QUELLENDRUCK:                   !include { file: wp_generic.yaml, vars: { property: "QUELLENDRUCK"   , interval: "never", unit: "bar"  , icon: "mdi:water-pressure", accuracy_decimals: "1" }}
   VOLUMENSTROM:                   !include { file: wp_generic.yaml, vars: { property: "VOLUMENSTROM"   , interval: "never", unit: "l/min", icon: "mdi:flow"          , accuracy_decimals: "1" }}
-
-binary_sensor:
-  - id: !extend LUEFTUNG
-    internal: true
-  - id: !extend EVU_SPERRE
-    internal: true
-  - id: !extend FILTERWECHSEL_BEIDE
-    internal: true
-  - id: !extend FILTERWECHSEL_ABLUFT
-    internal: true
-  - id: !extend FILTERWECHSEL_ZULUFT
-    internal: true
