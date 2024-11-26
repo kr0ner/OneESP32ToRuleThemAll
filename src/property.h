@@ -8,18 +8,7 @@
 #include "type.h"
 
 namespace detail {
-struct Property;
-struct Mapper {
-    Mapper(const Property* other);
-
-   protected:
-    Mapper() = default;
-
-   protected:
-    static inline std::unordered_map<std::uint16_t, const Property*> map;
-};
-
-struct Property : public Mapper {
+struct Property {
     std::string_view name;
     std::uint16_t id{0U};
     Type type{Type::et_default};
@@ -38,28 +27,32 @@ struct Property : public Mapper {
     }
 
    protected:
-    Property getProperty(const std::uint16_t id) {
-        if (auto it = map.find(id); it != map.end()) {
-            return *(it->second);
-        }
-        return {"UNKNOWN", id};
-    }
+    Property getProperty(const std::uint16_t id);
 };
 
-inline Mapper::Mapper(const Property* other) {
-    map.insert({other->id, other});
-}
+class Mapper {
+   public:
+    Mapper() = default;
+    inline Mapper(const Property other) { map.insert({other.id, other}); }
+
+    Property getProperty(const std::uint16_t id);
+
+   private:
+    static inline std::unordered_map<std::uint16_t, Property> map;
+};
+
 }  // namespace detail
 
 #define PROPERTY(NAME, VALUE, ...)                                          \
     static constexpr detail::Property k##NAME{#NAME, VALUE, ##__VA_ARGS__}; \
+    static constexpr bool unique##VALUE{true};                              \
     static inline detail::Mapper k##NAME##_MAPPING {                        \
-        &k##NAME                                                            \
+        k##NAME                                                             \
     }
 
 struct Property : public detail::Property {
-    Property(const Property& p) : detail::Property{p.name, p.id, p.type} {}
-    Property(const detail::Property& p) : detail::Property{p.name, p.id, p.type} {}
+    constexpr Property(const Property& p) : detail::Property{p.name, p.id, p.type} {}
+    constexpr Property(const detail::Property& p) : detail::Property{p.name, p.id, p.type} {}
     Property(const std::uint16_t _id) : detail::Property{getProperty(_id)} {}
 
     PROPERTY(INDEX_NOT_FOUND, 0x0000);
