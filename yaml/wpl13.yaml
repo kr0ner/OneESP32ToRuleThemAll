@@ -1,0 +1,56 @@
+esphome:
+  includes:
+    - OneESP32ToRuleThemAll/src/callback_handler.h
+    - OneESP32ToRuleThemAll/src/communication.h
+    - OneESP32ToRuleThemAll/src/mapper.h
+    - OneESP32ToRuleThemAll/src/mapper.cpp
+    - OneESP32ToRuleThemAll/src/property.h
+    - OneESP32ToRuleThemAll/src/property.cpp
+    - OneESP32ToRuleThemAll/src/simple_variant.h
+    - OneESP32ToRuleThemAll/src/type.h
+    - OneESP32ToRuleThemAll/src/type.cpp
+  platformio_options:
+    build_flags:
+      - "-DWPL_13"
+
+#########################################
+#                                       #
+#   Intervals                           #
+#                                       #
+#########################################
+interval:
+  - interval: 250ms
+    then:
+      - lambda: |-
+          // Request sensor value one after another.
+          if(!request_queue.empty()) {
+            constexpr auto use_extended_id{false};
+            const auto request_element = request_queue.front();
+            request_queue.pop();
+            //requestData(request_element.first, request_element.second);
+          }
+
+#########################################
+#                                       #
+#   CANbus configuration                #
+#                                       #
+#########################################
+canbus:
+  - id: wp_can
+    can_id: 680
+    use_extended_id: false
+    bit_rate: 20kbps
+    on_frame:
+    - can_id: 0
+      can_id_mask: 0
+      then:
+        - lambda: |-
+            ESP_LOGI("CAN", "message received with CAN-Id 0x%04lx", can_id);
+            const auto property_value_pair = processCanMessage(x);
+
+packages:
+  AUSSENTEMP:                     !include { file: wp_temperature.yaml, vars: { property: "AUSSENTEMP"          }}
+  RUECKLAUFISTTEMP:               !include { file: wp_temperature.yaml, vars: { property: "RUECKLAUFISTTEMP"    }}
+  TAUPUNKTTEMPERATUR:             !include { file: wp_temperature.yaml, vars: { property: "TAUPUNKTTEMPERATUR", target: "HK1"  }}
+  QUELLENDRUCK:                   !include { file: wp_generic.yaml,     vars: { property: "QUELLENDRUCK"      , unit: "bar"  , icon: "mdi:water-pressure", accuracy_decimals: "1" }}
+# add new sensors that you want to expose to HA here ... look at the parameters that you can pass to them ... maybe you need to override target with HK1, or HK2. Depends where the values are incoming

@@ -20,11 +20,11 @@ struct CanMember {
     std::uint16_t getResponseId() const { return getWriteId() | 0x200; }
 };
 
-static const CanMember ESPClient{0x6a2, "ESPClient"};
-static const CanMember Anfrage{0x6a1, "Anfrage"};
+static const CanMember ESPClient{0x680, "ESPClient"};
 static const CanMember Kessel{0x180, "Kessel"};
-static const CanMember HK1{0x301, "HK1"};
-static const CanMember HK2{0x302, "HK2"};
+static const CanMember HK1{0x500, "HK1"};
+static const CanMember HK2{0x480, "HK2"};
+static const CanMember Anfrage{0x700, "Anfrage"};
 
 using Request = std::pair<const CanMember, const Property>;
 static std::queue<Request> request_queue;
@@ -37,6 +37,14 @@ bool isRequest(const std::vector<std::uint8_t>& msg) {
     const std::vector<CanMember> members = {ESPClient, Anfrage, Kessel, HK1, HK2};
     const auto it =
         std::find_if(members.cbegin(), members.cend(), [id](const auto& member) { return member.getWriteId() == id; });
+    return it != members.cend();
+}
+
+bool isResponse(const std::vector<std::uint8_t>& msg) {
+    const auto id{msg[1U] | (msg[0U] << 8U)};
+    const std::vector<CanMember> members = {ESPClient, Anfrage, Kessel, HK1, HK2};
+    const auto it = std::find_if(members.cbegin(), members.cend(),
+                                 [id](const auto& member) { return member.getResponseId() == id; });
     return it != members.cend();
 }
 
@@ -80,7 +88,8 @@ std::pair<Property, SimpleVariant> processCanMessage(const std::vector<std::uint
     ESP_LOGI("Communication",
              "Message received: Read/Write ID 0x%02x 0x%02x(0x%04x) for property %s (0x%04x) with raw value: %d",
              msg[0U], msg[1U], canId, std::string(property.name).c_str(), property.id, value);
-    if (isRequest(msg)) {
+    if (!isResponse(msg)) {
+        ESP_LOGI("Communication", "Message is not a response. Dropping it!");
         return {Property::kINDEX_NOT_FOUND, value};
     }
     return {property, GetValueByType(value, property.type)};
