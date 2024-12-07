@@ -267,6 +267,8 @@ packages:
   MOTORSTROM:                     !include { file: wp_generic.yaml, vars: { property: "MOTORSTROM"               , interval: $interval_medium, unit: "A" }}
   MOTORSPANNUNG:                  !include { file: wp_generic.yaml, vars: { property: "MOTORSPANNUNG"            , interval: $interval_medium, unit: "V" }}
   MOTORLEISTUNG:                  !include { file: wp_generic.yaml, vars: { property: "MOTORLEISTUNG"            , interval: $interval_medium, unit: "kW", accuracy_decimals: "2" }}
+  VERDICHTERDREHZAHL:             !include { file: wp_generic.yaml, vars: { property: "VERDICHTERDREHZAHL"       , interval: $interval_medium, unit: "Hz"   , icon: "mdi:gauge" }}
+  HEIZLEISTUNG:                   !include { file: wp_generic.yaml, vars: { property: "HEIZLEISTUNG"             , interval: $interval_medium, unit: "%"    , icon: "mdi:gauge" }}
   HEIZ_KUEHL_LEISTUNG:            !include { file: wp_generic.yaml, vars: { property: "HEIZ_KUEHL_LEISTUNG"      , interval: $interval_medium, unit: "kW", accuracy_decimals: "2" }}
   ABLUFT_IST:                     !include { file: wp_generic.yaml, vars: { property: "ABLUFT_IST"               , interval: $interval_slow  , unit: "Hz"   , icon: "mdi:fan"   }}
   FORTLUFT_IST:                   !include { file: wp_generic.yaml, vars: { property: "FORTLUFT_IST"             , interval: $interval_slow  , unit: "Hz"   , icon: "mdi:fan"   }}
