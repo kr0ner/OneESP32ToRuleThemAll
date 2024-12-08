@@ -286,5 +286,11 @@ packages:
   LEISTUNG_AUSLEGUNG_KUEHLEN:     !include { file: wp_number.yaml, vars: { property: "LEISTUNG_AUSLEGUNG_KUEHLEN" }}
   PUMPENDREHZAHL_HEIZEN:          !include { file: wp_number.yaml, vars: { property: "PUMPENDREHZAHL_HEIZEN"      , step: "0.1" }}
   HYSTERESE_WW:                   !include { file: wp_number.yaml, vars: { property: "HYSTERESE_WW"               , min: "2.0", max: "10.0", step: "0.1", unit: "°C" }}
+  LUEFT_ZULUFT_STUFE1:            !include { file: wp_number.yaml, vars: { property: "LUEFT_ZULUFT_STUFE1", min: "0.0", max: "300.0", unit: "m³/h", icon: "mdi:air-filter"  }}
+  LUEFT_ZULUFT_STUFE2:            !include { file: wp_number.yaml, vars: { property: "LUEFT_ZULUFT_STUFE2", min: "0.0", max: "300.0", unit: "m³/h", icon: "mdi:air-filter"  }}
+  LUEFT_ZULUFT_STUFE3:            !include { file: wp_number.yaml, vars: { property: "LUEFT_ZULUFT_STUFE3", min: "0.0", max: "300.0", unit: "m³/h", icon: "mdi:air-filter"  }}
+  LUEFT_ABLUFT_STUFE1:            !include { file: wp_number.yaml, vars: { property: "LUEFT_ABLUFT_STUFE1", min: "0.0", max: "300.0", unit: "m³/h", icon: "mdi:air-filter"  }}
+  LUEFT_ABLUFT_STUFE2:            !include { file: wp_number.yaml, vars: { property: "LUEFT_ABLUFT_STUFE2", min: "0.0", max: "300.0", unit: "m³/h", icon: "mdi:air-filter"  }}
+  LUEFT_ABLUFT_STUFE3:            !include { file: wp_number.yaml, vars: { property: "LUEFT_ABLUFT_STUFE3", min: "0.0", max: "300.0", unit: "m³/h", icon: "mdi:air-filter"  }}
 
   WAERMEERTRAG_RUECKGE_TAG_SUMME_KWH:  !include { file: wp_daily_energy_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_RUECKGE_TAG_SUMME_KWH" , property_wh: "WAERMEERTRAG_RUECKGE_TAG_WH"    , property_kwh: "WAERMEERTRAG_RUECKGE_TAG_KWH"     }}
