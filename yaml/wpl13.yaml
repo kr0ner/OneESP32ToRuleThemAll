@@ -1,0 +1,88 @@
+esphome:
+  includes:
+    - OneESP32ToRuleThemAll/src/callback_handler.h
+    - OneESP32ToRuleThemAll/src/communication.h
+    - OneESP32ToRuleThemAll/src/mapper.h
+    - OneESP32ToRuleThemAll/src/mapper.cpp
+    - OneESP32ToRuleThemAll/src/property.h
+    - OneESP32ToRuleThemAll/src/property.cpp
+    - OneESP32ToRuleThemAll/src/simple_variant.h
+    - OneESP32ToRuleThemAll/src/type.h
+    - OneESP32ToRuleThemAll/src/type.cpp
+  platformio_options:
+    build_flags:
+      - "-DWPL_13"
+      - "-DESPCLIENT_ID=$espclient_can_id"
+      - "-DMANAGER_ID=$manager_can_id"
+      - "-DKESSEL_ID=$kessel_can_id"
+      - "-DHK1_ID=$hk1_can_id"
+      - "-DHK2_ID=$hk2_can_id"
+
+substitutions:
+  kessel_can_id: "0x180"
+  hk1_can_id: "0x601"
+  hk2_can_id: "0x602"
+  manager_can_id: "0x514"
+  espclient_can_id: "0x004"
+
+#########################################
+#                                       #
+#   Intervals                           #
+#                                       #
+#########################################
+interval:
+  - interval: 250ms
+    then:
+      - lambda: |-
+          // Request sensor value one after another.
+          if(!request_queue.empty()) {
+            constexpr auto use_extended_id{false};
+            const auto request_element = request_queue.front();
+            request_queue.pop();
+            requestData(request_element.first, request_element.second);
+          }
+
+#########################################
+#                                       #
+#   CANbus configuration                #
+#                                       #
+#########################################
+canbus:
+  - id: wp_can
+    can_id: $espclient_can_id
+    use_extended_id: false
+    bit_rate: 50kbps
+    on_frame:
+    - can_id: 0
+      can_id_mask: 0
+      then:
+        - lambda: |-
+            ESP_LOGD("CAN", "Can message received with CANId 0x%04lx", can_id);
+            const auto [property, value] = processCanMessage(x);
+            const auto canMember = getCanMemberByCanId(can_id);
+            if(canMember) {
+              auto callback = CallbackHandler::instance().getCallback(std::make_pair(canMember->get(),property));
+              callback(value);
+            } else {
+              ESP_LOGD("CAN", "No CANMember with CANId 0x%04lx available.", can_id);
+            }
+
+packages:
+  AUSSENTEMP:                     !include { file: wp_temperature.yaml, vars: { property: "AUSSENTEMP"          }}
+  ISTTEMPERATUR_HK1:              !include { file: wp_temperature.yaml, vars: { property: "ISTTEMPERATUR"     , name_suffix: "_HK1" , target: "HK1"  }}
+  KOMFORTTEMPERATUR_HK1:          !include { file: wp_temperature.yaml, vars: { property: "KOMFORTTEMPERATUR" , name_suffix: "_HK1" , target: "HK1"  }}
+  ISTTEMPERATUR_HK2:              !include { file: wp_temperature.yaml, vars: { property: "ISTTEMPERATUR"     , name_suffix: "_HK2" , target: "HK2"  }}
+  KOMFORTTEMPERATUR_HK2:          !include { file: wp_temperature.yaml, vars: { property: "KOMFORTTEMPERATUR" , name_suffix: "_HK2" , target: "HK2"  }}
+  PUFFERISTTEMPERATUR:            !include { file: wp_temperature.yaml, vars: { property: "PUFFERISTTEMPERATUR" }}
+  RAUMISTTEMP_HK1:                !include { file: wp_temperature.yaml, vars: { property: "RAUMISTTEMP"       , name_suffix: "_HK1" , target: "HK1"  }}
+  RAUMISTTEMP_HK2:                !include { file: wp_temperature.yaml, vars: { property: "RAUMISTTEMP"       , name_suffix: "_HK2" , target: "HK2"  }}
+  RAUMSOLLTEMP_HK1:               !include { file: wp_temperature.yaml, vars: { property: "RAUMSOLLTEMP"      , name_suffix: "_HK1" , target: "HK1"  }}
+  RAUMSOLLTEMP_HK2:               !include { file: wp_temperature.yaml, vars: { property: "RAUMSOLLTEMP"      , name_suffix: "_HK2" , target: "HK2"  }}
+  RAUMFEUCHTE:                    !include { file: wp_generic.yaml,     vars: { property: "RAUMFEUCHTE" , interval: $interval_very_slow, unit: "%", icon: "mdi:water-percent", accuracy_decimals: "1", target: "FET" }}
+  HEAT_EFF_1D:                    !include { file: wp_number.yaml,      vars: { property: "HEAT_EFF_1D" }}
+  HEAT_EFF_1Y:                    !include { file: wp_number.yaml,      vars: { property: "HEAT_EFF_1Y" }}
+  VORLAUFTEMP_QUELLE:             !include { file: wp_temperature.yaml, vars: { property: "VORLAUFTEMP_QUELLE"          }}
+  QUELLENDRUCK:                   !include { file: wp_generic.yaml,     vars: { property: "QUELLENDRUCK"          , interval: never, unit: "bar" , icon: "mdi:water-pressure" , accuracy_decimals: "1" }}
+  LEISTUNG_QUELLENPUMPE:          !include { file: wp_generic.yaml,     vars: { property: "LEISTUNG_QUELLENPUMPE" , interval: never, unit: "%"   , icon: "mdi:water-percent", accuracy_decimals: "1", target: "Manager" }}
+  STROM_INVERTER:                 !include { file: wp_generic.yaml,     vars: { property: "STROM_INVERTER"        , interval: never, unit: "A" , target: "Manager"}}
+  SPANNUNG_INVERTER:              !include { file: wp_generic.yaml,     vars: { property: "SPANNUNG_INVERTER"     , interval: never, unit: "V" , target: "Manager"}}

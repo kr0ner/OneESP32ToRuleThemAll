@@ -1,11 +1,12 @@
 defaults:
   interval: $interval_very_slow
   target: "Kessel"
+  name_suffix: ""
 
 sensor:
   - platform: template
-    name: ${property}
-    id: ${property}
+    name: ${property}${name_suffix}
+    id: ${property}${name_suffix}
     unit_of_measurement: "°C"
     icon: "mdi:thermometer-lines"
     device_class: "temperature"
@@ -22,6 +23,6 @@ esphome:
     then:
       - lambda: |-
           CallbackHandler::instance().addCallback(std::make_pair(${target},Property::k${property}),[](const SimpleVariant& value){
-              id(${property}).publish_state(value);
+              id(${property}${name_suffix}).publish_state(value);
           });
           queueRequest(${target}, Property::k${property});
