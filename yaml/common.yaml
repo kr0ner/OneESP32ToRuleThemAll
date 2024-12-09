@@ -156,59 +156,16 @@ canbus:
     use_extended_id: false
     bit_rate: 20kbps
     on_frame:
-
-#########################################
-#                                       #
-#   KESSEL messages                     #
-#                                       #
-#########################################
-    - can_id: 0x180
+    - can_id: 0
+      can_id_mask: 0
       then:
         - lambda: |-
-            const auto property_value_pair = processCanMessage(x);
-            Property property{property_value_pair.first};
-            SimpleVariant value{property_value_pair.second};
-            auto callback = CallbackHandler::instance().getCallback(std::make_pair(Kessel,property));
-            callback(value);
-
-#########################################
-#                                       #
-#   HK1 messages                        #
-#                                       #
-#########################################
-    - can_id: 0x301
-      then:
-        - lambda: |-
-            const auto property_value_pair = processCanMessage(x);
-            Property property{property_value_pair.first};
-            SimpleVariant value{property_value_pair.second};
-            auto callback = CallbackHandler::instance().getCallback(std::make_pair(HK1,property));
-            callback(value);
-
-#########################################
-#                                       #
-#   HK2 messages                        #
-#                                       #
-#########################################
-    - can_id: 0x302
-      then:
-        - lambda: |-
-            const auto property_value_pair = processCanMessage(x);
-            Property property{property_value_pair.first};
-            SimpleVariant value{property_value_pair.second};
-            auto callback = CallbackHandler::instance().getCallback(std::make_pair(HK2,property));
-            callback(value);
-
-#########################################
-#                                       #
-#   Message requests                    #
-#                                       #
-#########################################
-    - can_id: 0x6a1
-      then:
-        - lambda: |-
-            const auto property_value_pair = processCanMessage(x);
-            Property property{property_value_pair.first};
-            SimpleVariant value{property_value_pair.second};
-            auto callback = CallbackHandler::instance().getCallback(std::make_pair(Anfrage,property));
-            callback(value);
+            ESP_LOGD("CAN", "Can message received with CANId 0x%04lx", can_id);
+            const auto [property, value] = processCanMessage(x);
+            const auto canMember = getCanMemberByCanId(can_id);
+            if(canMember) {
+              auto callback = CallbackHandler::instance().getCallback(std::make_pair(canMember->get(),property));
+              callback(value);
+            } else {
+              ESP_LOGD("CAN", "No CANMember with CANId 0x%04lx available.", can_id);
+            }
