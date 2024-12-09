@@ -5,6 +5,7 @@
 #include <string>
 #include <tuple>
 #include <type_traits>
+#include <typeinfo>
 
 template <typename T>
 struct is_string
