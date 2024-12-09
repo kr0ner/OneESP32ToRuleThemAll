@@ -1,0 +1,73 @@
+esphome:
+  includes:
+    - OneESP32ToRuleThemAll/src/callback_handler.h
+    - OneESP32ToRuleThemAll/src/communication.h
+    - OneESP32ToRuleThemAll/src/mapper.h
+    - OneESP32ToRuleThemAll/src/mapper.cpp
+    - OneESP32ToRuleThemAll/src/property.h
+    - OneESP32ToRuleThemAll/src/property.cpp
+    - OneESP32ToRuleThemAll/src/simple_variant.h
+    - OneESP32ToRuleThemAll/src/type.h
+    - OneESP32ToRuleThemAll/src/type.cpp
+  platformio_options:
+    build_flags:
+      - "-DWPL_13"
+      - "-DESPCLIENT_ID=$espclient_can_id"
+      - "-DMANAGER_ID=$manager_can_id"
+      - "-DKESSEL_ID=$kessel_can_id"
+      - "-DHK1_ID=$hk1_can_id"
+      - "-DHK2_ID=$hk2_can_id"
+
+substitutions:
+  kessel_can_id: "0x180"
+  hk1_can_id: "0x700"
+  hk2_can_id: "0x500"
+  manager_can_id: "0x480"
+  espclient_can_id: "0x680"
+
+#########################################
+#                                       #
+#   Intervals                           #
+#                                       #
+#########################################
+interval:
+  - interval: 250ms
+    then:
+      - lambda: |-
+          // Request sensor value one after another.
+          if(!request_queue.empty()) {
+            constexpr auto use_extended_id{false};
+            const auto request_element = request_queue.front();
+            request_queue.pop();
+            requestData(request_element.first, request_element.second);
+          }
+
+#########################################
+#                                       #
+#   CANbus configuration                #
+#                                       #
+#########################################
+canbus:
+  - id: wp_can
+    can_id: $espclient_can_id
+    use_extended_id: false
+    bit_rate: 20kbps
+    on_frame:
+    - can_id: 0
+      can_id_mask: 0
+      then:
+        - lambda: |-
+            ESP_LOGD("CAN", "Can message received with CANId 0x%04lx", can_id);
+            const auto [property, value] = processCanMessage(x);
+            const auto canMember = getCanMemberByCanId(can_id);
+            if(canMember) {
+              auto callback = CallbackHandler::instance().getCallback(std::make_pair(canMember->get(),property));
+              callback(value);
+            } else {
+              ESP_LOGD("CAN", "No CANMember with CANId 0x%04lx available.", can_id);
+            }
+
+packages:
+  AUSSENTEMP:                     !include { file: wp_temperature.yaml, vars: { property: "AUSSENTEMP"          }}
+  ISTTEMPERATUR_HK2:              !include { file: wp_temperature.yaml, vars: { property: "ISTTEMPERATUR_HK2" , target: "HK2"  }}
+  KOMFORTTEMPERATUR_HK2:          !include { file: wp_temperature.yaml, vars: { property: "KOMFORTTEMPERATUR_HK2" , target: "HK2"  }}
