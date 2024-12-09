@@ -9,35 +9,62 @@
 #include "property.h"
 #include "type.h"
 
-using CANID = std::uint16_t;
+using CANId = std::uint16_t;
 
 struct CanMember {
-    CANID CanId;
+    CANId canId;
     std::string name;
-    bool operator<(const CanMember& other) const { return CanId < other.CanId; }
-    std::uint16_t getWriteId() const { return (((CanId & 0x7c0) << 5U) + (CanId & 0x3f)); }
+    bool operator<(const CanMember& other) const { return canId < other.canId; }
+    std::uint16_t getWriteId() const { return (((canId & 0x7c0) << 5U) + (canId & 0x3f)); }
     std::uint16_t getReadId() const { return getWriteId() | 0x100; }
     std::uint16_t getResponseId() const { return getWriteId() | 0x200; }
 };
 
-static const CanMember ESPClient{0x6a2, "ESPClient"};
-static const CanMember Anfrage{0x6a1, "Anfrage"};
-static const CanMember Kessel{0x180, "Kessel"};
-static const CanMember HK1{0x301, "HK1"};
-static const CanMember HK2{0x302, "HK2"};
+static const CanMember ESPClient{ESPCLIENT_ID, "ESPClient"};
+static const CanMember Manager{MANAGER_ID, "Manager"};
+static const CanMember Kessel{KESSEL_ID, "Kessel"};
+static const CanMember HK1{HK1_ID, "HK1"};
+static const CanMember HK2{HK2_ID, "HK2"};
+
+static const std::vector<std::reference_wrapper<const CanMember>> canMembers{Kessel, HK1, HK2, Manager, ESPClient};
 
 using Request = std::pair<const CanMember, const Property>;
 static std::queue<Request> request_queue;
+
+/**
+ * @brief Tries to find the CANMember with the given CANId.
+ *
+ * @param The CANId to look up.
+ * @return A reference to the CANMember wrapped in an optional.
+ */
+std::optional<std::reference_wrapper<const CanMember>> getCanMemberByCanId(CANId canId) {
+    const auto it = std::find_if(canMembers.cbegin(), canMembers.cend(),
+                                 [canId](const auto& member) { return member.get().canId == canId; });
+    if (it != canMembers.cend()) {
+        return it->get();
+    }
+    return std::nullopt;
+}
 
 /**
  * @brief Checks if the message is a request, sent by another CAN participant.
  */
 bool isRequest(const std::vector<std::uint8_t>& msg) {
     const auto id{msg[1U] | (msg[0U] << 8U)};
-    const std::vector<CanMember> members = {ESPClient, Anfrage, Kessel, HK1, HK2};
-    const auto it =
-        std::find_if(members.cbegin(), members.cend(), [id](const auto& member) { return member.getWriteId() == id; });
-    return it != members.cend();
+    const auto it = std::find_if(canMembers.cbegin(), canMembers.cend(), [id](const auto& member) {
+        return member.get().getReadId() == id || member.get().getWriteId() == id;
+    });
+    return it != canMembers.cend();
+}
+
+/**
+ * @brief Checks if the message is a response to a previously sent request. Responses contain the actual sensor value.
+ */
+bool isResponse(const std::vector<std::uint8_t>& msg) {
+    const auto id{msg[1U] | (msg[0U] << 8U)};
+    const auto it = std::find_if(canMembers.cbegin(), canMembers.cend(),
+                                 [id](const auto& member) { return member.get().getResponseId() == id; });
+    return it != canMembers.cend();
 }
 
 /**
@@ -80,7 +107,8 @@ std::pair<Property, SimpleVariant> processCanMessage(const std::vector<std::uint
     ESP_LOGI("Communication",
              "Message received: Read/Write ID 0x%02x 0x%02x(0x%04x) for property %s (0x%04x) with raw value: %d",
              msg[0U], msg[1U], canId, std::string(property.name).c_str(), property.id, value);
-    if (isRequest(msg)) {
+    if (!isResponse(msg)) {
+        ESP_LOGI("Communication", "Message is not a response. Dropping it!");
         return {Property::kINDEX_NOT_FOUND, value};
     }
     return {property, GetValueByType(value, property.type)};
@@ -96,7 +124,7 @@ void requestData(const CanMember& member, const Property& property) {
 
     data.insert(data.end(), {IdByte1, IdByte2, 0xfa, IndexByte1, IndexByte2, 0x00, 0x00});
 
-    id(wp_can).send_data(ESPClient.CanId, use_extended_id, data);
+    id(wp_can).send_data(ESPClient.canId, use_extended_id, data);
 }
 
 /**
@@ -117,7 +145,7 @@ void sendData(const CanMember& member, const Property property, const std::uint1
 
     data.insert(data.end(), {IdByte1, IdByte2, 0xfa, IndexByte1, IndexByte2, ValueByte1, ValueByte2});
 
-    id(wp_can).send_data(ESPClient.CanId, use_extended_id, data);
+    id(wp_can).send_data(ESPClient.canId, use_extended_id, data);
 }
 
 #endif

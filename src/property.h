@@ -56,6 +56,8 @@ struct Property : public detail::Property {
     Property(const std::uint16_t _id) : detail::Property{getProperty(_id)} {}
 
     PROPERTY(INDEX_NOT_FOUND, 0x0000);
+
+#if !defined(WPL_13)
     PROPERTY(FEHLERMELDUNG, 0x0001);
     PROPERTY(SPEICHERSOLLTEMP, 0x0003, Type::et_dec_val);
     PROPERTY(VORLAUFSOLLTEMP, 0x0004, Type::et_dec_val);
@@ -97,6 +99,7 @@ struct Property : public detail::Property {
     PROPERTY(WAERMEERTRAG_HEIZ_TAG_KWH, 0x092f, Type::et_double_val);
     PROPERTY(WAERMEERTRAG_HEIZ_SUM_KWH, 0x0930);
     PROPERTY(WAERMEERTRAG_HEIZ_SUM_MWH, 0x0931, Type::et_double_val);
+#endif
 
 #if defined(THZ_504) || defined(THZ_404) || defined(THZ_5_5_ECO)
     PROPERTY(RAUMSOLLTEMP_I, 0x0005, Type::et_dec_val);
@@ -189,6 +192,12 @@ struct Property : public detail::Property {
     PROPERTY(WARMWASSER, 0x0802);
     PROPERTY(ANLAGENFROST, 0x0a00, Type::et_dec_val);
     PROPERTY(WW_ECO, 0x0a06, Type::et_dec_val);
+#endif
+
+#if defined(WPL_13)
+    PROPERTY(AUSSENTEMP, 0x000c, Type::et_dec_val);
+    PROPERTY(KOMFORTTEMPERATUR_HK2, 0xc2d5, Type::et_dec_val);
+    PROPERTY(ISTTEMPERATUR_HK2, 0x0265, Type::et_dec_val);
 #endif
 };
 
