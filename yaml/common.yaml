@@ -9,6 +9,20 @@ esphome:
     - OneESP32ToRuleThemAll/src/simple_variant.h
     - OneESP32ToRuleThemAll/src/type.h
     - OneESP32ToRuleThemAll/src/type.cpp
+  platformio_options:
+    build_flags:
+      - "-DESPCLIENT_ID=$espclient_can_id"
+      - "-DMANAGER_ID=$manager_can_id"
+      - "-DKESSEL_ID=$kessel_can_id"
+      - "-DHK1_ID=$hk1_can_id"
+      - "-DHK2_ID=$hk2_can_id"
+
+substitutions:
+  kessel_can_id: "0x180"
+  hk1_can_id: "0x301"
+  hk2_can_id: "0x302"
+  manager_can_id: "0x6a1"
+  espclient_can_id: "0x6a2"
 
 #########################################
 #                                       #
@@ -152,7 +166,7 @@ sensor:
 #########################################
 canbus:
   - id: wp_can
-    can_id: 680
+    can_id: $espclient_can_id
     use_extended_id: false
     bit_rate: 20kbps
     on_frame:

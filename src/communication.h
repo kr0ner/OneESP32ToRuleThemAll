@@ -20,13 +20,13 @@ struct CanMember {
     std::uint16_t getResponseId() const { return getWriteId() | 0x200; }
 };
 
-static const CanMember ESPClient{0x6a2, "ESPClient"};
-static const CanMember Anfrage{0x6a1, "Anfrage"};
-static const CanMember Kessel{0x180, "Kessel"};
-static const CanMember HK1{0x301, "HK1"};
-static const CanMember HK2{0x302, "HK2"};
+static const CanMember ESPClient{ESPCLIENT_ID, "ESPClient"};
+static const CanMember Manager{MANAGER_ID, "Manager"};
+static const CanMember Kessel{KESSEL_ID, "Kessel"};
+static const CanMember HK1{HK1_ID, "HK1"};
+static const CanMember HK2{HK2_ID, "HK2"};
 
-static const std::vector<std::reference_wrapper<const CanMember>> canMembers{Anfrage, Kessel, HK1, HK2};
+static const std::vector<std::reference_wrapper<const CanMember>> canMembers{Kessel, HK1, HK2, Manager, ESPClient};
 
 using Request = std::pair<const CanMember, const Property>;
 static std::queue<Request> request_queue;
