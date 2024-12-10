@@ -107,7 +107,8 @@ std::pair<Property, SimpleVariant> processCanMessage(const std::vector<std::uint
     ESP_LOGI("Communication",
              "Message received: Read/Write ID 0x%02x 0x%02x(0x%04x) for property %s (0x%04x) with raw value: %d",
              msg[0U], msg[1U], canId, std::string(property.name).c_str(), property.id, value);
-    if (isRequest(msg)) {
+    if (!isResponse(msg)) {
+        ESP_LOGD("Communication", "Message is not a response. Dropping it!");
         return {Property::kINDEX_NOT_FOUND, value};
     }
     return {property, GetValueByType(value, property.type)};
