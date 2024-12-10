@@ -33,7 +33,7 @@ struct Property {
 class Mapper {
    public:
     Mapper() = default;
-    inline Mapper(const Property other) { map.insert({other.id, other}); }
+    inline Mapper(const Property& other) { map.insert({other.id, other}); }
 
     Property getProperty(const std::uint16_t id);
 
