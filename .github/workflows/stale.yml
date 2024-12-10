@@ -17,8 +17,10 @@ jobs:
           stale-issue-message: "Hi there! This is an automated message to let you know that this issue has been inactive for some time. If no further activity or updates are provided in the next 7 days, this issue will be closed as stale. If you're still working on this issue, please leave a comment to let us know. Otherwise, feel free to reopen the issue if you encounter the problem again in the future. Thanks for your understanding!"
           stale-pr-message: "Hello! This is an automated message regarding your pull request. We've noticed that this PR has been inactive for a while, with no updates or activity in the last 30 days. If no further updates or responses are provided within the next 7 days, this pull request will be closed as stale. If you're still actively working on this PR, please leave a comment to let us know. We're happy to keep it open and review your changes. Otherwise, feel free to reopen the PR if you have more work to contribute in the future. Thank you for your understanding and contributions!"
           stale-pr-label: "stale"
+          days-before-stale: 30
+          days-before-close: 7
       - uses: fpicalausa/remove-stale-branches@v1.6.0
         with:
-          dry-run: true # Check out the console output before setting this to false
+          dry-run: false
           days-before-branch-stale: 30
           days-before-branch-delete: 7
