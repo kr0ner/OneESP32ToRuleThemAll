@@ -3,7 +3,7 @@ fan:
     name: ${property}
     id: ${property}
     speed_count: 3
-    restore_mode: NO_RESTORE
+    restore_mode: RESTORE_DEFAULT_OFF
     on_speed_set:
       - lambda: |-
           const auto fan_speed = std::min(3, x);
