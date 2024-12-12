@@ -25,8 +25,12 @@ static const CanMember Manager{MANAGER_ID, "Manager"};
 static const CanMember Kessel{KESSEL_ID, "Kessel"};
 static const CanMember HK1{HK1_ID, "HK1"};
 static const CanMember HK2{HK2_ID, "HK2"};
+static const CanMember FET{0x402, "FET"};
+static const CanMember R2D2{0x700, "R2D2"};
+static const CanMember C3PO{0x480, "C3PO"};
 
-static const std::vector<std::reference_wrapper<const CanMember>> canMembers{Kessel, HK1, HK2, Manager, ESPClient};
+static const std::vector<std::reference_wrapper<const CanMember>> canMembers{Kessel, HK1,  HK2,  Manager,
+                                                                             FET,    R2D2, C3PO, ESPClient};
 
 using Request = std::pair<const CanMember, const Property>;
 static std::queue<Request> request_queue;
@@ -51,9 +55,8 @@ std::optional<std::reference_wrapper<const CanMember>> getCanMemberByCanId(CANId
  */
 bool isRequest(const std::vector<std::uint8_t>& msg) {
     const auto id{msg[1U] | (msg[0U] << 8U)};
-    const auto it = std::find_if(canMembers.cbegin(), canMembers.cend(), [id](const auto& member) {
-        return member.get().getReadId() == id || member.get().getWriteId() == id;
-    });
+    const auto it = std::find_if(canMembers.cbegin(), canMembers.cend(),
+                                 [id](const auto& member) { return member.get().getReadId() == id; });
     return it != canMembers.cend();
 }
 
@@ -107,8 +110,8 @@ std::pair<Property, SimpleVariant> processCanMessage(const std::vector<std::uint
     ESP_LOGI("Communication",
              "Message received: Read/Write ID 0x%02x 0x%02x(0x%04x) for property %s (0x%04x) with raw value: %d",
              msg[0U], msg[1U], canId, std::string(property.name).c_str(), property.id, value);
-    if (!isResponse(msg)) {
-        ESP_LOGD("Communication", "Message is not a response. Dropping it!");
+    if (isRequest(msg)) {
+        ESP_LOGD("Communication", "Message is a request. Dropping it!");
         return {Property::kINDEX_NOT_FOUND, value};
     }
     return {property, GetValueByType(value, property.type)};
