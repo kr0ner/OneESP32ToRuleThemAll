@@ -19,8 +19,14 @@ sensor:
     update_interval: never
     filters:
       - multiply: 0.001
-      - lambda: return x - id(gOFFSET_${property_wh});
-      
+      - lambda: |-
+          const auto newValue{x - id(gOFFSET_${property_wh})};
+          // readings shall never be negative
+          if(newValue > 0.0) {
+            return newValue;
+          }
+          return 0.0;
+
   - platform: template
     name: ${sensor_name}
     id: ${sensor_name}
@@ -50,17 +56,9 @@ esphome:
 time:
   - platform: sntp
     on_time:
-      # Every hour, every 5 minutes except midnight.
+      # Every hour, every 5 minutes starting at 4 minutes.
       - seconds: 0
-        minutes: 5/5
-        hours: 0-23
-        then:
-          - lambda: |-
-              queueRequest(${target}, Property::k${property_wh});
-              queueRequest(${target}, Property::k${property_kwh});
-      - seconds: 0
-        minutes: 0
-        hours: 1-23
+        minutes: 4/5
         then:
           - lambda: |-
               queueRequest(${target}, Property::k${property_wh});
@@ -73,6 +71,4 @@ time:
           - lambda: |-
               // set the current Wh value as offset for the next day and convert Wh to kWh
               id(gOFFSET_${property_wh}) = id(${property_wh}).raw_state * 0.001;
-          - sensor.template.publish:
-              id: ${sensor_name}
-              state: 0.0
+              id(${sensor_name}).publish_state(0.0);
