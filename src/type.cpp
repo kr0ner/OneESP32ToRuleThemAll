@@ -87,3 +87,7 @@ SimpleVariant GetValueByType(const std::uint16_t value, const Type type) {
             return value;
     }
 }
+
+std::uint16_t toggleEndianness(const std::uint16_t value) {
+    return (((value & 0xFF00) >> 8U) | ((value & 0x00FF) << 8U));
+}

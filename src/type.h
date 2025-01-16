@@ -37,4 +37,12 @@ T getParamType(void (C::*)(T));
  */
 SimpleVariant GetValueByType(const std::uint16_t value, const Type type);
 
+/**
+ * @brief Toggles endianness of an unsigned 16-bit integer.
+ *        Needed whenever payload of type et_little_endian is sent/received
+ *        little endian (CAN bus) -> big endian    (ESPHome)
+ *        big endian    (ESPHome) -> little endian (CAN bus)
+ */
+uint16_t toggleEndianness(const uint16_t value);
+
 #endif
