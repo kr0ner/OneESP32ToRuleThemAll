@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 
+#include "esphome.h"
 #include "mapper.h"
 #include "property.h"
 #include "type.h"

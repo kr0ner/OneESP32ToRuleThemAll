@@ -9,6 +9,7 @@ esphome:
     - OneESP32ToRuleThemAll/src/simple_variant.h
     - OneESP32ToRuleThemAll/src/type.h
     - OneESP32ToRuleThemAll/src/type.cpp
+    - OneESP32ToRuleThemAll/src/util.h
   platformio_options:
     build_flags:
       - "-DESPCLIENT_ID=$espclient_can_id"
@@ -42,6 +43,35 @@ globals:
   - id: gCOP_HEIZ_TAG
     type: float
     initial_value: "0.0"
+
+#########################################
+#                                       #
+#   Time Synchronization                #
+#                                       #
+#########################################
+time:
+  - platform: sntp
+    id: sntp_time
+    on_time:
+      - seconds: 0
+        minutes: 0
+        hours: 3 # sync at 3 am should be ok even with switch from/to daylight saving time
+        then:
+          - lambda: |-
+              syncTime();
+
+#########################################
+#                                       #
+#   Buttons                             #
+#                                       #
+#########################################
+button:
+  - platform: template
+    name: Synchronize Time
+    on_press:
+      then:
+        - lambda: |-
+            syncTime();
 
 #########################################
 #                                       #
