@@ -99,11 +99,11 @@ struct Property : public detail::Property {
     PROPERTY(WAERMEERTRAG_HEIZ_SUM_MWH, 0x0931, Type::et_double_val);
 
 #if defined(THZ_504) || defined(THZ_404) || defined(THZ_5_5_ECO)
-    PROPERTY(RAUMSOLLTEMP_I, 0x0005, Type::et_dec_val);
+    PROPERTY(RAUMSOLLTEMP_TAG, 0x0005, Type::et_dec_val);
     PROPERTY(RAUMSOLLTEMP_NACHT, 0x0008, Type::et_dec_val);
     PROPERTY(SAMMLERISTTEMP, 0x000d, Type::et_dec_val);
     PROPERTY(VORLAUFISTTEMP, 0x000f, Type::et_dec_val);
-    PROPERTY(EINSTELL_SPEICHERSOLLTEMP, 0x0013, Type::et_dec_val);
+    PROPERTY(SPEICHERSOLLTEMP_TAG, 0x0013, Type::et_dec_val);
     PROPERTY(PROGRAMMSCHALTER, 0x0112, Type::et_betriebsart);
     PROPERTY(HYSTERESE_WW, 0x0140, Type::et_dec_val);
     PROPERTY(BETRIEBS_STATUS, 0x0176);
@@ -137,6 +137,7 @@ struct Property : public detail::Property {
     PROPERTY(FORTLUFT_SOLL, 0x059a);
     PROPERTY(FORTLUFT_IST, 0x059b);
     PROPERTY(PUMPENZYKLEN_MIN_AUSSENT, 0x05bb);
+    PROPERTY(SPEICHERSOLLTEMP_NACHT, 0x05bf, Type::et_dec_val);
     PROPERTY(KUEHLSYSTEM, 0x0613);
     PROPERTY(DRUCK_HEIZKREIS, 0x064a, Type::et_dec_val);
     PROPERTY(LEISTUNG_AUSLEGUNG_KUEHLEN, 0x0692);

@@ -104,12 +104,12 @@ class CustomClimate : public Component, public Climate {
     bool fanRunning{false};
 };
 
-class HeatingDayNight : public CustomClimate {
+class Heating : public CustomClimate {
    public:
     template <typename Sensor, typename BinarySensor>
-    HeatingDayNight(Sensor* current_temperature_sensor, Sensor* target_temperature_sensor, BinarySensor* heating_sensor,
-                    BinarySensor* cooling_sensor, BinarySensor* fan_sensor, const Property targetHeatingTemperature,
-                    const Property targetCoolingTemperature)
+    Heating(Sensor* current_temperature_sensor, Sensor* target_temperature_sensor, BinarySensor* heating_sensor,
+            BinarySensor* cooling_sensor, BinarySensor* fan_sensor, const Property targetHeatingTemperature,
+            const Property targetCoolingTemperature)
         : CustomClimate({climate::CLIMATE_MODE_COOL, climate::CLIMATE_MODE_HEAT, climate::CLIMATE_MODE_AUTO,
                          climate::CLIMATE_MODE_FAN_ONLY, climate::CLIMATE_MODE_OFF},
                         {climate::CLIMATE_PRESET_NONE, climate::CLIMATE_PRESET_HOME, climate::CLIMATE_PRESET_AWAY},

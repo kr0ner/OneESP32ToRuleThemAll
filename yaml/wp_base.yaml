@@ -174,7 +174,7 @@ sensor:
 climate:
   - platform: custom
     lambda: |-
-      auto heating = new HeatingDayNight(id(RAUMISTTEMP),id(RAUMSOLLTEMP_I), id(HEIZEN), id(KUEHLEN), id(LUEFTUNG), Property::kRAUMSOLLTEMP_I, Property::kKUEHL_RAUMSOLL_TAG);
+      auto heating = new Heating(id(RAUMISTTEMP),id(RAUMSOLLTEMP_TAG), id(HEIZEN), id(KUEHLEN), id(LUEFTUNG), Property::kRAUMSOLLTEMP_TAG, Property::kKUEHL_RAUMSOLL_TAG);
       App.register_component(heating);
       return {heating};
     climates:
@@ -188,7 +188,7 @@ climate:
 
   - platform: custom
     lambda: |-
-      auto heating = new HeatingDayNight(id(RAUMISTTEMP),id(RAUMSOLLTEMP_NACHT), id(HEIZEN), id(KUEHLEN), id(LUEFTUNG), Property::kRAUMSOLLTEMP_NACHT, Property::kKUEHL_RAUMSOLL_NACHT);
+      auto heating = new Heating(id(RAUMISTTEMP),id(RAUMSOLLTEMP_NACHT), id(HEIZEN), id(KUEHLEN), id(LUEFTUNG), Property::kRAUMSOLLTEMP_NACHT, Property::kKUEHL_RAUMSOLL_NACHT);
       App.register_component(heating);
       return {heating};
     climates:
@@ -202,11 +202,25 @@ climate:
 
   - platform: custom
     lambda: |-
-      auto hot_water = new HotWater(id(SPEICHERISTTEMP),id(EINSTELL_SPEICHERSOLLTEMP), id(WARMWASSERBEREITUNG), Property::kEINSTELL_SPEICHERSOLLTEMP);
+      auto hot_water = new HotWater(id(SPEICHERISTTEMP),id(SPEICHERSOLLTEMP_TAG), id(WARMWASSERBEREITUNG), Property::kSPEICHERSOLLTEMP_TAG);
       App.register_component(hot_water);
       return {hot_water};
     climates:
-      name: "Hot Water"
+      name: "Hot Water Day"
+      visual:
+        min_temperature: 30.0
+        max_temperature: 75.0
+        temperature_step:
+          target_temperature: 1.0
+          current_temperature: 0.1
+
+  - platform: custom
+    lambda: |-
+      auto hot_water = new HotWater(id(SPEICHERISTTEMP),id(SPEICHERSOLLTEMP_NACHT), id(WARMWASSERBEREITUNG), Property::kSPEICHERSOLLTEMP_NACHT);
+      App.register_component(hot_water);
+      return {hot_water};
+    climates:
+      name: "Hot Water Night"
       visual:
         min_temperature: 30.0
         max_temperature: 75.0
@@ -251,11 +265,12 @@ packages:
 
   WAERMEERTRAG_RUECKGE_SUMME_MWH:  !include { file: wp_generic_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_RUECKGE_SUMME_MWH"     , scaled_property: "WAERMEERTRAG_RUECKGE_SUM_KWH" , property: "WAERMEERTRAG_RUECKGE_SUM_MWH" , unit: "MWh", accuracy_decimals: "3", icon: "mdi:fire"  }}
 
-  ABLUFTTEMP:                     !include { file: wp_temperature.yaml, vars: { property: "ABLUFTTEMP"                }}
-  EINSTELL_SPEICHERSOLLTEMP:      !include { file: wp_temperature.yaml, vars: { property: "EINSTELL_SPEICHERSOLLTEMP" }}
+  ABLUFTTEMP:                     !include { file: wp_temperature.yaml, vars: { property: "ABLUFTTEMP"             }}
+  SPEICHERSOLLTEMP_TAG:           !include { file: wp_temperature.yaml, vars: { property: "SPEICHERSOLLTEMP_TAG"   }}
+  SPEICHERSOLLTEMP_NACHT:         !include { file: wp_temperature.yaml, vars: { property: "SPEICHERSOLLTEMP_NACHT" }}
   SAMMLERISTTEMP:                 !include { file: wp_temperature.yaml, vars: { property: "SAMMLERISTTEMP"           , interval: $interval_medium }}
   TAUPUNKT_HK1:                   !include { file: wp_temperature.yaml, vars: { property: "TAUPUNKT_HK1"             , target: "HK1" }}
-  RAUMSOLLTEMP_I:                 !include { file: wp_temperature.yaml, vars: { property: "RAUMSOLLTEMP_I"           , target: "HK1" }}
+  RAUMSOLLTEMP_TAG:               !include { file: wp_temperature.yaml, vars: { property: "RAUMSOLLTEMP_TAG"         , target: "HK1" }}
   RAUMSOLLTEMP_NACHT:             !include { file: wp_temperature.yaml, vars: { property: "RAUMSOLLTEMP_NACHT"       , target: "HK1" }}
   KUEHL_RAUMSOLL_TAG:             !include { file: wp_temperature.yaml, vars: { property: "KUEHL_RAUMSOLL_TAG"       , target: "HK1" }}
 
