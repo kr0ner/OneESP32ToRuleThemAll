@@ -117,7 +117,7 @@ packages:
   WAERMEERTRAG_WW_SUMME_MWH:       !include { file: wp_generic_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_WW_SUMME_MWH"          , scaled_property: "WAERMEERTRAG_WW_SUM_KWH"      , property: "WAERMEERTRAG_WW_SUM_MWH"      , unit: "MWh", accuracy_decimals: "3", icon: "mdi:fire"  }}
   WAERMEERTRAG_HEIZ_SUMME_MWH:     !include { file: wp_generic_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_HEIZ_SUMME_MWH"        , scaled_property: "WAERMEERTRAG_HEIZ_SUM_KWH"    , property: "WAERMEERTRAG_HEIZ_SUM_MWH"    , unit: "MWh", accuracy_decimals: "3", icon: "mdi:fire"  }}
 
-  SPEICHERSOLLTEMP:               !include { file: wp_temperature.yaml, vars: { property: "SPEICHERSOLLTEMP"          }}
+  SPEICHERSOLLTEMP:               !include { file: wp_temperature.yaml, vars: { property: "SPEICHERSOLLTEMP" }}
   SPEICHERISTTEMP:                !include { file: wp_temperature.yaml, vars: { property: "SPEICHERISTTEMP"          , interval: $interval_medium }}
   AUSSENTEMP:                     !include { file: wp_temperature.yaml, vars: { property: "AUSSENTEMP"       }}
   VERDAMPFERTEMP:                 !include { file: wp_temperature.yaml, vars: { property: "VERDAMPFERTEMP"   }}
@@ -127,10 +127,15 @@ packages:
   VERSTELLTE_RAUMSOLLTEMP:        !include { file: wp_temperature.yaml, vars: { property: "VERSTELLTE_RAUMSOLLTEMP"  , target: "HK1" }}
   VORLAUFSOLLTEMP:                !include { file: wp_temperature.yaml, vars: { property: "VORLAUFSOLLTEMP"          , target: "HK1" }}
 
-  FEHLERMELDUNG:                  !include { file: wp_generic.yaml, vars: { property: "FEHLERMELDUNG"            , icon: "mdi:alert-circle" }}
-  FEUCHTE:                        !include { file: wp_generic.yaml, vars: { property: "FEUCHTE"                  , interval: $interval_very_slow, unit: "%", icon: "mdi:water-percent", target: "HK1", accuracy_decimals: "1" }}
+  FEHLERMELDUNG:                  !include { file: wp_generic.yaml, vars: { property: "FEHLERMELDUNG"      , icon: "mdi:alert-circle" }}
+  FEUCHTE:                        !include { file: wp_generic.yaml, vars: { property: "FEUCHTE"            , interval: $interval_very_slow, unit: "%", icon: "mdi:water-percent", target: "HK1", accuracy_decimals: "1" }}
+  SOLLWERT_MAX_HK1:               !include { file: wp_generic.yaml, vars: { property: "SOLLWERT_MAX_HK1"   , unit: "°C", icon: "mdi:temperature-celsius", target: "HK1", accuracy_decimals: "1" }}
+  SOLLWERT_MIN_HK1:               !include { file: wp_generic.yaml, vars: { property: "SOLLWERT_MIN_HK1"   , unit: "°C", icon: "mdi:temperature-celsius", target: "HK1", accuracy_decimals: "1" }}
+  ANTEIL_VORLAUF_HK1:             !include { file: wp_generic.yaml, vars: { property: "ANTEIL_VORLAUF_HK1" , unit: "%" , icon: "mdi:percent-box", target: "HK1" }}
+  FUSSPUNKT_HK1:                  !include { file: wp_generic.yaml, vars: { property: "FUSSPUNKT_HK1"      , unit: "°C", icon: "mdi:temperature-celsius", target: "HK1", accuracy_decimals: "1" }}
+  STEIGUNG_HK1:                   !include { file: wp_generic.yaml, vars: { property: "STEIGUNG_HK1"       , icon: "mdi:valve", target: "HK1", accuracy_decimals: "2" }}
 
-  RAUMEINFLUSS:                   !include { file: wp_number.yaml, vars: { property: "RAUMEINFLUSS"               , target: "HK1" }}
+  RAUMEINFLUSS:                   !include { file: wp_number.yaml, vars: { property: "RAUMEINFLUSS", target: "HK1" }}
 
   EL_AUFNAHMELEISTUNG_WW_SUMME_KWH:    !include { file: wp_daily_energy_combined.yaml, vars: { sensor_name: "EL_AUFNAHMELEISTUNG_WW_SUMME_KWH"   , property_wh: "EL_AUFNAHMELEISTUNG_WW_TAG_WH"  , property_kwh: "EL_AUFNAHMELEISTUNG_WW_TAG_KWH"   }}
   EL_AUFNAHMELEISTUNG_HEIZ_SUMME_KWH:  !include { file: wp_daily_energy_combined.yaml, vars: { sensor_name: "EL_AUFNAHMELEISTUNG_HEIZ_SUMME_KWH" , property_wh: "EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH", property_kwh: "EL_AUFNAHMELEISTUNG_HEIZ_TAG_KWH" }}

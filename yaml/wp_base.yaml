@@ -278,13 +278,13 @@ packages:
   LUEFT_STUFE_NACHT:              !include { file: wp_ventilation.yaml, vars: { property: "LUEFT_STUFE_NACHT" }}
   LUEFT_STUFE_PARTY:              !include { file: wp_ventilation.yaml, vars: { property: "LUEFT_STUFE_PARTY" }}
 
-  ABLUFTFEUCHTE:                  !include { file: wp_generic.yaml, vars: { property: "ABLUFTFEUCHTE"            , interval: $interval_very_slow, unit: "%", icon: "mdi:water-percent"}}
-  MOTORSTROM:                     !include { file: wp_generic.yaml, vars: { property: "MOTORSTROM"               , interval: $interval_medium, unit: "A" }}
-  MOTORSPANNUNG:                  !include { file: wp_generic.yaml, vars: { property: "MOTORSPANNUNG"            , interval: $interval_medium, unit: "V" }}
-  MOTORLEISTUNG:                  !include { file: wp_generic.yaml, vars: { property: "MOTORLEISTUNG"            , interval: $interval_medium, unit: "kW", accuracy_decimals: "2" }}
+  ABLUFTFEUCHTE:                  !include { file: wp_generic.yaml, vars: { property: "ABLUFTFEUCHTE"            , interval: $interval_very_slow, unit: "%" , icon: "mdi:water-percent"}}
+  MOTORSTROM:                     !include { file: wp_generic.yaml, vars: { property: "MOTORSTROM"               , interval: $interval_medium, unit: "A"    , icon: "mdi:current-ac" }}
+  MOTORSPANNUNG:                  !include { file: wp_generic.yaml, vars: { property: "MOTORSPANNUNG"            , interval: $interval_medium, unit: "V"    , icon: "mdi:sine-wave"}}
+  MOTORLEISTUNG:                  !include { file: wp_generic.yaml, vars: { property: "MOTORLEISTUNG"            , interval: $interval_medium, unit: "kW"   , icon: "mdi:flash", accuracy_decimals: "2" }}
   VERDICHTERDREHZAHL:             !include { file: wp_generic.yaml, vars: { property: "VERDICHTERDREHZAHL"       , interval: $interval_medium, unit: "Hz"   , icon: "mdi:gauge" }}
   HEIZLEISTUNG_RELATIV:           !include { file: wp_generic.yaml, vars: { property: "HEIZLEISTUNG_RELATIV"     , interval: $interval_medium, unit: "%"    , icon: "mdi:gauge" }}
-  HEIZ_KUEHL_LEISTUNG:            !include { file: wp_generic.yaml, vars: { property: "HEIZ_KUEHL_LEISTUNG"      , interval: $interval_medium, unit: "kW", accuracy_decimals: "2" }}
+  HEIZ_KUEHL_LEISTUNG:            !include { file: wp_generic.yaml, vars: { property: "HEIZ_KUEHL_LEISTUNG"      , interval: $interval_medium, unit: "kW"   , icon: "mdi:home-lightning-bolt-outline", accuracy_decimals: "2" }}
   ABLUFT_IST:                     !include { file: wp_generic.yaml, vars: { property: "ABLUFT_IST"               , interval: $interval_slow  , unit: "Hz"   , icon: "mdi:fan"   }}
   FORTLUFT_IST:                   !include { file: wp_generic.yaml, vars: { property: "FORTLUFT_IST"             , interval: $interval_slow  , unit: "Hz"   , icon: "mdi:fan"   }}
   ZULUFT_IST:                     !include { file: wp_generic.yaml, vars: { property: "ZULUFT_IST"               , interval: $interval_slow  , unit: "Hz"   , icon: "mdi:fan"   }}
@@ -294,7 +294,7 @@ packages:
   VOLUMENSTROM:                   !include { file: wp_generic.yaml, vars: { property: "VOLUMENSTROM"             , interval: $interval_slow  , unit: "l/min", icon: "mdi:pump"  }}
   LAUFZEIT_FILTER:                !include { file: wp_generic.yaml, vars: { property: "LAUFZEIT_FILTER"          , interval: $interval_once_in_a_while , unit: "%", icon: "mdi:calendar"  }}
   ANZEIGE_NIEDERDRUCK:            !include { file: wp_generic.yaml, vars: { property: "ANZEIGE_NIEDERDRUCK"      , accuracy_decimals: "2" }}
-  PUMPENZYKLEN_MIN_AUSSENT:       !include { file: wp_generic.yaml, vars: { property: "PUMPENZYKLEN_MIN_AUSSENT" }}
+  PUMPENZYKLEN_MIN_AUSSENT:       !include { file: wp_generic.yaml, vars: { property: "PUMPENZYKLEN_MIN_AUSSENT" , icon: "mdi:numeric"  }}
 
   NE_STUFE_WW:                    !include { file: wp_number.yaml, vars: { property: "NE_STUFE_WW"                , min: "0", max: "3" }}
   LEISTUNG_AUSLEGUNG_HEIZUNG:     !include { file: wp_number.yaml, vars: { property: "LEISTUNG_AUSLEGUNG_HEIZUNG" }}
