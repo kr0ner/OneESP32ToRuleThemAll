@@ -2,7 +2,7 @@ defaults:
   icon: "mdi:blank"
   accuracy_decimals: "0"
   target: "Kessel"
-  interval: "never"
+  update_interval: "never"
   unit: ""
   scaler: "1.0"
 
@@ -13,7 +13,7 @@ sensor:
     icon: ${icon}
     unit_of_measurement: ${unit}
     accuracy_decimals: ${accuracy_decimals}
-    update_interval: ${interval}
+    update_interval: ${update_interval}
     state_class: "measurement"
     lambda: |-
         queueRequest(${target}, Property::k${property});

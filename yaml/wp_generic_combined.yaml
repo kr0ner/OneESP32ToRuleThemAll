@@ -1,7 +1,7 @@
 defaults:
   target: "Kessel"
   scaler: "0.001"
-  interval: $interval_very_slow
+  update_interval: $interval_very_slow
 
 sensor:
   - platform: template
@@ -19,7 +19,7 @@ sensor:
     unit_of_measurement: ${unit}
     icon: ${icon}
     accuracy_decimals: ${accuracy_decimals}
-    update_interval: ${interval}
+    update_interval: ${update_interval}
     state_class: "total_increasing"
     lambda: |-
         queueRequest(${target}, Property::k${scaled_property});
