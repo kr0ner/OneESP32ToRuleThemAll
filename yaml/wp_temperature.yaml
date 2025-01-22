@@ -2,11 +2,12 @@ defaults:
   update_interval: $interval_very_slow
   target: "Kessel"
   writable: "false"
+  name_suffix: ""
 
 sensor:
   - platform: template
-    name: ${property}
-    id: ${property}
+    name: ${property}${name_suffix}
+    id: ${property}${name_suffix}
     unit_of_measurement: "°C"
     icon: "mdi:thermometer-lines"
     device_class: "temperature"
@@ -23,7 +24,7 @@ esphome:
     then:
       - lambda: |-
           auto callback= [](const SimpleVariant& value){
-              id(${property}).publish_state(value);
+              id(${property}${name_suffix}).publish_state(value);
           };
           CallbackHandler::instance().addCallback(std::make_pair(${target},Property::k${property}),callback);
           if constexpr(${writable}) {

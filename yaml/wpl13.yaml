@@ -1,0 +1,279 @@
+esphome:
+  includes:
+    - OneESP32ToRuleThemAll/src/callback_handler.h
+    - OneESP32ToRuleThemAll/src/communication.h
+    - OneESP32ToRuleThemAll/src/mapper.h
+    - OneESP32ToRuleThemAll/src/mapper.cpp
+    - OneESP32ToRuleThemAll/src/property.h
+    - OneESP32ToRuleThemAll/src/property.cpp
+    - OneESP32ToRuleThemAll/src/simple_variant.h
+    - OneESP32ToRuleThemAll/src/type.h
+    - OneESP32ToRuleThemAll/src/type.cpp
+    - OneESP32ToRuleThemAll/src/util.h
+  platformio_options:
+    build_flags:
+      - "-DWPL_13"
+      - "-DESPCLIENT_ID=$espclient_can_id"
+      - "-DMANAGER_ID=$manager_can_id"
+      - "-DKESSEL_ID=$kessel_can_id"
+      - "-DHK1_ID=$hk1_can_id"
+      - "-DHK2_ID=$hk2_can_id"
+  on_boot:
+    priority: -100
+    then:
+      - lambda: |-
+          CallbackHandler::instance().addCallback(std::make_pair(WPM2,Property::kPROGRAMMSCHALTER),[](const SimpleVariant& value){
+            const auto stringValue{value.get<std::string>()};
+            const auto index = id(PROGRAMMSCHALTER).index_of(stringValue);
+            if(index.has_value()) {
+              id(PROGRAMMSCHALTER).publish_state(stringValue);
+            }
+          });
+          queueRequest(WPM2, Property::kPROGRAMMSCHALTER);
+
+          CallbackHandler::instance().addCallback(std::make_pair(WPM2,Property::kBETRIEBS_STATUS),[](const SimpleVariant& value){
+            const std::bitset<12U> status_bits{static_cast<std::uint16_t>(value)};
+            id(HEIZKREISPUMPE_1).publish_state(status_bits.test(0U));
+            id(HEIZKREISPUMPE_2).publish_state(status_bits.test(1U));
+            id(PUFFERLADEPUMPE_1).publish_state(status_bits.test(2U));
+            id(QUELLENPUMPE).publish_state(status_bits.test(3U));
+            id(STOERAUSGANG).publish_state(status_bits.test(4U));
+            id(KUEHLBETRIEB).publish_state(status_bits.test(5U));
+            id(MISCHER_AUF_HEIZKREIS_2).publish_state(status_bits.test(6U));
+            id(MISCHER_ZU_HEIZKREIS_2).publish_state(status_bits.test(7U));
+            id(NHZ_1).publish_state(status_bits.test(8U));
+            id(NHZ_2).publish_state(status_bits.test(9U));
+            id(NHZ_3).publish_state(status_bits.test(10U));
+            id(EVU_SPERRE).publish_state(status_bits.test(11U));
+          });
+          queueRequest(WPM2, Property::kBETRIEBS_STATUS);
+
+          CallbackHandler::instance().addCallback(std::make_pair(Manager,Property::kWAERMEPUMPEN_STATUS),[](const SimpleVariant& value){
+            const std::bitset<9U> status_bits{static_cast<std::uint16_t>(value)};
+            id(VERDICHTER).publish_state(status_bits.test(0U));
+            id(OELSUMPFHEIZUNG).publish_state(status_bits.test(1U));
+            id(SICHERHEITSKETTE).publish_state(status_bits.test(2U));
+            id(NETZVERSORGUNG_INVERTER).publish_state(status_bits.test(3U));
+            id(STOERUNG).publish_state(status_bits.test(4U));
+            id(SOLEDRUCK_WAECHTER).publish_state(status_bits.test(5U));
+            id(WAERMEQUELLENPUMPE).publish_state(status_bits.test(6U));
+            id(PASSIVKUEHLVENTIL_HEIZEN).publish_state(status_bits.test(7U));
+            id(PASSIVKUEHLVENTIL_KUEHLEN).publish_state(status_bits.test(8U));
+          });
+          queueRequest(Manager, Property::kWAERMEPUMPEN_STATUS);
+
+substitutions:
+  kessel_can_id: "0x180"
+  hk1_can_id: "0x601"
+  hk2_can_id: "0x602"
+  manager_can_id: "0x514"
+  espclient_can_id: "0x6a2"
+
+#########################################
+#                                       #
+#   Global variables                    #
+#                                       #
+#########################################
+globals:
+  - id: gRAUMISTTEMP
+    type: float
+    initial_value: "0.0"
+  - id: gFEUCHTE
+    type: float
+    initial_value: "0.0"
+  - id: gCOP_WW_TAG
+    type: float
+    initial_value: "0.0"
+  - id: gCOP_HEIZ_TAG
+    type: float
+    initial_value: "0.0"
+
+#########################################
+#                                       #
+#   Time Synchronization                #
+#                                       #
+#########################################
+time:
+  - platform: sntp
+    id: sntp_time
+    on_time:
+      - seconds: 0
+        minutes: 0
+        hours: 3 # sync at 3 am should be ok even with switch from/to daylight saving time
+        then:
+          - lambda: |-
+              syncTime();
+
+#########################################
+#                                       #
+#   Buttons                             #
+#                                       #
+#########################################
+button:
+  - platform: template
+    name: Synchronize Time
+    on_press:
+      then:
+        - lambda: |-
+            syncTime();
+
+#########################################
+#                                       #
+#   Intervals                           #
+#                                       #
+#########################################
+interval:
+  - interval: 250ms
+    then:
+      - lambda: |-
+          // Request sensor value one after another.
+          if(!request_queue.empty()) {
+            constexpr auto use_extended_id{false};
+            const auto request_element = request_queue.front();
+            request_queue.pop();
+            requestData(request_element.first, request_element.second);
+          }
+
+#########################################
+#                                       #
+#   Selects                             #
+#                                       #
+#########################################
+select:
+  - platform: template
+    name: "PROGRAMMSCHALTER"
+    id: PROGRAMMSCHALTER
+    options:
+      - "Notbetrieb"
+      - "Bereitschaft"
+      - "Programm"
+      - "Komfort"
+      - "Eco"
+      - "Unbekannt"
+    initial_option: "Unbekannt"
+    optimistic: true
+    setup_priority: 100
+    set_action:
+      then:
+        - lambda: |-
+            const auto betriebsartId = Mapper::instance().getBetriebsartId(x);
+            if(betriebsartId.has_value()) {
+              sendData(WPM2, Property::kPROGRAMMSCHALTER, betriebsartId.value());
+            }
+
+#########################################
+#                                       #
+#   Packages                            #
+#                                       #
+#########################################
+packages:
+  HEIZKREISPUMPE_1:          !include { file: wp_binary.yaml, vars: { name: "HEIZKREISPUMPE_1" }}
+  HEIZKREISPUMPE_2:          !include { file: wp_binary.yaml, vars: { name: "HEIZKREISPUMPE_2" }}
+  PUFFERLADEPUMPE_1:         !include { file: wp_binary.yaml, vars: { name: "PUFFERLADEPUMPE_1" }}
+  QUELLENPUMPE:              !include { file: wp_binary.yaml, vars: { name: "QUELLENPUMPE" }}
+  STOERAUSGANG:              !include { file: wp_binary.yaml, vars: { name: "STOERAUSGANG" }}
+  KUEHLBETRIEB:              !include { file: wp_binary.yaml, vars: { name: "KUEHLBETRIEB" }}
+  MISCHER_AUF_HEIZKREIS_2:   !include { file: wp_binary.yaml, vars: { name: "MISCHER_AUF_HEIZKREIS_2" }}
+  MISCHER_ZU_HEIZKREIS_2:    !include { file: wp_binary.yaml, vars: { name: "MISCHER_ZU_HEIZKREIS_2" }}
+  NHZ_1:                     !include { file: wp_binary.yaml, vars: { name: "NHZ_1" }}
+  NHZ_2:                     !include { file: wp_binary.yaml, vars: { name: "NHZ_2" }}
+  NHZ_3:                     !include { file: wp_binary.yaml, vars: { name: "NHZ_3" }}
+  EVU_SPERRE:                !include { file: wp_binary.yaml, vars: { name: "EVU_SPERRE" }}
+  VERDICHTER:                !include { file: wp_binary.yaml, vars: { name: "VERDICHTER" }}
+  OELSUMPFHEIZUNG:           !include { file: wp_binary.yaml, vars: { name: "OELSUMPFHEIZUNG" }}
+  SICHERHEITSKETTE:          !include { file: wp_binary.yaml, vars: { name: "SICHERHEITSKETTE" }}
+  NETZVERSORGUNG_INVERTER:   !include { file: wp_binary.yaml, vars: { name: "NETZVERSORGUNG_INVERTER" }}
+  STOERUNG:                  !include { file: wp_binary.yaml, vars: { name: "STOERUNG" }}
+  SOLEDRUCK_WAECHTER:        !include { file: wp_binary.yaml, vars: { name: "SOLEDRUCK_WAECHTER" }}
+  WAERMEQUELLENPUMPE:        !include { file: wp_binary.yaml, vars: { name: "WAERMEQUELLENPUMPE" }}
+  PASSIVKUEHLVENTIL_HEIZEN:  !include { file: wp_binary.yaml, vars: { name: "PASSIVKUEHLVENTIL_HEIZEN" }}
+  PASSIVKUEHLVENTIL_KUEHLEN: !include { file: wp_binary.yaml, vars: { name: "PASSIVKUEHLVENTIL_KUEHLEN" }}
+
+  ISTTEMPERATUR_HK1:          !include { file: wp_temperature.yaml, vars: { property: "ISTTEMPERATUR"     , name_suffix: "_HK1" , target: "HK1"  }}
+  KOMFORTTEMPERATUR_HK1:      !include { file: wp_temperature.yaml, vars: { property: "KOMFORTTEMPERATUR" , name_suffix: "_HK1" , target: "HK1"  }}
+  ECOTEMPERATUR_HK1:          !include { file: wp_temperature.yaml, vars: { property: "ECOTEMPERATUR"     , name_suffix: "_HK1" , target: "HK1"  }}
+  ISTTEMPERATUR_HK2:          !include { file: wp_temperature.yaml, vars: { property: "ISTTEMPERATUR"     , name_suffix: "_HK2" , target: "HK2"  }}
+  KOMFORTTEMPERATUR_HK2:      !include { file: wp_temperature.yaml, vars: { property: "KOMFORTTEMPERATUR" , name_suffix: "_HK2" , target: "HK2"  }}
+  ECOTEMPERATUR_HK2:          !include { file: wp_temperature.yaml, vars: { property: "ECOTEMPERATUR"     , name_suffix: "_HK2" , target: "HK2"  }}
+  RAUMISTTEMP:                !include { file: wp_temperature.yaml, vars: { property: "RAUMISTTEMP"       , target: "FET"  }}
+  RAUMSOLLTEMP:               !include { file: wp_temperature.yaml, vars: { property: "RAUMSOLLTEMP"      , target: "FET"  }}
+  PUFFERISTTEMPERATUR:        !include { file: wp_temperature.yaml, vars: { property: "PUFFERISTTEMPERATUR" }}
+  ANLAGENFROST:               !include { file: wp_temperature.yaml, vars: { property: "ANLAGENFROST"       , target: "MFG"  }}
+  VORLAUFTEMP_QUELLE:         !include { file: wp_temperature.yaml, vars: { property: "VORLAUFTEMP_QUELLE" , target: "Manager"  }}
+  RUECKLAUFTEMP_QUELLE:       !include { file: wp_temperature.yaml, vars: { property: "RUECKLAUFTEMP_QUELLE" , target: "Manager"  }}
+  VORLAUFISTTEMP:             !include { file: wp_temperature.yaml, vars: { property: "VORLAUFISTTEMP"     , update_interval: $interval_medium, target: "MFG"  }}
+  VORLAUFSOLLTEMP:            !include { file: wp_temperature.yaml, vars: { property: "VORLAUFSOLLTEMP"    , target: "HK1"  }}
+  VERDAMPFERTEMP:             !include { file: wp_temperature.yaml, vars: { property: "VERDAMPFERTEMP"     , target: "Manager"  }}
+  RUECKLAUFISTTEMP:           !include { file: wp_temperature.yaml, vars: { property: "RUECKLAUFISTTEMP"   , update_interval: $interval_medium , target: "MFG" }}
+
+  RAUMFEUCHTE:                !include { file: wp_generic.yaml,     vars: { property: "RAUMFEUCHTE" , interval: $interval_very_slow, unit: "%", icon: "mdi:water-percent", accuracy_decimals: "1", target: "FET"  }}
+  HEIZEN_EFFIZIENZ_TAG:       !include { file: wp_generic.yaml,     vars: { property: "HEIZEN_EFFIZIENZ_TAG"  , target: "WPM2"  }}
+  HEIZEN_EFFIZIENZ_JAHR:      !include { file: wp_generic.yaml,     vars: { property: "HEIZEN_EFFIZIENZ_JAHR" , target: "WPM2"  }}
+  QUELLENDRUCK:               !include { file: wp_generic.yaml,     vars: { property: "QUELLENDRUCK"          , interval: never, unit: "bar"  , icon: "mdi:water-pressure" , accuracy_decimals: "1", target: "Manager"  }}
+  LEISTUNG_QUELLENPUMPE:      !include { file: wp_generic.yaml,     vars: { property: "LEISTUNG_QUELLENPUMPE" , interval: never, unit: "%"    , icon: "mdi:water-percent", accuracy_decimals: "1", target: "Manager"  }}
+  VOLUMENSTROM:               !include { file: wp_generic.yaml,     vars: { property: "VOLUMENSTROM"          , interval: never, unit: "l/min", icon: "mdi:flow"           , accuracy_decimals: "1", target: "Manager"  }}
+  STROM_INVERTER:             !include { file: wp_generic.yaml,     vars: { property: "STROM_INVERTER"        , interval: never, unit: "A"    , target: "Manager"          , accuracy_decimals: "1"  }}
+  SPANNUNG_INVERTER:          !include { file: wp_generic.yaml,     vars: { property: "SPANNUNG_INVERTER"     , interval: never, unit: "V"    , target: "Manager"          , accuracy_decimals: "1"  }}
+
+  RAUMEINFLUSS:               !include { file: wp_number.yaml, vars: { property: "RAUMEINFLUSS", target: "WPM2" }}
+
+  VERDICHTER_STARTS:            !include { file: wp_generic_combined.yaml, vars: { sensor_name: "VERDICHTER_STARTS"           , scaled_property: "VERDICHTER_STARTS_K"       , property: "VERDICHTER_STARTS"         , unit: ""   , accuracy_decimals: "0", scaler: "1000", icon: "mdi:counter" , target: "Manager" }}
+  WAERMEERTRAG_WW_SUMME_MWH:    !include { file: wp_generic_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_WW_SUMME_MWH"   , scaled_property: "WAERMEERTRAG_WW_SUM_KWH"   , property: "WAERMEERTRAG_WW_SUM_MWH"   , unit: "MWh", accuracy_decimals: "3", icon: "mdi:fire" , target: "Manager"  }}
+  WAERMEERTRAG_HEIZ_SUMME_MWH:  !include { file: wp_generic_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_HEIZ_SUMME_MWH" , scaled_property: "WAERMEERTRAG_HEIZ_SUM_KWH" , property: "WAERMEERTRAG_HEIZ_SUM_MWH" , unit: "MWh", accuracy_decimals: "3", icon: "mdi:fire" , target: "Manager"  }}
+
+  EL_AUFNAHMELEISTUNG_WW_SUMME_KWH:    !include { file: wp_daily_energy_combined.yaml, vars: { sensor_name: "EL_AUFNAHMELEISTUNG_WW_SUMME_KWH"   , property_wh: "EL_AUFNAHMELEISTUNG_WW_TAG_WH"   , property_kwh: "EL_AUFNAHMELEISTUNG_WW_TAG_KWH"   , target: "Manager" }}
+  EL_AUFNAHMELEISTUNG_HEIZ_SUMME_KWH:  !include { file: wp_daily_energy_combined.yaml, vars: { sensor_name: "EL_AUFNAHMELEISTUNG_HEIZ_SUMME_KWH" , property_wh: "EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH" , property_kwh: "EL_AUFNAHMELEISTUNG_HEIZ_TAG_KWH" , target: "Manager" }}
+  WAERMEERTRAG_WW_TAG_SUMME_KWH:       !include { file: wp_daily_energy_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_WW_TAG_SUMME_KWH"      , property_wh: "WAERMEERTRAG_WW_TAG_WH"          , property_kwh: "WAERMEERTRAG_WW_TAG_KWH"          , target: "Manager" }}
+  WAERMEERTRAG_HEIZ_TAG_SUMME_KWH:     !include { file: wp_daily_energy_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_HEIZ_TAG_SUMME_KWH"    , property_wh: "WAERMEERTRAG_HEIZ_TAG_WH"        , property_kwh: "WAERMEERTRAG_HEIZ_TAG_KWH"        , target: "Manager" }}
+
+  HEATPUMP_DATETIME: !include { file: wp_datetime.yaml }
+
+#########################################
+#                                       #
+#   Template Sensors                    #
+#                                       #
+#########################################
+sensor:
+  - platform: template
+    name: "COP WW TAG"
+    update_interval: $interval_very_slow
+    state_class: "measurement"
+    lambda: |-
+      if (id(WAERMEERTRAG_WW_TAG_SUMME_KWH).state && id(EL_AUFNAHMELEISTUNG_WW_SUMME_KWH).state && id(EL_AUFNAHMELEISTUNG_WW_SUMME_KWH).state != 0.0f) {
+        id(gCOP_WW_TAG) = id(WAERMEERTRAG_WW_TAG_SUMME_KWH).state / id(EL_AUFNAHMELEISTUNG_WW_SUMME_KWH).state;
+      }
+      return id(gCOP_WW_TAG);
+  - platform: template
+    name: "COP HEIZ TAG"
+    update_interval: $interval_very_slow
+    state_class: "measurement"
+    lambda: |-
+      if (id(WAERMEERTRAG_HEIZ_TAG_SUMME_KWH).state && id(EL_AUFNAHMELEISTUNG_HEIZ_SUMME_KWH).state && id(EL_AUFNAHMELEISTUNG_HEIZ_SUMME_KWH).state != 0.0f) {
+        id(gCOP_HEIZ_TAG) = id(WAERMEERTRAG_HEIZ_TAG_SUMME_KWH).state / id(EL_AUFNAHMELEISTUNG_HEIZ_SUMME_KWH).state;
+      }
+      return id(gCOP_HEIZ_TAG);
+
+#########################################
+#                                       #
+#   CANbus configuration                #
+#                                       #
+#########################################
+canbus:
+  - id: wp_can
+    can_id: $espclient_can_id
+    use_extended_id: false
+    bit_rate: 20kbps
+    on_frame:
+    - can_id: 0
+      can_id_mask: 0
+      then:
+        - lambda: |-
+            ESP_LOGD("CAN", "Can message received with CANId 0x%04lx", can_id);
+            const auto [property, value] = processCanMessage(x);
+            const auto canMember = getCanMemberByCanId(can_id);
+            if(canMember) {
+              auto callback = CallbackHandler::instance().getCallback(std::make_pair(canMember->get(),property));
+              callback(value);
+            } else {
+              ESP_LOGD("CAN", "No CANMember with CANId 0x%04lx available.", can_id);
+            }

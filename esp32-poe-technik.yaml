@@ -64,6 +64,7 @@ canbus:
     platform: mcp2515
     spi_id: McpSpi
     cs_pin: GPIO15
+    bit_rate: 20kbps
 
 #########################################
 #                                       #
@@ -100,6 +101,7 @@ packages:
   thz504: !include OneESP32ToRuleThemAll/yaml/thz504.yaml
 # thz55eco: !include OneESP32ToRuleThemAll/yaml/thz5_5_eco.yaml
 # ttf07: !include OneESP32ToRuleThemAll/yaml/ttf07.yaml
+# wpl13: !include OneESP32ToRuleThemAll/yaml/wpl13.yaml
   kondensatpumpe: !include OneESP32ToRuleThemAll/yaml/kondensatpumpe.yaml
 
 #########################################
