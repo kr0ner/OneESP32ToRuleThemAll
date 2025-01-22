@@ -112,17 +112,15 @@ interval:
 #########################################
 packages:
   VERDICHTER_STARTS:               !include { file: wp_generic_combined.yaml, vars: { sensor_name: "VERDICHTER_STARTS"                  , scaled_property: "VERDICHTER_STARTS_K"          , property: "VERDICHTER_STARTS"            , unit: ""   , accuracy_decimals: "0", scaler: "1000", icon: "mdi:counter" }}
-  WAERMEERTRAG_2WE_WW_SUMME_MWH:   !include { file: wp_generic_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_2WE_WW_SUMME_MWH"      , scaled_property: "WAERMEERTRAG_2WE_WW_SUM_KWH"  , property: "WAERMEERTRAG_2WE_WW_SUM_MWH"  , unit: "MWh", accuracy_decimals: "3", icon: "mdi:fire"  }}
-  WAERMEERTRAG_2WE_HEIZ_SUMME_MWH: !include { file: wp_generic_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_2WE_HEIZ_SUMME_MWH"    , scaled_property: "WAERMEERTRAG_2WE_HEIZ_SUM_KWH", property: "WAERMEERTRAG_2WE_HEIZ_SUM_MWH", unit: "MWh", accuracy_decimals: "3", icon: "mdi:fire"  }}
   WAERMEERTRAG_WW_SUMME_MWH:       !include { file: wp_generic_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_WW_SUMME_MWH"          , scaled_property: "WAERMEERTRAG_WW_SUM_KWH"      , property: "WAERMEERTRAG_WW_SUM_MWH"      , unit: "MWh", accuracy_decimals: "3", icon: "mdi:fire"  }}
   WAERMEERTRAG_HEIZ_SUMME_MWH:     !include { file: wp_generic_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_HEIZ_SUMME_MWH"        , scaled_property: "WAERMEERTRAG_HEIZ_SUM_KWH"    , property: "WAERMEERTRAG_HEIZ_SUM_MWH"    , unit: "MWh", accuracy_decimals: "3", icon: "mdi:fire"  }}
 
-  SPEICHERSOLLTEMP:               !include { file: wp_temperature.yaml, vars: { property: "SPEICHERSOLLTEMP" }}
-  SPEICHERISTTEMP:                !include { file: wp_temperature.yaml, vars: { property: "SPEICHERISTTEMP"          , interval: $interval_medium }}
+  SPEICHERSOLLTEMP:               !include { file: wp_temperature.yaml, vars: { property: "SPEICHERSOLLTEMP"          }}
+  SPEICHERISTTEMP:                !include { file: wp_temperature.yaml, vars: { property: "SPEICHERISTTEMP"          , update_interval: $interval_medium }}
   AUSSENTEMP:                     !include { file: wp_temperature.yaml, vars: { property: "AUSSENTEMP"       }}
   VERDAMPFERTEMP:                 !include { file: wp_temperature.yaml, vars: { property: "VERDAMPFERTEMP"   }}
-  RUECKLAUFISTTEMP:               !include { file: wp_temperature.yaml, vars: { property: "RUECKLAUFISTTEMP"         , interval: $interval_medium }}
-  VORLAUFISTTEMP:                 !include { file: wp_temperature.yaml, vars: { property: "VORLAUFISTTEMP"           , interval: $interval_medium, target: "HK1" }}
+  RUECKLAUFISTTEMP:               !include { file: wp_temperature.yaml, vars: { property: "RUECKLAUFISTTEMP"         , update_interval: $interval_medium }}
+  VORLAUFISTTEMP:                 !include { file: wp_temperature.yaml, vars: { property: "VORLAUFISTTEMP"           , update_interval: $interval_medium, target: "HK1" }}
   RAUMISTTEMP:                    !include { file: wp_temperature.yaml, vars: { property: "RAUMISTTEMP"              , target: "HK1" }}
   VERSTELLTE_RAUMSOLLTEMP:        !include { file: wp_temperature.yaml, vars: { property: "VERSTELLTE_RAUMSOLLTEMP"  , target: "HK1" }}
   VORLAUFSOLLTEMP:                !include { file: wp_temperature.yaml, vars: { property: "VORLAUFSOLLTEMP"          , target: "HK1" }}
@@ -137,10 +135,8 @@ packages:
 
   RAUMEINFLUSS:                   !include { file: wp_number.yaml, vars: { property: "RAUMEINFLUSS", target: "HK1" }}
 
-  EL_AUFNAHMELEISTUNG_WW_SUMME_KWH:    !include { file: wp_daily_energy_combined.yaml, vars: { sensor_name: "EL_AUFNAHMELEISTUNG_WW_SUMME_KWH"   , property_wh: "EL_AUFNAHMELEISTUNG_WW_TAG_WH"  , property_kwh: "EL_AUFNAHMELEISTUNG_WW_TAG_KWH"   }}
-  EL_AUFNAHMELEISTUNG_HEIZ_SUMME_KWH:  !include { file: wp_daily_energy_combined.yaml, vars: { sensor_name: "EL_AUFNAHMELEISTUNG_HEIZ_SUMME_KWH" , property_wh: "EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH", property_kwh: "EL_AUFNAHMELEISTUNG_HEIZ_TAG_KWH" }}
-  WAERMEERTRAG_2WE_WW_TAG_SUMME_KWH:   !include { file: wp_daily_energy_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_2WE_WW_TAG_SUMME_KWH"  , property_wh: "WAERMEERTRAG_2WE_WW_TAG_WH"     , property_kwh: "WAERMEERTRAG_2WE_WW_TAG_KWH"      }}
-  WAERMEERTRAG_2WE_HEIZ_TAG_SUMME_KWH: !include { file: wp_daily_energy_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_2WE_HEIZ_TAG_SUMME_KWH", property_wh: "WAERMEERTRAG_2WE_HEIZ_TAG_WH"   , property_kwh: "WAERMEERTRAG_2WE_HEIZ_TAG_KWH"    }}
+  EL_ENERGIEAUFNAHME_WW_SUMME_KWH:    !include { file: wp_daily_energy_combined.yaml, vars: { sensor_name: "EL_ENERGIEAUFNAHME_WW_SUMME_KWH"   , property_wh: "EL_ENERGIEAUFNAHME_WW_TAG_WH"  , property_kwh: "EL_ENERGIEAUFNAHME_WW_TAG_KWH"   }}
+  EL_ENERGIEAUFNAHME_HEIZ_SUMME_KWH:  !include { file: wp_daily_energy_combined.yaml, vars: { sensor_name: "EL_ENERGIEAUFNAHME_HEIZ_SUMME_KWH" , property_wh: "EL_ENERGIEAUFNAHME_HEIZ_TAG_WH", property_kwh: "EL_ENERGIEAUFNAHME_HEIZ_TAG_KWH" }}
   WAERMEERTRAG_WW_TAG_SUMME_KWH:       !include { file: wp_daily_energy_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_WW_TAG_SUMME_KWH"      , property_wh: "WAERMEERTRAG_WW_TAG_WH"         , property_kwh: "WAERMEERTRAG_WW_TAG_KWH"          }}
   WAERMEERTRAG_HEIZ_TAG_SUMME_KWH:     !include { file: wp_daily_energy_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_HEIZ_TAG_SUMME_KWH"    , property_wh: "WAERMEERTRAG_HEIZ_TAG_WH"       , property_kwh: "WAERMEERTRAG_HEIZ_TAG_KWH"        }}
 
@@ -180,8 +176,8 @@ sensor:
     update_interval: $interval_very_slow
     state_class: "measurement"
     lambda: |-
-      if (id(WAERMEERTRAG_WW_TAG_SUMME_KWH).state && id(EL_AUFNAHMELEISTUNG_WW_SUMME_KWH).state && id(EL_AUFNAHMELEISTUNG_WW_SUMME_KWH).state != 0.0f) {
-        id(gCOP_WW_TAG) = id(WAERMEERTRAG_WW_TAG_SUMME_KWH).state / id(EL_AUFNAHMELEISTUNG_WW_SUMME_KWH).state;
+      if (id(WAERMEERTRAG_WW_TAG_SUMME_KWH).state && id(EL_ENERGIEAUFNAHME_WW_SUMME_KWH).state && id(EL_ENERGIEAUFNAHME_WW_SUMME_KWH).state != 0.0f) {
+        id(gCOP_WW_TAG) = id(WAERMEERTRAG_WW_TAG_SUMME_KWH).state / id(EL_ENERGIEAUFNAHME_WW_SUMME_KWH).state;
       }
       return id(gCOP_WW_TAG);
   - platform: template
@@ -189,8 +185,8 @@ sensor:
     update_interval: $interval_very_slow
     state_class: "measurement"
     lambda: |-
-      if (id(WAERMEERTRAG_HEIZ_TAG_SUMME_KWH).state && id(EL_AUFNAHMELEISTUNG_HEIZ_SUMME_KWH).state && id(EL_AUFNAHMELEISTUNG_HEIZ_SUMME_KWH).state != 0.0f) {
-        id(gCOP_HEIZ_TAG) = id(WAERMEERTRAG_HEIZ_TAG_SUMME_KWH).state / id(EL_AUFNAHMELEISTUNG_HEIZ_SUMME_KWH).state;
+      if (id(WAERMEERTRAG_HEIZ_TAG_SUMME_KWH).state && id(EL_ENERGIEAUFNAHME_HEIZ_SUMME_KWH).state && id(EL_ENERGIEAUFNAHME_HEIZ_SUMME_KWH).state != 0.0f) {
+        id(gCOP_HEIZ_TAG) = id(WAERMEERTRAG_HEIZ_TAG_SUMME_KWH).state / id(EL_ENERGIEAUFNAHME_HEIZ_SUMME_KWH).state;
       }
       return id(gCOP_HEIZ_TAG);
 
