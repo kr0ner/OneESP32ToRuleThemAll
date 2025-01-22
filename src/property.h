@@ -61,15 +61,10 @@ struct Property : public detail::Property {
     PROPERTY(VORLAUFSOLLTEMP, 0x0004, Type::et_dec_val);
     PROPERTY(AUSSENTEMP, 0x000c, Type::et_dec_val);
     PROPERTY(SPEICHERISTTEMP, 0x000e, Type::et_dec_val);
-    PROPERTY(RAUMISTTEMP, 0x0011, Type::et_dec_val);
     PROPERTY(VERSTELLTE_RAUMSOLLTEMP, 0x0012, Type::et_dec_val);
-    PROPERTY(VERDAMPFERTEMP, 0x0014, Type::et_dec_val);
-    PROPERTY(RUECKLAUFISTTEMP, 0x0016, Type::et_dec_val);
     PROPERTY(SOLLWERT_MAX_HK1, 0x0028, Type::et_dec_val);
     PROPERTY(RAUMFEUCHTE, 0x0075, Type::et_dec_val);
     PROPERTY(STEIGUNG_HK1, 0x010e, Type::et_cent_val);
-    PROPERTY(RAUMEINFLUSS, 0x010f, Type::et_little_endian);
-    PROPERTY(PROGRAMMSCHALTER, 0x0112, Type::et_betriebsart);
     PROPERTY(WOCHENTAG, 0x0121, Type::et_little_endian);
     PROPERTY(TAG, 0x0122, Type::et_little_endian);
     PROPERTY(MONAT, 0x0123, Type::et_little_endian);
@@ -96,12 +91,21 @@ struct Property : public detail::Property {
     PROPERTY(WAERMEERTRAG_HEIZ_SUM_KWH, 0x0930);
     PROPERTY(WAERMEERTRAG_HEIZ_SUM_MWH, 0x0931, Type::et_double_val);
 
+#if defined(THZ_504) || defined(THZ_404) || defined(THZ_5_5_ECO) || defined(TTF_07_C)
+    PROPERTY(RAUMISTTEMP, 0x0011, Type::et_dec_val);
+    PROPERTY(VERDAMPFERTEMP, 0x0014, Type::et_dec_val);
+    PROPERTY(RUECKLAUFISTTEMP, 0x0016, Type::et_dec_val);
+    PROPERTY(RAUMEINFLUSS, 0x010f, Type::et_little_endian);
+    PROPERTY(PROGRAMMSCHALTER, 0x0112, Type::et_betriebsart);
+#endif
+
 #if defined(THZ_504) || defined(THZ_404) || defined(THZ_5_5_ECO)
     PROPERTY(RAUMSOLLTEMP_TAG, 0x0005, Type::et_dec_val);
     PROPERTY(RAUMSOLLTEMP_NACHT, 0x0008, Type::et_dec_val);
     PROPERTY(SAMMLERISTTEMP, 0x000d, Type::et_dec_val);
     PROPERTY(VORLAUFISTTEMP, 0x000f, Type::et_dec_val);
     PROPERTY(SPEICHERSOLLTEMP_TAG, 0x0013, Type::et_dec_val);
+    PROPERTY(SOMMERBETRIEB_TEMP, 0x0116, Type::et_dec_val);
     PROPERTY(HYSTERESE_WW, 0x0140, Type::et_dec_val);
     PROPERTY(BETRIEBS_STATUS, 0x0176);
     PROPERTY(VOLUMENSTROM, 0x01da, Type::et_dec_val);
@@ -118,8 +122,12 @@ struct Property : public detail::Property {
     PROPERTY(KUEHL_RAUMSOLL_NACHT, 0x056b, Type::et_dec_val);
     PROPERTY(LUEFT_STUFE_TAG, 0x056c);
     PROPERTY(LUEFT_STUFE_NACHT, 0x056d);
+    PROPERTY(LUEFT_STUFE_BEREITSCHAFT, 0x056f);
     PROPERTY(LUEFT_STUFE_PARTY, 0x0570);
     PROPERTY(PASSIVKUEHLUNG, 0x0575);
+    PROPERTY(LUEFT_ZEIT_AUSSERPLAN_STUFE1, 0x0572);
+    PROPERTY(LUEFT_ZEIT_AUSSERPLAN_STUFE2, 0x0573);
+    PROPERTY(LUEFT_ZEIT_AUSSERPLAN_STUFE3, 0x0574);
     PROPERTY(LUEFT_ZULUFT_STUFE1, 0x0576);
     PROPERTY(LUEFT_ZULUFT_STUFE2, 0x0577);
     PROPERTY(LUEFT_ZULUFT_STUFE3, 0x0578);
@@ -133,8 +141,10 @@ struct Property : public detail::Property {
     PROPERTY(ABLUFT_IST, 0x0599);
     PROPERTY(FORTLUFT_SOLL, 0x059a);
     PROPERTY(FORTLUFT_IST, 0x059b);
+    PROPERTY(SOMMERBETRIEB_HYSTERESE, 0x05a2, Type::et_dec_val);
     PROPERTY(PUMPENZYKLEN_MIN_AUSSENT, 0x05bb);
     PROPERTY(SPEICHERSOLLTEMP_NACHT, 0x05bf, Type::et_dec_val);
+    PROPERTY(LUEFT_STUFE_HAND, 0x0612);
     PROPERTY(KUEHLSYSTEM, 0x0613);
     PROPERTY(DRUCK_HEIZKREIS, 0x064a, Type::et_dec_val);
     PROPERTY(LEISTUNG_AUSLEGUNG_KUEHLEN, 0x0692);
@@ -162,16 +172,6 @@ struct Property : public detail::Property {
     PROPERTY(LAUFZEIT_FILTER, 0xc111);
     PROPERTY(DIFFERENZDRUCK, 0xc11e);
     PROPERTY(BETRIEBS_STATUS_2, 0xc356);
-#endif
-
-#if defined(THZ_5_5_ECO)
-    PROPERTY(SOMMERBETRIEB_TEMP, 0x0116, Type::et_dec_val);
-    PROPERTY(LUEFT_STUFE_BEREITSCHAFT, 0x056f);
-    PROPERTY(LUEFT_ZEIT_AUSSERPLAN_STUFE1, 0x0572);
-    PROPERTY(LUEFT_ZEIT_AUSSERPLAN_STUFE2, 0x0573);
-    PROPERTY(LUEFT_ZEIT_AUSSERPLAN_STUFE3, 0x0574);
-    PROPERTY(SOMMERBETRIEB_HYSTERESE, 0x05a2, Type::et_dec_val);
-    PROPERTY(LUEFT_STUFE_HAND, 0x0612);
 #endif
 
 #if defined(TTF_07_C)
@@ -205,6 +205,60 @@ struct Property : public detail::Property {
     PROPERTY(QUELLENMEDIUM, 0xfdae, Type::et_byte);
     PROPERTY(REGLERDYNAMIK, 0xfdb0, Type::et_little_endian);
     PROPERTY(VERDICHTER_STILLSTAND, 0xfdb1, Type::et_little_endian);
+#endif
+
+#if defined(WPL_13)
+    PROPERTY(EINSTELL_SPEICHERSOLLTEMP, 0x0013, Type::et_dec_val);
+    PROPERTY(PUFFERISTTEMPERATUR, 0x0078, Type::et_dec_val);
+    PROPERTY(SOLLTEMP_HK1, 0x01d5, Type::et_dec_val);
+    PROPERTY(VORLAUFTEMP, 0x01d6, Type::et_dec_val);
+    PROPERTY(MAXVORLAUFTEMP, 0x01e8, Type::et_dec_val);
+    PROPERTY(HEISSGASTEMP, 0x0265, Type::et_dec_val);
+    PROPERTY(EL_NACHERW_ANZ_STUFEN, 0x059f);
+    PROPERTY(EL_NACHERW_VERZ_ZEIT, 0x05a0);
+    PROPERTY(VERDICHTER_EINTRITTSTEMP, 0x06d9, Type::et_dec_val);
+    PROPERTY(ISTDREHZAHL_VERDICHTER, 0x06eb);
+    PROPERTY(SOLLDREHZAHL_VERDICHTER, 0x06ec);
+    PROPERTY(VERDAMPFERTEMP, 0x07a9, Type::et_dec_val);
+    PROPERTY(ANLAGENFROST, 0x0a00, Type::et_dec_val);
+    PROPERTY(VERFLUESSIGERTEMP, 0x0a37, Type::et_dec_val);
+    PROPERTY(OELSUMPFTEMP, 0x0a39, Type::et_dec_val);
+    PROPERTY(WAERMEPUMPEN_STATUS, 0x02e2);
+    PROPERTY(MINTEMP, 0x4ea4, Type::et_dec_val);
+    PROPERTY(MAXTEMP, 0x4ea8, Type::et_dec_val);
+    PROPERTY(MISCHERDYNAMIK, 0x4ea9);
+    PROPERTY(SOLLTEMP_HK2, 0x4eb0, Type::et_dec_val);
+    PROPERTY(ISTTEMPERATUR, 0x4eb4, Type::et_dec_val);
+    PROPERTY(KOMFORTTEMPERATUR, 0x4eb8, Type::et_dec_val);
+    PROPERTY(ECOTEMPERATUR, 0x4eb9, Type::et_dec_val);
+    PROPERTY(RAUMISTTEMP, 0x4ec7, Type::et_dec_val);
+    PROPERTY(RAUMSOLLTEMP, 0x4ece, Type::et_dec_val);
+    PROPERTY(RAUMFEUCHTE, 0x4ec8, Type::et_dec_val);
+    PROPERTY(TAUPUNKTTEMP, 0x4ee0, Type::et_dec_val);
+    PROPERTY(RAUMEINFLUSS, 0x4f33);
+    PROPERTY(HEIZUNGSDRUCK, 0x4f46, et_cent_val);
+    PROPERTY(VOLUMENSTROM, 0x4f47, Type::et_dec_val);
+    PROPERTY(HEIZEN_EFFIZIENZ_TAG, 0x501d, Type::et_dec_val);
+    PROPERTY(HEIZEN_EFFIZIENZ_JAHR, 0x501e, Type::et_dec_val);
+    PROPERTY(RAUMSOLLTEMP_KUEHLEN, 0x4f04, Type::et_dec_val);
+    PROPERTY(RUECKLAUFTEMP_QUELLE, 0x4fa6, Type::et_dec_val);
+    PROPERTY(VORLAUFTEMP_QUELLE, 0x4fa7, Type::et_dec_val);
+    PROPERTY(QUELLENDRUCK, 0x4fa8, Type::et_dec_val);
+    PROPERTY(LEISTUNG_QUELLENPUMPE, 0x4fa9, Type::et_dec_val);
+    PROPERTY(STROM_INVERTER, 0x06b2, Type::et_dec_val);
+    PROPERTY(SPANNUNG_INVERTER, 0x06b1, Type::et_dec_val);
+    PROPERTY(DRUCK_HOCHDRUCK, 0x07a6, Type::et_dec_val);
+    PROPERTY(DRUCK_NIEDERDRUCK, 0x07a7, Type::et_dec_val);
+    PROPERTY(VORLAUFISTTEMP, 0xfdf3, Type::et_dec_val);
+    PROPERTY(BETRIEBS_STATUS, 0x4ecd);
+    PROPERTY(VERDICHTER_STARTS, 0x4ef1);
+    PROPERTY(VERDICHTER_STARTS_K, 0x4ef0);
+    PROPERTY(HYSTERESE_VORLAUFTEMP_KUEHLEN, 0x4f00, Type::et_dec_val);
+    PROPERTY(PROGRAMMSCHALTER, 0x4f1b);
+    PROPERTY(VORLAUFISTTEMP_WP, 0x4f41, Type::et_dec_val);
+    PROPERTY(RUECKLAUFISTTEMP_WP, 0x4f43, Type::et_dec_val);
+    PROPERTY(LEISTUNG_KUEHLEN, 0x7a40, Type::et_dec_val);
+    PROPERTY(RUECKLAUFISTTEMP, 0xfdf4, Type::et_dec_val);
 #endif
 };
 

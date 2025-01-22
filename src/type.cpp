@@ -40,7 +40,13 @@ SimpleVariant GetValueByType(const std::uint16_t value, const Type type) {
         case Type::et_bool:
             return (value == 0x0001) ? true : false;
         case Type::et_betriebsart: {
-            const auto result = Mapper::instance().getBetriebsart(value);
+#if defined(WPL_13)
+            // values need to be mapped from e.g. 0x1 to 0x0100
+            const auto adjustedValue{value << 8U};
+#else
+            const auto adjustedValue{value};
+#endif
+            const auto result = Mapper::instance().getBetriebsart(adjustedValue);
             if (result.has_value()) {
                 return result.value();
             } else {
