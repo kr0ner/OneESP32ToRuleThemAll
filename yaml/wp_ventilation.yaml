@@ -29,7 +29,8 @@ esphome:
     priority: -100
     then:
       - lambda: |-
-          CallbackHandler::instance().addCallback(std::make_pair(Kessel,Property::k${property}),[](const SimpleVariant& value){
+          CallbackHandler::instance().addCallbacks({std::make_pair(Kessel,Property::k${property}),
+                                                   std::make_pair(Manager,Property::k${property})},[](const SimpleVariant& value){
               const auto fan_speed = std::min(static_cast<std::uint16_t>(3U),static_cast<std::uint16_t>(value));
               // only speeds between 1 and speed_count are allowed
               if(fan_speed == 0) {

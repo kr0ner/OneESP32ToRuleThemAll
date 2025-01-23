@@ -267,14 +267,14 @@ packages:
   WAERMEERTRAG_2WE_WW_SUMME_MWH:   !include { file: wp_generic_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_2WE_WW_SUMME_MWH"      , scaled_property: "WAERMEERTRAG_2WE_WW_SUM_KWH"  , property: "WAERMEERTRAG_2WE_WW_SUM_MWH"  , unit: "MWh", accuracy_decimals: "3", icon: "mdi:fire"  }}
   WAERMEERTRAG_2WE_HEIZ_SUMME_MWH: !include { file: wp_generic_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_2WE_HEIZ_SUMME_MWH"    , scaled_property: "WAERMEERTRAG_2WE_HEIZ_SUM_KWH", property: "WAERMEERTRAG_2WE_HEIZ_SUM_MWH", unit: "MWh", accuracy_decimals: "3", icon: "mdi:fire"  }}
 
-  ABLUFTTEMP:                     !include { file: wp_temperature.yaml, vars: { property: "ABLUFTTEMP"             }}
-  SPEICHERSOLLTEMP_TAG:           !include { file: wp_temperature.yaml, vars: { property: "SPEICHERSOLLTEMP_TAG"   }}
-  SPEICHERSOLLTEMP_NACHT:         !include { file: wp_temperature.yaml, vars: { property: "SPEICHERSOLLTEMP_NACHT" }}
-  SAMMLERISTTEMP:                 !include { file: wp_temperature.yaml, vars: { property: "SAMMLERISTTEMP"           , update_interval: $interval_medium }}
-  TAUPUNKT_HK1:                   !include { file: wp_temperature.yaml, vars: { property: "TAUPUNKT_HK1"             , target: "HK1" }}
-  RAUMSOLLTEMP_TAG:               !include { file: wp_temperature.yaml, vars: { property: "RAUMSOLLTEMP_TAG"         , target: "HK1" }}
-  RAUMSOLLTEMP_NACHT:             !include { file: wp_temperature.yaml, vars: { property: "RAUMSOLLTEMP_NACHT"       , target: "HK1" }}
-  KUEHL_RAUMSOLL_TAG:             !include { file: wp_temperature.yaml, vars: { property: "KUEHL_RAUMSOLL_TAG"       , target: "HK1" }}
+  ABLUFTTEMP:                     !include { file: wp_temperature.yaml, vars: { property: "ABLUFTTEMP"  }}
+  SPEICHERSOLLTEMP_TAG:           !include { file: wp_temperature.yaml, vars: { property: "SPEICHERSOLLTEMP_TAG"   , writable: "true" }}
+  SPEICHERSOLLTEMP_NACHT:         !include { file: wp_temperature.yaml, vars: { property: "SPEICHERSOLLTEMP_NACHT" , writable: "true" }}
+  SAMMLERISTTEMP:                 !include { file: wp_temperature.yaml, vars: { property: "SAMMLERISTTEMP"         , update_interval: $interval_medium }}
+  TAUPUNKT_HK1:                   !include { file: wp_temperature.yaml, vars: { property: "TAUPUNKT_HK1"           , target: "HK1" }}
+  RAUMSOLLTEMP_TAG:               !include { file: wp_temperature.yaml, vars: { property: "RAUMSOLLTEMP_TAG"       , target: "HK1" , writable: "true" }}
+  RAUMSOLLTEMP_NACHT:             !include { file: wp_temperature.yaml, vars: { property: "RAUMSOLLTEMP_NACHT"     , target: "HK1" , writable: "true" }}
+  KUEHL_RAUMSOLL_TAG:             !include { file: wp_temperature.yaml, vars: { property: "KUEHL_RAUMSOLL_TAG"     , target: "HK1" , writable: "true" }}
 
   LUEFT_STUFE_TAG:                !include { file: wp_ventilation.yaml, vars: { property: "LUEFT_STUFE_TAG"   }}
   LUEFT_STUFE_NACHT:              !include { file: wp_ventilation.yaml, vars: { property: "LUEFT_STUFE_NACHT" }}

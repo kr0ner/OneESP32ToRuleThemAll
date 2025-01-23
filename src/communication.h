@@ -146,6 +146,8 @@ void sendData(const CanMember& member, const Property property, const std::uint1
     data.insert(data.end(), {IdByte1, IdByte2, 0xfa, IndexByte1, IndexByte2, ValueByte1, ValueByte2});
 
     id(wp_can).send_data(ESPClient.canId, use_extended_id, data);
+    // directly request the value again to make sure the sensors are updated
+    queueRequest(member, property);
 }
 
 #endif
