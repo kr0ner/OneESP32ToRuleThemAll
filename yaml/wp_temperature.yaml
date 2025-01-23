@@ -1,6 +1,7 @@
 defaults:
   update_interval: $interval_very_slow
   target: "Kessel"
+  writable: "false"
 
 sensor:
   - platform: template
@@ -21,7 +22,11 @@ esphome:
     priority: -100
     then:
       - lambda: |-
-          CallbackHandler::instance().addCallback(std::make_pair(${target},Property::k${property}),[](const SimpleVariant& value){
+          auto callback= [](const SimpleVariant& value){
               id(${property}).publish_state(value);
-          });
+          };
+          CallbackHandler::instance().addCallback(std::make_pair(${target},Property::k${property}),callback);
+          if constexpr(${writable}) {
+            CallbackHandler::instance().addCallback(std::make_pair(Manager,Property::k${property}),callback);
+          }
           queueRequest(${target}, Property::k${property});
