@@ -39,10 +39,10 @@ globals:
     initial_value: "0.0"
   - id: gCOP_WW_TAG
     type: float
-    initial_value: "0.0"
+    initial_value: "1.0"
   - id: gCOP_HEIZ_TAG
     type: float
-    initial_value: "0.0"
+    initial_value: "1.0"
 
 #########################################
 #                                       #
@@ -179,6 +179,8 @@ sensor:
     name: "COP WW TAG"
     update_interval: $interval_very_slow
     state_class: "measurement"
+    filters:
+      - median
     lambda: |-
       if (id(WAERMEERTRAG_WW_TAG_SUMME_KWH).state && id(EL_AUFNAHMELEISTUNG_WW_SUMME_KWH).state && id(EL_AUFNAHMELEISTUNG_WW_SUMME_KWH).state != 0.0f) {
         id(gCOP_WW_TAG) = id(WAERMEERTRAG_WW_TAG_SUMME_KWH).state / id(EL_AUFNAHMELEISTUNG_WW_SUMME_KWH).state;
@@ -188,6 +190,8 @@ sensor:
     name: "COP HEIZ TAG"
     update_interval: $interval_very_slow
     state_class: "measurement"
+    filters:
+      - median
     lambda: |-
       if (id(WAERMEERTRAG_HEIZ_TAG_SUMME_KWH).state && id(EL_AUFNAHMELEISTUNG_HEIZ_SUMME_KWH).state && id(EL_AUFNAHMELEISTUNG_HEIZ_SUMME_KWH).state != 0.0f) {
         id(gCOP_HEIZ_TAG) = id(WAERMEERTRAG_HEIZ_TAG_SUMME_KWH).state / id(EL_AUFNAHMELEISTUNG_HEIZ_SUMME_KWH).state;
