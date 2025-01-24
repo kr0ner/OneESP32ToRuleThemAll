@@ -6,6 +6,15 @@ esphome:
     priority: -100
     then:
       - lambda: |-
+          CallbackHandler::instance().addCallback(std::make_pair(Kessel,Property::kPROGRAMMSCHALTER),[](const SimpleVariant& value){
+            const auto stringValue{value.get<std::string>()};
+            const auto index = id(PROGRAMMSCHALTER).index_of(stringValue);
+            if(index.has_value()) {
+              id(PROGRAMMSCHALTER).publish_state(stringValue);
+            }
+          });
+          queueRequest(Kessel, Property::kPROGRAMMSCHALTER);
+
           CallbackHandler::instance().addCallback(std::make_pair(Kessel,Property::kBETRIEBS_STATUS),[](const SimpleVariant& value){
             const std::bitset<15U> status_bits{static_cast<std::uint16_t>(value)};
             id(NHZ1).publish_state(status_bits.test(0) && !status_bits.test(1U));
@@ -38,6 +47,7 @@ select:
       - "Programm"
       - "Komfort"
       - "Eco"
+      - "Warmwasser"
       - "Unbekannt"
     initial_option: "Unbekannt"
     optimistic: true
@@ -46,6 +56,9 @@ select:
       then:
         - lambda: |-
             const auto betriebsartId = Mapper::instance().getBetriebsartId(x);
+
+            ESP_LOGI("ttf07.yaml:select", "Updating PROGRAMMSCHALTER to %s betriebsartId=0x%0x", x.c_str(), betriebsartId.value());
+
             if(betriebsartId.has_value()) {
               sendData(Kessel, Property::kPROGRAMMSCHALTER, betriebsartId.value());
             }
