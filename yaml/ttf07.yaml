@@ -57,14 +57,15 @@ select:
         - lambda: |-
             const auto betriebsartId = Mapper::instance().getBetriebsartId(x);
 
-            ESP_LOGI("ttf07.yaml:select", "Updating PROGRAMMSCHALTER to %s betriebsartId=0x%0x", x.c_str(), betriebsartId.value());
-
             if(betriebsartId.has_value()) {
+              ESP_LOGI("ttf07.yaml:select", "Updating PROGRAMMSCHALTER to %s betriebsartId=0x%0x", x.c_str(), betriebsartId.value());
               sendData(Kessel, Property::kPROGRAMMSCHALTER, betriebsartId.value());
             }
 
 packages:
   COMMON: !include { file: common.yaml}
+
+  
 
   NHZ1:                !include { file: wp_binary.yaml, vars: { name: "NHZ1" }}
   NHZ2:                !include { file: wp_binary.yaml, vars: { name: "NHZ2" }}
