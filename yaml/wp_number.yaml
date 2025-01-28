@@ -16,7 +16,7 @@ number:
     optimistic: true
     set_action:
       - lambda: |-
-          ESP_LOGI("Number", "New value %f", x);
+          ESP_LOGI("Number", "Setting new value %f for %s", x, std::string(Property::k${property}.name).c_str());
           if(x != NAN) {
             const auto type = Property::k${property}.type;
             switch(type) {
