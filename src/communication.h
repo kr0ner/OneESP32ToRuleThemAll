@@ -1,7 +1,7 @@
 #if !defined(COMMUNICATION_H)
 #define COMMUNICATION_H
 #include <cstdint>
-#include <queue>
+#include <list>
 #include <string>
 #include <vector>
 
@@ -30,7 +30,18 @@ static const CanMember HK2{HK2_ID, "HK2"};
 static const std::vector<std::reference_wrapper<const CanMember>> canMembers{Kessel, HK1, HK2, Manager, ESPClient};
 
 using Request = std::pair<const CanMember, const Property>;
-static std::queue<Request> request_queue;
+struct ConditionalRequest {
+    ConditionalRequest(Request request) : _request(request){};
+    ConditionalRequest(Request request, std::function<bool()> condition)
+        : _request(request), _condition(std::move(condition)){};
+
+    Request _request;
+    std::function<bool()> _condition = []() {
+        return true;
+    };
+};
+
+static std::list<ConditionalRequest> conditionalRequests;
 
 /**
  * @brief Tries to find the CANMember with the given CANId.
@@ -70,11 +81,36 @@ bool isResponse(const std::vector<std::uint8_t>& msg) {
 /**
  * @brief Puts a request towards the \c member for the given \c property in the request queue.
  *        This will effectively prevent that requests are all sent at the same time, which might
- *        cause issues. The time inbetween actual requests is defined in yaml.
+ *        cause issues. The list of requests is processed one element at a time and according to the interval set in the
+ *        common.yaml
  */
 void queueRequest(const CanMember& member, const Property& property) {
     ESP_LOGI("QUEUE", "Requesting data from %s for %s", member.name.c_str(), std::string(property.name).c_str());
-    request_queue.push(std::make_pair(member, property));
+    conditionalRequests.emplace_back(std::make_pair(member, property));
+}
+
+/**
+ * @brief Puts a conditional request towards the \c member for the given \c property. The request will be placed once
+ *        the \c condition evaluates to true and there are no preceding requests pending. The list of requests is
+ *        processed one element at a time and according to the interval set in the common.yaml
+ */
+void queueConditionalRequest(const CanMember& member, const Property& property, std::function<bool()> condition) {
+    ESP_LOGI("QUEUE", "Adding conditional request for data from %s for %s", member.name.c_str(),
+             std::string(property.name).c_str());
+    conditionalRequests.emplace_back(std::make_pair(member, property), std::move(condition));
+}
+
+/**
+ * @brief Puts a conditional request towards the \c member for the given \c property. The request will be placed once
+ *        the given \c time in seconds has passed and there are no preceding requests pending. The list of requests is
+ *        processed one element at a time and according to the interval set in the common.yaml
+ */
+void scheduleRequest(const CanMember& member, const Property& property, std::chrono::seconds seconds) {
+    ESP_LOGI("QUEUE", "Scheduling request for data from %s for %s in % d seconds", member.name.c_str(),
+             std::string(property.name).c_str(), seconds.count());
+    conditionalRequests.emplace_back(
+        std::make_pair(member, property),
+        [t = std::chrono::steady_clock::now() + seconds]() { return t < std::chrono::steady_clock::now(); });
 }
 
 /**
@@ -146,8 +182,8 @@ void sendData(const CanMember& member, const Property property, const std::uint1
     data.insert(data.end(), {IdByte1, IdByte2, 0xfa, IndexByte1, IndexByte2, ValueByte1, ValueByte2});
 
     id(wp_can).send_data(ESPClient.canId, use_extended_id, data);
-    // directly request the value again to make sure the sensors are updated
-    queueRequest(member, property);
+    // Request the value again to make sure the sensor is updated, with a delay of 10s to allow the heatpump to react.
+    scheduleRequest(member, property, std::chrono::seconds(10));
 }
 
 #endif
