@@ -4,10 +4,11 @@ esphome:
       - "-DTHZ_5_5_ECO"
 
 packages:
-  COMMON: !include { file: common.yaml}
-  BASE:   !include { file: wp_base.yaml}
+  COMMON: !include { file: common.yaml }
+  BASE:   !include { file: wp_base.yaml }
   
-  LUEFT_STUFE_BEREITSCHAFT:       !include { file: wp_ventilation.yaml, vars: { property: "LUEFT_STUFE_BEREITSCHAFT" }}
-  LUEFT_STUFE_HAND:               !include { file: wp_ventilation.yaml, vars: { property: "LUEFT_STUFE_HAND" }}
-  LAUFZEIT_FILTER_TAGE:           !include { file: wp_generic.yaml, vars: { property: "LAUFZEIT_FILTER_TAGE",icon: "mdi:air-filter", unit: "d", update_interval: $interval_once_in_a_while  }}
-  SOMMERBETRIEB_TEMP:             !include { file: wp_number.yaml, vars:  { property: "SOMMERBETRIEB_TEMP", icon: "mdi:sun-thermometer", min: "15.0", max: "25.0", step: "1.0", unit: "°C"  }}
+  LUEFT_STUFE_BEREITSCHAFT: !include { file: wp_ventilation.yaml, vars: { property: "LUEFT_STUFE_BEREITSCHAFT" }}
+  LUEFT_STUFE_HAND:         !include { file: wp_ventilation.yaml, vars: { property: "LUEFT_STUFE_HAND"         }}
+
+  LAUFZEIT_FILTER_TAGE:     !include { file: wp_generic.yaml, vars: { property: "LAUFZEIT_FILTER_TAGE" , icon: "mdi:air-filter"      , unit: "d" , update_interval: $interval_once_in_a_while }}
+  SOMMERBETRIEB_TEMP:       !include { file: wp_number.yaml , vars: { property: "SOMMERBETRIEB_TEMP"   , icon: "mdi:sun-thermometer" , unit: "°C", min: "15.0", max: "25.0", step: "1.0"      }}

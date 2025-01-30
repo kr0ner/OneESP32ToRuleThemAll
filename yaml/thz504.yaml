@@ -4,9 +4,9 @@ esphome:
       - "-DTHZ_504"
 
 packages:
-  COMMON: !include { file: common.yaml}
-  BASE:   !include { file: wp_base.yaml}
+  COMMON: !include { file: common.yaml }
+  BASE:   !include { file: wp_base.yaml }
 
-  ABLUFT_TAUPUNKT:      !include { file: wp_temperature.yaml, vars: { property: "ABLUFT_TAUPUNKT"  }}
-  DIFFERENZDRUCK:       !include { file: wp_generic.yaml, vars: { property: "DIFFERENZDRUCK"      , icon: "mdi:air-filter", unit: "Pa", update_interval: $interval_medium           }}
-  LAUFZEIT_FILTER_TAGE: !include { file: wp_generic.yaml, vars: { property: "LAUFZEIT_FILTER_TAGE", icon: "mdi:air-filter", unit: "d" , update_interval: $interval_once_in_a_while  }}
+  ABLUFT_TAUPUNKT:      !include { file: wp_temperature.yaml, vars: { property: "ABLUFT_TAUPUNKT" }}
+  DIFFERENZDRUCK:       !include { file: wp_generic.yaml, vars: { property: "DIFFERENZDRUCK"      , icon: "mdi:air-filter", unit: "Pa", update_interval: $interval_medium          }}
+  LAUFZEIT_FILTER_TAGE: !include { file: wp_generic.yaml, vars: { property: "LAUFZEIT_FILTER_TAGE", icon: "mdi:air-filter", unit: "d" , update_interval: $interval_once_in_a_while }}
