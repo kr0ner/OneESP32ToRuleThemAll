@@ -122,7 +122,6 @@ packages:
   SPEICHERSOLLTEMP:               !include { file: wp_temperature.yaml, vars: { property: "SPEICHERSOLLTEMP"          }}
   SPEICHERISTTEMP:                !include { file: wp_temperature.yaml, vars: { property: "SPEICHERISTTEMP"          , update_interval: $interval_medium }}
   AUSSENTEMP:                     !include { file: wp_temperature.yaml, vars: { property: "AUSSENTEMP"       }}
-  VERDAMPFERTEMP:                 !include { file: wp_temperature.yaml, vars: { property: "VERDAMPFERTEMP"   }}
   RUECKLAUFISTTEMP:               !include { file: wp_temperature.yaml, vars: { property: "RUECKLAUFISTTEMP"         , update_interval: $interval_medium }}
   VORLAUFISTTEMP:                 !include { file: wp_temperature.yaml, vars: { property: "VORLAUFISTTEMP"           , update_interval: $interval_medium, target: "HK1" }}
   RAUMISTTEMP:                    !include { file: wp_temperature.yaml, vars: { property: "RAUMISTTEMP"              , target: "HK1" }}
@@ -132,9 +131,6 @@ packages:
   FEHLERMELDUNG:                  !include { file: wp_generic.yaml, vars: { property: "FEHLERMELDUNG"      , icon: "mdi:alert-circle" }}
   FEUCHTE:                        !include { file: wp_generic.yaml, vars: { property: "FEUCHTE"            , interval: $interval_very_slow, unit: "%", icon: "mdi:water-percent", target: "HK1", accuracy_decimals: "1" }}
   SOLLWERT_MAX_HK1:               !include { file: wp_generic.yaml, vars: { property: "SOLLWERT_MAX_HK1"   , unit: "°C", icon: "mdi:temperature-celsius", target: "HK1", accuracy_decimals: "1" }}
-  SOLLWERT_MIN_HK1:               !include { file: wp_generic.yaml, vars: { property: "SOLLWERT_MIN_HK1"   , unit: "°C", icon: "mdi:temperature-celsius", target: "HK1", accuracy_decimals: "1" }}
-  ANTEIL_VORLAUF_HK1:             !include { file: wp_generic.yaml, vars: { property: "ANTEIL_VORLAUF_HK1" , unit: "%" , icon: "mdi:percent-box", target: "HK1" }}
-  FUSSPUNKT_HK1:                  !include { file: wp_generic.yaml, vars: { property: "FUSSPUNKT_HK1"      , unit: "°C", icon: "mdi:temperature-celsius", target: "HK1", accuracy_decimals: "1" }}
   STEIGUNG_HK1:                   !include { file: wp_generic.yaml, vars: { property: "STEIGUNG_HK1"       , icon: "mdi:valve", target: "HK1", accuracy_decimals: "2" }}
 
   RAUMEINFLUSS:                   !include { file: wp_number.yaml, vars: { property: "RAUMEINFLUSS", target: "HK1" }}
