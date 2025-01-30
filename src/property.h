@@ -66,7 +66,7 @@ struct Property : public detail::Property {
     PROPERTY(VERDAMPFERTEMP, 0x0014, Type::et_dec_val);
     PROPERTY(RUECKLAUFISTTEMP, 0x0016, Type::et_dec_val);
     PROPERTY(SOLLWERT_MAX_HK1, 0x0028, Type::et_dec_val);
-    PROPERTY(FEUCHTE, 0x0075, Type::et_dec_val);
+    PROPERTY(RAUMFEUCHTE, 0x0075, Type::et_dec_val);
     PROPERTY(STEIGUNG_HK1, 0x010e, Type::et_cent_val);
     PROPERTY(RAUMEINFLUSS, 0x010f, Type::et_little_endian);
     PROPERTY(PROGRAMMSCHALTER, 0x0112, Type::et_betriebsart);
