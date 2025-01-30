@@ -275,6 +275,7 @@ packages:
   RAUMSOLLTEMP_TAG:               !include { file: wp_temperature.yaml, vars: { property: "RAUMSOLLTEMP_TAG"       , target: "HK1" , writable: "true" }}
   RAUMSOLLTEMP_NACHT:             !include { file: wp_temperature.yaml, vars: { property: "RAUMSOLLTEMP_NACHT"     , target: "HK1" , writable: "true" }}
   KUEHL_RAUMSOLL_TAG:             !include { file: wp_temperature.yaml, vars: { property: "KUEHL_RAUMSOLL_TAG"     , target: "HK1" , writable: "true" }}
+  VERDAMPFERTEMP:                 !include { file: wp_temperature.yaml, vars: { property: "VERDAMPFERTEMP"  }}
 
   LUEFT_STUFE_TAG:                !include { file: wp_ventilation.yaml, vars: { property: "LUEFT_STUFE_TAG"   }}
   LUEFT_STUFE_NACHT:              !include { file: wp_ventilation.yaml, vars: { property: "LUEFT_STUFE_NACHT" }}
@@ -295,7 +296,9 @@ packages:
   ZULUFT_SOLL:                    !include { file: wp_generic.yaml, vars: { property: "ZULUFT_SOLL"              , update_interval: $interval_slow            , unit: "l/min", icon: "mdi:pump"  }}
   VOLUMENSTROM:                   !include { file: wp_generic.yaml, vars: { property: "VOLUMENSTROM"             , update_interval: $interval_slow            , unit: "l/min", icon: "mdi:pump"  }}
   LAUFZEIT_FILTER:                !include { file: wp_generic.yaml, vars: { property: "LAUFZEIT_FILTER"          , update_interval: $interval_once_in_a_while , unit: "%"    , icon: "mdi:calendar"  }}
-
+  SOLLWERT_MIN_HK1:               !include { file: wp_generic.yaml, vars: { property: "SOLLWERT_MIN_HK1"         , unit: "°C", icon: "mdi:temperature-celsius" , target: "HK1", accuracy_decimals: "1" }}
+  ANTEIL_VORLAUF_HK1:             !include { file: wp_generic.yaml, vars: { property: "ANTEIL_VORLAUF_HK1"       , unit: "%" , icon: "mdi:percent-box"         , target: "HK1" }}
+  FUSSPUNKT_HK1:                  !include { file: wp_generic.yaml, vars: { property: "FUSSPUNKT_HK1"            , unit: "°C", icon: "mdi:temperature-celsius" , target: "HK1", accuracy_decimals: "1" }}
   ANZEIGE_NIEDERDRUCK:            !include { file: wp_generic.yaml, vars: { property: "ANZEIGE_NIEDERDRUCK"      , accuracy_decimals: "2" }}
   PUMPENZYKLEN_MIN_AUSSENT:       !include { file: wp_generic.yaml, vars: { property: "PUMPENZYKLEN_MIN_AUSSENT" , icon: "mdi:numeric"  }}
 
