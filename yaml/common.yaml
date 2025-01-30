@@ -34,7 +34,7 @@ globals:
   - id: gRAUMISTTEMP
     type: float
     initial_value: "0.0"
-  - id: gFEUCHTE
+  - id: gRAUMFEUCHTE
     type: float
     initial_value: "0.0"
   - id: gCOP_WW_TAG
@@ -102,11 +102,11 @@ interval:
             ESP_LOGI("SET", "Sending cached room temperature %f to heatpump", room_temp);
             sendData(HK1, Property::kRAUMISTTEMP, static_cast<std::uint16_t>(room_temp * 10.0f));
           }
-          // Send current FEUCHTE
-          const auto humidity = id(gFEUCHTE);
+          // Send current RAUMFEUCHTE
+          const auto humidity = id(gRAUMFEUCHTE);
           if(humidity > 0.0) {
             ESP_LOGI("SET", "Sending cached humidity %f to heatpump", humidity);
-            sendData(HK1, Property::kFEUCHTE, static_cast<std::uint16_t>(humidity * 10.0f));
+            sendData(HK1, Property::kRAUMFEUCHTE, static_cast<std::uint16_t>(humidity * 10.0f));
           }
 
 #########################################
@@ -130,7 +130,7 @@ packages:
   VORLAUFSOLLTEMP:                !include { file: wp_temperature.yaml, vars: { property: "VORLAUFSOLLTEMP"          , target: "HK1" }}
 
   FEHLERMELDUNG:                  !include { file: wp_generic.yaml, vars: { property: "FEHLERMELDUNG"      , icon: "mdi:alert-circle" }}
-  FEUCHTE:                        !include { file: wp_generic.yaml, vars: { property: "FEUCHTE"            , interval: $interval_very_slow, unit: "%", icon: "mdi:water-percent", target: "HK1", accuracy_decimals: "1" }}
+  RAUMFEUCHTE:                    !include { file: wp_generic.yaml, vars: { property: "RAUMFEUCHTE"        , interval: $interval_very_slow, unit: "%", icon: "mdi:water-percent", target: "HK1", accuracy_decimals: "1" }}
   SOLLWERT_MAX_HK1:               !include { file: wp_generic.yaml, vars: { property: "SOLLWERT_MAX_HK1"   , unit: "°C", icon: "mdi:temperature-celsius", target: "HK1", accuracy_decimals: "1" }}
   SOLLWERT_MIN_HK1:               !include { file: wp_generic.yaml, vars: { property: "SOLLWERT_MIN_HK1"   , unit: "°C", icon: "mdi:temperature-celsius", target: "HK1", accuracy_decimals: "1" }}
   ANTEIL_VORLAUF_HK1:             !include { file: wp_generic.yaml, vars: { property: "ANTEIL_VORLAUF_HK1" , unit: "%" , icon: "mdi:percent-box", target: "HK1" }}
@@ -168,7 +168,7 @@ sensor:
       then:
         - lambda: |-
             ESP_LOGI("SET", "Updating humidity to %f", x);
-            id(gFEUCHTE) = x;
+            id(gRAUMFEUCHTE) = x;
 
 #########################################
 #                                       #
