@@ -56,34 +56,31 @@ select:
       then:
         - lambda: |-
             const auto betriebsartId = Mapper::instance().getBetriebsartId(x);
-
             if(betriebsartId.has_value()) {
               ESP_LOGI("ttf07.yaml:select", "Updating PROGRAMMSCHALTER to %s betriebsartId=0x%0x", x.c_str(), betriebsartId.value());
               sendData(Kessel, Property::kPROGRAMMSCHALTER, betriebsartId.value());
             }
 
 packages:
-  COMMON: !include { file: common.yaml}
+  COMMON: !include { file: common.yaml }
 
-  
+  NHZ1:                     !include { file: wp_binary.yaml, vars: { name: "NHZ1" }}
+  NHZ2:                     !include { file: wp_binary.yaml, vars: { name: "NHZ2" }}
+  NHZ3:                     !include { file: wp_binary.yaml, vars: { name: "NHZ3" }}
+  VERDICHTER:               !include { file: wp_binary.yaml, vars: { name: "VERDICHTER" }}
+  WARMWASSERBEREITUNG:      !include { file: wp_binary.yaml, vars: { name: "WARMWASSERBEREITUNG" }}
+  HEIZKREISPUMPE:           !include { file: wp_binary.yaml, vars: { name: "HEIZKREISPUMPE" }}
+  PUFFERLADEPUMPE:          !include { file: wp_binary.yaml, vars: { name: "PUFFERLADEPUMPE" }}
+  QUELLENPUMPE:             !include { file: wp_binary.yaml, vars: { name: "QUELLENPUMPE" }}
+  KUEHLBETRIEB:             !include { file: wp_binary.yaml, vars: { name: "KUEHLBETRIEB" }}
 
-  NHZ1:                !include { file: wp_binary.yaml, vars: { name: "NHZ1" }}
-  NHZ2:                !include { file: wp_binary.yaml, vars: { name: "NHZ2" }}
-  NHZ3:                !include { file: wp_binary.yaml, vars: { name: "NHZ3" }}
-  VERDICHTER:          !include { file: wp_binary.yaml, vars: { name: "VERDICHTER" }}
-  WARMWASSERBEREITUNG: !include { file: wp_binary.yaml, vars: { name: "WARMWASSERBEREITUNG" }}
-  HEIZKREISPUMPE:      !include { file: wp_binary.yaml, vars: { name: "HEIZKREISPUMPE" }}
-  PUFFERLADEPUMPE:     !include { file: wp_binary.yaml, vars: { name: "PUFFERLADEPUMPE" }}
-  QUELLENPUMPE:        !include { file: wp_binary.yaml, vars: { name: "QUELLENPUMPE" }}
-  KUEHLBETRIEB:        !include { file: wp_binary.yaml, vars: { name: "KUEHLBETRIEB" }}
-
-  QUELLE_IST:      !include { file: wp_temperature.yaml, vars: { property: "QUELLE_IST" }}
-  HKISTTEMP:       !include { file: wp_temperature.yaml, vars: { property: "HKISTTEMP" }}
-  PUFFERISTTEMP:   !include { file: wp_temperature.yaml, vars: { property: "PUFFERISTTEMP" }}
-  PUFFERSOLLTEMP:  !include { file: wp_temperature.yaml, vars: { property: "PUFFERSOLLTEMP" }}
-  HKSOLLTEMP:      !include { file: wp_temperature.yaml, vars: { property: "HKSOLLTEMP"     , update_interval: "never" }}
-  HEIZGASTEMP:     !include { file: wp_temperature.yaml, vars: { property: "HEIZGASTEMP"    , update_interval: "${interval_slow}" }}
-  QUELLENTEMP_MIN: !include { file: wp_temperature.yaml, vars: { property: "QUELLENTEMP_MIN", update_interval: "${interval_slow}" }} 
+  QUELLE_IST:               !include { file: wp_temperature.yaml, vars: { property: "QUELLE_IST" }}
+  HKISTTEMP:                !include { file: wp_temperature.yaml, vars: { property: "HKISTTEMP" }}
+  PUFFERISTTEMP:            !include { file: wp_temperature.yaml, vars: { property: "PUFFERISTTEMP" }}
+  PUFFERSOLLTEMP:           !include { file: wp_temperature.yaml, vars: { property: "PUFFERSOLLTEMP" }}
+  HKSOLLTEMP:               !include { file: wp_temperature.yaml, vars: { property: "HKSOLLTEMP"     , update_interval: "never" }}
+  HEIZGASTEMP:              !include { file: wp_temperature.yaml, vars: { property: "HEIZGASTEMP"    , update_interval: "${interval_slow}" }}
+  QUELLENTEMP_MIN:          !include { file: wp_temperature.yaml, vars: { property: "QUELLENTEMP_MIN", update_interval: "${interval_slow}" }} 
 
   DRUCK_HEIZKREIS:          !include { file: wp_generic.yaml, vars: { property: "DRUCK_HEIZKREIS"  , unit: "bar"  , icon: "mdi:water-pressure", accuracy_decimals: "1" }}
   QUELLENDRUCK:             !include { file: wp_generic.yaml, vars: { property: "QUELLENDRUCK"     , unit: "bar"  , icon: "mdi:water-pressure", accuracy_decimals: "1" }}

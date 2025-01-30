@@ -248,76 +248,76 @@ interval:
 #                                       #
 #########################################
 packages:
-  SCHALTPROGRAMM_AKTIV:       !include { file: wp_binary.yaml, vars: { name: "SCHALTPROGRAMM_AKTIV" }}
-  VERDICHTER:                 !include { file: wp_binary.yaml, vars: { name: "VERDICHTER" }}
-  WARMWASSERBEREITUNG:        !include { file: wp_binary.yaml, vars: { name: "WARMWASSERBEREITUNG" }}
-  ELEKTRISCHE_NACHERWAERMUNG: !include { file: wp_binary.yaml, vars: { name: "ELEKTRISCHE_NACHERWAERMUNG" }}
-  SERVICE:                    !include { file: wp_binary.yaml, vars: { name: "SERVICE" }}
-  HEIZEN:                     !include { file: wp_binary.yaml, vars: { name: "HEIZEN" }}
-  KUEHLEN:                    !include { file: wp_binary.yaml, vars: { name: "KUEHLEN" }}
-  LUEFTUNG:                   !include { file: wp_binary.yaml, vars: { name: "LUEFTUNG" }}
-  EVU_SPERRE:                 !include { file: wp_binary.yaml, vars: { name: "EVU_SPERRE" }}
-  FILTERWECHSEL_BEIDE:        !include { file: wp_binary.yaml, vars: { name: "FILTERWECHSEL_BEIDE" }}
-  HEIZKREISPUMPE:             !include { file: wp_binary.yaml, vars: { name: "HEIZKREISPUMPE" }}
-  ABTAUEN_VERDAMPFER:         !include { file: wp_binary.yaml, vars: { name: "ABTAUEN_VERDAMPFER" }}
-  FILTERWECHSEL_ABLUFT:       !include { file: wp_binary.yaml, vars: { name: "FILTERWECHSEL_ABLUFT" }}
-  FILTERWECHSEL_ZULUFT:       !include { file: wp_binary.yaml, vars: { name: "FILTERWECHSEL_ZULUFT" }}
-  AUFHEIZPROGRAMM_AKTIV:      !include { file: wp_binary.yaml, vars: { name: "AUFHEIZPROGRAMM_AKTIV" }}
-  SOMMERBETRIEB_AKTIV:        !include { file: wp_binary.yaml, vars: { name: "SOMMERBETRIEB_AKTIV" }}
-  OFEN_KAMIN_AKTIV:           !include { file: wp_binary.yaml, vars: { name: "OFEN_KAMIN_AKTIV" }}
+  SCHALTPROGRAMM_AKTIV:                !include { file: wp_binary.yaml, vars: { name: "SCHALTPROGRAMM_AKTIV" }}
+  VERDICHTER:                          !include { file: wp_binary.yaml, vars: { name: "VERDICHTER" }}
+  WARMWASSERBEREITUNG:                 !include { file: wp_binary.yaml, vars: { name: "WARMWASSERBEREITUNG" }}
+  ELEKTRISCHE_NACHERWAERMUNG:          !include { file: wp_binary.yaml, vars: { name: "ELEKTRISCHE_NACHERWAERMUNG" }}
+  SERVICE:                             !include { file: wp_binary.yaml, vars: { name: "SERVICE" }}
+  HEIZEN:                              !include { file: wp_binary.yaml, vars: { name: "HEIZEN" }}
+  KUEHLEN:                             !include { file: wp_binary.yaml, vars: { name: "KUEHLEN" }}
+  LUEFTUNG:                            !include { file: wp_binary.yaml, vars: { name: "LUEFTUNG" }}
+  EVU_SPERRE:                          !include { file: wp_binary.yaml, vars: { name: "EVU_SPERRE" }}
+  FILTERWECHSEL_BEIDE:                 !include { file: wp_binary.yaml, vars: { name: "FILTERWECHSEL_BEIDE" }}
+  HEIZKREISPUMPE:                      !include { file: wp_binary.yaml, vars: { name: "HEIZKREISPUMPE" }}
+  ABTAUEN_VERDAMPFER:                  !include { file: wp_binary.yaml, vars: { name: "ABTAUEN_VERDAMPFER" }}
+  FILTERWECHSEL_ABLUFT:                !include { file: wp_binary.yaml, vars: { name: "FILTERWECHSEL_ABLUFT" }}
+  FILTERWECHSEL_ZULUFT:                !include { file: wp_binary.yaml, vars: { name: "FILTERWECHSEL_ZULUFT" }}
+  AUFHEIZPROGRAMM_AKTIV:               !include { file: wp_binary.yaml, vars: { name: "AUFHEIZPROGRAMM_AKTIV" }}
+  SOMMERBETRIEB_AKTIV:                 !include { file: wp_binary.yaml, vars: { name: "SOMMERBETRIEB_AKTIV" }}
+  OFEN_KAMIN_AKTIV:                    !include { file: wp_binary.yaml, vars: { name: "OFEN_KAMIN_AKTIV" }}
 
-  WAERMEERTRAG_RUECKGE_SUMME_MWH:  !include { file: wp_generic_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_RUECKGE_SUMME_MWH"     , scaled_property: "WAERMEERTRAG_RUECKGE_SUM_KWH" , property: "WAERMEERTRAG_RUECKGE_SUM_MWH" , unit: "MWh", accuracy_decimals: "3", icon: "mdi:fire"  }}
-  WAERMEERTRAG_2WE_WW_SUMME_MWH:   !include { file: wp_generic_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_2WE_WW_SUMME_MWH"      , scaled_property: "WAERMEERTRAG_2WE_WW_SUM_KWH"  , property: "WAERMEERTRAG_2WE_WW_SUM_MWH"  , unit: "MWh", accuracy_decimals: "3", icon: "mdi:fire"  }}
-  WAERMEERTRAG_2WE_HEIZ_SUMME_MWH: !include { file: wp_generic_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_2WE_HEIZ_SUMME_MWH"    , scaled_property: "WAERMEERTRAG_2WE_HEIZ_SUM_KWH", property: "WAERMEERTRAG_2WE_HEIZ_SUM_MWH", unit: "MWh", accuracy_decimals: "3", icon: "mdi:fire"  }}
+  ABLUFTTEMP:                          !include { file: wp_temperature.yaml, vars: { property: "ABLUFTTEMP"  }}
+  SPEICHERSOLLTEMP_TAG:                !include { file: wp_temperature.yaml, vars: { property: "SPEICHERSOLLTEMP_TAG"   , writable: "true" }}
+  SPEICHERSOLLTEMP_NACHT:              !include { file: wp_temperature.yaml, vars: { property: "SPEICHERSOLLTEMP_NACHT" , writable: "true" }}
+  SAMMLERISTTEMP:                      !include { file: wp_temperature.yaml, vars: { property: "SAMMLERISTTEMP"         , update_interval: $interval_medium }}
+  TAUPUNKT_HK1:                        !include { file: wp_temperature.yaml, vars: { property: "TAUPUNKT_HK1"           , target: "HK1" }}
+  RAUMSOLLTEMP_TAG:                    !include { file: wp_temperature.yaml, vars: { property: "RAUMSOLLTEMP_TAG"       , target: "HK1" , writable: "true" }}
+  RAUMSOLLTEMP_NACHT:                  !include { file: wp_temperature.yaml, vars: { property: "RAUMSOLLTEMP_NACHT"     , target: "HK1" , writable: "true" }}
+  KUEHL_RAUMSOLL_TAG:                  !include { file: wp_temperature.yaml, vars: { property: "KUEHL_RAUMSOLL_TAG"     , target: "HK1" , writable: "true" }}
+  VERDAMPFERTEMP:                      !include { file: wp_temperature.yaml, vars: { property: "VERDAMPFERTEMP"  }}
 
-  ABLUFTTEMP:                     !include { file: wp_temperature.yaml, vars: { property: "ABLUFTTEMP"  }}
-  SPEICHERSOLLTEMP_TAG:           !include { file: wp_temperature.yaml, vars: { property: "SPEICHERSOLLTEMP_TAG"   , writable: "true" }}
-  SPEICHERSOLLTEMP_NACHT:         !include { file: wp_temperature.yaml, vars: { property: "SPEICHERSOLLTEMP_NACHT" , writable: "true" }}
-  SAMMLERISTTEMP:                 !include { file: wp_temperature.yaml, vars: { property: "SAMMLERISTTEMP"         , update_interval: $interval_medium }}
-  TAUPUNKT_HK1:                   !include { file: wp_temperature.yaml, vars: { property: "TAUPUNKT_HK1"           , target: "HK1" }}
-  RAUMSOLLTEMP_TAG:               !include { file: wp_temperature.yaml, vars: { property: "RAUMSOLLTEMP_TAG"       , target: "HK1" , writable: "true" }}
-  RAUMSOLLTEMP_NACHT:             !include { file: wp_temperature.yaml, vars: { property: "RAUMSOLLTEMP_NACHT"     , target: "HK1" , writable: "true" }}
-  KUEHL_RAUMSOLL_TAG:             !include { file: wp_temperature.yaml, vars: { property: "KUEHL_RAUMSOLL_TAG"     , target: "HK1" , writable: "true" }}
-  VERDAMPFERTEMP:                 !include { file: wp_temperature.yaml, vars: { property: "VERDAMPFERTEMP"  }}
+  LUEFT_STUFE_TAG:                     !include { file: wp_ventilation.yaml, vars: { property: "LUEFT_STUFE_TAG"   }}
+  LUEFT_STUFE_NACHT:                   !include { file: wp_ventilation.yaml, vars: { property: "LUEFT_STUFE_NACHT" }}
+  LUEFT_STUFE_PARTY:                   !include { file: wp_ventilation.yaml, vars: { property: "LUEFT_STUFE_PARTY" }}
 
-  LUEFT_STUFE_TAG:                !include { file: wp_ventilation.yaml, vars: { property: "LUEFT_STUFE_TAG"   }}
-  LUEFT_STUFE_NACHT:              !include { file: wp_ventilation.yaml, vars: { property: "LUEFT_STUFE_NACHT" }}
-  LUEFT_STUFE_PARTY:              !include { file: wp_ventilation.yaml, vars: { property: "LUEFT_STUFE_PARTY" }}
+  ABLUFTFEUCHTE:                       !include { file: wp_generic.yaml, vars: { property: "ABLUFTFEUCHTE"            , update_interval: $interval_very_slow       , unit: "%"    , icon: "mdi:water-percent"}}
+  MOTORSTROM:                          !include { file: wp_generic.yaml, vars: { property: "MOTORSTROM"               , update_interval: $interval_medium          , unit: "A"    , icon: "mdi:current-ac"}}
+  MOTORSPANNUNG:                       !include { file: wp_generic.yaml, vars: { property: "MOTORSPANNUNG"            , update_interval: $interval_medium          , unit: "V"    , icon: "mdi:sine-wave"}}
+  MOTORLEISTUNG:                       !include { file: wp_generic.yaml, vars: { property: "MOTORLEISTUNG"            , update_interval: $interval_medium          , unit: "kW"   , icon: "mdi:flash", accuracy_decimals: "2" }}
+  VERDICHTERDREHZAHL:                  !include { file: wp_generic.yaml, vars: { property: "VERDICHTERDREHZAHL"       , update_interval: $interval_medium          , unit: "Hz"   , icon: "mdi:gauge" }}
+  HEIZLEISTUNG_RELATIV:                !include { file: wp_generic.yaml, vars: { property: "HEIZLEISTUNG_RELATIV"     , update_interval: $interval_medium          , unit: "%"    , icon: "mdi:gauge" }}
+  HEIZ_KUEHL_LEISTUNG:                 !include { file: wp_generic.yaml, vars: { property: "HEIZ_KUEHL_LEISTUNG"      , update_interval: $interval_medium          , unit: "kW"   , icon: "mdi:home-lightning-bolt-outline", accuracy_decimals: "2" }}
+  ABLUFT_IST:                          !include { file: wp_generic.yaml, vars: { property: "ABLUFT_IST"               , update_interval: $interval_slow            , unit: "Hz"   , icon: "mdi:fan"   }}
+  FORTLUFT_IST:                        !include { file: wp_generic.yaml, vars: { property: "FORTLUFT_IST"             , update_interval: $interval_slow            , unit: "Hz"   , icon: "mdi:fan"   }}
+  ZULUFT_IST:                          !include { file: wp_generic.yaml, vars: { property: "ZULUFT_IST"               , update_interval: $interval_slow            , unit: "Hz"   , icon: "mdi:fan"   }}
+  ABLUFT_SOLL:                         !include { file: wp_generic.yaml, vars: { property: "ABLUFT_SOLL"              , update_interval: $interval_slow            , unit: "l/min", icon: "mdi:pump"  }}
+  FORTLUFT_SOLL:                       !include { file: wp_generic.yaml, vars: { property: "FORTLUFT_SOLL"            , update_interval: $interval_slow            , unit: "l/min", icon: "mdi:pump"  }}
+  ZULUFT_SOLL:                         !include { file: wp_generic.yaml, vars: { property: "ZULUFT_SOLL"              , update_interval: $interval_slow            , unit: "l/min", icon: "mdi:pump"  }}
+  VOLUMENSTROM:                        !include { file: wp_generic.yaml, vars: { property: "VOLUMENSTROM"             , update_interval: $interval_slow            , unit: "l/min", icon: "mdi:pump"  }}
+  LAUFZEIT_FILTER:                     !include { file: wp_generic.yaml, vars: { property: "LAUFZEIT_FILTER"          , update_interval: $interval_once_in_a_while , unit: "%"    , icon: "mdi:calendar"  }}
+  ANZEIGE_NIEDERDRUCK:                 !include { file: wp_generic.yaml, vars: { property: "ANZEIGE_NIEDERDRUCK"      , accuracy_decimals: "2" }}
+  PUMPENZYKLEN_MIN_AUSSENT:            !include { file: wp_generic.yaml, vars: { property: "PUMPENZYKLEN_MIN_AUSSENT" , icon: "mdi:numeric"  }}
+  SOLLWERT_MAX_HK1:                    !include { file: wp_generic.yaml, vars: { property: "SOLLWERT_MAX_HK1"   , unit: "°C", icon: "mdi:temperature-celsius", target: "HK1", accuracy_decimals: "1" }}
+  SOLLWERT_MIN_HK1:                    !include { file: wp_generic.yaml, vars: { property: "SOLLWERT_MIN_HK1"         , unit: "°C", icon: "mdi:temperature-celsius" , target: "HK1", accuracy_decimals: "1" }}
+  ANTEIL_VORLAUF_HK1:                  !include { file: wp_generic.yaml, vars: { property: "ANTEIL_VORLAUF_HK1"       , unit: "%" , icon: "mdi:percent-box"         , target: "HK1" }}
+  FUSSPUNKT_HK1:                       !include { file: wp_generic.yaml, vars: { property: "FUSSPUNKT_HK1"            , unit: "°C", icon: "mdi:temperature-celsius" , target: "HK1", accuracy_decimals: "1" }}
 
-  ABLUFTFEUCHTE:                  !include { file: wp_generic.yaml, vars: { property: "ABLUFTFEUCHTE"            , update_interval: $interval_very_slow       , unit: "%"    , icon: "mdi:water-percent"}}
-  MOTORSTROM:                     !include { file: wp_generic.yaml, vars: { property: "MOTORSTROM"               , update_interval: $interval_medium          , unit: "A"    , icon: "mdi:current-ac"}}
-  MOTORSPANNUNG:                  !include { file: wp_generic.yaml, vars: { property: "MOTORSPANNUNG"            , update_interval: $interval_medium          , unit: "V"    , icon: "mdi:sine-wave"}}
-  MOTORLEISTUNG:                  !include { file: wp_generic.yaml, vars: { property: "MOTORLEISTUNG"            , update_interval: $interval_medium          , unit: "kW"   , icon: "mdi:flash", accuracy_decimals: "2" }}
-  VERDICHTERDREHZAHL:             !include { file: wp_generic.yaml, vars: { property: "VERDICHTERDREHZAHL"       , update_interval: $interval_medium          , unit: "Hz"   , icon: "mdi:gauge" }}
-  HEIZLEISTUNG_RELATIV:           !include { file: wp_generic.yaml, vars: { property: "HEIZLEISTUNG_RELATIV"     , update_interval: $interval_medium          , unit: "%"    , icon: "mdi:gauge" }}
-  HEIZ_KUEHL_LEISTUNG:            !include { file: wp_generic.yaml, vars: { property: "HEIZ_KUEHL_LEISTUNG"      , update_interval: $interval_medium          , unit: "kW"   , icon: "mdi:home-lightning-bolt-outline", accuracy_decimals: "2" }}
-  ABLUFT_IST:                     !include { file: wp_generic.yaml, vars: { property: "ABLUFT_IST"               , update_interval: $interval_slow            , unit: "Hz"   , icon: "mdi:fan"   }}
-  FORTLUFT_IST:                   !include { file: wp_generic.yaml, vars: { property: "FORTLUFT_IST"             , update_interval: $interval_slow            , unit: "Hz"   , icon: "mdi:fan"   }}
-  ZULUFT_IST:                     !include { file: wp_generic.yaml, vars: { property: "ZULUFT_IST"               , update_interval: $interval_slow            , unit: "Hz"   , icon: "mdi:fan"   }}
-  ABLUFT_SOLL:                    !include { file: wp_generic.yaml, vars: { property: "ABLUFT_SOLL"              , update_interval: $interval_slow            , unit: "l/min", icon: "mdi:pump"  }}
-  FORTLUFT_SOLL:                  !include { file: wp_generic.yaml, vars: { property: "FORTLUFT_SOLL"            , update_interval: $interval_slow            , unit: "l/min", icon: "mdi:pump"  }}
-  ZULUFT_SOLL:                    !include { file: wp_generic.yaml, vars: { property: "ZULUFT_SOLL"              , update_interval: $interval_slow            , unit: "l/min", icon: "mdi:pump"  }}
-  VOLUMENSTROM:                   !include { file: wp_generic.yaml, vars: { property: "VOLUMENSTROM"             , update_interval: $interval_slow            , unit: "l/min", icon: "mdi:pump"  }}
-  LAUFZEIT_FILTER:                !include { file: wp_generic.yaml, vars: { property: "LAUFZEIT_FILTER"          , update_interval: $interval_once_in_a_while , unit: "%"    , icon: "mdi:calendar"  }}
-  SOLLWERT_MAX_HK1:               !include { file: wp_generic.yaml, vars: { property: "SOLLWERT_MAX_HK1"   , unit: "°C", icon: "mdi:temperature-celsius", target: "HK1", accuracy_decimals: "1" }}
-  SOLLWERT_MIN_HK1:               !include { file: wp_generic.yaml, vars: { property: "SOLLWERT_MIN_HK1"         , unit: "°C", icon: "mdi:temperature-celsius" , target: "HK1", accuracy_decimals: "1" }}
-  ANTEIL_VORLAUF_HK1:             !include { file: wp_generic.yaml, vars: { property: "ANTEIL_VORLAUF_HK1"       , unit: "%" , icon: "mdi:percent-box"         , target: "HK1" }}
-  FUSSPUNKT_HK1:                  !include { file: wp_generic.yaml, vars: { property: "FUSSPUNKT_HK1"            , unit: "°C", icon: "mdi:temperature-celsius" , target: "HK1", accuracy_decimals: "1" }}
-  ANZEIGE_NIEDERDRUCK:            !include { file: wp_generic.yaml, vars: { property: "ANZEIGE_NIEDERDRUCK"      , accuracy_decimals: "2" }}
-  PUMPENZYKLEN_MIN_AUSSENT:       !include { file: wp_generic.yaml, vars: { property: "PUMPENZYKLEN_MIN_AUSSENT" , icon: "mdi:numeric"  }}
+  NE_STUFE_WW:                         !include { file: wp_number.yaml, vars: { property: "NE_STUFE_WW"                , min: "0", max: "3" }}
+  LEISTUNG_AUSLEGUNG_HEIZUNG:          !include { file: wp_number.yaml, vars: { property: "LEISTUNG_AUSLEGUNG_HEIZUNG" }}
+  LEISTUNG_AUSLEGUNG_KUEHLEN:          !include { file: wp_number.yaml, vars: { property: "LEISTUNG_AUSLEGUNG_KUEHLEN" }}
+  PUMPENDREHZAHL_HEIZEN:               !include { file: wp_number.yaml, vars: { property: "PUMPENDREHZAHL_HEIZEN"      , step: "0.1" }}
+  HYSTERESE_WW:                        !include { file: wp_number.yaml, vars: { property: "HYSTERESE_WW"               , min: "2.0", max: "10.0", step: "0.1", unit: "°C" }}
+  LUEFT_ZULUFT_STUFE1:                 !include { file: wp_number.yaml, vars: { property: "LUEFT_ZULUFT_STUFE1", min: "0.0", max: "300.0", unit: "m³/h", icon: "mdi:air-filter"  }}
+  LUEFT_ZULUFT_STUFE2:                 !include { file: wp_number.yaml, vars: { property: "LUEFT_ZULUFT_STUFE2", min: "0.0", max: "300.0", unit: "m³/h", icon: "mdi:air-filter"  }}
+  LUEFT_ZULUFT_STUFE3:                 !include { file: wp_number.yaml, vars: { property: "LUEFT_ZULUFT_STUFE3", min: "0.0", max: "300.0", unit: "m³/h", icon: "mdi:air-filter"  }}
+  LUEFT_ABLUFT_STUFE1:                 !include { file: wp_number.yaml, vars: { property: "LUEFT_ABLUFT_STUFE1", min: "0.0", max: "300.0", unit: "m³/h", icon: "mdi:air-filter"  }}
+  LUEFT_ABLUFT_STUFE2:                 !include { file: wp_number.yaml, vars: { property: "LUEFT_ABLUFT_STUFE2", min: "0.0", max: "300.0", unit: "m³/h", icon: "mdi:air-filter"  }}
+  LUEFT_ABLUFT_STUFE3:                 !include { file: wp_number.yaml, vars: { property: "LUEFT_ABLUFT_STUFE3", min: "0.0", max: "300.0", unit: "m³/h", icon: "mdi:air-filter"  }}
 
-  NE_STUFE_WW:                    !include { file: wp_number.yaml, vars: { property: "NE_STUFE_WW"                , min: "0", max: "3" }}
-  LEISTUNG_AUSLEGUNG_HEIZUNG:     !include { file: wp_number.yaml, vars: { property: "LEISTUNG_AUSLEGUNG_HEIZUNG" }}
-  LEISTUNG_AUSLEGUNG_KUEHLEN:     !include { file: wp_number.yaml, vars: { property: "LEISTUNG_AUSLEGUNG_KUEHLEN" }}
-  PUMPENDREHZAHL_HEIZEN:          !include { file: wp_number.yaml, vars: { property: "PUMPENDREHZAHL_HEIZEN"      , step: "0.1" }}
-  HYSTERESE_WW:                   !include { file: wp_number.yaml, vars: { property: "HYSTERESE_WW"               , min: "2.0", max: "10.0", step: "0.1", unit: "°C" }}
-  LUEFT_ZULUFT_STUFE1:            !include { file: wp_number.yaml, vars: { property: "LUEFT_ZULUFT_STUFE1", min: "0.0", max: "300.0", unit: "m³/h", icon: "mdi:air-filter"  }}
-  LUEFT_ZULUFT_STUFE2:            !include { file: wp_number.yaml, vars: { property: "LUEFT_ZULUFT_STUFE2", min: "0.0", max: "300.0", unit: "m³/h", icon: "mdi:air-filter"  }}
-  LUEFT_ZULUFT_STUFE3:            !include { file: wp_number.yaml, vars: { property: "LUEFT_ZULUFT_STUFE3", min: "0.0", max: "300.0", unit: "m³/h", icon: "mdi:air-filter"  }}
-  LUEFT_ABLUFT_STUFE1:            !include { file: wp_number.yaml, vars: { property: "LUEFT_ABLUFT_STUFE1", min: "0.0", max: "300.0", unit: "m³/h", icon: "mdi:air-filter"  }}
-  LUEFT_ABLUFT_STUFE2:            !include { file: wp_number.yaml, vars: { property: "LUEFT_ABLUFT_STUFE2", min: "0.0", max: "300.0", unit: "m³/h", icon: "mdi:air-filter"  }}
-  LUEFT_ABLUFT_STUFE3:            !include { file: wp_number.yaml, vars: { property: "LUEFT_ABLUFT_STUFE3", min: "0.0", max: "300.0", unit: "m³/h", icon: "mdi:air-filter"  }}
+  WAERMEERTRAG_RUECKGE_TAG_SUMME_KWH:  !include { file: wp_daily_energy_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_RUECKGE_TAG_SUMME_KWH" , property_wh: "WAERMEERTRAG_RUECKGE_TAG_WH"    , property_kwh: "WAERMEERTRAG_RUECKGE_TAG_KWH"     }}
+  WAERMEERTRAG_2WE_WW_TAG_SUMME_KWH:   !include { file: wp_daily_energy_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_2WE_WW_TAG_SUMME_KWH"  , property_wh: "WAERMEERTRAG_2WE_WW_TAG_WH"     , property_kwh: "WAERMEERTRAG_2WE_WW_TAG_KWH"      }}
+  WAERMEERTRAG_2WE_HEIZ_TAG_SUMME_KWH: !include { file: wp_daily_energy_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_2WE_HEIZ_TAG_SUMME_KWH", property_wh: "WAERMEERTRAG_2WE_HEIZ_TAG_WH"   , property_kwh: "WAERMEERTRAG_2WE_HEIZ_TAG_KWH"    }}
 
-  WAERMEERTRAG_RUECKGE_TAG_SUMME_KWH:  !include { file: wp_daily_energy_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_RUECKGE_TAG_SUMME_KWH" , property_wh: "WAERMEERTRAG_RUECKGE_TAG_WH"    , property_kwh: "WAERMEERTRAG_RUECKGE_TAG_KWH"  }}
-  WAERMEERTRAG_2WE_WW_TAG_SUMME_KWH:   !include { file: wp_daily_energy_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_2WE_WW_TAG_SUMME_KWH"  , property_wh: "WAERMEERTRAG_2WE_WW_TAG_WH"     , property_kwh: "WAERMEERTRAG_2WE_WW_TAG_KWH"   }}
-  WAERMEERTRAG_2WE_HEIZ_TAG_SUMME_KWH: !include { file: wp_daily_energy_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_2WE_HEIZ_TAG_SUMME_KWH", property_wh: "WAERMEERTRAG_2WE_HEIZ_TAG_WH"   , property_kwh: "WAERMEERTRAG_2WE_HEIZ_TAG_KWH" }}
+  WAERMEERTRAG_RUECKGE_SUMME_MWH:      !include { file: wp_generic_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_RUECKGE_SUMME_MWH"  , scaled_property: "WAERMEERTRAG_RUECKGE_SUM_KWH" , property: "WAERMEERTRAG_RUECKGE_SUM_MWH" , unit: "MWh", accuracy_decimals: "3", icon: "mdi:fire"  }}
+  WAERMEERTRAG_2WE_WW_SUMME_MWH:       !include { file: wp_generic_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_2WE_WW_SUMME_MWH"   , scaled_property: "WAERMEERTRAG_2WE_WW_SUM_KWH"  , property: "WAERMEERTRAG_2WE_WW_SUM_MWH"  , unit: "MWh", accuracy_decimals: "3", icon: "mdi:fire"  }}
+  WAERMEERTRAG_2WE_HEIZ_SUMME_MWH:     !include { file: wp_generic_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_2WE_HEIZ_SUMME_MWH" , scaled_property: "WAERMEERTRAG_2WE_HEIZ_SUM_KWH", property: "WAERMEERTRAG_2WE_HEIZ_SUM_MWH", unit: "MWh", accuracy_decimals: "3", icon: "mdi:fire"  }}
