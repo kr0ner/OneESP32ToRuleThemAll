@@ -130,7 +130,6 @@ packages:
 
   FEHLERMELDUNG:                  !include { file: wp_generic.yaml, vars: { property: "FEHLERMELDUNG"      , icon: "mdi:alert-circle" }}
   RAUMFEUCHTE:                    !include { file: wp_generic.yaml, vars: { property: "RAUMFEUCHTE"        , interval: $interval_very_slow, unit: "%", icon: "mdi:water-percent", target: "HK1", accuracy_decimals: "1" }}
-  SOLLWERT_MAX_HK1:               !include { file: wp_generic.yaml, vars: { property: "SOLLWERT_MAX_HK1"   , unit: "°C", icon: "mdi:temperature-celsius", target: "HK1", accuracy_decimals: "1" }}
   STEIGUNG_HK1:                   !include { file: wp_generic.yaml, vars: { property: "STEIGUNG_HK1"       , icon: "mdi:valve", target: "HK1", accuracy_decimals: "2" }}
 
   RAUMEINFLUSS:                   !include { file: wp_number.yaml, vars: { property: "RAUMEINFLUSS", target: "HK1" }}
