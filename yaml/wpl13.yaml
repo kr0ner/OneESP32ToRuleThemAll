@@ -235,31 +235,6 @@ packages:
 
 #########################################
 #                                       #
-#   Template Sensors                    #
-#                                       #
-#########################################
-sensor:
-  - platform: template
-    name: "COP WW TAG"
-    update_interval: $interval_very_slow
-    state_class: "measurement"
-    lambda: |-
-      if (id(WAERMEERTRAG_WW_TAG_SUMME_KWH).state && id(EL_AUFNAHMELEISTUNG_WW_SUMME_KWH).state && id(EL_AUFNAHMELEISTUNG_WW_SUMME_KWH).state != 0.0f) {
-        id(gCOP_WW_TAG) = id(WAERMEERTRAG_WW_TAG_SUMME_KWH).state / id(EL_AUFNAHMELEISTUNG_WW_SUMME_KWH).state;
-      }
-      return id(gCOP_WW_TAG);
-  - platform: template
-    name: "COP HEIZ TAG"
-    update_interval: $interval_very_slow
-    state_class: "measurement"
-    lambda: |-
-      if (id(WAERMEERTRAG_HEIZ_TAG_SUMME_KWH).state && id(EL_AUFNAHMELEISTUNG_HEIZ_SUMME_KWH).state && id(EL_AUFNAHMELEISTUNG_HEIZ_SUMME_KWH).state != 0.0f) {
-        id(gCOP_HEIZ_TAG) = id(WAERMEERTRAG_HEIZ_TAG_SUMME_KWH).state / id(EL_AUFNAHMELEISTUNG_HEIZ_SUMME_KWH).state;
-      }
-      return id(gCOP_HEIZ_TAG);
-
-#########################################
-#                                       #
 #   CANbus configuration                #
 #                                       #
 #########################################
