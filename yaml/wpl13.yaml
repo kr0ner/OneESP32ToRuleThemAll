@@ -24,6 +24,7 @@ esphome:
       - lambda: |-
           CallbackHandler::instance().addCallback(std::make_pair(WPM2,Property::kPROGRAMMSCHALTER),[](const SimpleVariant& value){
             const auto stringValue{value.get<std::string>()};
+            ESP_LOGI("PROGRAMMSCHALTER", "mapped value %s", stringValue.c_str());
             const auto index = id(PROGRAMMSCHALTER).index_of(stringValue);
             if(index.has_value()) {
               id(PROGRAMMSCHALTER).publish_state(stringValue);
