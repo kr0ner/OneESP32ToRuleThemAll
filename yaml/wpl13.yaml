@@ -127,11 +127,15 @@ interval:
     then:
       - lambda: |-
           // Request sensor value one after another.
-          if(!request_queue.empty()) {
-            constexpr auto use_extended_id{false};
-            const auto request_element = request_queue.front();
-            request_queue.pop();
-            requestData(request_element.first, request_element.second);
+          if(!conditionalRequests.empty()) {
+            // find the next request of which the condition evaluates to true
+            auto it = std::find_if(conditionalRequests.begin(),conditionalRequests.end(),[](const auto& element){
+              return element._condition();
+            });
+            if(it != conditionalRequests.end()) {
+                requestData(it->_request.first, it->_request.second);
+                conditionalRequests.erase(it);
+            }
           }
 
 #########################################
