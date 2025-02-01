@@ -202,7 +202,7 @@ packages:
   RAUMISTTEMP:                !include { file: wp_temperature.yaml, vars: { property: "RAUMISTTEMP"       , target: "FET"  }}
   RAUMSOLLTEMP:               !include { file: wp_temperature.yaml, vars: { property: "RAUMSOLLTEMP"      , target: "FET"  }}
   PUFFERISTTEMPERATUR:        !include { file: wp_temperature.yaml, vars: { property: "PUFFERISTTEMPERATUR" }}
-  ANLAGENFROST:               !include { file: wp_temperature.yaml, vars: { property: "ANLAGENFROST"       , target: "MFG"  }}
+  FROSTSCHUTZ:                !include { file: wp_temperature.yaml, vars: { property: "FROSTSCHUTZ"       , target: "MFG"  }}
   VORLAUFTEMP_QUELLE:         !include { file: wp_temperature.yaml, vars: { property: "VORLAUFTEMP_QUELLE" , target: "Manager"  }}
   RUECKLAUFTEMP_QUELLE:       !include { file: wp_temperature.yaml, vars: { property: "RUECKLAUFTEMP_QUELLE" , target: "Manager"  }}
   VORLAUFISTTEMP:             !include { file: wp_temperature.yaml, vars: { property: "VORLAUFISTTEMP"     , update_interval: $interval_medium, target: "MFG"  }}
