@@ -1,5 +1,6 @@
 #if !defined(COMMUNICATION_H)
 #define COMMUNICATION_H
+#include <chrono>
 #include <cstdint>
 #include <list>
 #include <string>
@@ -26,8 +27,12 @@ static const CanMember Manager{MANAGER_ID, "Manager"};
 static const CanMember Kessel{KESSEL_ID, "Kessel"};
 static const CanMember HK1{HK1_ID, "HK1"};
 static const CanMember HK2{HK2_ID, "HK2"};
+static const CanMember FET{0x402, "FET"};    // TODO: make configurable and double check
+static const CanMember MFG{0x700, "MFG"};    // TODO: make configurable and double check
+static const CanMember WPM2{0x480, "WPM2"};  // TODO: make configurable and double check
 
-static const std::vector<std::reference_wrapper<const CanMember>> canMembers{Kessel, HK1, HK2, Manager, ESPClient};
+static const std::vector<std::reference_wrapper<const CanMember>> canMembers{Kessel,    HK1, HK2, Manager,
+                                                                             ESPClient, FET, MFG, WPM2};
 
 using Request = std::pair<const CanMember, const Property>;
 struct ConditionalRequest {
@@ -140,13 +145,16 @@ std::pair<Property, SimpleVariant> processCanMessage(const std::vector<std::uint
 
     const auto value{static_cast<std::uint16_t>((byte1 << 8U) | byte2)};
     const auto canId{static_cast<std::uint16_t>(((msg[0U] & 0xfc) << 3) | (msg[1U] & 0x3f))};
+    if (isRequest(msg)) {
+        ESP_LOGD("Communication", "Message is a request. Dropping it!");
+        ESP_LOGD("Communication",
+                 "Message received: Read/Write ID 0x%02x 0x%02x(0x%03x) for property %s (0x%04x) with raw value: %d",
+                 msg[0U], msg[1U], canId, std::string(property.name).c_str(), property.id, value);
+        return {Property::kINDEX_NOT_FOUND, value};
+    }
     ESP_LOGI("Communication",
              "Message received: Read/Write ID 0x%02x 0x%02x(0x%03x) for property %s (0x%04x) with raw value: %d",
              msg[0U], msg[1U], canId, std::string(property.name).c_str(), property.id, value);
-    if (isRequest(msg)) {
-        ESP_LOGD("Communication", "Message is a request. Dropping it!");
-        return {Property::kINDEX_NOT_FOUND, value};
-    }
     return {property, GetValueByType(value, property.type)};
 }
 

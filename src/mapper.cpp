@@ -85,7 +85,7 @@ Mapper::Mapper() {
                 {0x0020, "Einfrierschutz"},
                 {0x0021, "KEINE LEISTUNG"}};
 
-#if defined(TTF_07_C)
+#if defined(TTF_07_C) | defined(WPL_13)
     betriebsartMap = {{0x0000, "Notbetrieb"}, {0x0100, "Bereitschaft"}, {0x0200, "Programm"},
                       {0x0300, "Komfort"},    {0x0400, "Eco"},          {0x0500, "Warmwasser"}};
 #else
