@@ -1,5 +1,6 @@
 #if !defined(COMMUNICATION_H)
 #define COMMUNICATION_H
+#include <chrono>
 #include <cstdint>
 #include <list>
 #include <string>
