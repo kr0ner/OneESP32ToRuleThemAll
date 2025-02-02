@@ -28,6 +28,7 @@ esphome:
                 timeToSet.month = static_cast<std::uint16_t>(value);
               });
             });
+            CallbackHandler::instance().addCallback(std::make_pair(Kessel,Property::kWOCHENTAG),[](const SimpleVariant&){});
             CallbackHandler::instance().addCallback(std::make_pair(Kessel,Property::kTAG),[updateTime](const SimpleVariant& value){
               updateTime([&value](ESPTime& timeToSet){
                 timeToSet.day_of_month = static_cast<std::uint16_t>(value);
