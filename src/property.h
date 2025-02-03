@@ -62,7 +62,6 @@ struct Property : public detail::Property {
     PROPERTY(AUSSENTEMP, 0x000c, Type::et_dec_val);
     PROPERTY(SPEICHERISTTEMP, 0x000e, Type::et_dec_val);
     PROPERTY(VERSTELLTE_RAUMSOLLTEMP, 0x0012, Type::et_dec_val);
-    PROPERTY(SOLLWERT_MAX_HK1, 0x0028, Type::et_dec_val);
     PROPERTY(STEIGUNG_HK1, 0x010e, Type::et_cent_val);
     PROPERTY(WOCHENTAG, 0x0121, Type::et_little_endian);
     PROPERTY(TAG, 0x0122, Type::et_little_endian);
@@ -70,7 +69,6 @@ struct Property : public detail::Property {
     PROPERTY(JAHR, 0x0124, Type::et_little_endian);
     PROPERTY(STUNDE, 0x0125, Type::et_little_endian);
     PROPERTY(MINUTE, 0x0126, Type::et_little_endian);
-    PROPERTY(SOLLWERT_MIN_HK1, 0x012b, Type::et_dec_val);
     PROPERTY(ANTEIL_VORLAUF_HK1, 0x059d);
     PROPERTY(FUSSPUNKT_HK1, 0x059e, Type::et_dec_val);
     PROPERTY(EL_AUFNAHMELEISTUNG_WW_TAG_WH, 0x091a);
@@ -105,7 +103,9 @@ struct Property : public detail::Property {
     PROPERTY(SAMMLERISTTEMP, 0x000d, Type::et_dec_val);
     PROPERTY(VORLAUFISTTEMP, 0x000f, Type::et_dec_val);
     PROPERTY(SPEICHERSOLLTEMP_TAG, 0x0013, Type::et_dec_val);
+    PROPERTY(SOLLWERT_MAX_HK1, 0x0028, Type::et_dec_val);
     PROPERTY(SOMMERBETRIEB_TEMP, 0x0116, Type::et_dec_val);
+    PROPERTY(SOLLWERT_MIN_HK1, 0x012b, Type::et_dec_val);
     PROPERTY(HYSTERESE_WW, 0x0140, Type::et_dec_val);
     PROPERTY(BETRIEBS_STATUS, 0x0176);
     PROPERTY(VOLUMENSTROM, 0x01da, Type::et_dec_val);
