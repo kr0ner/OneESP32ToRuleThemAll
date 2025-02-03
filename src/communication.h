@@ -111,7 +111,7 @@ void queueConditionalRequest(const CanMember& member, const Property& property, 
  *        processed one element at a time and according to the interval set in the common.yaml
  */
 void scheduleRequest(const CanMember& member, const Property& property, std::chrono::seconds seconds) {
-    ESP_LOGI("QUEUE", "Scheduling request for data from %s for %s in % d seconds", member.name.c_str(),
+    ESP_LOGI("QUEUE", "Scheduling request for data from %s for %s in %lld seconds", member.name.c_str(),
              std::string(property.name).c_str(), seconds.count());
     conditionalRequests.emplace_back(
         std::make_pair(member, property),
