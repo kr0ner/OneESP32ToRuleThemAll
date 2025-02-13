@@ -220,6 +220,7 @@ struct Property : public detail::Property {
     PROPERTY(ISTDREHZAHL_VERDICHTER, 0x06eb);
     PROPERTY(SOLLDREHZAHL_VERDICHTER, 0x06ec);
     PROPERTY(VERDAMPFERTEMP, 0x07a9, Type::et_dec_val);
+    PROPERTY(FROSTSCHUTZ, 0xfe07, Type::et_dec_val);
     PROPERTY(VERFLUESSIGERTEMP, 0x0a37, Type::et_dec_val);
     PROPERTY(OELSUMPFTEMP, 0x0a39, Type::et_dec_val);
     PROPERTY(WAERMEPUMPEN_STATUS, 0x02e2);
@@ -249,12 +250,11 @@ struct Property : public detail::Property {
     PROPERTY(DRUCK_HOCHDRUCK, 0x07a6, Type::et_dec_val);
     PROPERTY(DRUCK_NIEDERDRUCK, 0x07a7, Type::et_dec_val);
     PROPERTY(VORLAUFISTTEMP, 0xfdf3, Type::et_dec_val);
-    PROPERTY(FROSTSCHUTZ, 0xfe07, Type::et_dec_val);
     PROPERTY(BETRIEBS_STATUS, 0x4ecd);
     PROPERTY(VERDICHTER_STARTS, 0x4ef1);
     PROPERTY(VERDICHTER_STARTS_K, 0x4ef0);
     PROPERTY(HYSTERESE_VORLAUFTEMP_KUEHLEN, 0x4f00, Type::et_dec_val);
-    PROPERTY(PROGRAMMSCHALTER, 0x4f1b);
+    PROPERTY(PROGRAMMSCHALTER, 0x4f1b, Type::et_betriebsart);
     PROPERTY(VORLAUFISTTEMP_WP, 0x4f41, Type::et_dec_val);
     PROPERTY(RUECKLAUFISTTEMP_WP, 0x4f43, Type::et_dec_val);
     PROPERTY(LEISTUNG_KUEHLEN, 0x7a40, Type::et_dec_val);
