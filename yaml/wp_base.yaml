@@ -171,6 +171,9 @@ sensor:
 #   Custom climates                     #
 #                                       #
 #########################################
+external_components:
+  - source: OneESP32ToRuleThemAll/components
+
 climate:
   - platform: custom
     lambda: |-
