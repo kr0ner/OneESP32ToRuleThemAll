@@ -19,6 +19,9 @@ uart:
 #   SML reader                          #
 #                                       #
 #########################################
+external_components:
+  - source: OneESP32ToRuleThemAll/components
+
 custom_component:
   - lambda: |-
       auto sml_reader = new SMLReader(id(smartmeter_uart));
