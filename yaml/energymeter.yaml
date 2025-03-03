@@ -1,3 +1,7 @@
+defaults:
+  rx_pin: "GPIO2"
+  mqtt_enabled: "true"
+
 esphome:
   includes:
     - OneESP32ToRuleThemAll/src/sml_reader.h
@@ -11,7 +15,7 @@ esphome:
 #########################################
 uart:
   id: smartmeter_uart
-  rx_pin: GPIO2
+  rx_pin: ${rx_pin}
   baud_rate: 9600
 
 #########################################
@@ -24,7 +28,7 @@ external_components:
 
 custom_component:
   - lambda: |-
-      auto sml_reader = new SMLReader(id(smartmeter_uart));
+      auto sml_reader = new SMLReader<${mqtt_enabled}>(id(smartmeter_uart));
       return {sml_reader};
 
 #########################################
@@ -38,6 +42,7 @@ mqtt:
   username: !secret mqtt_user
   password: !secret mqtt_password
   discovery: false
+  enable_on_boot: ${mqtt_enabled}
 
 #########################################
 #                                       #
