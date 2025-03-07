@@ -32,6 +32,14 @@ esphome:
           });
           queueRequest(Kessel, Property::kBETRIEBS_STATUS);
 
+interval:
+  - interval: "${interval_very_fast}"
+    then:
+      - lambda: |-
+          queueRequest(Kessel, Property::kBETRIEBS_STATUS);  // BETRIEBS_STATUS is only transmitted after an explicit request. 
+          queueRequest(Kessel, Property::kPROGRAMMSCHALTER);  // PROGRAMMSCHALTER is only transmitted after an explicit request. 
+
+
 #########################################
 #                                       #
 #   Selects                             #
