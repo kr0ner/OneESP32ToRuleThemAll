@@ -6,7 +6,9 @@ esphome:
     priority: -100
     then:
       - lambda: |-
-          CallbackHandler::instance().addCallback(std::make_pair(Kessel,Property::kPROGRAMMSCHALTER),[](const SimpleVariant& value){
+          CallbackHandler::instance().addCallbacks({std::make_pair(Kessel,Property::kPROGRAMMSCHALTER),
+                                                    std::make_pair(Manager,Property::kPROGRAMMSCHALTER)},
+                                                    [](const SimpleVariant& value){
             const auto stringValue{value.get<std::string>()};
             const auto index = id(PROGRAMMSCHALTER).index_of(stringValue);
             if(index.has_value()) {
@@ -80,7 +82,7 @@ packages:
   PUFFERSOLLTEMP:           !include { file: wp_temperature.yaml, vars: { property: "PUFFERSOLLTEMP" }}
   HKSOLLTEMP:               !include { file: wp_temperature.yaml, vars: { property: "HKSOLLTEMP"     , update_interval: "never" }}
   HEIZGASTEMP:              !include { file: wp_temperature.yaml, vars: { property: "HEIZGASTEMP"    , update_interval: "${interval_slow}" }}
-  QUELLENTEMP_MIN:          !include { file: wp_temperature.yaml, vars: { property: "QUELLENTEMP_MIN", update_interval: "${interval_slow}" }} 
+  QUELLENTEMP_MIN:          !include { file: wp_temperature.yaml, vars: { property: "QUELLENTEMP_MIN", update_interval: "${interval_slow}" }}
 
   DRUCK_HEIZKREIS:          !include { file: wp_generic.yaml, vars: { property: "DRUCK_HEIZKREIS"  , unit: "bar"  , icon: "mdi:water-pressure", accuracy_decimals: "1" }}
   QUELLENDRUCK:             !include { file: wp_generic.yaml, vars: { property: "QUELLENDRUCK"     , unit: "bar"  , icon: "mdi:water-pressure", accuracy_decimals: "1" }}
