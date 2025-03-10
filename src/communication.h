@@ -64,6 +64,21 @@ std::optional<std::reference_wrapper<const CanMember>> getCanMemberByCanId(CANId
 }
 
 /**
+ * @brief Tries to find the CANMember with the given name.
+ *
+ * @param The name to look up.
+ * @return A reference to the CANMember wrapped in an optional.
+ */
+std::optional<std::reference_wrapper<const CanMember>> getCanMemberByName(const std::string& name) {
+    const auto it = std::find_if(canMembers.cbegin(), canMembers.cend(),
+                                 [name](const auto& member) { return member.get().name == name; });
+    if (it != canMembers.cend()) {
+        return it->get();
+    }
+    return std::nullopt;
+}
+
+/**
  * @brief Checks if the message is a request, sent by another CAN participant.
  */
 bool isRequest(const std::vector<std::uint8_t>& msg) {

@@ -141,6 +141,45 @@ packages:
 
   HEATPUMP_DATETIME: !include { file: wp_datetime.yaml }
 
+
+#########################################
+#                                       #
+#   Home Assistant Actions              #
+#                                       #
+#########################################
+api:
+  actions:
+    - action: can_send_raw_data
+      variables:
+        data: int[]
+      then:
+        - lambda: |-
+            if(data.size() != 7U) {
+              ESP_LOGE("ACTION", "Data is expected to have 7 elements, but has %zd .", data.size());
+              return;
+            }
+            ESP_LOGI("ACTION", "Sending data (0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x)", data[0], data[1], data[2], data[3], data[4], data[5], data[6]);
+            const auto use_extended_id{false};
+            std::vector<std::uint8_t> payload;
+            payload.resize(data.size());
+            std::transform(data.cbegin(),data.cend(),payload.begin(),[](const auto in){ return static_cast<std::uint8_t>(in);});
+            id(wp_can).send_data(ESPClient.canId, use_extended_id, payload);
+    - action: can_send_value
+      variables:
+        property: int
+        target: string
+        raw_value: int
+      then:
+        - lambda: |-
+            Property mappedProperty(static_cast<std::uint16_t>(property));
+            const auto value{static_cast<std::uint16_t>(raw_value)};
+            if(const auto member = getCanMemberByName(target); member.has_value()) {
+              ESP_LOGI("ACTION", "Sending value %d for property %s (0x%04x) to %s", value, std::string(mappedProperty.name).c_str(), mappedProperty.id, target.c_str());
+              sendData(member.value(), mappedProperty, value);
+            } else {
+              ESP_LOGI("ACTION","No CanMember with name %s defined!", target.c_str());
+            }
+
 #########################################
 #                                       #
 #   Home Assistant Sensors              #
