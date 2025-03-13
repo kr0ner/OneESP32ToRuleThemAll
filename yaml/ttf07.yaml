@@ -6,7 +6,9 @@ esphome:
     priority: -100
     then:
       - lambda: |-
-          CallbackHandler::instance().addCallback(std::make_pair(Kessel,Property::kPROGRAMMSCHALTER),[](const SimpleVariant& value){
+          CallbackHandler::instance().addCallbacks({std::make_pair(Kessel,Property::kPROGRAMMSCHALTER),
+                                                    std::make_pair(Manager,Property::kPROGRAMMSCHALTER)},
+                                                    [](const SimpleVariant& value){
             const auto stringValue{value.get<std::string>()};
             const auto index = id(PROGRAMMSCHALTER).index_of(stringValue);
             if(index.has_value()) {
@@ -64,8 +66,6 @@ select:
 
 packages:
   COMMON: !include { file: common.yaml}
-
-  
 
   NHZ1:                !include { file: wp_binary.yaml, vars: { name: "NHZ1" }}
   NHZ2:                !include { file: wp_binary.yaml, vars: { name: "NHZ2" }}
