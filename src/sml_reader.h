@@ -61,38 +61,9 @@ struct Readings {
     float total_incoming{0.0f};
     float total_outgoing{0.0f};
     float frequency{0.0f};
-
-    void publishMQTT() const {
-        std::ostringstream payload;
-        payload.precision(1);
-        payload << std::fixed;
-        payload << "{\"grid\":{\"power\":" << power << ",";
-        payload << "\"L1\":{\"power\":" << power_l1 << ",\"voltage\":" << voltage_l1 << ",\"current\":" << current_l1
-                << "},";
-        payload << "\"L2\":{\"power\":" << power_l2 << ",\"voltage\":" << voltage_l2 << ",\"current\":" << current_l2
-                << "},";
-        payload << "\"L3\":{\"power\":" << power_l3 << ",\"voltage\":" << voltage_l3 << ",\"current\":" << current_l3
-                << "}}}";
-        id(mqtt_client).publish("homeassistant/energy/grid", payload.str());
-    }
-
-    void publishHA() const {
-        id(Instantaneous_Power).publish_state(power);
-        id(Instantaneous_Power_L1).publish_state(power_l1);
-        id(Instantaneous_Power_L2).publish_state(power_l2);
-        id(Instantaneous_Power_L3).publish_state(power_l3);
-        id(Instantaneous_Voltage_L1).publish_state(voltage_l1);
-        id(Instantaneous_Voltage_L2).publish_state(voltage_l2);
-        id(Instantaneous_Voltage_L3).publish_state(voltage_l3);
-        id(Instantaneous_Current_L1).publish_state(current_l1);
-        id(Instantaneous_Current_L2).publish_state(current_l2);
-        id(Instantaneous_Current_L3).publish_state(current_l3);
-        id(Frequency).publish_state(frequency);
-        id(Total_incoming).publish_state(total_incoming);
-        id(Total_Outgoing).publish_state(total_outgoing);
-    }
 };
 
+template <bool PublishMQTT>
 class SMLReader : public Component, public UARTDevice {
     std::vector<std::uint8_t> _buffer;
     State _current_state{State::kWaitingForStartSequence};
@@ -241,11 +212,43 @@ class SMLReader : public Component, public UARTDevice {
 
     void publishReadings() {
         if (_readings.has_value()) {
-            _readings->publishMQTT();
-            _readings->publishHA();
+            if constexpr (PublishMQTT) {
+                publishMQTT(*_readings);
+            }
+            publishHA(*_readings);
             _readings.reset();
         }
         ESP_LOGV("SMLReader", "starting over");
+    }
+
+    void publishMQTT(const Readings& readings) const {
+        std::ostringstream payload;
+        payload.precision(1);
+        payload << std::fixed;
+        payload << "{\"grid\":{\"power\":" << readings.power << ",";
+        payload << "\"L1\":{\"power\":" << readings.power_l1 << ",\"voltage\":" << readings.voltage_l1
+                << ",\"current\":" << readings.current_l1 << "},";
+        payload << "\"L2\":{\"power\":" << readings.power_l2 << ",\"voltage\":" << readings.voltage_l2
+                << ",\"current\":" << readings.current_l2 << "},";
+        payload << "\"L3\":{\"power\":" << readings.power_l3 << ",\"voltage\":" << readings.voltage_l3
+                << ",\"current\":" << readings.current_l3 << "}}}";
+        id(mqtt_client).publish("homeassistant/energy/grid", payload.str());
+    }
+
+    void publishHA(const Readings& readings) const {
+        id(Instantaneous_Power).publish_state(readings.power);
+        id(Instantaneous_Power_L1).publish_state(readings.power_l1);
+        id(Instantaneous_Power_L2).publish_state(readings.power_l2);
+        id(Instantaneous_Power_L3).publish_state(readings.power_l3);
+        id(Instantaneous_Voltage_L1).publish_state(readings.voltage_l1);
+        id(Instantaneous_Voltage_L2).publish_state(readings.voltage_l2);
+        id(Instantaneous_Voltage_L3).publish_state(readings.voltage_l3);
+        id(Instantaneous_Current_L1).publish_state(readings.current_l1);
+        id(Instantaneous_Current_L2).publish_state(readings.current_l2);
+        id(Instantaneous_Current_L3).publish_state(readings.current_l3);
+        id(Frequency).publish_state(readings.frequency);
+        id(Total_incoming).publish_state(readings.total_incoming);
+        id(Total_Outgoing).publish_state(readings.total_outgoing);
     }
 
    public:
