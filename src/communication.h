@@ -1,5 +1,6 @@
 #if !defined(COMMUNICATION_H)
 #define COMMUNICATION_H
+#include <algorithm>
 #include <chrono>
 #include <cstdint>
 #include <list>
@@ -47,6 +48,22 @@ struct ConditionalRequest {
 };
 
 static std::list<ConditionalRequest> conditionalRequests;
+
+/**
+ * @brief Splits the given integer into single bytes.
+ *
+ * @param The integer to be split.
+ * @return A tuple of bytes.
+ */
+template <typename T, std::size_t Remaining = sizeof(T)>
+constexpr auto asBytes(T value) {
+    if constexpr (Remaining == 1) {
+        return std::make_tuple(static_cast<std::uint8_t>(value & 0xFF));
+    } else {
+        std::uint8_t byte = (value >> ((Remaining - 1) * 8U)) & 0xFF;
+        return std::tuple_cat(std::make_tuple(byte), asBytes<T, Remaining - 1U>(value));
+    }
+}
 
 /**
  * @brief Tries to find the CANMember with the given CANId.
@@ -175,13 +192,9 @@ std::pair<Property, SimpleVariant> processCanMessage(const std::vector<std::uint
 
 void requestData(const CanMember& member, const Property& property) {
     const auto use_extended_id{false};  //No use of extended ID
-    const std::uint8_t IdByte1{static_cast<std::uint8_t>((member.getReadId() >> 8U) & 0xff)};
-    const std::uint8_t IdByte2{static_cast<std::uint8_t>(member.getReadId() & 0xff)};
-    const std::uint8_t IndexByte1{static_cast<std::uint8_t>((property >> 8U) & 0xff)};
-    const std::uint8_t IndexByte2{static_cast<std::uint8_t>(property & 0xff)};
-    std::vector<std::uint8_t> data;
-
-    data.insert(data.end(), {IdByte1, IdByte2, 0xfa, IndexByte1, IndexByte2, 0x00, 0x00});
+    const auto [IdByte1, IdByte2] = asBytes(member.getReadId());
+    const auto [IndexByte1, IndexByte2] = asBytes(property.id);
+    std::vector<std::uint8_t> data{IdByte1, IdByte2, 0xfa, IndexByte1, IndexByte2, 0x00, 0x00};
 
     id(wp_can).send_data(ESPClient.canId, use_extended_id, data);
 }
@@ -194,15 +207,10 @@ void requestData(const CanMember& member, const Property& property) {
  */
 void sendData(const CanMember& member, const Property property, const std::uint16_t value) {
     const auto use_extended_id{false};  //No use of extended ID
-    const std::uint8_t IdByte1{static_cast<std::uint8_t>((member.getWriteId() >> 8U) & 0xff)};
-    const std::uint8_t IdByte2{static_cast<std::uint8_t>(member.getWriteId() & 0xff)};
-    const std::uint8_t IndexByte1{static_cast<std::uint8_t>((property >> 8U) & 0xff)};
-    const std::uint8_t IndexByte2{static_cast<std::uint8_t>(property & 0xff)};
-    const std::uint8_t ValueByte1{static_cast<std::uint8_t>((value >> 8U) & 0xff)};
-    const std::uint8_t ValueByte2{static_cast<std::uint8_t>(value & 0xff)};
-    std::vector<std::uint8_t> data;
-
-    data.insert(data.end(), {IdByte1, IdByte2, 0xfa, IndexByte1, IndexByte2, ValueByte1, ValueByte2});
+    const auto [IdByte1, IdByte2] = asBytes(member.getWriteId());
+    const auto [IndexByte1, IndexByte2] = asBytes(property.id);
+    const auto [ValueByte1, ValueByte2] = asBytes(value);
+    std::vector<std::uint8_t> data{IdByte1, IdByte2, 0xfa, IndexByte1, IndexByte2, ValueByte1, ValueByte2};
 
     id(wp_can).send_data(ESPClient.canId, use_extended_id, data);
     // Request the value again to make sure the sensor is updated, with a delay of 10s to allow the heatpump to react.

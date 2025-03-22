@@ -3,7 +3,7 @@ esphome:
   friendly_name: ESP32-PoE Technik
   platformio_options:
     build_flags:
-      - "-std=gnu++17"
+      - "-std=gnu++2a"
     build_unflags:
       - "-std=gnu++11"
       - "-fno-rtti"

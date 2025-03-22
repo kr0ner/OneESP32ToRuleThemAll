@@ -2,18 +2,12 @@
 
 std::optional<std::string> Mapper::getError(const std::uint16_t id) const {
     const auto it = errorMap.find(id);
-    if (it != errorMap.end()) {
-        return it->second;
-    }
-    return {};
+    return (it != errorMap.cend()) ? std::make_optional(it->second) : std::nullopt;
 }
 
 std::optional<std::string> Mapper::getBetriebsart(const std::uint16_t id) const {
     const auto it = betriebsartMap.find(id);
-    if (it != betriebsartMap.end()) {
-        return it->second;
-    }
-    return {};
+    return (it != betriebsartMap.cend()) ? std::make_optional(it->second) : std::nullopt;
 }
 
 std::optional<std::uint16_t> Mapper::getBetriebsartId(const std::string& betriebsart) const {
@@ -27,10 +21,7 @@ std::optional<std::uint16_t> Mapper::getBetriebsartId(const std::string& betrieb
 
 std::optional<std::string> Mapper::getKuehlmodus(const std::uint16_t id) const {
     const auto it = kuehlmodusMap.find(id);
-    if (it != kuehlmodusMap.end()) {
-        return it->second;
-    }
-    return {};
+    return (it != kuehlmodusMap.cend()) ? std::make_optional(it->second) : std::nullopt;
 }
 
 std::optional<std::uint16_t> Mapper::getKuehlmodusId(const std::string& kuehlmodus) const {
@@ -44,10 +35,7 @@ std::optional<std::uint16_t> Mapper::getKuehlmodusId(const std::string& kuehlmod
 
 std::optional<std::string> Mapper::getPassivkuehlung(const std::uint16_t id) const {
     const auto it = passivkuehlungMap.find(id);
-    if (it != passivkuehlungMap.end()) {
-        return it->second;
-    }
-    return {};
+    return (it != passivkuehlungMap.end()) ? std::make_optional(it->second) : std::nullopt;
 }
 
 std::optional<std::uint16_t> Mapper::getPassivkuehlungId(const std::string& passivkuehlung) const {
