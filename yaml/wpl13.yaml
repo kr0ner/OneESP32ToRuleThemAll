@@ -226,10 +226,10 @@ packages:
   WAERMEERTRAG_WW_SUMME_MWH:    !include { file: wp_generic_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_WW_SUMME_MWH"   , scaled_property: "WAERMEERTRAG_WW_SUM_KWH"   , property: "WAERMEERTRAG_WW_SUM_MWH"   , unit: "MWh", accuracy_decimals: "3", icon: "mdi:fire" , target: "Manager"  }}
   WAERMEERTRAG_HEIZ_SUMME_MWH:  !include { file: wp_generic_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_HEIZ_SUMME_MWH" , scaled_property: "WAERMEERTRAG_HEIZ_SUM_KWH" , property: "WAERMEERTRAG_HEIZ_SUM_MWH" , unit: "MWh", accuracy_decimals: "3", icon: "mdi:fire" , target: "Manager"  }}
 
-  EL_AUFNAHMELEISTUNG_WW_SUMME_KWH:    !include { file: wp_daily_energy_combined.yaml, vars: { sensor_name: "EL_AUFNAHMELEISTUNG_WW_SUMME_KWH"   , property_wh: "EL_AUFNAHMELEISTUNG_WW_TAG_WH"   , property_kwh: "EL_AUFNAHMELEISTUNG_WW_TAG_KWH"   , target: "Manager" }}
-  EL_AUFNAHMELEISTUNG_HEIZ_SUMME_KWH:  !include { file: wp_daily_energy_combined.yaml, vars: { sensor_name: "EL_AUFNAHMELEISTUNG_HEIZ_SUMME_KWH" , property_wh: "EL_AUFNAHMELEISTUNG_HEIZ_TAG_WH" , property_kwh: "EL_AUFNAHMELEISTUNG_HEIZ_TAG_KWH" , target: "Manager" }}
-  WAERMEERTRAG_WW_TAG_SUMME_KWH:       !include { file: wp_daily_energy_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_WW_TAG_SUMME_KWH"      , property_wh: "WAERMEERTRAG_WW_TAG_WH"          , property_kwh: "WAERMEERTRAG_WW_TAG_KWH"          , target: "Manager" }}
-  WAERMEERTRAG_HEIZ_TAG_SUMME_KWH:     !include { file: wp_daily_energy_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_HEIZ_TAG_SUMME_KWH"    , property_wh: "WAERMEERTRAG_HEIZ_TAG_WH"        , property_kwh: "WAERMEERTRAG_HEIZ_TAG_KWH"        , target: "Manager" }}
+  EL_ENERGIEAUFNAHME_WW_SUMME_KWH:   !include { file: wp_daily_energy_combined.yaml, vars: { sensor_name: "EL_ENERGIEAUFNAHME_WW_SUMME_KWH"   , property_wh: "EL_ENERGIEAUFNAHME_WW_TAG_WH"   , property_kwh: "EL_ENERGIEAUFNAHME_WW_TAG_KWH"   , target: "Manager" }}
+  EL_ENERGIEAUFNAHME_HEIZ_SUMME_KWH: !include { file: wp_daily_energy_combined.yaml, vars: { sensor_name: "EL_ENERGIEAUFNAHME_HEIZ_SUMME_KWH" , property_wh: "EL_ENERGIEAUFNAHME_HEIZ_TAG_WH" , property_kwh: "EL_ENERGIEAUFNAHME_HEIZ_TAG_KWH" , target: "Manager" }}
+  WAERMEERTRAG_WW_TAG_SUMME_KWH:     !include { file: wp_daily_energy_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_WW_TAG_SUMME_KWH"     , property_wh: "WAERMEERTRAG_WW_TAG_WH"         , property_kwh: "WAERMEERTRAG_WW_TAG_KWH"         , target: "Manager" }}
+  WAERMEERTRAG_HEIZ_TAG_SUMME_KWH:   !include { file: wp_daily_energy_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_HEIZ_TAG_SUMME_KWH"   , property_wh: "WAERMEERTRAG_HEIZ_TAG_WH"       , property_kwh: "WAERMEERTRAG_HEIZ_TAG_KWH"       , target: "Manager" }}
 
   HEATPUMP_DATETIME: !include { file: wp_datetime.yaml }
 
