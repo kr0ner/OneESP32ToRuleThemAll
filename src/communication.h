@@ -12,15 +12,26 @@
 #include "property.h"
 #include "type.h"
 
+// FixMe: consteval is not yet supported by the compiler
+#define consteval constexpr
+
 using CANId = std::uint16_t;
 
-struct CanMember {
-    CANId canId;
-    std::string name;
-    bool operator<(const CanMember& other) const { return canId < other.canId; }
-    std::uint16_t getWriteId() const { return (((canId & 0x7c0) << 5U) + (canId & 0x3f)); }
-    std::uint16_t getReadId() const { return getWriteId() | 0x100; }
-    std::uint16_t getResponseId() const { return getWriteId() | 0x200; }
+class CanMember {
+    std::string_view _name;
+    CANId _canId;
+
+   public:
+    consteval CanMember(std::string_view name, CANId _canId) : _name(name), _canId(_canId) {}
+    consteval bool operator<(const CanMember& other) const { return _canId < other._canId; }
+    consteval bool operator==(const CanMember& other) const {
+        return std::tie(_name, _canId) == std::tie(other._name, other._canId);
+    }
+    consteval std::uint16_t writeId() const { return (((_canId & 0x7c0) << 5U) + (_canId & 0x3f)); }
+    consteval std::uint16_t readId() const { return writeId() | 0x100; }
+    consteval std::uint16_t responseId() const { return writeId() | 0x200; }
+    consteval const char* name() const { return _name.data(); }
+    consteval CANId canId() const { return _canId; }
 };
 
 static const CanMember ESPClient{ESPCLIENT_ID, "ESPClient"};
