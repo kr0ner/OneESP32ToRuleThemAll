@@ -24,6 +24,9 @@ class CanMember {
    public:
     consteval CanMember(std::string_view name, CANId _canId) : _name(name), _canId(_canId) {}
     consteval bool operator<(const CanMember& other) const { return _canId < other._canId; }
+    consteval bool operator==(const CanMember& other) const {
+        return std::tie(_name, _canId) == std::tie(other._name, other._canId);
+    }
     consteval std::uint16_t writeId() const { return (((_canId & 0x7c0) << 5U) + (_canId & 0x3f)); }
     consteval std::uint16_t readId() const { return writeId() | 0x100; }
     consteval std::uint16_t responseId() const { return writeId() | 0x200; }

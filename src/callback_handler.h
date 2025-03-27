@@ -2,7 +2,7 @@
 #define CALLBACK_HANDLER_H
 
 #include <functional>
-#include <map>
+#include <unordered_map>
 #include <utility>
 
 #include "communication.h"
@@ -10,15 +10,47 @@
 #include "property.h"
 #include "simple_variant.h"
 
+namespace std {
+template <>
+struct hash<CanMember> {
+    size_t operator()(const CanMember& rhs) const {
+        size_t h1 = hash<std::string_view>{}(rhs.name());
+        size_t h2 = hash<CANId>{}(rhs.canId());
+        return h1 ^ (h2 << 1);
+    }
+};
+
+template <>
+struct hash<Property> {
+    size_t operator()(const Property& rhs) const {
+        size_t h1 = hash<std::string_view>{}(rhs.name());
+        size_t h2 = hash<std::uint16_t>{}(rhs.id());
+        size_t h3 = hash<Type>{}(rhs.type());
+        return h1 ^ (h2 << 1) ^ (h3 << 2);
+    }
+};
+
+template <>
+struct hash<std::pair<CanMember, Property>> {
+    size_t operator()(const std::pair<CanMember, Property>& rhs) const {
+        size_t h1 = std::hash<CanMember>()(rhs.first);
+        size_t h2 = std::hash<Property>()(rhs.second);
+        return h1 ^ (h2 + 0x9e3779b9 + (h1 << 6) + (h1 >> 2));
+    }
+};
+}  // namespace std
+
 class CallbackHandler {
    public:
+    using Key = std::pair<CanMember, Property>;
+    using Callback = std::function<void(const SimpleVariant&)>;
+
     /**
      * @brief For every given key adds a callback that will be executed every time a CAN message
      *        with the specified \c Property is received for the given \c CanMember. The callback
      *        needs to ensure that only one source is actively handled at a time to prevent toggling.
      */
-    void addCallbacks(const std::vector<std::pair<CanMember, Property>>& keys,
-                      std::function<void(const SimpleVariant&)> callback) {
+    void addCallbacks(const std::vector<Key>& keys, Callback callback) {
         for (const auto& key : keys) {
             addCallback(key, callback);
         }
@@ -31,7 +63,7 @@ class CallbackHandler {
      *        Registering multiple callbacks is possible. They are executed in the same order as they
      *        were added.
      */
-    void addCallback(const std::pair<CanMember, Property> key, std::function<void(const SimpleVariant&)> callback) {
+    void addCallback(const Key key, Callback callback) {
         // check if callback already exists
         auto it = callbacks.find(key);
         if (it == callbacks.end()) {
@@ -60,7 +92,7 @@ class CallbackHandler {
      *        \c CanMember. If no callback could be found, it will return an empty lambda.
      * @note  Unknown property ids will be silently ignored.
      */
-    std::function<void(const SimpleVariant&)> getCallback(const std::pair<CanMember, Property> key) const {
+    [[nodiscard]] std::function<void(const SimpleVariant&)> getCallback(const Key key) const {
         if (key.second != Property::kINDEX_NOT_FOUND) {
             auto it = callbacks.find(key);
             if (it != callbacks.end()) {
@@ -99,7 +131,7 @@ class CallbackHandler {
 
    private:
     CallbackHandler() {}
-    std::map<std::pair<CanMember, Property>, std::function<void(const SimpleVariant&)>> callbacks;
+    std::unordered_map<Key, Callback> callbacks;
 };
 
 #endif
