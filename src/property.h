@@ -2,43 +2,50 @@
 #define PROPERTY_H
 
 #include <cstdint>
+#include <functional>
 #include <sstream>
 #include <string>
 #include <unordered_map>
 #include "type.h"
 
+// FixMe: consteval is not yet supported by the compiler
+#define consteval constexpr
+
 namespace detail {
 struct Property {
-    std::string_view name;
-    std::uint16_t id{0U};
-    Type type{Type::et_default};
+    consteval Property(const std::string_view name, const std::uint16_t id, const Type type)
+        : _name(name), _id(id), _type(type) {}
+    consteval Property(const std::string_view name, const std::uint16_t id) : _name(name), _id(id) {}
 
-    constexpr Property(const std::string_view _name, const std::uint16_t _id, const Type _type)
-        : name(_name), id(_id), type(_type) {}
-    constexpr Property(const std::string_view _name, const std::uint16_t _id) : name(_name), id(_id) {}
-
-    constexpr operator std::uint16_t() const { return id; }
+    constexpr operator std::uint16_t() const { return _id; }
+    constexpr inline const char* name() const { return _name.data(); }
+    constexpr inline std::uint16_t id() const { return _id; }
+    constexpr inline Type type() const { return _type; }
 
     Property& operator=(const Property& p) {
-        name = p.name;
-        id = p.id;
-        type = p.type;
+        _name = p.name();
+        _id = p.id();
+        _type = p.type();
         return *this;
     }
 
    protected:
-    Property getProperty(const std::uint16_t id);
+    std::string_view _name;
+    std::uint16_t _id{0U};
+    Type _type{Type::et_default};
+
+    Property getProperty(const std::uint16_t id) const;
 };
 
 class Mapper {
    public:
     Mapper() = default;
-    inline Mapper(const Property& other) { map.insert({other.id, other}); }
+    inline Mapper(const Property& other) { map.insert({other.id(), std::cref(other)}); }
 
-    Property getProperty(const std::uint16_t id);
+    Property getProperty(const std::uint16_t id) const;
 
    private:
-    static inline std::unordered_map<std::uint16_t, Property> map;
+    static inline std::unordered_map<std::uint16_t, std::reference_wrapper<const Property>> map;
 };
 
 }  // namespace detail
@@ -51,8 +58,8 @@ class Mapper {
     }
 
 struct Property : public detail::Property {
-    constexpr Property(const Property& p) : detail::Property{p.name, p.id, p.type} {}
-    constexpr Property(const detail::Property& p) : detail::Property{p.name, p.id, p.type} {}
+    consteval Property(const Property& p) : detail::Property{p._name, p._id, p._type} {}
+    consteval Property(const detail::Property& p) : detail::Property(p.name(), p.id(), p.type()) {}
     Property(const std::uint16_t _id) : detail::Property{getProperty(_id)} {}
 
     PROPERTY(INDEX_NOT_FOUND, 0x0000);
