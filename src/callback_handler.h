@@ -49,6 +49,13 @@ class CallbackHandler {
     }
 
     /**
+     * @brief Replaces already existing callbacks with the new one.
+     */
+    void replaceCallback(const Key key, Callback callback) {
+        callbacks.insert_or_assign(std::move(key), std::move(callback));
+    }
+
+    /**
      * @brief Obtains the callback that has been registered for a specific \c Property and
      *        \c CanMember. If no callback could be found, it will return an empty lambda.
      * @note  Unknown property ids will be silently ignored.
@@ -61,6 +68,21 @@ class CallbackHandler {
             }
             ESP_LOGI("CallbackHandler", "Callback not found for %s %s (0x%04x)", key.first.name.c_str(),
                      std::string(key.second.name).c_str(), key.second.id);
+        }
+        return [](const SimpleVariant&) -> void {
+        };
+    }
+
+    /**
+     * @brief Removes the callback that has been registered for a specific \c Property and
+     *        \c CanMember. The already registered callback will be returned. If no callback could be found,
+     *        an empty lambda will be returned.
+     */
+    std::function<void(const SimpleVariant&)> removeCallback(const Key key) {
+        if (auto it = callbacks.find(key); it != callbacks.end()) {
+            auto callback = std::move(it->second);
+            callbacks.erase(key);
+            return callback;
         }
         return [](const SimpleVariant&) -> void {
         };
