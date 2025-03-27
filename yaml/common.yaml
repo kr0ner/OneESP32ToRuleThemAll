@@ -89,7 +89,7 @@ interval:
               return element._condition();
             });
             if(it != conditionalRequests.end()) {
-                requestData(it->_request.first, it->_request.second);
+                requestData(it->_request.canMember, it->_request.property);
                 conditionalRequests.erase(it);
             }
           }
@@ -163,7 +163,7 @@ api:
             std::vector<std::uint8_t> payload;
             payload.resize(data.size());
             std::transform(data.cbegin(),data.cend(),payload.begin(),[](const auto in){ return static_cast<std::uint8_t>(in);});
-            id(wp_can).send_data(ESPClient.canId, use_extended_id, payload);
+            id(wp_can).send_data(ESPClient.canId(), use_extended_id, payload);
     - action: can_send_value
       variables:
         property: int
@@ -174,7 +174,7 @@ api:
             Property mappedProperty(static_cast<std::uint16_t>(property));
             const auto value{static_cast<std::uint16_t>(raw_value)};
             if(const auto member = getCanMemberByName(target); member.has_value()) {
-              ESP_LOGI("ACTION", "Sending value %d for property %s (0x%04x) to %s", value, std::string(mappedProperty.name).c_str(), mappedProperty.id, target.c_str());
+              ESP_LOGI("ACTION", "Sending value %d for property %s (0x%04x) to %s", value, mappedProperty.name(), mappedProperty.id(), target.c_str());
               sendData(member.value(), mappedProperty, value);
             } else {
               ESP_LOGI("ACTION","No CanMember with name %s defined!", target.c_str());
