@@ -59,8 +59,8 @@ class CallbackHandler {
             if (it != callbacks.end()) {
                 return it->second;
             }
-            ESP_LOGI("CallbackHandler", "Callback not found for %s %s (0x%04x)", key.first.name.c_str(),
-                     std::string(key.second.name).c_str(), key.second.id);
+            ESP_LOGI("CallbackHandler", "Callback not found for %s %s (0x%04x)", key.first.name(), key.second.name(),
+                     key.second.id());
         }
         return [](const SimpleVariant&) -> void {
         };
