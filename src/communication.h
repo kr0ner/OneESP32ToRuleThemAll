@@ -12,39 +12,51 @@
 #include "property.h"
 #include "type.h"
 
+// FixMe: consteval is not yet supported by the compiler
+#define consteval constexpr
+
 using CANId = std::uint16_t;
 
-struct CanMember {
-    CANId canId;
-    std::string name;
-    bool operator<(const CanMember& other) const { return canId < other.canId; }
-    std::uint16_t getWriteId() const { return (((canId & 0x7c0) << 5U) + (canId & 0x3f)); }
-    std::uint16_t getReadId() const { return getWriteId() | 0x100; }
-    std::uint16_t getResponseId() const { return getWriteId() | 0x200; }
+class CanMember {
+    std::string_view _name;
+    CANId _canId;
+
+   public:
+    consteval CanMember(std::string_view name, CANId _canId) : _name(name), _canId(_canId) {}
+    consteval bool operator<(const CanMember& other) const { return _canId < other._canId; }
+    consteval std::uint16_t writeId() const { return (((_canId & 0x7c0) << 5U) + (_canId & 0x3f)); }
+    consteval std::uint16_t readId() const { return writeId() | 0x100; }
+    consteval std::uint16_t responseId() const { return writeId() | 0x200; }
+    consteval const char* name() const { return _name.data(); }
+    consteval CANId canId() const { return _canId; }
 };
 
-static const CanMember ESPClient{ESPCLIENT_ID, "ESPClient"};
-static const CanMember Manager{MANAGER_ID, "Manager"};
-static const CanMember Kessel{KESSEL_ID, "Kessel"};
-static const CanMember HK1{HK1_ID, "HK1"};
-static const CanMember HK2{HK2_ID, "HK2"};
-static const CanMember FET{0x402, "FET"};    // TODO: make configurable and double check
-static const CanMember MFG{0x700, "MFG"};    // TODO: make configurable and double check
-static const CanMember WPM2{0x480, "WPM2"};  // TODO: make configurable and double check
+static constexpr CanMember ESPClient{"ESP", ESPCLIENT_ID};
+static constexpr CanMember Manager{"Manager", MANAGER_ID};
+static constexpr CanMember Kessel{"Kessel", KESSEL_ID};
+static constexpr CanMember HK1{"HK1", HK1_ID};
+static constexpr CanMember HK2{"HK2", HK2_ID};
+static constexpr CanMember FET{"FET", 0x402};    // TODO: make configurable and double check
+static constexpr CanMember MFG{"MFG", 0x700};    // TODO: make configurable and double check
+static constexpr CanMember WPM2{"WPM2", 0x480};  // TODO: make configurable and double check
 
 static const std::vector<std::reference_wrapper<const CanMember>> canMembers{Kessel,    HK1, HK2, Manager,
                                                                              ESPClient, FET, MFG, WPM2};
 
-using Request = std::pair<const CanMember, const Property>;
+struct Request {
+    const CanMember& canMember;
+    const Property& property;
+};
+
 struct ConditionalRequest {
     ConditionalRequest(Request request) : _request(request){};
     ConditionalRequest(Request request, std::function<bool()> condition)
         : _request(request), _condition(std::move(condition)){};
 
-    Request _request;
-    std::function<bool()> _condition = []() {
+    const std::function<bool()> _condition = []() {
         return true;
     };
+    const Request _request;
 };
 
 static std::list<ConditionalRequest> conditionalRequests;
@@ -73,7 +85,7 @@ constexpr auto asBytes(T value) {
  */
 std::optional<std::reference_wrapper<const CanMember>> getCanMemberByCanId(CANId canId) {
     const auto it = std::find_if(canMembers.cbegin(), canMembers.cend(),
-                                 [canId](const auto& member) { return member.get().canId == canId; });
+                                 [canId](const auto& member) { return member.get().canId() == canId; });
     if (it != canMembers.cend()) {
         return it->get();
     }
@@ -88,7 +100,7 @@ std::optional<std::reference_wrapper<const CanMember>> getCanMemberByCanId(CANId
  */
 std::optional<std::reference_wrapper<const CanMember>> getCanMemberByName(const std::string& name) {
     const auto it = std::find_if(canMembers.cbegin(), canMembers.cend(),
-                                 [name](const auto& member) { return member.get().name == name; });
+                                 [name](const auto& member) { return std::string(member.get().name()) == name; });
     if (it != canMembers.cend()) {
         return it->get();
     }
@@ -101,7 +113,7 @@ std::optional<std::reference_wrapper<const CanMember>> getCanMemberByName(const 
 bool isRequest(const std::vector<std::uint8_t>& msg) {
     const auto id{msg[1U] | (msg[0U] << 8U)};
     const auto it = std::find_if(canMembers.cbegin(), canMembers.cend(),
-                                 [id](const auto& member) { return member.get().getReadId() == id; });
+                                 [id](const auto& member) { return member.get().readId() == id; });
     return it != canMembers.cend();
 }
 
@@ -111,7 +123,7 @@ bool isRequest(const std::vector<std::uint8_t>& msg) {
 bool isResponse(const std::vector<std::uint8_t>& msg) {
     const auto id{msg[1U] | (msg[0U] << 8U)};
     const auto it = std::find_if(canMembers.cbegin(), canMembers.cend(),
-                                 [id](const auto& member) { return member.get().getResponseId() == id; });
+                                 [id](const auto& member) { return member.get().responseId() == id; });
     return it != canMembers.cend();
 }
 
@@ -122,8 +134,8 @@ bool isResponse(const std::vector<std::uint8_t>& msg) {
  *        common.yaml
  */
 void queueRequest(const CanMember& member, const Property& property) {
-    ESP_LOGI("QUEUE", "Requesting data from %s for %s", member.name.c_str(), std::string(property.name).c_str());
-    conditionalRequests.emplace_back(std::make_pair(member, property));
+    ESP_LOGI("QUEUE", "Requesting data from %s for %s", member.name(), property.name());
+    conditionalRequests.emplace_back(Request{member, property});
 }
 
 /**
@@ -132,9 +144,8 @@ void queueRequest(const CanMember& member, const Property& property) {
  *        processed one element at a time and according to the interval set in the common.yaml
  */
 void queueConditionalRequest(const CanMember& member, const Property& property, std::function<bool()> condition) {
-    ESP_LOGI("QUEUE", "Adding conditional request for data from %s for %s", member.name.c_str(),
-             std::string(property.name).c_str());
-    conditionalRequests.emplace_back(std::make_pair(member, property), std::move(condition));
+    ESP_LOGI("QUEUE", "Adding conditional request for data from %s for %s", member.name(), property.name());
+    conditionalRequests.emplace_back(Request{member, property}, std::move(condition));
 }
 
 /**
@@ -143,11 +154,11 @@ void queueConditionalRequest(const CanMember& member, const Property& property, 
  *        processed one element at a time and according to the interval set in the common.yaml
  */
 void scheduleRequest(const CanMember& member, const Property& property, std::chrono::seconds seconds) {
-    ESP_LOGI("QUEUE", "Scheduling request for data from %s for %s in %lld seconds", member.name.c_str(),
-             std::string(property.name).c_str(), seconds.count());
-    conditionalRequests.emplace_back(
-        std::make_pair(member, property),
-        [t = std::chrono::steady_clock::now() + seconds]() { return t < std::chrono::steady_clock::now(); });
+    ESP_LOGI("QUEUE", "Scheduling request for data from %s for %s in %lld seconds", member.name(), property.name(),
+             seconds.count());
+    conditionalRequests.emplace_back(Request{member, property}, [t = std::chrono::steady_clock::now() + seconds]() {
+        return t < std::chrono::steady_clock::now();
+    });
 }
 
 /**
@@ -168,11 +179,11 @@ std::pair<Property, SimpleVariant> processCanMessage(const std::vector<std::uint
     if (msg[2U] == 0xfa) {
         byte1 = msg[5U];
         byte2 = msg[6U];
-        property = static_cast<Property>(msg[4U] | (msg[3U] << 8U));
+        property = Property(msg[4U] | (msg[3U] << 8U));
     } else {
         byte1 = msg[3U];
         byte2 = msg[4U];
-        property = static_cast<Property>(msg[2U]);
+        property = Property(msg[2U]);
     }
 
     const auto value{static_cast<std::uint16_t>((byte1 << 8U) | byte2)};
@@ -181,22 +192,22 @@ std::pair<Property, SimpleVariant> processCanMessage(const std::vector<std::uint
         ESP_LOGD("Communication", "Message is a request. Dropping it!");
         ESP_LOGD("Communication",
                  "Message received: Read/Write ID 0x%02x 0x%02x(0x%03x) for property %s (0x%04x) with raw value: %d",
-                 msg[0U], msg[1U], canId, std::string(property.name).c_str(), property.id, value);
+                 msg[0U], msg[1U], canId, property.name(), property.id(), value);
         return {Property::kINDEX_NOT_FOUND, value};
     }
     ESP_LOGI("Communication",
              "Message received: Read/Write ID 0x%02x 0x%02x(0x%03x) for property %s (0x%04x) with raw value: %d",
-             msg[0U], msg[1U], canId, std::string(property.name).c_str(), property.id, value);
-    return {property, GetValueByType(value, property.type)};
+             msg[0U], msg[1U], canId, property.name(), property.id(), value);
+    return {property, GetValueByType(value, property.type())};
 }
 
 void requestData(const CanMember& member, const Property& property) {
     const auto use_extended_id{false};  //No use of extended ID
-    const auto [IdByte1, IdByte2] = asBytes(member.getReadId());
-    const auto [IndexByte1, IndexByte2] = asBytes(property.id);
+    const auto [IdByte1, IdByte2] = asBytes(member.readId());
+    const auto [IndexByte1, IndexByte2] = asBytes(property.id());
     std::vector<std::uint8_t> data{IdByte1, IdByte2, 0xfa, IndexByte1, IndexByte2, 0x00, 0x00};
 
-    id(wp_can).send_data(ESPClient.canId, use_extended_id, data);
+    id(wp_can).send_data(ESPClient.canId(), use_extended_id, data);
 }
 
 /**
@@ -207,12 +218,12 @@ void requestData(const CanMember& member, const Property& property) {
  */
 void sendData(const CanMember& member, const Property property, const std::uint16_t value) {
     const auto use_extended_id{false};  //No use of extended ID
-    const auto [IdByte1, IdByte2] = asBytes(member.getWriteId());
-    const auto [IndexByte1, IndexByte2] = asBytes(property.id);
+    const auto [IdByte1, IdByte2] = asBytes(member.writeId());
+    const auto [IndexByte1, IndexByte2] = asBytes(property.id());
     const auto [ValueByte1, ValueByte2] = asBytes(value);
     std::vector<std::uint8_t> data{IdByte1, IdByte2, 0xfa, IndexByte1, IndexByte2, ValueByte1, ValueByte2};
 
-    id(wp_can).send_data(ESPClient.canId, use_extended_id, data);
+    id(wp_can).send_data(ESPClient.canId(), use_extended_id, data);
     // Request the value again to make sure the sensor is updated, with a delay of 10s to allow the heatpump to react.
     scheduleRequest(member, property, std::chrono::seconds(10));
 }
