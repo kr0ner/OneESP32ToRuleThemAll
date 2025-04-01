@@ -16,9 +16,9 @@ number:
     optimistic: true
     set_action:
       - lambda: |-
-          ESP_LOGI("Number", "Setting new value %f for %s", x, std::string(Property::k${property}.name).c_str());
+          ESP_LOGI("Number", "Setting new value %f for %s", x, Property::k${property}.name());
           if(x != NAN) {
-            const auto type = Property::k${property}.type;
+            const auto type = Property::k${property}.type();
             switch(type) {
               case Type::et_little_endian: {
                   const auto value{static_cast<std::uint16_t>(x)};

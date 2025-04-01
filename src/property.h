@@ -8,34 +8,37 @@
 #include "type.h"
 
 namespace detail {
-struct Property {
-    std::string_view name;
-    std::uint16_t id{0U};
-    Type type{Type::et_default};
-
-    constexpr Property(const std::string_view _name, const std::uint16_t _id, const Type _type)
-        : name(_name), id(_id), type(_type) {}
-    constexpr Property(const std::string_view _name, const std::uint16_t _id) : name(_name), id(_id) {}
-
-    constexpr operator std::uint16_t() const { return id; }
+class Property {
+   public:
+    constexpr Property(const std::string_view name, const std::uint16_t id, const Type type)
+        : _name(name), _id(id), _type(type) {}
+    constexpr Property(const std::string_view name, const std::uint16_t id) : _name(name), _id(id) {}
 
     Property& operator=(const Property& p) {
-        name = p.name;
-        id = p.id;
-        type = p.type;
+        _name = p._name;
+        _id = p._id;
+        _type = p._type;
         return *this;
     }
+    constexpr operator std::uint16_t() const { return _id; }
+    constexpr inline const char* name() const { return _name.data(); }
+    constexpr inline std::uint16_t id() const { return _id; }
+    constexpr inline Type type() const { return _type; }
 
-   protected:
-    Property getProperty(const std::uint16_t id);
+   private:
+    Property getProperty(const std::uint16_t id) const;
+
+    std::string_view _name;
+    std::uint16_t _id{0U};
+    Type _type{Type::et_default};
 };
 
 class Mapper {
    public:
     Mapper() = default;
-    inline Mapper(const Property& other) { map.insert({other.id, other}); }
+    inline Mapper(const Property& other) { map.insert({other.id(), other}); }
 
-    Property getProperty(const std::uint16_t id);
+    Property getProperty(const std::uint16_t id) const;
 
    private:
     static inline std::unordered_map<std::uint16_t, Property> map;
@@ -50,10 +53,19 @@ class Mapper {
         k##NAME                                                             \
     }
 
-struct Property : public detail::Property {
-    constexpr Property(const Property& p) : detail::Property{p.name, p.id, p.type} {}
-    constexpr Property(const detail::Property& p) : detail::Property{p.name, p.id, p.type} {}
-    Property(const std::uint16_t _id) : detail::Property{getProperty(_id)} {}
+class Property {
+   private:
+    const detail::Property& _p;
+
+   public:
+    constexpr Property(const Property& p) : _p{p._p} {}
+    constexpr Property(const detail::Property& p) : _p{p} {}
+    Property(const std::uint16_t id) : _p{detail::Mapper().getProperty(id)} {}
+
+    constexpr operator std::uint16_t() const { return _p.id(); }
+    constexpr inline const char* name() const { return _p.name(); }
+    constexpr inline std::uint16_t id() const { return _p.id(); }
+    constexpr inline Type type() const { return _p.type(); }
 
     PROPERTY(INDEX_NOT_FOUND, 0x0000);
     PROPERTY(FEHLERMELDUNG, 0x0001);

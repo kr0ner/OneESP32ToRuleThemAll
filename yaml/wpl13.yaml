@@ -134,7 +134,7 @@ interval:
               return element._condition();
             });
             if(it != conditionalRequests.end()) {
-                requestData(it->_request.first, it->_request.second);
+                requestData(it->_request.canMember, it->_request.property);
                 conditionalRequests.erase(it);
             }
           }
