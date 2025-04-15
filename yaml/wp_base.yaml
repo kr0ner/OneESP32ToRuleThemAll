@@ -40,7 +40,7 @@ esphome:
           });
 
           id(ELEKTRISCHE_NACHERWAERMUNG).add_on_state_callback([](const bool state){
-            const auto electricHeatingPower = state ? id(NE_STUFE_WW).state * 230.0 /*V*/ * 16.0 /*A*/ : 0.0f;
+            const auto electricHeatingPower = state ? id(NE_STUFE_WW).state * 230.0 /*V*/ * 12.6 /*A*/ : 0.0f;
             id(ELECTRIC_HEATING_POWER).publish_state(electricHeatingPower);
           });
 
@@ -129,23 +129,6 @@ select:
             if(betriebsartId.has_value()) {
               sendData(Kessel, Property::kPROGRAMMSCHALTER, betriebsartId.value());
             }
-
-#########################################
-#                                       #
-#   Switches                            #
-#                                       #
-#########################################
-switch:
-  - platform: template
-    name: "KUEHLUNG HK1"
-    id: KUEHLUNGHK1
-    optimistic: true
-    turn_on_action:
-      - lambda: |-
-          sendData(HK1, Property::kKUEHLMODE, static_cast<std::uint16_t>(true));
-    turn_off_action:
-      - lambda: |-
-          sendData(HK1, Property::kKUEHLMODE, static_cast<std::uint16_t>(false));
 
 #########################################
 #                                       #
@@ -321,3 +304,6 @@ packages:
   WAERMEERTRAG_RUECKGE_SUMME_MWH:      !include { file: wp_generic_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_RUECKGE_SUMME_MWH"  , scaled_property: "WAERMEERTRAG_RUECKGE_SUM_KWH" , property: "WAERMEERTRAG_RUECKGE_SUM_MWH" , unit: "MWh", accuracy_decimals: "3", icon: "mdi:fire"  }}
   WAERMEERTRAG_2WE_WW_SUMME_MWH:       !include { file: wp_generic_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_2WE_WW_SUMME_MWH"   , scaled_property: "WAERMEERTRAG_2WE_WW_SUM_KWH"  , property: "WAERMEERTRAG_2WE_WW_SUM_MWH"  , unit: "MWh", accuracy_decimals: "3", icon: "mdi:fire"  }}
   WAERMEERTRAG_2WE_HEIZ_SUMME_MWH:     !include { file: wp_generic_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_2WE_HEIZ_SUMME_MWH" , scaled_property: "WAERMEERTRAG_2WE_HEIZ_SUM_KWH", property: "WAERMEERTRAG_2WE_HEIZ_SUM_MWH", unit: "MWh", accuracy_decimals: "3", icon: "mdi:fire"  }}
+
+  WARMWASSER_ECO:                      !include { file: wp_switch.yaml, vars: { property: "WARMWASSER_ECO", icon: "mdi:sprout" }}
+  KUEHLMODE:                           !include { file: wp_switch.yaml, vars: { property: "KUEHLMODE" }}
