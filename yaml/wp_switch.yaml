@@ -1,0 +1,26 @@
+defaults:
+  target: "Kessel"
+  icon: "mdi:toggle-switch-variant"
+
+switch:
+  - platform: template
+    name: ${property}
+    id: ${property}
+    icon: ${icon}
+    turn_on_action:
+      - lambda: |-
+          sendData(${target}, Property::k${property}, static_cast<std::uint16_t>(true));
+    turn_off_action:
+      - lambda: |-
+          sendData(${target}, Property::k${property}, static_cast<std::uint16_t>(false));
+
+esphome:
+  on_boot:
+    priority: -100
+    then:
+      - lambda: |-
+          CallbackHandler::instance().addCallback(std::make_pair(${target},Property::k${property}),
+                                                  [](const SimpleVariant& value){
+              id(${property}).publish_state(value);
+          });
+          queueRequest(${target}, Property::k${property});
