@@ -260,6 +260,17 @@ struct Property : public detail::Property {
     PROPERTY(RUECKLAUFISTTEMP_WP, 0x4f43, Type::et_dec_val);
     PROPERTY(LEISTUNG_KUEHLEN, 0x7a40, Type::et_dec_val);
     PROPERTY(RUECKLAUFISTTEMP, 0xfdf4, Type::et_dec_val);
+    PROPERTY(STEIGUNG_HEIZKURVE, 0x4f2b, Type::et_dec_val);
+    PROPERTY(STARTTEMPERATUR, 0x4fbe, Type::et_dec_val);
+    PROPERTY(STEIGUNG_KUEHLKURVE, 0x4fb9, Type::et_dec_val);
+    PROPERTY(UMGEBUNGSTEMPERATUR_INVERTER, 0xc1e6, Type::et_dec_val);
+    PROPERTY(UNTERK_COND, 0x0aff, Type::et_dec_val);
+    PROPERTY(TEMPERATUR_INV_VERDICHTER, 0xc1e7, Type::et_dec_val);
+    PROPERTY(STROM_MOTOR, 0x06b4, Type::et_dec_val);
+    PROPERTY(ADAPTION_UEBERHITZUNG, 0x4f9e, Type::et_dec_val);
+    PROPERTY(VERDICHTERDREHZAHLGRENZE, 0x4fac, Type::et_dec_val);
+    PROPERTY(IST_UEBERHITZUNG_SAUGGAS_VERDICHTER, 0x4fa2, Type::et_dec_val);
+    PROPERTY(SOLL_UEBERHITZUNG_SAUGGAS_VERDICHTER, 0x4fa1, Type::et_dec_val);
 #endif
 };
 
