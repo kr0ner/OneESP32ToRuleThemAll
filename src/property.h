@@ -271,6 +271,7 @@ struct Property : public detail::Property {
     PROPERTY(STARTTEMPERATUR, 0x4fbe, Type::et_dec_val);
     PROPERTY(STEIGUNG_KUEHLKURVE, 0x4fb9, Type::et_dec_val);
     PROPERTY(LAUFZEIT_PASSIVKUEHLUNG, 0x4f9a, Type::et_dec_val);
+    PROPERTY(ZEITINTERVALL, 0x4f4d, Type::et_dec_val);
 #endif
 };
 
