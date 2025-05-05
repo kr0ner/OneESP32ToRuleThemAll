@@ -5,11 +5,12 @@ defaults:
   update_interval: "never"
   unit: ""
   scaler: "1.0"
+  name_suffix: ""
 
 sensor:
   - platform: template
-    name: ${property}
-    id: ${property}
+    name: ${property}${name_suffix}
+    id: ${property}${name_suffix}
     icon: ${icon}
     unit_of_measurement: ${unit}
     accuracy_decimals: ${accuracy_decimals}
@@ -25,6 +26,6 @@ esphome:
     then:
       - lambda: |-
           CallbackHandler::instance().addCallback(std::make_pair(${target},Property::k${property}),[](const SimpleVariant& value){
-              id(${property}).publish_state(${scaler} * value.get<float>());
+              id(${property}${name_suffix}).publish_state(${scaler} * value.get<float>());
           });
           queueRequest(${target}, Property::k${property});
