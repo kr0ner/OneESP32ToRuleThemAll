@@ -230,6 +230,7 @@ struct Property : public detail::Property {
     PROPERTY(MISCHERDYNAMIK, 0x4ea9);
     PROPERTY(SOLLTEMP_HK2, 0x4eb0, Type::et_dec_val);
     PROPERTY(ISTTEMPERATUR, 0x4eb4, Type::et_dec_val);
+    PROPERTY(SOLLTEMPERATUR, 0x4eb0, Type::et_dec_val);
     PROPERTY(KOMFORTTEMPERATUR, 0x4eb8, Type::et_dec_val);
     PROPERTY(ECOTEMPERATUR, 0x4eb9, Type::et_dec_val);
     PROPERTY(RAUMISTTEMP, 0x4ec7, Type::et_dec_val);

@@ -195,9 +195,11 @@ packages:
   PASSIVKUEHLVENTIL_KUEHLEN: !include { file: wp_binary.yaml, vars: { name: "PASSIVKUEHLVENTIL_KUEHLEN" }}
 
   ISTTEMPERATUR_HK1:          !include { file: wp_temperature.yaml, vars: { property: "ISTTEMPERATUR"     , name_suffix: "_HK1" , target: "HK1"  }}
+  SOLLTEMPERATUR_HK1:         !include { file: wp_temperature.yaml, vars: { property: "SOLLTEMPERATUR"    , name_suffix: "_HK1" , target: "HK1"  }}
   KOMFORTTEMPERATUR_HK1:      !include { file: wp_temperature.yaml, vars: { property: "KOMFORTTEMPERATUR" , name_suffix: "_HK1" , target: "HK1"  }}
   ECOTEMPERATUR_HK1:          !include { file: wp_temperature.yaml, vars: { property: "ECOTEMPERATUR"     , name_suffix: "_HK1" , target: "HK1"  }}
   ISTTEMPERATUR_HK2:          !include { file: wp_temperature.yaml, vars: { property: "ISTTEMPERATUR"     , name_suffix: "_HK2" , target: "HK2"  }}
+  SOLLTEMPERATUR_HK2:         !include { file: wp_temperature.yaml, vars: { property: "SOLLTEMPERATUR"    , name_suffix: "_HK2" , target: "HK2"  }}
   KOMFORTTEMPERATUR_HK2:      !include { file: wp_temperature.yaml, vars: { property: "KOMFORTTEMPERATUR" , name_suffix: "_HK2" , target: "HK2"  }}
   ECOTEMPERATUR_HK2:          !include { file: wp_temperature.yaml, vars: { property: "ECOTEMPERATUR"     , name_suffix: "_HK2" , target: "HK2"  }}
   RAUMISTTEMP:                !include { file: wp_temperature.yaml, vars: { property: "RAUMISTTEMP"       , target: "FET"  }}
