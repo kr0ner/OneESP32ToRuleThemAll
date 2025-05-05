@@ -216,6 +216,15 @@ packages:
   VORLAUFISTTEMP_WP:          !include { file: wp_temperature.yaml, vars: { property: "VORLAUFISTTEMP_WP"  , update_interval: $interval_medium , target: "Kessel" }}
   RUECKLAUFISTTEMP_WP:        !include { file: wp_temperature.yaml, vars: { property: "RUECKLAUFISTTEMP_WP", update_interval: $interval_medium , target: "Kessel" }}
 
+  EL_NACHERW_VERZ_ZEIT:          !include { file: wp_generic.yaml, vars: { property: "EL_NACHERW_VERZ_ZEIT", unit: "min"   , target: "Kessel"  }}
+  EL_NACHERW_ANZ_STUFEN:         !include { file: wp_generic.yaml, vars: { property: "EL_NACHERW_ANZ_STUFEN", target: "Kessel"  }}
+  VERDICHTER_EINTRITTSTEMP:      !include { file: wp_temperature.yaml, vars: { property: "VERDICHTER_EINTRITTSTEMP", target: "Manager"  }}
+  ISTDREHZAHL_VERDICHTER:        !include { file: wp_generic.yaml, vars: { property: "ISTDREHZAHL_VERDICHTER" , unit: "Hz", target: "Manager"  }}
+  SOLLDREHZAHL_VERDICHTER:       !include { file: wp_generic.yaml, vars: { property: "SOLLDREHZAHL_VERDICHTER", unit: "Hz", target: "Manager"  }}
+  TAUPUNKTTEMP:                  !include { file: wp_temperature.yaml, vars: { property: "TAUPUNKTTEMP", target: "HK2"  }}
+  RAUMSOLLTEMP_KUEHLEN:          !include { file: wp_temperature.yaml, vars: { property: "RAUMSOLLTEMP_KUEHLEN", target: "HK2"  }}
+  LEISTUNG_KUEHLEN:              !include { file: wp_generic.yaml, vars: { property: "LEISTUNG_KUEHLEN", unit: "kW", target: "WPM2"  }}
+
   RAUMFEUCHTE:                !include { file: wp_generic.yaml,     vars: { property: "RAUMFEUCHTE" , interval: $interval_very_slow, unit: "%", icon: "mdi:water-percent", accuracy_decimals: "1", target: "FET"  }}
   HEIZEN_EFFIZIENZ_TAG:       !include { file: wp_generic.yaml,     vars: { property: "HEIZEN_EFFIZIENZ_TAG"  , target: "WPM2", accuracy_decimals: "2" }}
   HEIZEN_EFFIZIENZ_JAHR:      !include { file: wp_generic.yaml,     vars: { property: "HEIZEN_EFFIZIENZ_JAHR" , target: "WPM2", accuracy_decimals: "2" }}
