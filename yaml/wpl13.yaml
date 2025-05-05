@@ -227,6 +227,7 @@ packages:
   VERDICHTER_EINTRITTSTEMP:      !include { file: wp_temperature.yaml, vars: { property: "VERDICHTER_EINTRITTSTEMP", target: "Manager"  }}
   TAUPUNKTTEMP:                  !include { file: wp_temperature.yaml, vars: { property: "TAUPUNKTTEMP", target: "HK2"  }}
   RAUMSOLLTEMP_KUEHLEN:          !include { file: wp_temperature.yaml, vars: { property: "RAUMSOLLTEMP_KUEHLEN", target: "HK2"  }}
+  BIVALENZTEMPERATUR_HZG:        !include { file: wp_temperature.yaml, vars: { property: "BIVALENZTEMPERATUR_HZG", target: "Kessel"  }}
 
   EL_NACHERW_VERZ_ZEIT:       !include { file: wp_generic.yaml, vars: { property: "EL_NACHERW_VERZ_ZEIT", unit: "min"   , target: "Kessel"  }}
   EL_NACHERW_ANZ_STUFEN:      !include { file: wp_generic.yaml, vars: { property: "EL_NACHERW_ANZ_STUFEN", target: "Kessel"  }}

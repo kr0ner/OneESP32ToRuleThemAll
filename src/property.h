@@ -210,6 +210,7 @@ struct Property : public detail::Property {
 
 #if defined(WPL_13)
     PROPERTY(PUFFERISTTEMPERATUR, 0x0078, Type::et_dec_val);
+    PROPERTY(BIVALENZTEMPERATUR_HZG, 0x01ac, Type::et_dec_val);
     PROPERTY(PUFFERSOLLTEMPERATUR, 0x01d5, Type::et_dec_val);
     PROPERTY(VORLAUFTEMP, 0x01d6, Type::et_dec_val);
     PROPERTY(MAXVORLAUFTEMP, 0x01e8, Type::et_dec_val);
@@ -221,6 +222,7 @@ struct Property : public detail::Property {
     PROPERTY(SOLLDREHZAHL_VERDICHTER, 0x06ec);
     PROPERTY(VERDAMPFERTEMP, 0x07a9, Type::et_dec_val);
     PROPERTY(FROSTSCHUTZ, 0xfe07, Type::et_dec_val);
+    PROPERTY(ANLAGEFROST, 0x0a00, Type::et_dec_val);
     PROPERTY(VERFLUESSIGERTEMP, 0x0a37, Type::et_dec_val);
     PROPERTY(OELSUMPFTEMP, 0x0a39, Type::et_dec_val);
     PROPERTY(WAERMEPUMPEN_STATUS, 0x02e2);
@@ -268,7 +270,6 @@ struct Property : public detail::Property {
     PROPERTY(STEIGUNG_HEIZKURVE, 0x4f2b, Type::et_dec_val);
     PROPERTY(STARTTEMPERATUR, 0x4fbe, Type::et_dec_val);
     PROPERTY(STEIGUNG_KUEHLKURVE, 0x4fb9, Type::et_dec_val);
-    PROPERTY(ANLAGEFROST, 0x0a00, Type::et_dec_val);
     PROPERTY(LAUFZEIT_PASSIVKUEHLUNG, 0x4f9a, Type::et_dec_val);
 #endif
 };
