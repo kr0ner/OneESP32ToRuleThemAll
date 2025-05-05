@@ -214,6 +214,7 @@ struct Property : public detail::Property {
     PROPERTY(SOLLTEMP_HK1, 0x01d5, Type::et_dec_val);
     PROPERTY(VORLAUFTEMP, 0x01d6, Type::et_dec_val);
     PROPERTY(MAXVORLAUFTEMP, 0x01e8, Type::et_dec_val);
+    PROPERTY(MAXRUECKLAUFTEMP, 0x0028, Type::et_dec_val);
     PROPERTY(HEISSGASTEMP, 0x0265, Type::et_dec_val);
     PROPERTY(EL_NACHERW_ANZ_STUFEN, 0x059f);
     PROPERTY(EL_NACHERW_VERZ_ZEIT, 0x05a0);
