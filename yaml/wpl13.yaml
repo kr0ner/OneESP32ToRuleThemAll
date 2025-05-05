@@ -212,6 +212,8 @@ packages:
   VORLAUFSOLLTEMP:                      !include { file: wp_temperature.yaml, vars: { property: "VORLAUFSOLLTEMP"    , target: "HK1"  }}
   VERDAMPFERTEMP:                       !include { file: wp_temperature.yaml, vars: { property: "VERDAMPFERTEMP"     , target: "Manager"  }}
   RUECKLAUFISTTEMP:                     !include { file: wp_temperature.yaml, vars: { property: "RUECKLAUFISTTEMP"   , update_interval: $interval_medium , target: "MFG" }}
+  MAXVORLAUFTEMP:                       !include { file: wp_temperature.yaml, vars: { property: "MAXVORLAUFTEMP"     , target: "Kessel"  }}
+  MAXRUECKLAUFTEMP:                     !include { file: wp_temperature.yaml, vars: { property: "MAXRUECKLAUFTEMP"   , target: "Kessel"  }}
   AUSSENTEMP:                           !include { file: wp_temperature.yaml, vars: { property: "AUSSENTEMP"         , update_interval: $interval_medium , target: "Kessel" }}
   VORLAUFISTTEMP_WP:                    !include { file: wp_temperature.yaml, vars: { property: "VORLAUFISTTEMP_WP"  , update_interval: $interval_medium , target: "Kessel" }}
   RUECKLAUFISTTEMP_WP:                  !include { file: wp_temperature.yaml, vars: { property: "RUECKLAUFISTTEMP_WP", update_interval: $interval_medium , target: "Kessel" }}
