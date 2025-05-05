@@ -209,9 +209,8 @@ struct Property : public detail::Property {
 #endif
 
 #if defined(WPL_13)
-    PROPERTY(EINSTELL_SPEICHERSOLLTEMP, 0x0013, Type::et_dec_val);
     PROPERTY(PUFFERISTTEMPERATUR, 0x0078, Type::et_dec_val);
-    PROPERTY(SOLLTEMP_HK1, 0x01d5, Type::et_dec_val);
+    PROPERTY(PUFFERSOLLTEMPERATUR, 0x01d5, Type::et_dec_val);
     PROPERTY(VORLAUFTEMP, 0x01d6, Type::et_dec_val);
     PROPERTY(MAXVORLAUFTEMP, 0x01e8, Type::et_dec_val);
     PROPERTY(HEISSGASTEMP, 0x0265, Type::et_dec_val);
@@ -228,7 +227,6 @@ struct Property : public detail::Property {
     PROPERTY(MINTEMP, 0x4ea4, Type::et_dec_val);
     PROPERTY(MAXTEMP, 0x4ea8, Type::et_dec_val);
     PROPERTY(MISCHERDYNAMIK, 0x4ea9);
-    PROPERTY(SOLLTEMP_HK2, 0x4eb0, Type::et_dec_val);
     PROPERTY(ISTTEMPERATUR, 0x4eb4, Type::et_dec_val);
     PROPERTY(KOMFORTTEMPERATUR, 0x4eb8, Type::et_dec_val);
     PROPERTY(ECOTEMPERATUR, 0x4eb9, Type::et_dec_val);
