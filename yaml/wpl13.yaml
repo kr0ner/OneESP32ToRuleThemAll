@@ -222,8 +222,8 @@ packages:
   RAUMFEUCHTE:                !include { file: wp_generic.yaml,     vars: { property: "RAUMFEUCHTE" , interval: $interval_very_slow, unit: "%", icon: "mdi:water-percent", accuracy_decimals: "1", target: "FET"  }}
   HEIZEN_EFFIZIENZ_TAG:       !include { file: wp_generic.yaml,     vars: { property: "HEIZEN_EFFIZIENZ_TAG"  , target: "WPM2", accuracy_decimals: "2" }}
   HEIZEN_EFFIZIENZ_JAHR:      !include { file: wp_generic.yaml,     vars: { property: "HEIZEN_EFFIZIENZ_JAHR" , target: "WPM2", accuracy_decimals: "2" }}
-  DRUCK_NIEDERDRUCK:          !include { file: wp_generic.yaml,     vars: { property: "DRUCK_NIEDERDRUCK"     , interval: never, unit: "bar"  , icon: "mdi:water-pressure" , accuracy_decimals: "2", target: "Manager"  }}
-  DRUCK_HOCHDRUCK:            !include { file: wp_generic.yaml,     vars: { property: "DRUCK_HOCHDRUCK"       , interval: never, unit: "bar"  , icon: "mdi:water-pressure" , accuracy_decimals: "2", target: "Manager"  }}
+  DRUCK_NIEDERDRUCK:          !include { file: wp_generic.yaml,     vars: { property: "DRUCK_NIEDERDRUCK"     , interval: never, unit: "bar"  , icon: "mdi:water-pressure", scaler: "0.1" , accuracy_decimals: "2", target: "Manager"  }}
+  DRUCK_HOCHDRUCK:            !include { file: wp_generic.yaml,     vars: { property: "DRUCK_HOCHDRUCK"       , interval: never, unit: "bar"  , icon: "mdi:water-pressure", scaler: "0.1" , accuracy_decimals: "2", target: "Manager"  }}
   HEIZUNGSDRUCK:              !include { file: wp_generic.yaml,     vars: { property: "HEIZUNGSDRUCK"         , interval: never, unit: "bar"  , icon: "mdi:water-pressure" , accuracy_decimals: "2", target: "Kessel"  }}
   QUELLENDRUCK:               !include { file: wp_generic.yaml,     vars: { property: "QUELLENDRUCK"          , interval: never, unit: "bar"  , icon: "mdi:water-pressure" , accuracy_decimals: "1", target: "Manager"  }}
   LEISTUNG_QUELLENPUMPE:      !include { file: wp_generic.yaml,     vars: { property: "LEISTUNG_QUELLENPUMPE" , interval: never, unit: "%"    , icon: "mdi:water-percent", accuracy_decimals: "1", target: "Manager"  }}
