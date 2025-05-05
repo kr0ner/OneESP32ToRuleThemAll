@@ -211,6 +211,8 @@ packages:
   VERDAMPFERTEMP:             !include { file: wp_temperature.yaml, vars: { property: "VERDAMPFERTEMP"     , target: "Manager"  }}
   RUECKLAUFISTTEMP:           !include { file: wp_temperature.yaml, vars: { property: "RUECKLAUFISTTEMP"   , update_interval: $interval_medium , target: "MFG" }}
 
+  ZEITINTERVALL:              !include { file: wp_generic.yaml,     vars: { property: "ZEITINTERVALL", scaler: "10", target: "WPM2" }}
+
   RAUMFEUCHTE:                !include { file: wp_generic.yaml,     vars: { property: "RAUMFEUCHTE" , interval: $interval_very_slow, unit: "%", icon: "mdi:water-percent", accuracy_decimals: "1", target: "FET"  }}
   HEIZEN_EFFIZIENZ_TAG:       !include { file: wp_generic.yaml,     vars: { property: "HEIZEN_EFFIZIENZ_TAG"  , target: "WPM2", accuracy_decimals: "2" }}
   HEIZEN_EFFIZIENZ_JAHR:      !include { file: wp_generic.yaml,     vars: { property: "HEIZEN_EFFIZIENZ_JAHR" , target: "WPM2", accuracy_decimals: "2" }}
