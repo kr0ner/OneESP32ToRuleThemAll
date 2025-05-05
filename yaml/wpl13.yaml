@@ -220,7 +220,7 @@ packages:
   STROM_INVERTER:             !include { file: wp_generic.yaml,     vars: { property: "STROM_INVERTER"        , interval: never, unit: "A"    , target: "Manager"          , accuracy_decimals: "1"  }}
   SPANNUNG_INVERTER:          !include { file: wp_generic.yaml,     vars: { property: "SPANNUNG_INVERTER"     , interval: never, unit: "V"    , target: "Manager"          , accuracy_decimals: "1"  }}
 
-  RAUMEINFLUSS:               !include { file: wp_number.yaml, vars: { property: "RAUMEINFLUSS", target: "WPM2" }}
+  RAUMEINFLUSS:               !include { file: wp_number.yaml, vars: { property: "RAUMEINFLUSS", target: "HK2" }}
 
   VERDICHTER_STARTS:            !include { file: wp_generic_combined.yaml, vars: { sensor_name: "VERDICHTER_STARTS"           , scaled_property: "VERDICHTER_STARTS_K"       , property: "VERDICHTER_STARTS"         , unit: ""   , accuracy_decimals: "0", scaler: "1000", icon: "mdi:counter" , target: "Manager" }}
   WAERMEERTRAG_WW_SUMME_MWH:    !include { file: wp_generic_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_WW_SUMME_MWH"   , scaled_property: "WAERMEERTRAG_WW_SUM_KWH"   , property: "WAERMEERTRAG_WW_SUM_MWH"   , unit: "MWh", accuracy_decimals: "3", icon: "mdi:fire" , target: "Manager"  }}

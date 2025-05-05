@@ -225,7 +225,7 @@ struct Property : public detail::Property {
     PROPERTY(VERFLUESSIGERTEMP, 0x0a37, Type::et_dec_val);
     PROPERTY(OELSUMPFTEMP, 0x0a39, Type::et_dec_val);
     PROPERTY(WAERMEPUMPEN_STATUS, 0x02e2);
-    PROPERTY(MINTEMP, 0x4ea4, Type::et_dec_val);
+    PROPERTY(MINTEMP, 0x4ea7, Type::et_dec_val);
     PROPERTY(MAXTEMP, 0x4ea8, Type::et_dec_val);
     PROPERTY(MISCHERDYNAMIK, 0x4ea9);
     PROPERTY(SOLLTEMP_HK2, 0x4eb0, Type::et_dec_val);
@@ -236,7 +236,7 @@ struct Property : public detail::Property {
     PROPERTY(RAUMSOLLTEMP, 0x4ece, Type::et_dec_val);
     PROPERTY(RAUMFEUCHTE, 0x4ec8, Type::et_dec_val);
     PROPERTY(TAUPUNKTTEMP, 0x4ee0, Type::et_dec_val);
-    PROPERTY(RAUMEINFLUSS, 0x4f33);
+    PROPERTY(RAUMEINFLUSS, 0x4ea4);
     PROPERTY(HEIZUNGSDRUCK, 0x4f46, et_cent_val);
     PROPERTY(VOLUMENSTROM, 0x4f47, Type::et_dec_val);
     PROPERTY(HEIZEN_EFFIZIENZ_TAG, 0x501d, Type::et_cent_val);
