@@ -260,6 +260,7 @@ struct Property : public detail::Property {
     PROPERTY(RUECKLAUFISTTEMP_WP, 0x4f43, Type::et_dec_val);
     PROPERTY(LEISTUNG_KUEHLEN, 0x7a40, Type::et_dec_val);
     PROPERTY(RUECKLAUFISTTEMP, 0xfdf4, Type::et_dec_val);
+    PROPERTY(STEIGUNG_HEIZKURVE, 0x4f2b, Type::et_dec_val);
 #endif
 };
 
