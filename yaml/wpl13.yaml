@@ -225,6 +225,10 @@ packages:
   RAUMSOLLTEMP_KUEHLEN:          !include { file: wp_temperature.yaml, vars: { property: "RAUMSOLLTEMP_KUEHLEN", target: "HK2"  }}
   LEISTUNG_KUEHLEN:              !include { file: wp_generic.yaml, vars: { property: "LEISTUNG_KUEHLEN", unit: "kW", target: "WPM2"  }}
 
+  HYSTERESE_VORLAUFTEMP_KUEHLEN: !include { file: wp_temperature.yaml, vars: { property: "HYSTERESE_VORLAUFTEMP_KUEHLEN", target: "Kessel", unit: "°K"  }}
+  STARTTEMPERATUR:               !include { file: wp_temperature.yaml, vars: { property: "STARTTEMPERATUR"              , target: "HK2"  }}
+  STEIGUNG_KUEHLKURVE:           !include { file: wp_generic.yaml,     vars: { property: "STEIGUNG_KUEHLKURVE"          , target: "HK2" , scaler: "0.1", accuracy_decimals: "2" }}
+
   RAUMFEUCHTE:                !include { file: wp_generic.yaml,     vars: { property: "RAUMFEUCHTE" , interval: $interval_very_slow, unit: "%", icon: "mdi:water-percent", accuracy_decimals: "1", target: "FET"  }}
   HEIZEN_EFFIZIENZ_TAG:       !include { file: wp_generic.yaml,     vars: { property: "HEIZEN_EFFIZIENZ_TAG"  , target: "WPM2", accuracy_decimals: "2" }}
   HEIZEN_EFFIZIENZ_JAHR:      !include { file: wp_generic.yaml,     vars: { property: "HEIZEN_EFFIZIENZ_JAHR" , target: "WPM2", accuracy_decimals: "2" }}
