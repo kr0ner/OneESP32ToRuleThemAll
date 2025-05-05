@@ -240,6 +240,11 @@ struct Property : public detail::Property {
     PROPERTY(VOLUMENSTROM, 0x4f47, Type::et_cent_val);
     PROPERTY(HEIZEN_EFFIZIENZ_TAG, 0x501d, Type::et_cent_val);
     PROPERTY(HEIZEN_EFFIZIENZ_JAHR, 0x501e, Type::et_cent_val);
+    PROPERTY(KUEHLEN_SOLLTEMP, 0x4f45, Type::et_dec_val);
+    PROPERTY(KUEHLEN_ISTTEMP, 0x4f44, Type::et_dec_val);
+    PROPERTY(ISTTEMPERATUR_KK_2, 0x4f09, Type::et_dec_val);
+    PROPERTY(SOLLTEMPERATUR_KK_2, 0x4f0a, Type::et_dec_val);
+    PROPERTY(RUECKLAUFTEMP, 0x0016, Type::et_dec_val);
     PROPERTY(RAUMSOLLTEMP_KUEHLEN, 0x4f04, Type::et_dec_val);
     PROPERTY(RUECKLAUFTEMP_QUELLE, 0x4fa6, Type::et_dec_val);
     PROPERTY(VORLAUFTEMP_QUELLE, 0x4fa7, Type::et_dec_val);
@@ -256,12 +261,15 @@ struct Property : public detail::Property {
     PROPERTY(HYSTERESE_VORLAUFTEMP_KUEHLEN, 0x4f00, Type::et_dec_val);
     PROPERTY(PROGRAMMSCHALTER, 0x4f1b, Type::et_betriebsart);
     PROPERTY(VORLAUFISTTEMP_WP, 0x4f41, Type::et_dec_val);
+    PROPERTY(VORLAUFISTTEMP_NHZ, 0x4f40, Type::et_dec_val);
     PROPERTY(RUECKLAUFISTTEMP_WP, 0x4f43, Type::et_dec_val);
     PROPERTY(LEISTUNG_KUEHLEN, 0x7a40, Type::et_dec_val);
     PROPERTY(RUECKLAUFISTTEMP, 0xfdf4, Type::et_dec_val);
     PROPERTY(STEIGUNG_HEIZKURVE, 0x4f2b, Type::et_dec_val);
     PROPERTY(STARTTEMPERATUR, 0x4fbe, Type::et_dec_val);
     PROPERTY(STEIGUNG_KUEHLKURVE, 0x4fb9, Type::et_dec_val);
+    PROPERTY(ANLAGEFROST, 0x0a00, Type::et_dec_val);
+    PROPERTY(LAUFZEIT_PASSIVKUEHLUNG, 0x4f9a, Type::et_dec_val);
 #endif
 };
 
