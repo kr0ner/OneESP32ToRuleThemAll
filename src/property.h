@@ -238,7 +238,7 @@ struct Property : public detail::Property {
     PROPERTY(TAUPUNKTTEMP, 0x4ee0, Type::et_dec_val);
     PROPERTY(RAUMEINFLUSS, 0x4f33);
     PROPERTY(HEIZUNGSDRUCK, 0x4f46, et_cent_val);
-    PROPERTY(VOLUMENSTROM, 0x4f47, Type::et_dec_val);
+    PROPERTY(VOLUMENSTROM, 0x4f47, Type::et_cent_val);
     PROPERTY(HEIZEN_EFFIZIENZ_TAG, 0x501d, Type::et_cent_val);
     PROPERTY(HEIZEN_EFFIZIENZ_JAHR, 0x501e, Type::et_cent_val);
     PROPERTY(RAUMSOLLTEMP_KUEHLEN, 0x4f04, Type::et_dec_val);
