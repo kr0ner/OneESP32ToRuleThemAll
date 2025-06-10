@@ -280,7 +280,7 @@ packages:
   LAUFZEIT_FILTER:                     !include { file: wp_generic.yaml, vars: { property: "LAUFZEIT_FILTER"          , update_interval: $interval_once_in_a_while , unit: "%"    , icon: "mdi:calendar"  }}
   ANZEIGE_NIEDERDRUCK:                 !include { file: wp_generic.yaml, vars: { property: "ANZEIGE_NIEDERDRUCK"      , accuracy_decimals: "2" }}
   PUMPENZYKLEN_MIN_AUSSENT:            !include { file: wp_generic.yaml, vars: { property: "PUMPENZYKLEN_MIN_AUSSENT" , icon: "mdi:numeric"  }}
-  SOLLWERT_MAX_HK1:                    !include { file: wp_generic.yaml, vars: { property: "SOLLWERT_MAX_HK1"   , unit: "°C", icon: "mdi:temperature-celsius", target: "HK1", accuracy_decimals: "1" }}
+  SOLLWERT_MAX_HK1:                    !include { file: wp_generic.yaml, vars: { property: "SOLLWERT_MAX_HK1"         , unit: "°C", icon: "mdi:temperature-celsius" , target: "HK1", accuracy_decimals: "1" }}
   SOLLWERT_MIN_HK1:                    !include { file: wp_generic.yaml, vars: { property: "SOLLWERT_MIN_HK1"         , unit: "°C", icon: "mdi:temperature-celsius" , target: "HK1", accuracy_decimals: "1" }}
   ANTEIL_VORLAUF_HK1:                  !include { file: wp_generic.yaml, vars: { property: "ANTEIL_VORLAUF_HK1"       , unit: "%" , icon: "mdi:percent-box"         , target: "HK1" }}
   FUSSPUNKT_HK1:                       !include { file: wp_generic.yaml, vars: { property: "FUSSPUNKT_HK1"            , unit: "°C", icon: "mdi:temperature-celsius" , target: "HK1", accuracy_decimals: "1" }}
@@ -297,13 +297,13 @@ packages:
   LUEFT_ABLUFT_STUFE2:                 !include { file: wp_number.yaml, vars: { property: "LUEFT_ABLUFT_STUFE2", min: "0.0", max: "300.0", unit: "m³/h", icon: "mdi:air-filter"  }}
   LUEFT_ABLUFT_STUFE3:                 !include { file: wp_number.yaml, vars: { property: "LUEFT_ABLUFT_STUFE3", min: "0.0", max: "300.0", unit: "m³/h", icon: "mdi:air-filter"  }}
 
-  WAERMEERTRAG_RUECKGE_TAG_SUMME_KWH:  !include { file: wp_daily_energy_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_RUECKGE_TAG_SUMME_KWH" , property_wh: "WAERMEERTRAG_RUECKGE_TAG_WH"    , property_kwh: "WAERMEERTRAG_RUECKGE_TAG_KWH"     }}
-  WAERMEERTRAG_2WE_WW_TAG_SUMME_KWH:   !include { file: wp_daily_energy_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_2WE_WW_TAG_SUMME_KWH"  , property_wh: "WAERMEERTRAG_2WE_WW_TAG_WH"     , property_kwh: "WAERMEERTRAG_2WE_WW_TAG_KWH"      }}
-  WAERMEERTRAG_2WE_HEIZ_TAG_SUMME_KWH: !include { file: wp_daily_energy_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_2WE_HEIZ_TAG_SUMME_KWH", property_wh: "WAERMEERTRAG_2WE_HEIZ_TAG_WH"   , property_kwh: "WAERMEERTRAG_2WE_HEIZ_TAG_KWH"    }}
+  WAERMEERTRAG_RUECKGE_TAG_SUMME_KWH:  !include { file: wp_daily_energy_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_RUECKGE_TAG_SUMME_KWH" , property_wh: "WAERMEERTRAG_RUECKGE_TAG_WH"  , property_kwh: "WAERMEERTRAG_RUECKGE_TAG_KWH"  }}
+  WAERMEERTRAG_2WE_WW_TAG_SUMME_KWH:   !include { file: wp_daily_energy_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_2WE_WW_TAG_SUMME_KWH"  , property_wh: "WAERMEERTRAG_2WE_WW_TAG_WH"   , property_kwh: "WAERMEERTRAG_2WE_WW_TAG_KWH"   }}
+  WAERMEERTRAG_2WE_HEIZ_TAG_SUMME_KWH: !include { file: wp_daily_energy_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_2WE_HEIZ_TAG_SUMME_KWH", property_wh: "WAERMEERTRAG_2WE_HEIZ_TAG_WH" , property_kwh: "WAERMEERTRAG_2WE_HEIZ_TAG_KWH" }}
 
   WAERMEERTRAG_RUECKGE_SUMME_MWH:      !include { file: wp_generic_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_RUECKGE_SUMME_MWH"  , scaled_property: "WAERMEERTRAG_RUECKGE_SUM_KWH" , property: "WAERMEERTRAG_RUECKGE_SUM_MWH" , unit: "MWh", accuracy_decimals: "3", icon: "mdi:fire"  }}
   WAERMEERTRAG_2WE_WW_SUMME_MWH:       !include { file: wp_generic_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_2WE_WW_SUMME_MWH"   , scaled_property: "WAERMEERTRAG_2WE_WW_SUM_KWH"  , property: "WAERMEERTRAG_2WE_WW_SUM_MWH"  , unit: "MWh", accuracy_decimals: "3", icon: "mdi:fire"  }}
   WAERMEERTRAG_2WE_HEIZ_SUMME_MWH:     !include { file: wp_generic_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_2WE_HEIZ_SUMME_MWH" , scaled_property: "WAERMEERTRAG_2WE_HEIZ_SUM_KWH", property: "WAERMEERTRAG_2WE_HEIZ_SUM_MWH", unit: "MWh", accuracy_decimals: "3", icon: "mdi:fire"  }}
 
   WARMWASSER_ECO:                      !include { file: wp_switch.yaml, vars: { property: "WARMWASSER_ECO", icon: "mdi:sprout" }}
-  KUEHLMODE:                           !include { file: wp_switch.yaml, vars: { property: "KUEHLMODE" }}
+  KUEHLMODE:                           !include { file: wp_switch.yaml, vars: { property: "KUEHLMODE" , target: "HK1" }}
