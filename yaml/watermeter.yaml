@@ -8,7 +8,7 @@ sensor:
     pin: GPIO33
     name: "Active water consumption"
     id: active_water_consumption
-    unit_of_measurement: "liter/min"
+    unit_of_measurement: "L/min"
     icon: "mdi:water"
     internal_filter: 100ms
     internal_filter_mode: PULSE
