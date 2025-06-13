@@ -3,12 +3,13 @@ defaults:
   target: "Kessel"
   writable: "false"
   name_suffix: ""
+  unit: "°C"
 
 sensor:
   - platform: template
     name: ${property}${name_suffix}
     id: ${property}${name_suffix}
-    unit_of_measurement: "°C"
+    unit_of_measurement: ${unit}
     icon: "mdi:thermometer-lines"
     device_class: "temperature"
     state_class: "measurement"
