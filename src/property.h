@@ -209,9 +209,8 @@ struct Property : public detail::Property {
 #endif
 
 #if defined(WPL_13)
-    PROPERTY(EINSTELL_SPEICHERSOLLTEMP, 0x0013, Type::et_dec_val);
     PROPERTY(PUFFERISTTEMPERATUR, 0x0078, Type::et_dec_val);
-    PROPERTY(SOLLTEMP_HK1, 0x01d5, Type::et_dec_val);
+    PROPERTY(PUFFERSOLLTEMPERATUR, 0x01d5, Type::et_dec_val);
     PROPERTY(VORLAUFTEMP, 0x01d6, Type::et_dec_val);
     PROPERTY(MAXVORLAUFTEMP, 0x01e8, Type::et_dec_val);
     PROPERTY(HEISSGASTEMP, 0x0265, Type::et_dec_val);
@@ -225,20 +224,20 @@ struct Property : public detail::Property {
     PROPERTY(VERFLUESSIGERTEMP, 0x0a37, Type::et_dec_val);
     PROPERTY(OELSUMPFTEMP, 0x0a39, Type::et_dec_val);
     PROPERTY(WAERMEPUMPEN_STATUS, 0x02e2);
-    PROPERTY(MINTEMP, 0x4ea4, Type::et_dec_val);
+    PROPERTY(MINTEMP, 0x4ea7, Type::et_dec_val);
     PROPERTY(MAXTEMP, 0x4ea8, Type::et_dec_val);
     PROPERTY(MISCHERDYNAMIK, 0x4ea9);
-    PROPERTY(SOLLTEMP_HK2, 0x4eb0, Type::et_dec_val);
     PROPERTY(ISTTEMPERATUR, 0x4eb4, Type::et_dec_val);
+    PROPERTY(SOLLTEMPERATUR, 0x4eb0, Type::et_dec_val);
     PROPERTY(KOMFORTTEMPERATUR, 0x4eb8, Type::et_dec_val);
     PROPERTY(ECOTEMPERATUR, 0x4eb9, Type::et_dec_val);
     PROPERTY(RAUMISTTEMP, 0x4ec7, Type::et_dec_val);
     PROPERTY(RAUMSOLLTEMP, 0x4ece, Type::et_dec_val);
     PROPERTY(RAUMFEUCHTE, 0x4ec8, Type::et_dec_val);
     PROPERTY(TAUPUNKTTEMP, 0x4ee0, Type::et_dec_val);
-    PROPERTY(RAUMEINFLUSS, 0x4f33);
+    PROPERTY(RAUMEINFLUSS, 0x4ea4);
     PROPERTY(HEIZUNGSDRUCK, 0x4f46, et_cent_val);
-    PROPERTY(VOLUMENSTROM, 0x4f47, Type::et_dec_val);
+    PROPERTY(VOLUMENSTROM, 0x4f47, Type::et_cent_val);
     PROPERTY(HEIZEN_EFFIZIENZ_TAG, 0x501d, Type::et_cent_val);
     PROPERTY(HEIZEN_EFFIZIENZ_JAHR, 0x501e, Type::et_cent_val);
     PROPERTY(RAUMSOLLTEMP_KUEHLEN, 0x4f04, Type::et_dec_val);
@@ -261,6 +260,9 @@ struct Property : public detail::Property {
     PROPERTY(LEISTUNG_KUEHLEN, 0x7a40, Type::et_dec_val);
     PROPERTY(RUECKLAUFISTTEMP, 0xfdf4, Type::et_dec_val);
     PROPERTY(BIVALENZTEMPERATUR_HZG, 0x01ac, Type::et_dec_val);
+    PROPERTY(STEIGUNG_HEIZKURVE, 0x4f2b, Type::et_dec_val);
+    PROPERTY(STARTTEMPERATUR, 0x4fbe, Type::et_dec_val);
+    PROPERTY(STEIGUNG_KUEHLKURVE, 0x4fb9, Type::et_dec_val);
 #endif
 };
 
