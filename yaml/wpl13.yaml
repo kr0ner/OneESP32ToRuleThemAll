@@ -212,6 +212,15 @@ packages:
   VORLAUFSOLLTEMP:            !include { file: wp_temperature.yaml, vars: { property: "VORLAUFSOLLTEMP"    , target: "HK1"  }}
   VERDAMPFERTEMP:             !include { file: wp_temperature.yaml, vars: { property: "VERDAMPFERTEMP"     , target: "Manager"  }}
   RUECKLAUFISTTEMP:           !include { file: wp_temperature.yaml, vars: { property: "RUECKLAUFISTTEMP"   , update_interval: $interval_medium , target: "MFG" }}
+  
+  RUECKLAUFTEMP:              !include { file: wp_temperature.yaml, vars: { property: "RUECKLAUFTEMP"      , update_interval: $interval_medium , target: "Manager" }}
+  KUEHLEN_SOLLTEMP:           !include { file: wp_temperature.yaml, vars: { property: "KUEHLEN_SOLLTEMP"   , update_interval: $interval_medium , target: "Kessel" }}
+  KUEHLEN_ISTTEMP:            !include { file: wp_temperature.yaml, vars: { property: "KUEHLEN_ISTTEMP"    , update_interval: $interval_medium , target: "Kessel" }}
+  ISTTEMPERATUR_KK_2:         !include { file: wp_temperature.yaml, vars: { property: "ISTTEMPERATUR_KK_2" , update_interval: $interval_medium , target: "HK2" }}
+  SOLLTEMPERATUR_KK_2:        !include { file: wp_temperature.yaml, vars: { property: "SOLLTEMPERATUR_KK_2", update_interval: $interval_medium , target: "HK2" }}
+  ANLAGEFROST:                !include { file: wp_temperature.yaml, vars: { property: "ANLAGEFROST"        , update_interval: $interval_medium , target: "Kessel" }}
+  VORLAUFISTTEMP_NHZ:         !include { file: wp_temperature.yaml, vars: { property: "VORLAUFISTTEMP_NHZ" , update_interval: $interval_medium , target: "Kessel" }}
+  LAUFZEIT_PASSIVKUEHLUNG:    !include { file: wp_generic.yaml,     vars: { property: "LAUFZEIT_PASSIVKUEHLUNG", scaler: "10", unit: "h", target: "Manager"  }}
   AUSSENTEMP:                 !include { file: wp_temperature.yaml, vars: { property: "AUSSENTEMP"         , update_interval: $interval_medium , target: "Kessel" }}
   VORLAUFISTTEMP_WP:          !include { file: wp_temperature.yaml, vars: { property: "VORLAUFISTTEMP_WP"  , update_interval: $interval_medium , target: "Kessel" }}
   RUECKLAUFISTTEMP_WP:        !include { file: wp_temperature.yaml, vars: { property: "RUECKLAUFISTTEMP_WP", update_interval: $interval_medium , target: "Kessel" }}
