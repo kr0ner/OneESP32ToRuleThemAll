@@ -86,9 +86,11 @@ SimpleVariant GetValueByType(const std::uint16_t value, const Type type) {
         }
         // just convert to float and handle the decimals in yaml
         case Type::et_double_val:
+            [[fallthrough]];
         case Type::et_triple_val:
             return static_cast<std::int16_t>(value) * 1.0f;
         case Type::et_default:
+            [[fallthrough]];
         default:
             return value;
     }

@@ -110,7 +110,7 @@ struct Property : public detail::Property {
     PROPERTY(BETRIEBS_STATUS, 0x0176);
     PROPERTY(VOLUMENSTROM, 0x01da, Type::et_dec_val);
     PROPERTY(TAUPUNKT_HK1, 0x0264, Type::et_dec_val);
-    PROPERTY(KUEHLMODE, 0x0287);
+    PROPERTY(KUEHLMODE, 0x0287, Type::et_bool);
     PROPERTY(PUMPENDREHZAHL_HEIZEN, 0x02cb, Type::et_dec_val);
     PROPERTY(LAUFZEIT_FILTER_TAGE, 0x0341);
     PROPERTY(WAERMEERTRAG_RUECKGE_TAG_WH, 0x03ae);
