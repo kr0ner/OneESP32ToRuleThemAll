@@ -7,6 +7,7 @@ switch:
     name: ${property}
     id: ${property}
     icon: ${icon}
+    restore_mode: RESTORE_DEFAULT_OFF
     turn_on_action:
       - lambda: |-
           sendData(${target}, Property::k${property}, static_cast<std::uint16_t>(true));
