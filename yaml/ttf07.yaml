@@ -95,3 +95,5 @@ packages:
   VERDICHTER_STILLSTAND:    !include { file: wp_generic.yaml, vars: { property: "VERDICHTER_STILLSTAND"   , update_interval: "${interval_once_in_a_while}", unit: "min" }}
   REGLERDYNAMIK:            !include { file: wp_generic.yaml, vars: { property: "REGLERDYNAMIK"           , update_interval: "${interval_once_in_a_while}" }}
   KUEHLEN_EINGESCHALTET:    !include { file: wp_generic.yaml, vars: { property: "KUEHLEN_EINGESCHALTET"   , update_interval: "${interval_slow}" }}
+
+  PUMPENZYKLEN_MIN_AUSSENT:            !include { file: wp_generic.yaml, vars: { property: "PUMPENZYKLEN_MIN_AUSSENT" , icon: "mdi:numeric"  }}
