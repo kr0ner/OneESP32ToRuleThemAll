@@ -6,21 +6,24 @@ esphome:
 packages:
 
   COMMON: !include { file: common.yaml }
-  BASE: !include { file: wp_base.yaml }
+  BASE:   !include { file: wp_base.yaml }
 
-  LUEFT_STUFE_BEREITSCHAFT: !include { file: wp_ventilation.yaml, vars: { property: "LUEFT_STUFE_BEREITSCHAFT" }}
-  LUEFT_STUFE_HAND: !include { file: wp_ventilation.yaml, vars: { property: "LUEFT_STUFE_HAND" }}
-  LAUFZEIT_FILTER_TAGE: !include { file: wp_generic.yaml, vars: { property: "LAUFZEIT_FILTER_TAGE", icon: "mdi:air-filter", unit: "d", update_interval: $interval_once_in_a_while }}
-  SOMMERBETRIEB_TEMP: !include { file: wp_number.yaml, vars: { property: "SOMMERBETRIEB_TEMP", icon: "mdi:sun-thermometer", min: "10.0", max: "20.0", step: "1.0", unit: "°C"}}
-  SOMMERBETRIEB_HYSTERESE: !include { file: wp_temperature.yaml, vars: { property: "SOMMERBETRIEB_HYSTERESE", interval: $interval_slow }}
-  HEISSGAS_TEMP: !include { file: wp_temperature.yaml, vars: { property: "HEISSGAS_TEMP", interval: $interval_slow }}
-  VERFLUESSIGER_TEMP: !include { file: wp_temperature.yaml, vars: { property: "VERFLUESSIGER_TEMP", interval: $interval_slow }}
-  DRUCK_HEIZKREIS: !include { file: wp_generic.yaml, vars: { property: "DRUCK_HEIZKREIS", unit: "bar", icon: "mdi:gauge", accuracy_decimals: "1" }}
-  AKTIVE_HEIZSTUFEN: !include { file: wp_generic.yaml, vars: { property: "AKTIVE_HEIZSTUFEN", interval: $interval_medium, icon: "mdi:heat-pump-outline"}}
-  LAUFZEIT_VERDICHTER_HEIZEN: !include { file: wp_generic.yaml, vars: { property: "LAUFZEIT_VERDICHTER_HEIZEN", icon: "mdi:calendar-clock", interval: $interval_slow }}
-  LAUFZEIT_VERDICHTER_WW: !include { file: wp_generic.yaml, vars: { property: "LAUFZEIT_VERDICHTER_WW", icon: "mdi:calendar-clock", interval: $interval_slow }}
-  LAUFZEIT_NHZ_HEIZEN:    !include { file: wp_generic.yaml, vars: { property: "LAUFZEIT_NHZ_HEIZEN", icon: "mdi:calendar-clock", interval: $interval_slow }}
-  LAUFZEIT_NHZ_WW: !include { file: wp_generic.yaml, vars: { property: "LAUFZEIT_NHZ_WW", icon: "mdi:calendar-clock", interval: interval_slow }}
+  LUEFT_STUFE_BEREITSCHAFT:   !include { file: wp_ventilation.yaml, vars: { property: "LUEFT_STUFE_BEREITSCHAFT" }}
+  LUEFT_STUFE_HAND:           !include { file: wp_ventilation.yaml, vars: { property: "LUEFT_STUFE_HAND" }}
+
+  SOMMERBETRIEB_HYSTERESE:    !include { file: wp_temperature.yaml, vars: { property: "SOMMERBETRIEB_HYSTERESE", update_interval: $interval_slow }}
+  HEISSGAS_TEMP:              !include { file: wp_temperature.yaml, vars: { property: "HEISSGAS_TEMP"          , update_interval: $interval_slow }}
+  VERFLUESSIGER_TEMP:         !include { file: wp_temperature.yaml, vars: { property: "VERFLUESSIGER_TEMP"     , update_interval: $interval_slow }}
+
+  LAUFZEIT_FILTER_TAGE:       !include { file: wp_generic.yaml,     vars: { property: "LAUFZEIT_FILTER_TAGE"      , icon: "mdi:air-filter"       , update_interval: $interval_once_in_a_while, unit: "d" }}
+  DRUCK_HEIZKREIS:            !include { file: wp_generic.yaml,     vars: { property: "DRUCK_HEIZKREIS"           , icon: "mdi:gauge"            , update_interval: $interval_medium, unit: "bar", accuracy_decimals: "1" }}
+  AKTIVE_HEIZSTUFEN:          !include { file: wp_generic.yaml,     vars: { property: "AKTIVE_HEIZSTUFEN"         , icon: "mdi:heat-pump-outline", update_interval: $interval_medium}}
+  LAUFZEIT_VERDICHTER_HEIZEN: !include { file: wp_generic.yaml,     vars: { property: "LAUFZEIT_VERDICHTER_HEIZEN", icon: "mdi:calendar-clock"   , update_interval: $interval_slow }}
+  LAUFZEIT_VERDICHTER_WW:     !include { file: wp_generic.yaml,     vars: { property: "LAUFZEIT_VERDICHTER_WW"    , icon: "mdi:calendar-clock"   , update_interval: $interval_slow }}
+  LAUFZEIT_NHZ_HEIZEN:        !include { file: wp_generic.yaml,     vars: { property: "LAUFZEIT_NHZ_HEIZEN"       , icon: "mdi:calendar-clock"   , update_interval: $interval_slow }}
+  LAUFZEIT_NHZ_WW:            !include { file: wp_generic.yaml,     vars: { property: "LAUFZEIT_NHZ_WW"           , icon: "mdi:calendar-clock"   , update_interval: $interval_slow }}
+
+  SOMMERBETRIEB_TEMP:         !include { file: wp_number.yaml,      vars: { property: "SOMMERBETRIEB_TEMP", icon: "mdi:sun-thermometer", min: "10.0", max: "20.0", step: "1.0", unit: "°C"}}
 
 binary_sensor:
   - platform: template
