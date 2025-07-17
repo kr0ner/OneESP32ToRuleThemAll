@@ -262,6 +262,8 @@ packages:
   LUEFT_STUFE_TAG:                     !include { file: wp_ventilation.yaml, vars: { property: "LUEFT_STUFE_TAG"   }}
   LUEFT_STUFE_NACHT:                   !include { file: wp_ventilation.yaml, vars: { property: "LUEFT_STUFE_NACHT" }}
   LUEFT_STUFE_PARTY:                   !include { file: wp_ventilation.yaml, vars: { property: "LUEFT_STUFE_PARTY" }}
+  LUEFT_STUFE_BEREITSCHAFT:            !include { file: wp_ventilation.yaml, vars: { property: "LUEFT_STUFE_BEREITSCHAFT" }}
+  LUEFT_STUFE_HAND:                    !include { file: wp_ventilation.yaml, vars: { property: "LUEFT_STUFE_HAND" }}
 
   ABLUFTFEUCHTE:                       !include { file: wp_generic.yaml, vars: { property: "ABLUFTFEUCHTE"            , update_interval: $interval_very_slow       , unit: "%"    , icon: "mdi:water-percent"}}
   MOTORSTROM:                          !include { file: wp_generic.yaml, vars: { property: "MOTORSTROM"               , update_interval: $interval_medium          , unit: "A"    , icon: "mdi:current-ac"}}
