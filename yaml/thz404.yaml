@@ -10,7 +10,10 @@ packages:
   SOMMERBETRIEB_HYSTERESE:    !include { file: wp_temperature.yaml, vars: { property: "SOMMERBETRIEB_HYSTERESE", update_interval: $interval_slow }}
   HEISSGAS_TEMP:              !include { file: wp_temperature.yaml, vars: { property: "HEISSGAS_TEMP"          , update_interval: $interval_slow }}
   VERFLUESSIGER_TEMP:         !include { file: wp_temperature.yaml, vars: { property: "VERFLUESSIGER_TEMP"     , update_interval: $interval_slow }}
-
+  PUMPENZYKLEN_MAX_AUSSENT:   !include { file: wp_temperature.yaml, vars: { property: "PUMPENZYKLEN_MAX_AUSSENT" }}
+  
+  PUMPENZYKLEN_MIN_TAG:       !include { file: wp_generic.yaml, vars: { property: "PUMPENZYKLEN_MIN_TAG" , icon: "mdi:numeric", update_interval: $interval_very_slow  }}
+  PUMPENZYKLEN_MAX_TAG:       !include { file: wp_generic.yaml, vars: { property: "PUMPENZYKLEN_MAX_TAG" , icon: "mdi:numeric", update_interval: $interval_very_slow  }}
   LAUFZEIT_FILTER_TAGE:       !include { file: wp_generic.yaml,     vars: { property: "LAUFZEIT_FILTER_TAGE"      , icon: "mdi:air-filter"       , update_interval: $interval_once_in_a_while, unit: "d" }}
   DRUCK_HEIZKREIS:            !include { file: wp_generic.yaml,     vars: { property: "DRUCK_HEIZKREIS"           , icon: "mdi:gauge"            , update_interval: $interval_medium, unit: "bar", accuracy_decimals: "1" }}
   AKTIVE_HEIZSTUFEN:          !include { file: wp_generic.yaml,     vars: { property: "AKTIVE_HEIZSTUFEN"         , icon: "mdi:heat-pump-outline", update_interval: $interval_medium}}
