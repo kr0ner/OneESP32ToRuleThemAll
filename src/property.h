@@ -7,6 +7,7 @@
 #include <unordered_map>
 #include "type.h"
 
+namespace oe32trta {
 namespace detail {
 struct Property {
     std::string_view name;
@@ -42,18 +43,19 @@ class Mapper {
 };
 
 }  // namespace detail
+}  // namespace oe32trta
 
-#define PROPERTY(NAME, VALUE, ...)                                          \
-    static constexpr detail::Property k##NAME{#NAME, VALUE, ##__VA_ARGS__}; \
-    static constexpr bool unique##VALUE{true};                              \
-    static inline detail::Mapper k##NAME##_MAPPING {                        \
-        k##NAME                                                             \
+#define PROPERTY(NAME, VALUE, ...)                                                    \
+    static constexpr oe32trta::detail::Property k##NAME{#NAME, VALUE, ##__VA_ARGS__}; \
+    static constexpr bool unique##VALUE{true};                                        \
+    static inline oe32trta::detail::Mapper k##NAME##_MAPPING {                        \
+        k##NAME                                                                       \
     }
 
-struct Property : public detail::Property {
-    constexpr Property(const Property& p) : detail::Property{p.name, p.id, p.type} {}
-    constexpr Property(const detail::Property& p) : detail::Property{p.name, p.id, p.type} {}
-    Property(const std::uint16_t _id) : detail::Property{getProperty(_id)} {}
+struct Property : public oe32trta::detail::Property {
+    constexpr Property(const Property& p) : oe32trta::detail::Property{p.name, p.id, p.type} {}
+    constexpr Property(const oe32trta::detail::Property& p) : oe32trta::detail::Property{p.name, p.id, p.type} {}
+    Property(const std::uint16_t _id) : oe32trta::detail::Property{getProperty(_id)} {}
 
     PROPERTY(INDEX_NOT_FOUND, 0x0000);
     PROPERTY(FEHLERMELDUNG, 0x0001);
