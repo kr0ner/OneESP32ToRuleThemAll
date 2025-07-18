@@ -4,7 +4,6 @@ esphome:
       - "-DTHZ_404"
 
 packages:
-
   COMMON: !include { file: common.yaml }
   BASE:   !include { file: wp_base.yaml }
 

@@ -281,6 +281,7 @@ packages:
   VOLUMENSTROM:                        !include { file: wp_generic.yaml, vars: { property: "VOLUMENSTROM"             , update_interval: $interval_slow            , unit: "l/min", icon: "mdi:pump"  }}
   LAUFZEIT_FILTER:                     !include { file: wp_generic.yaml, vars: { property: "LAUFZEIT_FILTER"          , update_interval: $interval_once_in_a_while , unit: "%"    , icon: "mdi:calendar"  }}
   ANZEIGE_NIEDERDRUCK:                 !include { file: wp_generic.yaml, vars: { property: "ANZEIGE_NIEDERDRUCK"      , accuracy_decimals: "2" }}
+  PUMPENZYKLEN_MIN_AUSSENT:            !include { file: wp_generic.yaml, vars: { property: "PUMPENZYKLEN_MIN_AUSSENT" , icon: "mdi:numeric"  }}
   SOLLWERT_MAX_HK1:                    !include { file: wp_generic.yaml, vars: { property: "SOLLWERT_MAX_HK1"         , unit: "°C", icon: "mdi:temperature-celsius" , target: "HK1", accuracy_decimals: "1" }}
   SOLLWERT_MIN_HK1:                    !include { file: wp_generic.yaml, vars: { property: "SOLLWERT_MIN_HK1"         , unit: "°C", icon: "mdi:temperature-celsius" , target: "HK1", accuracy_decimals: "1" }}
   ANTEIL_VORLAUF_HK1:                  !include { file: wp_generic.yaml, vars: { property: "ANTEIL_VORLAUF_HK1"       , unit: "%" , icon: "mdi:percent-box"         , target: "HK1" }}
