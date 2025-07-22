@@ -19,7 +19,7 @@ esphome:
       - "-DHK1_ID=$hk1_can_id"
       - "-DHK2_ID=$hk2_can_id"
   on_boot:
-    priority: -100
+    priority: 100.0 # AFTER_CONNECTION
     then:
       - lambda: |-
           CallbackHandler::instance().addCallback(std::make_pair(WPM2,Property::kPROGRAMMSCHALTER),[](const SimpleVariant& value){

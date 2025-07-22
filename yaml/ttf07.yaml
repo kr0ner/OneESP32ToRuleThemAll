@@ -3,7 +3,7 @@ esphome:
     build_flags:
       - "-DTTF_07_C"
   on_boot:
-    priority: -100
+    priority: 100.0 # AFTER_CONNECTION
     then:
       - lambda: |-
           CallbackHandler::instance().addCallback(std::make_pair(Kessel,Property::kPROGRAMMSCHALTER),[](const SimpleVariant& value){

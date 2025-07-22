@@ -9,24 +9,30 @@ fan:
           const auto fan_speed = std::min(3, x);
           ESP_LOGI("fan", "Speed set %d", fan_speed);
           sendData(Kessel, Property::k${property}, fan_speed);
-          queueRequest(Kessel, Property::kZULUFT_SOLL);
-          queueRequest(Kessel, Property::kABLUFT_SOLL);
+          scheduleRequest(Kessel, Property::kZULUFT_SOLL, std::chrono::seconds(10));
+          scheduleRequest(Kessel, Property::kZULUFT_IST, std::chrono::seconds(20));
+          scheduleRequest(Kessel, Property::kABLUFT_SOLL, std::chrono::seconds(10));
+          scheduleRequest(Kessel, Property::kABLUFT_IST, std::chrono::seconds(20));
     on_turn_off:
       - lambda: |-
           ESP_LOGI("fan", "Fan turned off!");
           sendData(Kessel, Property::k${property}, 0U);
-          queueRequest(Kessel, Property::kZULUFT_SOLL);
-          queueRequest(Kessel, Property::kABLUFT_SOLL);
+          scheduleRequest(Kessel, Property::kZULUFT_SOLL, std::chrono::seconds(10));
+          scheduleRequest(Kessel, Property::kZULUFT_IST, std::chrono::seconds(20));
+          scheduleRequest(Kessel, Property::kABLUFT_SOLL, std::chrono::seconds(10));
+          scheduleRequest(Kessel, Property::kABLUFT_IST, std::chrono::seconds(20));
     on_turn_on:
       - lambda: |-
           ESP_LOGI("fan", "Fan turned on!");
           sendData(Kessel, Property::k${property}, id(${property}).speed);
-          queueRequest(Kessel, Property::kZULUFT_SOLL);
-          queueRequest(Kessel, Property::kABLUFT_SOLL);
+          scheduleRequest(Kessel, Property::kZULUFT_SOLL, std::chrono::seconds(10));
+          scheduleRequest(Kessel, Property::kZULUFT_IST, std::chrono::seconds(20));
+          scheduleRequest(Kessel, Property::kABLUFT_SOLL, std::chrono::seconds(10));
+          scheduleRequest(Kessel, Property::kABLUFT_IST, std::chrono::seconds(20));
 
 esphome:
   on_boot:
-    priority: -100
+    priority: 100.0 # AFTER_CONNECTION
     then:
       - lambda: |-
           CallbackHandler::instance().addCallbacks({std::make_pair(Kessel,Property::k${property}),

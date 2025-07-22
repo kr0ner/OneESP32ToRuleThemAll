@@ -9,9 +9,12 @@ class CustomClimate : public Component, public Climate {
         traits_.set_supported_modes(std::move(modes));
         traits_.set_supported_presets(std::move(presets));
         traits_.set_supports_current_temperature(true);
+        update_mode();
     }
 
     void setup() override {}
+
+    float get_setup_priority() const override { return esphome::setup_priority::LATE; }
 
     template <typename Sensor>
     void register_current_temperature_callback(Sensor* current_temperature_sensor) {
