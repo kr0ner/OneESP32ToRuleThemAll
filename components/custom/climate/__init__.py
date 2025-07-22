@@ -11,7 +11,7 @@ CONFIG_SCHEMA = cv.Schema(
     {
         cv.GenerateID(): cv.declare_id(CustomClimateConstructor),
         cv.Required(CONF_LAMBDA): cv.returning_lambda,
-        cv.Required(CONF_CLIMATES): cv.ensure_list(climate.CLIMATE_SCHEMA),
+        cv.Required(CONF_CLIMATES): cv.ensure_list(climate.climate_schema(climate.Climate)),
     }
 )
 
