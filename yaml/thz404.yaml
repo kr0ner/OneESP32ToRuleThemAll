@@ -28,7 +28,7 @@ binary_sensor:
   - platform: template
     name: "SOMMERMODUS"
     id: SOMMERMODUS
-    publish_initial_state: false
+    trigger_on_initial_state: false
     lambda: |-
       if (id(AUSSENTEMP).state >= (id(SOMMERBETRIEB_TEMP).state + id(SOMMERBETRIEB_HYSTERESE).state)) {
         id(SOMMERMODUS).publish_state(true);
