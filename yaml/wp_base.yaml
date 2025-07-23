@@ -2,7 +2,7 @@ esphome:
   includes:
     - OneESP32ToRuleThemAll/src/custom_climate.h
   on_boot:
-    priority: -100
+    priority: 100.0 # AFTER_CONNECTION
     then:
       - lambda: |-
           CallbackHandler::instance().addCallback(std::make_pair(Kessel,Property::kPASSIVKUEHLUNG),[](const SimpleVariant& value){
@@ -12,13 +12,14 @@ esphome:
               id(PASSIVKUEHLUNG).publish_state(stringValue);
             }
           });
-          queueRequest(Kessel, Property::kPASSIVKUEHLUNG);
+          scheduleRequest(Kessel, Property::kPASSIVKUEHLUNG, std::chrono::seconds(10));
 
           CallbackHandler::instance().addCallback(std::make_pair(Kessel,Property::kZULUFT_IST),[](const SimpleVariant& value){
             // workaround for broken ninth bit of BETRIEBSSTATUS
             const auto zuluftIst = static_cast<std::uint16_t>(value);
             id(LUEFTUNG).publish_state(zuluftIst > 0U);
           });
+          scheduleRequest(Kessel, Property::kZULUFT_IST, std::chrono::seconds(10));
 
           CallbackHandler::instance().addCallbacks({std::make_pair(Kessel,Property::kABLUFT_SOLL),
                                                     std::make_pair(Kessel,Property::kZULUFT_SOLL)},
@@ -51,14 +52,14 @@ esphome:
               id(PROGRAMMSCHALTER).publish_state(stringValue);
             }
           });
-          queueRequest(Kessel, Property::kPROGRAMMSCHALTER);
+          scheduleRequest(Kessel, Property::kPROGRAMMSCHALTER, std::chrono::seconds(10));
 
           CallbackHandler::instance().addCallback(std::make_pair(Kessel,Property::kBETRIEBS_STATUS_2),[](const SimpleVariant& value){
             const std::bitset<2U> status_bits{static_cast<std::uint16_t>(value)};
             id(SOMMERBETRIEB_AKTIV).publish_state(status_bits.test(0U));
             id(OFEN_KAMIN_AKTIV).publish_state(status_bits.test(1U));
           });
-          queueRequest(Kessel, Property::kBETRIEBS_STATUS_2);
+          scheduleRequest(Kessel, Property::kBETRIEBS_STATUS_2, std::chrono::seconds(10));
 
           CallbackHandler::instance().addCallback(std::make_pair(Kessel,Property::kBETRIEBS_STATUS),[](const SimpleVariant& value){
             const std::bitset<15U> status_bits{static_cast<std::uint16_t>(value)};
@@ -78,7 +79,7 @@ esphome:
             id(FILTERWECHSEL_ZULUFT).publish_state(status_bits.test(13U));
             id(AUFHEIZPROGRAMM_AKTIV).publish_state(status_bits.test(14U));
           });
-          queueRequest(Kessel, Property::kBETRIEBS_STATUS);
+          scheduleRequest(Kessel, Property::kBETRIEBS_STATUS, std::chrono::seconds(10));
 
 #########################################
 #                                       #

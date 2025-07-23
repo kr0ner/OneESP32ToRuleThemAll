@@ -1,6 +1,6 @@
 esphome:
   on_boot:
-    priority: -100
+    priority: 100.0 # AFTER_CONNECTION
     then:
       - lambda: |-
             id(HEATPUMP_DATETIME).state = "2024-01-01 12:34";

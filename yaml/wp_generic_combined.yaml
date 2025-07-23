@@ -28,7 +28,7 @@ sensor:
 
 esphome:
   on_boot:
-    priority: -100
+    priority: 100.0 # AFTER_CONNECTION
     then:
       - lambda: |-
           // Handle the values received from the heat pump. Scaled property value is just stored in an internal sensor and published together with the property value on reception.

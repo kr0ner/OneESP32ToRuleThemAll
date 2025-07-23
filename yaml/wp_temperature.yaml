@@ -21,7 +21,7 @@ sensor:
 
 esphome:
   on_boot:
-    priority: -100
+    priority: 100.0 # AFTER_CONNECTION
     then:
       - lambda: |-
           auto callback= [](const SimpleVariant& value){

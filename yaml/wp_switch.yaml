@@ -17,7 +17,7 @@ switch:
 
 esphome:
   on_boot:
-    priority: -100
+    priority: 100.0 # AFTER_CONNECTION
     then:
       - lambda: |-
           static_assert(Property::k${property}.type == Type::et_bool, "Only properties of type bool are supported by wp_switch.");
