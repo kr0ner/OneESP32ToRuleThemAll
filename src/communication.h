@@ -65,6 +65,38 @@ constexpr auto asBytes(T value) {
     }
 }
 
+enum class MessageType : std::uint8_t { Write, Read, Response };
+
+/**
+ * @brief Decode a read/write/response ID into its underlying CAN ID and message type.
+ *
+ * The message type is encoded like this:
+ * - Write    : base write ID
+ * - Read     : write ID | 0x100
+ * - Response : write ID | 0x200
+ *
+ * This function reconstructs the original CAN ID and MessageType from a given read/write/response ID.
+ *
+ * @param externalId The 16-bit read/write/response ID.
+ * @return A pair consisting of the decoded CAN ID and its MessageType.
+ */
+std::pair<CANId, MessageType> decodeCanIdAndMessageType(const std::uint16_t externalId) {
+    MessageType messageType = MessageType::Write;
+    std::uint16_t writeId = externalId;
+
+    if (externalId & 0x200) {
+        messageType = MessageType::Response;
+        writeId &= ~0x200;
+    } else if (externalId & 0x100) {
+        messageType = MessageType::Read;
+        writeId &= ~0x100;
+    }
+
+    std::uint16_t canId = ((writeId >> 5) & 0x7c0) | (writeId & 0x3f);
+
+    return {canId, messageType};
+}
+
 /**
  * @brief Tries to find the CANMember with the given CANId.
  *
@@ -100,9 +132,8 @@ std::optional<std::reference_wrapper<const CanMember>> getCanMemberByName(const 
  */
 bool isRequest(const std::vector<std::uint8_t>& msg) {
     const auto id{msg[1U] | (msg[0U] << 8U)};
-    const auto it = std::find_if(canMembers.cbegin(), canMembers.cend(),
-                                 [id](const auto& member) { return member.get().getReadId() == id; });
-    return it != canMembers.cend();
+    const auto [canId, messageType] = decodeCanIdAndMessageType(id);
+    return messageType == MessageType::Read;
 }
 
 /**
@@ -110,9 +141,8 @@ bool isRequest(const std::vector<std::uint8_t>& msg) {
  */
 bool isResponse(const std::vector<std::uint8_t>& msg) {
     const auto id{msg[1U] | (msg[0U] << 8U)};
-    const auto it = std::find_if(canMembers.cbegin(), canMembers.cend(),
-                                 [id](const auto& member) { return member.get().getResponseId() == id; });
-    return it != canMembers.cend();
+    const auto [canId, messageType] = decodeCanIdAndMessageType(id);
+    return messageType == MessageType::Response;
 }
 
 /**
@@ -191,7 +221,7 @@ std::pair<Property, SimpleVariant> processCanMessage(const std::vector<std::uint
 }
 
 void requestData(const CanMember& member, const Property& property) {
-    const auto use_extended_id{false};  //No use of extended ID
+    const auto use_extended_id{false};
     const auto [IdByte1, IdByte2] = asBytes(member.getReadId());
     const auto [IndexByte1, IndexByte2] = asBytes(property.id);
     std::vector<std::uint8_t> data{IdByte1, IdByte2, 0xfa, IndexByte1, IndexByte2, 0x00, 0x00};
@@ -206,7 +236,7 @@ void requestData(const CanMember& member, const Property& property) {
  *        the type.
  */
 void sendData(const CanMember& member, const Property property, const std::uint16_t value) {
-    const auto use_extended_id{false};  //No use of extended ID
+    const auto use_extended_id{false};
     const auto [IdByte1, IdByte2] = asBytes(member.getWriteId());
     const auto [IndexByte1, IndexByte2] = asBytes(property.id);
     const auto [ValueByte1, ValueByte2] = asBytes(value);
