@@ -6,7 +6,7 @@ esphome:
   includes:
     - OneESP32ToRuleThemAll/src/sml_reader.h
   libraries:
-    - git+https://github.com/volkszaehler/libsml
+    - libsml=git+https://github.com/volkszaehler/libsml
 
 #########################################
 #                                       #
