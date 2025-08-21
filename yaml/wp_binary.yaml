@@ -2,3 +2,4 @@ binary_sensor:
   - platform: template
     name: ${name}
     id: ${name}
+    trigger_on_initial_state: true
