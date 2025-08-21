@@ -17,6 +17,18 @@ esphome:
       - "-DKESSEL_ID=$kessel_can_id"
       - "-DHK1_ID=$hk1_can_id"
       - "-DHK2_ID=$hk2_can_id"
+  on_boot:
+    priority: 100.0 # AFTER_CONNECTION
+    then:
+      - wait_until:
+          condition:
+            api.connected:
+      - homeassistant.action:
+          action: homeassistant.update_entity
+          data:
+            entity_id: |-
+              - $entity_room_temperature
+              - $entity_humidity
 
 substitutions:
   kessel_can_id: "0x180"
@@ -185,10 +197,12 @@ api:
 #   Home Assistant Sensors              #
 #                                       #
 #########################################
+  homeassistant_states: true
 sensor:
   - platform: homeassistant
     name: "Temperature Sensor From Home Assistant"
     entity_id: $entity_room_temperature
+    device_class: temperature
     on_value:
       then:
         - lambda: |-
@@ -198,6 +212,7 @@ sensor:
   - platform: homeassistant
     name: "Humidity Sensor From Home Assistant"
     entity_id: $entity_humidity
+    device_class: humidity
     on_value:
       then:
         - lambda: |-
