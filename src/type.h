@@ -2,6 +2,7 @@
 #define TYPE_H
 
 #include <cstdint>
+#include <optional>
 #include "simple_variant.h"
 
 enum Type : std::uint8_t {
@@ -36,6 +37,13 @@ T getParamType(void (C::*)(T));
  *        returned as \c SimpleVariant.
  */
 SimpleVariant GetValueByType(const std::uint16_t value, const Type type);
+
+/**
+ * @brief Converts a typed \c SimpleVariant to its raw 16-bit representation.
+ *
+ * Inverse of GetValueByType(). Returns \c std::nullopt on conversion failure.
+ */
+std::optional<std::uint16_t> GetRawByType(const SimpleVariant& value, const Type type);
 
 /**
  * @brief Toggles endianness of an unsigned 16-bit integer.
