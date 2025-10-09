@@ -13,6 +13,8 @@ class Mapper {
    public:
     std::optional<std::string> getError(const std::uint16_t id) const;
 
+    std::optional<std::uint16_t> getErrorId(const std::string& error) const;
+
     std::optional<std::string> getBetriebsart(const std::uint16_t id) const;
 
     std::optional<std::uint16_t> getBetriebsartId(const std::string& betriebsart) const;
