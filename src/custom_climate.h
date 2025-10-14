@@ -9,6 +9,7 @@ class CustomClimate : public Component, public Climate {
         traits_.set_supported_modes(std::move(modes));
         traits_.set_supported_presets(std::move(presets));
         traits_.set_supports_current_temperature(true);
+        traits_.set_supports_two_point_target_temperature(false);
         update_mode();
     }
 
@@ -99,8 +100,10 @@ class CustomClimate : public Component, public Climate {
 
     ClimateTraits traits() override { return traits_; }
 
-   private:
+   protected:
     climate::ClimateTraits traits_{};
+
+   private:
     const std::vector<std::pair<const CanMember, const Property>> targetTemperatureProperties_;
     bool isHeating{false};
     bool isCooling{false};
@@ -123,6 +126,7 @@ class Heating : public CustomClimate {
         register_heating_callback(heating_sensor);
         register_cooling_callback(cooling_sensor);
         register_fan_callback(fan_sensor);
+        traits_.set_supports_two_point_target_temperature(true);
     };
 };
 
