@@ -1,6 +1,5 @@
 defaults:
   rx_pin: "GPIO2"
-  mqtt_enabled: "true"
 
 esphome:
   includes:
@@ -23,6 +22,11 @@ uart:
   rx_pin: ${rx_pin}
   baud_rate: 9600
 
+substitutions:
+  mqtt_server: !secret mqtt_server
+  mqtt_user: !secret mqtt_user
+  mqtt_password: !secret mqtt_password
+
 #########################################
 #                                       #
 #   SML reader                          #
@@ -33,21 +37,8 @@ external_components:
 
 custom_component:
   - lambda: |-
-      auto sml_reader = new SMLReader<${mqtt_enabled}>(id(smartmeter_uart));
+      auto sml_reader = new SMLReader(id(smartmeter_uart),"${mqtt_server}","${mqtt_user}","${mqtt_password}");
       return {sml_reader};
-
-#########################################
-#                                       #
-#   MQTT                                #
-#                                       #
-#########################################
-mqtt:
-  id: mqtt_client
-  broker: !secret mqtt_server
-  username: !secret mqtt_user
-  password: !secret mqtt_password
-  discovery: false
-  enable_on_boot: ${mqtt_enabled}
 
 #########################################
 #                                       #
@@ -57,7 +48,7 @@ mqtt:
 sensor:
   - platform: template
     name: "Total incoming"
-    id: Total_incoming
+    id: Total_Incoming
     #obis_code: "1-0:1.8.0"
     unit_of_measurement: kWh
     device_class: energy
