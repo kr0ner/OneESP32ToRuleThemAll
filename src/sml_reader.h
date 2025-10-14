@@ -1,3 +1,5 @@
+#pragma once
+
 #include <sml/sml_file.h>
 #include <algorithm>
 #include <array>
@@ -5,8 +7,11 @@
 #include <cmath>
 #include <sstream>
 #include <string>
+#include <tuple>
 #include <vector>
 #include "esphome.h"
+#include "esphome/components/network/util.h"
+#include "mqtt_client.h"
 
 namespace {
 struct ObisIdentifier {
@@ -63,12 +68,40 @@ struct Readings {
     float frequency{0.0f};
 };
 
-template <bool PublishMQTT>
 class SMLReader : public Component, public UARTDevice {
     std::vector<std::uint8_t> _buffer;
     State _current_state{State::kWaitingForStartSequence};
     sml_file* _file;
     std::optional<Readings> _readings;
+
+    // Native MQTT Client & State
+    esp_mqtt_client_handle_t _private_client{nullptr};
+    bool _mqtt_connected{false};
+    bool _mqtt_initialized{false};
+    std::string _mqtt_uri;
+    std::string _mqtt_user;
+    std::string _mqtt_pass;
+
+    static void mqtt_event_handler(void* handler_args, esp_event_base_t, int32_t event_id, void*) {
+        SMLReader* instance = (SMLReader*)handler_args;
+
+        switch ((esp_mqtt_event_id_t)event_id) {
+            case MQTT_EVENT_CONNECTED:
+                ESP_LOGI("SMLReader", "Native MQTT Connected!");
+                instance->_mqtt_connected = true;
+                break;
+            case MQTT_EVENT_DISCONNECTED:
+                ESP_LOGW("SMLReader", "Native MQTT Disconnected");
+                instance->_mqtt_connected = false;
+                break;
+            case MQTT_EVENT_ERROR:
+                ESP_LOGE("SMLReader", "Native MQTT Error");
+                instance->_mqtt_connected = false;
+                break;
+            default:
+                break;
+        }
+    }
 
     template <typename T, typename F>
     void waitForSequence(const T& sequence, F func) {
@@ -103,29 +136,6 @@ class SMLReader : public Component, public UARTDevice {
         }
         ESP_LOGV("SMLReader", "unknown type : %d", entry->value->type);
         return 0.0f;
-    }
-
-    bool parseBoolean(const sml_list* const entry) const {
-        if (entry->value->type == SML_TYPE_BOOLEAN) {
-            ESP_LOGV("SMLReader", "value: %s", entry->value->data.boolean ? "true" : "false");
-            return entry->value->data.boolean;
-        }
-        ESP_LOGV("SMLReader", "unknown type : %d", entry->value->type);
-        return false;
-    }
-
-    std::string parseString(const sml_list* const entry) {
-        std::string str;
-        if (entry->value->type == SML_TYPE_OCTET_STRING) {
-            char* value;
-            sml_value_to_strhex(entry->value, &value, true);
-            ESP_LOGV("SMLReader", "value: %s", value);
-            str = std::string(value);
-            free(value);
-            return str;
-        }
-        ESP_LOGV("SMLReader", "unknown type : %d", entry->value->type);
-        return str;
     }
 
     void parseFile() {
@@ -167,12 +177,6 @@ class SMLReader : public Component, public UARTDevice {
                     const ObisIdentifier obisIdentifier{entry->obj_name->str[0U], entry->obj_name->str[1U],
                                                         entry->obj_name->str[2U], entry->obj_name->str[3U],
                                                         entry->obj_name->str[4U]};
-                    /*ESP_LOGD("SMLReader","Obis Identifier %d-%d:%d.%d.%d/0",
-														obisIdentifier.medium, 
-														obisIdentifier.channel, 
-														obisIdentifier.measured_parameter, 
-														obisIdentifier.measurement_type,
-														obisIdentifier.tariff);*/
 
                     if (obisIdentifier == total_incoming) {
                         readings.total_incoming = parseNumeric(entry);
@@ -212,27 +216,28 @@ class SMLReader : public Component, public UARTDevice {
 
     void publishReadings() {
         if (_readings.has_value()) {
-            if constexpr (PublishMQTT) {
-                publishMQTT(*_readings);
-            }
+            publishMQTT(*_readings);
             publishHA(*_readings);
             _readings.reset();
         }
         ESP_LOGV("SMLReader", "starting over");
     }
 
-    void publishMQTT(const Readings& readings) const {
-        std::ostringstream payload;
-        payload.precision(1);
-        payload << std::fixed;
-        payload << "{\"grid\":{\"power\":" << readings.power << ",";
-        payload << "\"L1\":{\"power\":" << readings.power_l1 << ",\"voltage\":" << readings.voltage_l1
-                << ",\"current\":" << readings.current_l1 << "},";
-        payload << "\"L2\":{\"power\":" << readings.power_l2 << ",\"voltage\":" << readings.voltage_l2
-                << ",\"current\":" << readings.current_l2 << "},";
-        payload << "\"L3\":{\"power\":" << readings.power_l3 << ",\"voltage\":" << readings.voltage_l3
-                << ",\"current\":" << readings.current_l3 << "}}}";
-        id(mqtt_client).publish("homeassistant/energy/grid", payload.str());
+    void publishMQTT(const Readings& readings) {
+        if (!_mqtt_connected || _private_client == nullptr) {
+            return;
+        }
+
+        char payload[512];
+        snprintf(payload, sizeof(payload),
+                 "{\"grid\":{\"power\":%.1f,"
+                 "\"L1\":{\"power\":%.1f,\"voltage\":%.1f,\"current\":%.1f},"
+                 "\"L2\":{\"power\":%.1f,\"voltage\":%.1f,\"current\":%.1f},"
+                 "\"L3\":{\"power\":%.1f,\"voltage\":%.1f,\"current\":%.1f}}}",
+                 readings.power, readings.power_l1, readings.voltage_l1, readings.current_l1, readings.power_l2,
+                 readings.voltage_l2, readings.current_l2, readings.power_l3, readings.voltage_l3, readings.current_l3);
+
+        esp_mqtt_client_publish(_private_client, "homeassistant/energy/grid", payload, 0, 1, 0);
     }
 
     void publishHA(const Readings& readings) const {
@@ -247,16 +252,50 @@ class SMLReader : public Component, public UARTDevice {
         id(Instantaneous_Current_L2).publish_state(readings.current_l2);
         id(Instantaneous_Current_L3).publish_state(readings.current_l3);
         id(Frequency).publish_state(readings.frequency);
-        id(Total_incoming).publish_state(readings.total_incoming);
+        id(Total_Incoming).publish_state(readings.total_incoming);
         id(Total_Outgoing).publish_state(readings.total_outgoing);
     }
 
+    void initMQTT() {
+        if (_mqtt_initialized) {
+            return;
+        }
+
+        ESP_LOGI("SMLReader", "Initializing MQTT...");
+
+        esp_mqtt_client_config_t mqtt_cfg = {};
+        mqtt_cfg.broker.address.uri = _mqtt_uri.c_str();
+        mqtt_cfg.credentials.username = _mqtt_user.c_str();
+        mqtt_cfg.credentials.authentication.password = _mqtt_pass.c_str();
+
+        _private_client = esp_mqtt_client_init(&mqtt_cfg);
+
+        if (_private_client) {
+            esp_mqtt_client_register_event(_private_client, (esp_mqtt_event_id_t)ESP_EVENT_ANY_ID, mqtt_event_handler,
+                                           this);
+            esp_mqtt_client_start(_private_client);
+            ESP_LOGI("SMLReader", "MQTT Client Started");
+            _mqtt_initialized = true;
+        } else {
+            ESP_LOGE("SMLReader", "Failed to init MQTT Client");
+        }
+    }
+
    public:
-    SMLReader(UARTComponent* parent) : UARTDevice(parent) {}
+    SMLReader(UARTComponent* parent, std::string server, std::string user, std::string password)
+        : UARTDevice(parent), _mqtt_user(std::move(user)), _mqtt_pass(std::move(password)) {
+        _mqtt_uri = "mqtt://" + server + ":1883";
+    }
 
     void setup() override { _buffer.reserve(4096U); }
 
     void loop() override {
+        if (!_mqtt_initialized) {
+            if (esphome::network::is_connected()) {
+                initMQTT();
+            }
+        }
+
         switch (_current_state) {
             case (State::kWaitingForStartSequence):
                 waitForSequence(start_sequence, [this]() {
