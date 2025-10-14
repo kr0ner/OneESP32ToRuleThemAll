@@ -1,12 +1,12 @@
 defaults:
   rx_pin: "GPIO2"
-  mqtt_enabled: "true"
 
 esphome:
   includes:
     - OneESP32ToRuleThemAll/src/sml_reader.h
   libraries:
     - libsml=git+https://github.com/volkszaehler/libsml
+    - pubsubclient=git+https://github.com/knolleary/pubsubclient
 
 #########################################
 #                                       #
@@ -18,6 +18,11 @@ uart:
   rx_pin: ${rx_pin}
   baud_rate: 9600
 
+substitutions:
+  mqtt_server: !secret mqtt_server
+  mqtt_user: !secret mqtt_user
+  mqtt_password: !secret mqtt_password
+
 #########################################
 #                                       #
 #   SML reader                          #
@@ -28,7 +33,7 @@ external_components:
 
 custom_component:
   - lambda: |-
-      auto sml_reader = new SMLReader<${mqtt_enabled}>(id(smartmeter_uart));
+      auto sml_reader = new SMLReader(id(smartmeter_uart),"${mqtt_server}","${mqtt_user}","${mqtt_password}");
       return {sml_reader};
 
 #########################################
@@ -36,13 +41,13 @@ custom_component:
 #   MQTT                                #
 #                                       #
 #########################################
-mqtt:
-  id: mqtt_client
-  broker: !secret mqtt_server
-  username: !secret mqtt_user
-  password: !secret mqtt_password
-  discovery: false
-  enable_on_boot: ${mqtt_enabled}
+#mqtt:
+#  id: mqtt_client
+#  broker: !secret mqtt_server
+#  username: !secret mqtt_user
+#  password: !secret mqtt_password
+#  discovery: false
+#  enable_on_boot: ${mqtt_enabled}
 
 #########################################
 #                                       #

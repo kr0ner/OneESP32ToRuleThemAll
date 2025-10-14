@@ -1,9 +1,10 @@
+#include <PubSubClient.h>
+#include <WiFi.h>
 #include <sml/sml_file.h>
 #include <algorithm>
 #include <array>
 #include <chrono>
 #include <cmath>
-#include <sstream>
 #include <string>
 #include <vector>
 #include "esphome.h"
@@ -16,8 +17,8 @@ struct ObisIdentifier {
     const std::uint8_t measurement_type{0U};
     const std::uint8_t tariff{0U};
     bool operator==(const ObisIdentifier& other) const {
-        return std::tie(medium, channel, measured_parameter, measurement_type, tariff) ==
-               std::tie(other.medium, other.channel, other.measured_parameter, other.measurement_type, other.tariff);
+        return medium == other.medium && channel == other.channel && measured_parameter == other.measured_parameter &&
+               measurement_type == other.measurement_type && tariff == other.tariff;
     }
 };
 
@@ -63,12 +64,16 @@ struct Readings {
     float frequency{0.0f};
 };
 
-template <bool PublishMQTT>
 class SMLReader : public Component, public UARTDevice {
     std::vector<std::uint8_t> _buffer;
     State _current_state{State::kWaitingForStartSequence};
     sml_file* _file;
     std::optional<Readings> _readings;
+    WiFiClient wifi_client_;
+    PubSubClient mqtt_client_{wifi_client_};
+    const std::string _mqtt_server;
+    const std::string _mqtt_user;
+    const std::string _mqtt_password;
 
     template <typename T, typename F>
     void waitForSequence(const T& sequence, F func) {
@@ -97,7 +102,7 @@ class SMLReader : public Component, public UARTDevice {
             double value = sml_value_to_double(entry->value);
             int scaler = (entry->scaler) ? *entry->scaler : 0;
             if (scaler != 0) {
-                return (value * pow(10.0f, scaler));
+                return (value * powf(10.0f, scaler));
             }
             return value;
         }
@@ -212,8 +217,10 @@ class SMLReader : public Component, public UARTDevice {
 
     void publishReadings() {
         if (_readings.has_value()) {
-            if constexpr (PublishMQTT) {
+            connect_mqtt();
+            if (mqtt_client_.connected()) {
                 publishMQTT(*_readings);
+                mqtt_client_.loop();
             }
             publishHA(*_readings);
             _readings.reset();
@@ -221,18 +228,32 @@ class SMLReader : public Component, public UARTDevice {
         ESP_LOGV("SMLReader", "starting over");
     }
 
-    void publishMQTT(const Readings& readings) const {
-        std::ostringstream payload;
-        payload.precision(1);
-        payload << std::fixed;
-        payload << "{\"grid\":{\"power\":" << readings.power << ",";
-        payload << "\"L1\":{\"power\":" << readings.power_l1 << ",\"voltage\":" << readings.voltage_l1
-                << ",\"current\":" << readings.current_l1 << "},";
-        payload << "\"L2\":{\"power\":" << readings.power_l2 << ",\"voltage\":" << readings.voltage_l2
-                << ",\"current\":" << readings.current_l2 << "},";
-        payload << "\"L3\":{\"power\":" << readings.power_l3 << ",\"voltage\":" << readings.voltage_l3
-                << ",\"current\":" << readings.current_l3 << "}}}";
-        id(mqtt_client).publish("homeassistant/energy/grid", payload.str());
+    void connect_mqtt() {
+        if (mqtt_client_.connected()) {
+            return;
+        }
+
+        mqtt_client_.setServer(_mqtt_server.c_str(), 1883);
+        if (mqtt_client_.connect("esp_sml_reader", _mqtt_user.c_str(), _mqtt_password.c_str())) {
+            ESP_LOGI("SMLReader", "Connected to MQTT broker");
+        } else {
+            ESP_LOGW("SMLReader", "MQTT connect failed, rc=%d", mqtt_client_.state());
+        }
+    }
+
+    void publishMQTT(const Readings& readings) {
+        char payload[512];
+        snprintf(payload, sizeof(payload),
+                 "{\"grid\":{\"power\":%.1f,"
+                 "\"L1\":{\"power\":%.1f,\"voltage\":%.1f,\"current\":%.1f},"
+                 "\"L2\":{\"power\":%.1f,\"voltage\":%.1f,\"current\":%.1f},"
+                 "\"L3\":{\"power\":%.1f,\"voltage\":%.1f,\"current\":%.1f}}}",
+                 readings.power, readings.power_l1, readings.voltage_l1, readings.current_l1, readings.power_l2,
+                 readings.voltage_l2, readings.current_l2, readings.power_l3, readings.voltage_l3, readings.current_l3);
+
+        if (!mqtt_client_.publish("homeassistant/energy/grid", payload, true)) {
+            ESP_LOGW("SMLReader", "MQTT publish failed");
+        }
     }
 
     void publishHA(const Readings& readings) const {
@@ -252,9 +273,16 @@ class SMLReader : public Component, public UARTDevice {
     }
 
    public:
-    SMLReader(UARTComponent* parent) : UARTDevice(parent) {}
+    SMLReader(UARTComponent* parent, std::string mqtt_server, std::string mqtt_user, std::string mqtt_password)
+        : UARTDevice(parent),
+          _mqtt_server(std::move(mqtt_server)),
+          _mqtt_user(std::move(mqtt_user)),
+          _mqtt_password(std::move(mqtt_password)) {}
 
-    void setup() override { _buffer.reserve(4096U); }
+    void setup() override {
+        _buffer.reserve(4096U);
+        mqtt_client_.setServer(_mqtt_server.c_str(), 1883);
+    }
 
     void loop() override {
         switch (_current_state) {
