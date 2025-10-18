@@ -173,6 +173,7 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(LAUFZEIT_FILTER, 0xc111);
     PROPERTY(DIFFERENZDRUCK, 0xc11e);
     PROPERTY(BETRIEBS_STATUS_2, 0xc356);
+    PROPERTY(ZEITSPERRE_NE, 0x0588);
 #endif
 
 #if defined(THZ_504) || defined(THZ_5_5_ECO)

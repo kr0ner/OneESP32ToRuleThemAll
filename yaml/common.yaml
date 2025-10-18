@@ -187,7 +187,8 @@ api:
 #########################################
 sensor:
   - platform: homeassistant
-    name: "Temperature Sensor From Home Assistant"
+    name: Temperature Sensor From Home Assistant
+    id: ha_temperature_sensor
     entity_id: $entity_room_temperature
     on_value:
       then:
@@ -196,7 +197,8 @@ sensor:
             id(gRAUMISTTEMP) = x;
 
   - platform: homeassistant
-    name: "Humidity Sensor From Home Assistant"
+    name: Humidity Sensor From Home Assistant
+    id: ha_humidity_sensor
     entity_id: $entity_humidity
     on_value:
       then:

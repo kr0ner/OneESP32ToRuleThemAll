@@ -21,8 +21,9 @@ packages:
   LAUFZEIT_VERDICHTER_WW:     !include { file: wp_generic.yaml,     vars: { property: "LAUFZEIT_VERDICHTER_WW"    , icon: "mdi:calendar-clock"   , update_interval: $interval_slow }}
   LAUFZEIT_NHZ_HEIZEN:        !include { file: wp_generic.yaml,     vars: { property: "LAUFZEIT_NHZ_HEIZEN"       , icon: "mdi:calendar-clock"   , update_interval: $interval_slow }}
   LAUFZEIT_NHZ_WW:            !include { file: wp_generic.yaml,     vars: { property: "LAUFZEIT_NHZ_WW"           , icon: "mdi:calendar-clock"   , update_interval: $interval_slow }}
+  
+  SOMMERBETRIEB_TEMP:         !include { file: wp_number.yaml,      vars: { property: "SOMMERBETRIEB_TEMP" , min: "10.0", max: "25.0" , step: "0.5" , unit: "°C" , icon: "mdi:sun-thermometer" }}
 
-  SOMMERBETRIEB_TEMP:         !include { file: wp_number.yaml,      vars: { property: "SOMMERBETRIEB_TEMP", icon: "mdi:sun-thermometer", min: "10.0", max: "20.0", step: "1.0", unit: "°C"}}
 
 binary_sensor:
   - platform: template

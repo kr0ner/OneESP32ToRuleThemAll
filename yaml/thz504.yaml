@@ -8,5 +8,8 @@ packages:
   BASE:   !include { file: wp_base.yaml }
 
   ABLUFT_TAUPUNKT:      !include { file: wp_temperature.yaml, vars: { property: "ABLUFT_TAUPUNKT" }}
+
+  SOMMERBETRIEB_TEMP:   !include { file: wp_number.yaml, vars: { property: "SOMMERBETRIEB_TEMP" , min: "10.0", max: "25.0" , step: "0.5" , unit: "°C" , icon: "mdi:sun-thermometer" }}
+
   DIFFERENZDRUCK:       !include { file: wp_generic.yaml, vars: { property: "DIFFERENZDRUCK"      , icon: "mdi:air-filter", unit: "Pa", update_interval: $interval_medium          }}
   LAUFZEIT_FILTER_TAGE: !include { file: wp_generic.yaml, vars: { property: "LAUFZEIT_FILTER_TAGE", icon: "mdi:air-filter", unit: "d" , update_interval: $interval_once_in_a_while }}

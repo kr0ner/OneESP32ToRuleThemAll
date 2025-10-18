@@ -14,9 +14,10 @@ esphome:
                 // update the part that belongs to this sensor
                 updateTimeFragment(timeToSet);
                 // convert the time back to string and directly save it to the state of the datetime sensor
-                timeToSet.strftime(id(HEATPUMP_DATETIME).state.data(), 20, "%Y-%m-%d %H:%M");
+                char buf[20];
+                timeToSet.strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M");
                 // publish the value
-                id(HEATPUMP_DATETIME).publish_state(id(HEATPUMP_DATETIME).state);
+                id(HEATPUMP_DATETIME).state = std::string(buf);
             };
             CallbackHandler::instance().addCallback(std::make_pair(Kessel,Property::kJAHR),[updateTime](const SimpleVariant& value){
               updateTime([&value](ESPTime& timeToSet){
@@ -43,6 +44,7 @@ esphome:
               updateTime([&value](ESPTime& timeToSet){
                 timeToSet.minute = static_cast<std::uint16_t>(value);
               });
+              id(HEATPUMP_DATETIME).publish_state(id(HEATPUMP_DATETIME).state);
             });
             queueRequest(Kessel, Property::kJAHR);
             queueRequest(Kessel, Property::kMONAT);
