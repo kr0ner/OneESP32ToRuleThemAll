@@ -10,3 +10,10 @@ packages:
   LAUFZEIT_FILTER_TAGE:     !include { file: wp_generic.yaml, vars: { property: "LAUFZEIT_FILTER_TAGE" , icon: "mdi:air-filter" , unit: "d" , update_interval: $interval_once_in_a_while }}
 
   ZEITSPERRE_NE:            !include { file: wp_number.yaml , vars: { property: "ZEITSPERRE_NE" , icon: "mdi:valve" , min: "0", max: "360", step: "5.0" }}
+
+button:
+  - platform: template
+    name: "Reset Filter"
+    on_press:
+        lambda: |-
+            sendData(Kessel, Property::kRESET_FILTER, 1U);

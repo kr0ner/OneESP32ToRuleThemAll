@@ -46,3 +46,10 @@ sensor:
     accuracy_decimals: 1
     lambda: |-
       return (id(RUECKLAUFISTTEMP).state - id(VORLAUFSOLLTEMP).state);
+
+button:
+  - platform: template
+    name: "Reset Filter"
+    on_press:
+        lambda: |-
+            sendData(Kessel, Property::kRESET_FILTER, 1U);
