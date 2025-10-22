@@ -6,5 +6,3 @@ esphome:
 packages:
   COMMON: !include { file: common.yaml }
   BASE:   !include { file: wp_base.yaml }
-
-  SOMMERBETRIEB_TEMP:   !include { file: wp_number.yaml, vars: { property: "SOMMERBETRIEB_TEMP" , min: "10.0", max: "25.0" , step: "0.5" , unit: "°C" , icon: "mdi:sun-thermometer" }}
