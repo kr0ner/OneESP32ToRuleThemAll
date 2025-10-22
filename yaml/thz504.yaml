@@ -11,3 +11,10 @@ packages:
 
   DIFFERENZDRUCK:       !include { file: wp_generic.yaml, vars: { property: "DIFFERENZDRUCK"      , icon: "mdi:air-filter", unit: "Pa", update_interval: $interval_medium          }}
   LAUFZEIT_FILTER_TAGE: !include { file: wp_generic.yaml, vars: { property: "LAUFZEIT_FILTER_TAGE", icon: "mdi:air-filter", unit: "d" , update_interval: $interval_once_in_a_while }}
+
+button:
+  - platform: template
+    name: "Reset Filter"
+    on_press:
+        lambda: |-
+            sendData(Kessel, Property::kRESET_FILTER, 1U);
