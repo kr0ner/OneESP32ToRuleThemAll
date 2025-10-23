@@ -126,7 +126,6 @@ class Heating : public CustomClimate {
         register_heating_callback(heating_sensor);
         register_cooling_callback(cooling_sensor);
         register_fan_callback(fan_sensor);
-        traits_.set_supports_two_point_target_temperature(true);
     };
 };
 
