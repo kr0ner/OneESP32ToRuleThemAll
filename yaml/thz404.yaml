@@ -13,7 +13,6 @@ packages:
 
   DRUCK_HEIZKREIS:            !include { file: wp_generic.yaml, vars: { property: "DRUCK_HEIZKREIS", unit: "bar", icon: "mdi:gauge", accuracy_decimals: "1" }}
   AKTIVE_HEIZSTUFEN:          !include { file: wp_generic.yaml, vars: { property: "AKTIVE_HEIZSTUFEN", interval: $interval_medium, icon: "mdi:heat-pump-outline"}}
-  LAUFZEIT_FILTER_TAGE:       !include { file: wp_generic.yaml, vars: { property: "LAUFZEIT_FILTER_TAGE", icon: "mdi:air-filter", unit: "d", update_interval: $interval_once_in_a_while }}
   LAUFZEIT_VERDICHTER_HEIZEN: !include { file: wp_generic.yaml, vars: { property: "LAUFZEIT_VERDICHTER_HEIZEN", icon: "mdi:calendar-clock", interval: $interval_slow }}
   LAUFZEIT_VERDICHTER_WW:     !include { file: wp_generic.yaml, vars: { property: "LAUFZEIT_VERDICHTER_WW", icon: "mdi:calendar-clock", interval: $interval_slow }}
   LAUFZEIT_NHZ_HEIZEN:        !include { file: wp_generic.yaml, vars: { property: "LAUFZEIT_NHZ_HEIZEN", icon: "mdi:calendar-clock", interval: $interval_slow }}
@@ -46,10 +45,3 @@ sensor:
     accuracy_decimals: 1
     lambda: |-
       return (id(RUECKLAUFISTTEMP).state - id(VORLAUFSOLLTEMP).state);
-
-button:
-  - platform: template
-    name: "Reset Filter"
-    on_press:
-        lambda: |-
-            sendData(Kessel, Property::kRESET_FILTER, 1U);
