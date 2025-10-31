@@ -1,23 +1,17 @@
+#########################################
+#                                       #
+#   Kondensatpumpe Störung              #
+#                                       #
+#########################################
 binary_sensor:
-  #########################################
-  #                                       #
-  #   Kondensatpumpe Störung              #
-  #                                       #
-  #########################################
-    - platform: gpio
-      pin:
-        number: GPIO32
-        mode:
-          input: true
-          pullup: true
-        inverted: true
-      name: "Kondensatpumpe Störung"
-      filters:
-        - delayed_on: 1s
-        - delayed_off: 1min
-      on_press:
-        then:
-          - switch.turn_on: evu_sperre
-      on_release:
-        then:
-          - switch.turn_off: evu_sperre
+  - platform: gpio
+    pin:
+      number: GPIO16
+      mode:
+        input: true
+        pullup: true
+    device_class: problem
+    name: "Kondensatpumpe Störung"
+    filters:
+      - delayed_on: 1s
+      - delayed_off: 1min
