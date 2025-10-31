@@ -1,0 +1,9 @@
+fan:
+  - platform: speed
+    output: umluft_pwm
+    name: "Umluft"
+
+output:
+  - platform: ledc
+    pin: GPIO32
+    id: umluft_pwm
