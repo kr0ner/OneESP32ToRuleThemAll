@@ -130,8 +130,7 @@ packages:
 
   FEHLERMELDUNG:                     !include { file: wp_generic.yaml, vars: { property: "FEHLERMELDUNG"      , icon: "mdi:alert-circle" }}
   RAUMFEUCHTE:                       !include { file: wp_generic.yaml, vars: { property: "RAUMFEUCHTE"        , interval: $interval_very_slow, unit: "%", icon: "mdi:water-percent", target: "HK1", accuracy_decimals: "1" }}
-  STEIGUNG_HK1:                      !include { file: wp_generic.yaml, vars: { property: "STEIGUNG_HK1"       , icon: "mdi:valve", target: "HK1", accuracy_decimals: "2" }}
-
+  STEIGUNG_HK1:                      !include { file: wp_number.yaml, vars: { property: "STEIGUNG_HK1"       , icon: "mdi:valve", target: "HK1", min: "0", max: "5.0", step: "0.01"}}
   RAUMEINFLUSS:                      !include { file: wp_number.yaml, vars: { property: "RAUMEINFLUSS", target: "HK1" }}
 
   EL_ENERGIEAUFNAHME_WW_SUMME_KWH:   !include { file: wp_daily_energy_combined.yaml, vars: { sensor_name: "EL_ENERGIEAUFNAHME_WW_SUMME_KWH"   , property_wh: "EL_ENERGIEAUFNAHME_WW_TAG_WH"   , property_kwh: "EL_ENERGIEAUFNAHME_WW_TAG_KWH"   }}
