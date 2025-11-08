@@ -3,12 +3,15 @@ defaults:
   step: "1"
   min: "0"
   max: "100"
+  icon: "mdi:valve"
+  unit: ""
 
 number:
   - platform: template
     name: ${property}
     id: ${property}
-    icon: "mdi:valve"
+    icon: ${icon}
+    unit: ${unit}
     min_value: ${min}
     max_value: ${max}
     step: ${step}
