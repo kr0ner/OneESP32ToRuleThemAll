@@ -11,7 +11,7 @@ number:
     name: ${property}
     id: ${property}
     icon: ${icon}
-    unit: ${unit}
+    unit_of_measurement: ${unit}
     min_value: ${min}
     max_value: ${max}
     step: ${step}
