@@ -161,7 +161,7 @@ api:
             const auto use_extended_id{false};
             std::vector<std::uint8_t> payload;
             payload.resize(data.size());
-            std::transform(data.cbegin(),data.cend(),payload.begin(),[](const auto in){ return static_cast<std::uint8_t>(in);});
+            std::transform(data.begin(),data.end(),payload.begin(),[](const auto in){ return static_cast<std::uint8_t>(in);});
             id(wp_can).send_data(ESPClient.canId, use_extended_id, payload);
     - action: can_send_value
       variables:
