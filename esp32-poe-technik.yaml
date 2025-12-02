@@ -106,3 +106,4 @@ packages:
 # ttf07: !include OneESP32ToRuleThemAll/yaml/ttf07.yaml
 # wpl13: !include OneESP32ToRuleThemAll/yaml/wpl13.yaml
 # kondensatpumpe: !include OneESP32ToRuleThemAll/yaml/kondensatpumpe.yaml
+# sgready: !include OneESP32ToRuleThemAll/yaml/sg_ready.yaml
