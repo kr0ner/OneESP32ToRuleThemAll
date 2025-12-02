@@ -1,0 +1,72 @@
+# This can be used for controlling a 2ch-relay with your esp32
+# INBETRIEBNAHME -> IO KONFIGURATION -> EINGANG X.1.13 -> SG READY -> EIN
+# 
+# Wiring:
+# X.1.13 1 -> K1
+# X.1.13 2 -> K1 & K2
+# X.1.13 3 -> K2
+
+switch:
+  - platform: gpio
+    name: "SG Ready K1"
+    pin: GPIO26
+    inverted: true
+    id: relay_k1
+    restore_mode: ALWAYS_OFF
+  - platform: gpio
+    name: "SG Ready K2"
+    pin: GPIO25
+    inverted: true
+    id: relay_k2
+    restore_mode: ALWAYS_OFF
+select:
+  - platform: template
+    name: "SG Ready State"
+    id: sg_select
+    optimistic: true
+    restore_value: true
+    initial_option: "2 - Normal operation"
+    options:
+      # The operation for the heat pump is blocked for a maximum of two hours per day.
+      - "1 - Blocked operation"    
+
+      # The heat pump runs in energy-efficient normal mode.
+      - "2 - Normal operation"     
+
+      # The operation of the heat pump is encouraged to increase electricity consumption for heating and warm water.
+      - "3 - Encouraged operation"
+
+      # The heat pump is ordered to run. This state supports two variants which must be adjustable on the controller for different tariff and utilization models:
+      # i) the heat pump is switched on
+      # ii) the heat pump is switched on AND the warm water temperature is raised
+      - "4 - Ordered operation"
+    on_value:
+      then:
+        - lambda: |-
+            std::string wished = id(sg_select).state;
+            bool want_k1 = (wished.find("1 -") != std::string::npos || wished.find("4 -") != std::string::npos);
+            bool want_k2 = (wished.find("3 -") != std::string::npos || wished.find("4 -") != std::string::npos);
+            if (want_k1) {
+              id(relay_k1).turn_on();
+            } else {
+              id(relay_k1).turn_off();
+            }
+            if (want_k2) {
+              id(relay_k2).turn_on();
+            } else {
+              id(relay_k2).turn_off();
+            }
+text_sensor:
+  - platform: template
+    name: "SG Ready Actual State"
+    id: current_real_state
+    update_interval: 10s
+    lambda: |-
+      bool out_k1 = id(relay_k1).state;
+      bool out_k2 = id(relay_k2).state;
+      std::string real;
+      if (out_k1 && out_k2) real = "4 - Ordered operation";
+      else if (!out_k1 && out_k2) real = "3 - Encouraged operation";
+      else if (out_k1 && !out_k2) real = "1 - Blocked operation";
+      else real = "2 - Normal operation";
+      return real;
