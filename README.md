@@ -1,5 +1,9 @@
 This project aims to provide all kinds of useful features for your Home Assistant instance using a single ESP32 board.
 
+If you like the project, help me code all night 😴
+
+<a href="https://www.buymeacoffee.com/kr0ner" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a>
+
 ## Features:
 
   - SmartMeter readings via optical sensor [https://amzn.eu/d/1a28LBy]
