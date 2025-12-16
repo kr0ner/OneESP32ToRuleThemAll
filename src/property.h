@@ -110,6 +110,7 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(SOLLWERT_MIN_HK1, 0x012b, Type::et_dec_val);
     PROPERTY(HYSTERESE_WW, 0x0140, Type::et_dec_val);
     PROPERTY(BETRIEBS_STATUS, 0x0176);
+    PROPERTY(FIRMWARE_VERSION, 0x019a, et_cent_val);
     PROPERTY(VOLUMENSTROM, 0x01da, Type::et_dec_val);
     PROPERTY(TAUPUNKT_HK1, 0x0264, Type::et_dec_val);
     PROPERTY(KUEHLMODE, 0x0287, Type::et_bool);
