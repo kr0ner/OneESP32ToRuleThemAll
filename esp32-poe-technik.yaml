@@ -102,6 +102,7 @@ packages:
 # sensors: !include OneESP32ToRuleThemAll/yaml/sensors.yaml
 # thz404: !include OneESP32ToRuleThemAll/yaml/thz404.yaml
   thz504: !include OneESP32ToRuleThemAll/yaml/thz504.yaml
+# thz55eco works for Stiebel Eltron LWZ 5.5s
 # thz55eco: !include OneESP32ToRuleThemAll/yaml/thz5_5_eco.yaml
 # ttf07: !include OneESP32ToRuleThemAll/yaml/ttf07.yaml
 # wpl13: !include OneESP32ToRuleThemAll/yaml/wpl13.yaml
