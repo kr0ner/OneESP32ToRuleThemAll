@@ -113,6 +113,7 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(FIRMWARE_VERSION, 0x019a, et_cent_val);
     PROPERTY(VOLUMENSTROM, 0x01da, Type::et_dec_val);
     PROPERTY(TAUPUNKT_HK1, 0x0264, Type::et_dec_val);
+    PROPERTY(HEISSGAS_TEMP, 0x0265, Type::et_dec_val);
     PROPERTY(KUEHLMODE, 0x0287, Type::et_bool);
     PROPERTY(PUMPENDREHZAHL_HEIZEN, 0x02cb, Type::et_dec_val);
     PROPERTY(LAUFZEIT_FILTER_TAGE, 0x0341);
@@ -148,7 +149,12 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(ABLUFT_IST, 0x0599);
     PROPERTY(FORTLUFT_SOLL, 0x059a);
     PROPERTY(FORTLUFT_IST, 0x059b);
+    PROPERTY(VERFLUESSIGER_TEMP, 0x059c, Type::et_dec_val);
     PROPERTY(SOMMERBETRIEB_HYSTERESE, 0x05a2, Type::et_dec_val);
+    PROPERTY(LAUFZEIT_VERDICHTER_HEIZEN, 0x05a4);
+    PROPERTY(LAUFZEIT_VERDICHTER_WW, 0x05a6);
+    PROPERTY(LAUFZEIT_NHZ_WW, 0x05a7);
+    PROPERTY(LAUFZEIT_NHZ_HEIZEN, 0x05a8);
     PROPERTY(SPEICHERSOLLTEMP_NACHT, 0x05bf, Type::et_dec_val);
     PROPERTY(LUEFT_STUFE_HAND, 0x0612);
     PROPERTY(KUEHLSYSTEM, 0x0613);
@@ -160,7 +166,8 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(MOTORLEISTUNG, 0x06a0, Type::et_cent_val);
     PROPERTY(MOTORSPANNUNG, 0x06a1);
     PROPERTY(ABLUFTTEMP, 0x0694, Type::et_dec_val);
-    PROPERTY(ANZEIGE_NIEDERDRUCK, 0x07a7, Type::et_cent_val);
+    PROPERTY(DRUCK_HOCHDRUCK, 0x07a6, Type::et_dec_val);
+    PROPERTY(DRUCK_NIEDERDRUCK, 0x07a7, Type::et_dec_val);
     PROPERTY(WAERMEERTRAG_2WE_WW_TAG_WH, 0x0922);
     PROPERTY(WAERMEERTRAG_2WE_WW_TAG_KWH, 0x0923, Type::et_double_val);
     PROPERTY(WAERMEERTRAG_2WE_WW_SUM_KWH, 0x0924);
@@ -182,7 +189,8 @@ struct Property : public oe32trta::detail::Property {
 #endif
 
 #if defined(THZ_504) || defined(THZ_5_5_ECO)
-    PROPERTY(PUMPENZYKLEN_MIN_AUSSENT, 0x05bb);
+    PROPERTY(PUMPENZYKLEN_AUSSENTEMP_MIN, 0x05bb);
+    PROPERTY(PUMPENZYKLEN_AUSSENTEMP_MAX, 0x05bc);
 #endif
 
 #if defined(TTF_07_C)
@@ -225,7 +233,7 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(VORLAUFTEMP, 0x01d6, Type::et_dec_val);
     PROPERTY(MAXVORLAUFTEMP, 0x01e8, Type::et_dec_val);
     PROPERTY(MAXRUECKLAUFTEMP, 0x0028, Type::et_dec_val);
-    PROPERTY(HEISSGASTEMP, 0x0265, Type::et_dec_val);
+    PROPERTY(HEISSGAS_TEMP, 0x0265, Type::et_dec_val);
     PROPERTY(EL_NACHERW_ANZ_STUFEN, 0x059f);
     PROPERTY(EL_NACHERW_VERZ_ZEIT, 0x05a0);
     PROPERTY(VERDICHTER_EINTRITTSTEMP, 0x06d9, Type::et_dec_val);
@@ -234,7 +242,7 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(VERDAMPFERTEMP, 0x07a9, Type::et_dec_val);
     PROPERTY(FROSTSCHUTZ, 0xfe07, Type::et_dec_val);
     PROPERTY(ANLAGEFROST, 0x0a00, Type::et_dec_val);
-    PROPERTY(VERFLUESSIGERTEMP, 0x0a37, Type::et_dec_val);
+    PROPERTY(VERFLUESSIGER_TEMP, 0x0a37, Type::et_dec_val);
     PROPERTY(OELSUMPFTEMP, 0x0a39, Type::et_dec_val);
     PROPERTY(WAERMEPUMPEN_STATUS, 0x02e2);
     PROPERTY(MINTEMP, 0x4ea7, Type::et_dec_val);
@@ -294,16 +302,10 @@ struct Property : public oe32trta::detail::Property {
 #endif
 
 #if defined(THZ_404)
-    PROPERTY(HEISSGAS_TEMP, 0x0265, Type::et_dec_val);
-    PROPERTY(VERFLUESSIGER_TEMP, 0x059c, Type::et_dec_val);
-    PROPERTY(LAUFZEIT_VERDICHTER_HEIZEN, 0x05a4);
-    PROPERTY(LAUFZEIT_VERDICHTER_WW, 0x05a6);
-    PROPERTY(LAUFZEIT_NHZ_WW, 0x05a7);
-    PROPERTY(LAUFZEIT_NHZ_HEIZEN, 0x05a8);
     PROPERTY(PUMPENZYKLEN_MIN_TAG, 0x05b8);
     PROPERTY(PUMPENZYKLEN_MAX_TAG, 0x05b7);
-    PROPERTY(PUMPENZYKLEN_MAX_AUSSENT, 0x05b9, Type::et_dec_val);
-    PROPERTY(PUMPENZYKLEN_MIN_AUSSENT, 0x05ba, Type::et_dec_val);
+    PROPERTY(PUMPENZYKLEN_AUSSENTEMP_MAX, 0x05b9, Type::et_dec_val);
+    PROPERTY(PUMPENZYKLEN_AUSSENTEMP_MIN, 0x05ba, Type::et_dec_val);
     PROPERTY(AKTIVE_HEIZSTUFEN, 0x05bb);
 #endif
 };
