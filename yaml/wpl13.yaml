@@ -215,9 +215,9 @@ packages:
   MAXVORLAUFTEMP:                       !include { file: wp_temperature.yaml, vars: { property: "MAXVORLAUFTEMP"     , target: "Kessel"  }}
   MAXRUECKLAUFTEMP:                     !include { file: wp_temperature.yaml, vars: { property: "MAXRUECKLAUFTEMP"   , target: "Kessel"  }}
   AUSSENTEMP:                           !include { file: wp_temperature.yaml, vars: { property: "AUSSENTEMP"         , update_interval: $interval_medium , target: "Kessel" }}
-  HEISSGASTEMP:                         !include { file: wp_temperature.yaml, vars: { property: "HEISSGASTEMP"       , update_interval: $interval_medium , target: "Manager" }}
+  HEISSGAS_TEMP:                        !include { file: wp_temperature.yaml, vars: { property: "HEISSGAS_TEMP"      , update_interval: $interval_medium , target: "Manager" }}
   VORLAUFTEMP:                          !include { file: wp_temperature.yaml, vars: { property: "VORLAUFTEMP"        , update_interval: $interval_medium , target: "Manager" }}
-  VERFLUESSIGERTEMP:                    !include { file: wp_temperature.yaml, vars: { property: "VERFLUESSIGERTEMP"  , update_interval: $interval_medium , target: "Manager" }}
+  VERFLUESSIGER_TEMP:                   !include { file: wp_temperature.yaml, vars: { property: "VERFLUESSIGER_TEMP" , update_interval: $interval_medium , target: "Manager" }}
   OELSUMPFTEMP:                         !include { file: wp_temperature.yaml, vars: { property: "OELSUMPFTEMP"       , update_interval: $interval_medium , target: "Manager" }}
   VORLAUFISTTEMP_WP:                    !include { file: wp_temperature.yaml, vars: { property: "VORLAUFISTTEMP_WP"  , update_interval: $interval_medium , target: "Kessel" }}
   RUECKLAUFISTTEMP_WP:                  !include { file: wp_temperature.yaml, vars: { property: "RUECKLAUFISTTEMP_WP", update_interval: $interval_medium , target: "Kessel" }}
