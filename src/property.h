@@ -110,6 +110,7 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(SOLLWERT_MIN_HK1, 0x012b, Type::et_dec_val);
     PROPERTY(HYSTERESE_WW, 0x0140, Type::et_dec_val);
     PROPERTY(BETRIEBS_STATUS, 0x0176);
+    PROPERTY(FIRMWARE_VERSION, 0x019a, et_cent_val);
     PROPERTY(VOLUMENSTROM, 0x01da, Type::et_dec_val);
     PROPERTY(TAUPUNKT_HK1, 0x0264, Type::et_dec_val);
     PROPERTY(KUEHLMODE, 0x0287, Type::et_bool);
@@ -137,6 +138,8 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(LUEFT_ABLUFT_STUFE1, 0x0579);
     PROPERTY(LUEFT_ABLUFT_STUFE2, 0x057a);
     PROPERTY(LUEFT_ABLUFT_STUFE3, 0x057b);
+    PROPERTY(ANTILEGIONELLEN, 0x0586);
+    PROPERTY(WW_TEMP_LEGIONELLEN, 0x0587, Type::et_dec_val);
     PROPERTY(NE_STUFE_WW, 0x058a);
     PROPERTY(WARMWASSER_ECO, 0x058d, Type::et_bool);
     PROPERTY(ZULUFT_SOLL, 0x0596);
