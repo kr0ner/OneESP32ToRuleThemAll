@@ -261,9 +261,9 @@ packages:
   RAUMSOLLTEMP_TAG:                    !include { file: wp_temperature.yaml, vars: { property: "RAUMSOLLTEMP_TAG"       , target: "HK1" , writable: "true" }}
   RAUMSOLLTEMP_NACHT:                  !include { file: wp_temperature.yaml, vars: { property: "RAUMSOLLTEMP_NACHT"     , target: "HK1" , writable: "true" }}
   KUEHL_RAUMSOLL_TAG:                  !include { file: wp_temperature.yaml, vars: { property: "KUEHL_RAUMSOLL_TAG"     , target: "HK1" , writable: "true" }}
-  VERDAMPFERTEMP:                      !include { file: wp_temperature.yaml, vars: { property: "VERDAMPFERTEMP"         , interval: $interval_slow }}
-  HEISSGAS_TEMP:                       !include { file: wp_temperature.yaml, vars: { property: "HEISSGAS_TEMP"          , interval: $interval_slow }}
-  VERFLUESSIGER_TEMP:                  !include { file: wp_temperature.yaml, vars: { property: "VERFLUESSIGER_TEMP"     , interval: $interval_slow }}
+  VERDAMPFERTEMP:                      !include { file: wp_temperature.yaml, vars: { property: "VERDAMPFERTEMP"         , update_interval: $interval_slow }}
+  HEISSGAS_TEMP:                       !include { file: wp_temperature.yaml, vars: { property: "HEISSGAS_TEMP"          , update_interval: $interval_slow }}
+  VERFLUESSIGER_TEMP:                  !include { file: wp_temperature.yaml, vars: { property: "VERFLUESSIGER_TEMP"     , update_interval: $interval_slow }}
 
   LUEFT_STUFE_TAG:                     !include { file: wp_ventilation.yaml, vars: { property: "LUEFT_STUFE_TAG" }}
   LUEFT_STUFE_NACHT:                   !include { file: wp_ventilation.yaml, vars: { property: "LUEFT_STUFE_NACHT" }}

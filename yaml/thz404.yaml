@@ -7,9 +7,9 @@ packages:
   COMMON: !include { file: common.yaml }
   BASE:   !include { file: wp_base.yaml }
 
-  SOMMERBETRIEB_HYSTERESE:    !include { file: wp_temperature.yaml, vars: { property: "SOMMERBETRIEB_HYSTERESE", interval: $interval_slow }}
+  SOMMERBETRIEB_HYSTERESE:    !include { file: wp_temperature.yaml, vars: { property: "SOMMERBETRIEB_HYSTERESE", update_interval: $interval_slow }}
 
-  AKTIVE_HEIZSTUFEN:          !include { file: wp_generic.yaml, vars: { property: "AKTIVE_HEIZSTUFEN", interval: $interval_medium, icon: "mdi:heat-pump-outline"}}
+  AKTIVE_HEIZSTUFEN:          !include { file: wp_generic.yaml, vars: { property: "AKTIVE_HEIZSTUFEN", update_interval: $interval_medium, icon: "mdi:heat-pump-outline"}}
 
 globals:
   - id: sommermodus_state
