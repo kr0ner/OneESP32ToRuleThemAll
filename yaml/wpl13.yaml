@@ -250,19 +250,19 @@ packages:
   LEISTUNG_KUEHLEN:           !include { file: wp_generic.yaml, vars: { property: "LEISTUNG_KUEHLEN", unit: "kW", target: "WPM2"  }}
   STEIGUNG_KUEHLKURVE:        !include { file: wp_generic.yaml, vars: { property: "STEIGUNG_KUEHLKURVE"          , target: "HK2" , scaler: "0.1", accuracy_decimals: "2" }}
   LAUFZEIT_PASSIVKUEHLUNG:    !include { file: wp_generic.yaml, vars: { property: "LAUFZEIT_PASSIVKUEHLUNG", scaler: "10", unit: "h", target: "Manager"  }}
-  RAUMFEUCHTE:                !include { file: wp_generic.yaml, vars: { property: "RAUMFEUCHTE" , interval: $interval_very_slow, unit: "%", icon: "mdi:water-percent", accuracy_decimals: "1", target: "FET"  }}
+  RAUMFEUCHTE:                !include { file: wp_generic.yaml, vars: { property: "RAUMFEUCHTE" , update_interval: $interval_very_slow, unit: "%", icon: "mdi:water-percent", accuracy_decimals: "1", target: "FET"  }}
   HEIZEN_EFFIZIENZ_TAG:       !include { file: wp_generic.yaml, vars: { property: "HEIZEN_EFFIZIENZ_TAG"  , target: "WPM2", accuracy_decimals: "2" }}
   HEIZEN_EFFIZIENZ_JAHR:      !include { file: wp_generic.yaml, vars: { property: "HEIZEN_EFFIZIENZ_JAHR" , target: "WPM2", accuracy_decimals: "2" }}
-  DRUCK_NIEDERDRUCK:          !include { file: wp_generic.yaml, vars: { property: "DRUCK_NIEDERDRUCK"     , interval: never, unit: "bar"  , icon: "mdi:water-pressure", scaler: "0.1" , accuracy_decimals: "2", target: "Manager"  }}
-  DRUCK_HOCHDRUCK:            !include { file: wp_generic.yaml, vars: { property: "DRUCK_HOCHDRUCK"       , interval: never, unit: "bar"  , icon: "mdi:water-pressure", scaler: "0.1" , accuracy_decimals: "2", target: "Manager"  }}
-  HEIZUNGSDRUCK:              !include { file: wp_generic.yaml, vars: { property: "HEIZUNGSDRUCK"         , interval: never, unit: "bar"  , icon: "mdi:water-pressure" , accuracy_decimals: "2", target: "Kessel"  }}
-  QUELLENDRUCK:               !include { file: wp_generic.yaml, vars: { property: "QUELLENDRUCK"          , interval: never, unit: "bar"  , icon: "mdi:water-pressure" , accuracy_decimals: "1", target: "Manager"  }}
-  LEISTUNG_QUELLENPUMPE:      !include { file: wp_generic.yaml, vars: { property: "LEISTUNG_QUELLENPUMPE" , interval: never, unit: "%"    , icon: "mdi:water-percent", accuracy_decimals: "1", target: "Manager"  }}
-  VOLUMENSTROM:               !include { file: wp_generic.yaml, vars: { property: "VOLUMENSTROM"          , interval: never, unit: "l/min", icon: "mdi:flow"           , accuracy_decimals: "2", target: "Kessel"  }}
-  STROM_INVERTER:             !include { file: wp_generic.yaml, vars: { property: "STROM_INVERTER"        , interval: never, unit: "A"    , target: "Manager"          , accuracy_decimals: "1"  }}
-  SPANNUNG_INVERTER:          !include { file: wp_generic.yaml, vars: { property: "SPANNUNG_INVERTER"     , interval: never, unit: "V"    , target: "Manager"          , accuracy_decimals: "1"  }}
+  DRUCK_NIEDERDRUCK:          !include { file: wp_generic.yaml, vars: { property: "DRUCK_NIEDERDRUCK"     , unit: "bar"  , icon: "mdi:water-pressure", scaler: "0.1" , accuracy_decimals: "2", target: "Manager"  }}
+  DRUCK_HOCHDRUCK:            !include { file: wp_generic.yaml, vars: { property: "DRUCK_HOCHDRUCK"       , unit: "bar"  , icon: "mdi:water-pressure", scaler: "0.1" , accuracy_decimals: "2", target: "Manager"  }}
+  HEIZUNGSDRUCK:              !include { file: wp_generic.yaml, vars: { property: "HEIZUNGSDRUCK"         , unit: "bar"  , icon: "mdi:water-pressure" , accuracy_decimals: "2", target: "Kessel"  }}
+  QUELLENDRUCK:               !include { file: wp_generic.yaml, vars: { property: "QUELLENDRUCK"          , unit: "bar"  , icon: "mdi:water-pressure" , accuracy_decimals: "1", target: "Manager"  }}
+  LEISTUNG_QUELLENPUMPE:      !include { file: wp_generic.yaml, vars: { property: "LEISTUNG_QUELLENPUMPE" , unit: "%"    , icon: "mdi:water-percent", accuracy_decimals: "1", target: "Manager"  }}
+  VOLUMENSTROM:               !include { file: wp_generic.yaml, vars: { property: "VOLUMENSTROM"          , unit: "l/min", icon: "mdi:flow"           , accuracy_decimals: "2", target: "Kessel"  }}
+  STROM_INVERTER:             !include { file: wp_generic.yaml, vars: { property: "STROM_INVERTER"        , unit: "A"    , target: "Manager"          , accuracy_decimals: "1"  }}
+  SPANNUNG_INVERTER:          !include { file: wp_generic.yaml, vars: { property: "SPANNUNG_INVERTER"     , unit: "V"    , target: "Manager"          , accuracy_decimals: "1"  }}
   ZEITINTERVALL:              !include { file: wp_generic.yaml, vars: { property: "ZEITINTERVALL", scaler: "10", target: "WPM2" }}
-  STROM_MOTOR:                !include { file: wp_generic.yaml, vars: { property: "STROM_MOTOR"     , interval: never, unit: "A"    , target: "Manager"          , accuracy_decimals: "1"  }}
+  STROM_MOTOR:                !include { file: wp_generic.yaml, vars: { property: "STROM_MOTOR"     , unit: "A"    , target: "Manager"          , accuracy_decimals: "1"  }}
   VERDICHTERDREHZAHLGRENZE:   !include { file: wp_generic.yaml, vars: { property: "VERDICHTERDREHZAHLGRENZE", target: "Manager"  }}
   STEIGUNG_HEIZKURVE_HK1:     !include { file: wp_generic.yaml, vars: { property: "STEIGUNG_HEIZKURVE"    , target: "HK1" , name_suffix: "_HK1", scaler: "0.1", accuracy_decimals: "2" }}
   STEIGUNG_HEIZKURVE_HK2:     !include { file: wp_generic.yaml, vars: { property: "STEIGUNG_HEIZKURVE"    , target: "HK2" , name_suffix: "_HK2", scaler: "0.1", accuracy_decimals: "2" }}
