@@ -11,7 +11,7 @@ esphome:
 esp32:
   board: esp32-poe
   framework:
-    type: arduino
+    type: esp-idf
 
 # Enable logging
 logger:
@@ -65,6 +65,7 @@ canbus:
     spi_id: McpSpi
     cs_pin: GPIO15
     bit_rate: 20kbps
+    clock: 8MHZ
 
 #########################################
 #                                       #

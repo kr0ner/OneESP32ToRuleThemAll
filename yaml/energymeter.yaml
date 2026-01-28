@@ -5,8 +5,13 @@ defaults:
 esphome:
   includes:
     - OneESP32ToRuleThemAll/src/sml_reader.h
-  libraries:
-    - libsml=git+https://github.com/volkszaehler/libsml
+
+esp32:
+  framework:
+    components:
+      - name: libsml
+        source: https://github.com/kr0ner/libsml
+        ref: master
 
 #########################################
 #                                       #
