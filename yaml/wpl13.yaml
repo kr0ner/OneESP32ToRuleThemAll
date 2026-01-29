@@ -128,14 +128,18 @@ interval:
     then:
       - lambda: |-
           // Request sensor value one after another.
-          if(!conditionalRequests.empty()) {
+          if(!conditionalTasks.empty()) {
             // find the next request of which the condition evaluates to true
-            auto it = std::find_if(conditionalRequests.begin(),conditionalRequests.end(),[](const auto& element){
+            auto it = std::find_if(conditionalTasks.begin(),conditionalTasks.end(),[](const auto& element){
               return element._condition();
             });
-            if(it != conditionalRequests.end()) {
-                requestData(it->_request.first, it->_request.second);
-                conditionalRequests.erase(it);
+            if(it != conditionalTasks.end()) {
+                if(it->_value) {
+                  sendData(it->_task.first, it->_task.second, it->_value.value());
+                } else {
+                  requestData(it->_task.first, it->_task.second);
+                }
+                conditionalTasks.erase(it);
             }
           }
 
@@ -163,7 +167,7 @@ select:
         - lambda: |-
             const auto betriebsartId = Mapper::instance().getBetriebsartId(x);
             if(betriebsartId.has_value()) {
-              sendData(WPM2, Property::kPROGRAMMSCHALTER, (betriebsartId.value() >> 8U) & 0xFF);
+              queueTransmission(WPM2, Property::kPROGRAMMSCHALTER, (betriebsartId.value() >> 8U) & 0xFF);
             }
 
 #########################################

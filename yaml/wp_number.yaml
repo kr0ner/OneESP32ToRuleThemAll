@@ -24,7 +24,7 @@ number:
             const auto type = Property::k${property}.type;
             const auto value = GetRawByType(SimpleVariant(x),type);
             if(value.has_value()) {
-                sendData(${target}, Property::k${property}, *value);
+                queueTransmission(${target}, Property::k${property}, *value);
             } else {
               ESP_LOGE("Number", "Setting new value failed!");
             }

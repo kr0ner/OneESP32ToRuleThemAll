@@ -58,7 +58,7 @@ select:
             const auto betriebsartId = Mapper::instance().getBetriebsartId(x);
             if(betriebsartId.has_value()) {
               ESP_LOGI("ttf07.yaml:select", "Updating PROGRAMMSCHALTER to %s betriebsartId=0x%0x", x.c_str(), betriebsartId.value());
-              sendData(Kessel, Property::kPROGRAMMSCHALTER, betriebsartId.value());
+              queueTransmission(Kessel, Property::kPROGRAMMSCHALTER, betriebsartId.value());
             }
 
 packages:

@@ -108,7 +108,7 @@ select:
         - lambda: |-
             const auto passivkuehlungId = Mapper::instance().getPassivkuehlungId(x);
             if(passivkuehlungId.has_value()) {
-              sendData(Kessel, Property::kPASSIVKUEHLUNG, passivkuehlungId.value());
+              queueTransmission(Kessel, Property::kPASSIVKUEHLUNG, passivkuehlungId.value());
             }
 
   - platform: template
@@ -131,7 +131,7 @@ select:
         - lambda: |-
             const auto betriebsartId = Mapper::instance().getBetriebsartId(x);
             if(betriebsartId.has_value()) {
-              sendData(Kessel, Property::kPROGRAMMSCHALTER, betriebsartId.value());
+              queueTransmission(Kessel, Property::kPROGRAMMSCHALTER, betriebsartId.value());
             }
 
 #########################################
@@ -333,5 +333,5 @@ button:
     name: "Reset Filter"
     on_press:
         lambda: |-
-            sendData(Kessel, Property::kRESET_FILTER, 1U);
+            queueTransmission(Kessel, Property::kRESET_FILTER, 1U);
             scheduleRequest(Kessel, Property::kLAUFZEIT_FILTER_TAGE, std::chrono::seconds(30));
