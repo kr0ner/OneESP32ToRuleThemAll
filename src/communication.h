@@ -35,19 +35,20 @@ static const CanMember WPM2{0x480, "WPM2"};  // TODO: make configurable and doub
 static const std::vector<std::reference_wrapper<const CanMember>> canMembers{Kessel,    HK1, HK2, Manager,
                                                                              ESPClient, FET, MFG, WPM2};
 
-using Request = std::pair<const CanMember, const Property>;
-struct ConditionalRequest {
-    ConditionalRequest(Request request) : _request(request){};
-    ConditionalRequest(Request request, std::function<bool()> condition)
-        : _request(request), _condition(std::move(condition)){};
+using Task = std::pair<const CanMember, const Property>;
+struct ConditionalTask {
+    ConditionalTask(Task task, std::optional<std::uint16_t> value = std::nullopt) : _task(task), _value(value){};
+    ConditionalTask(Task task, std::function<bool()> condition, std::optional<std::uint16_t> value = std::nullopt)
+        : _task(task), _condition(std::move(condition)), _value(value){};
 
-    Request _request;
+    Task _task;
+    std::optional<std::uint16_t> _value;
     std::function<bool()> _condition = []() {
         return true;
     };
 };
 
-static std::list<ConditionalRequest> conditionalRequests;
+static std::list<ConditionalTask> conditionalTasks;
 
 /**
  * @brief Splits the given integer into single bytes.
@@ -153,7 +154,7 @@ bool isResponse(const std::vector<std::uint8_t>& msg) {
  */
 void queueRequest(const CanMember& member, const Property& property) {
     ESP_LOGI("QUEUE", "Requesting data from %s for %s", member.name.c_str(), std::string(property.name).c_str());
-    conditionalRequests.emplace_back(std::make_pair(member, property));
+    conditionalTasks.emplace_back(std::make_pair(member, property));
 }
 
 /**
@@ -164,7 +165,7 @@ void queueRequest(const CanMember& member, const Property& property) {
 void queueConditionalRequest(const CanMember& member, const Property& property, std::function<bool()> condition) {
     ESP_LOGI("QUEUE", "Adding conditional request for data from %s for %s", member.name.c_str(),
              std::string(property.name).c_str());
-    conditionalRequests.emplace_back(std::make_pair(member, property), std::move(condition));
+    conditionalTasks.emplace_back(std::make_pair(member, property), std::move(condition));
 }
 
 /**
@@ -175,9 +176,19 @@ void queueConditionalRequest(const CanMember& member, const Property& property, 
 void scheduleRequest(const CanMember& member, const Property& property, std::chrono::seconds seconds) {
     ESP_LOGI("QUEUE", "Scheduling request for data from %s for %s in %lld seconds", member.name.c_str(),
              std::string(property.name).c_str(), seconds.count());
-    conditionalRequests.emplace_back(
-        std::make_pair(member, property),
-        [t = std::chrono::steady_clock::now() + seconds]() { return t < std::chrono::steady_clock::now(); });
+    conditionalTasks.emplace_back(std::make_pair(member, property), [t = std::chrono::steady_clock::now() + seconds]() {
+        return t < std::chrono::steady_clock::now();
+    });
+}
+
+/**
+ * @brief Puts a send request towards the \c member for the given \c property  with the \c value in the task queue. This
+ *        will effectively prevent that CAN messages are all sent at the same time, which might cause issues.
+ * @note  The list of tasks is processed one element at a time and according to the interval set in the common.yaml
+ */
+void queueTransmission(const CanMember& member, const Property& property, const std::uint16_t value) {
+    ESP_LOGI("QUEUE", "Sending %d for %s to %s ", value, std::string(property.name).c_str(), member.name.c_str());
+    conditionalTasks.emplace_back(std::make_pair(member, property), value);
 }
 
 /**
@@ -220,6 +231,7 @@ std::pair<Property, SimpleVariant> processCanMessage(const std::vector<std::uint
     return {property, GetValueByType(value, property.type)};
 }
 
+namespace {
 void requestData(const CanMember& member, const Property& property) {
     const auto use_extended_id{false};
     const auto [IdByte1, IdByte2] = asBytes(member.getReadId());
@@ -246,5 +258,6 @@ void sendData(const CanMember& member, const Property property, const std::uint1
     // Request the value again to make sure the sensor is updated, with a delay of 10s to allow the heatpump to react.
     scheduleRequest(member, property, std::chrono::seconds(10));
 }
+}  // namespace
 
 #endif

@@ -89,8 +89,8 @@ class CustomClimate : public Component, public Climate {
 
             // Send target temp to climate
             for (const auto& targetTemperatureProperty : targetTemperatureProperties_) {
-                sendData(targetTemperatureProperty.first, targetTemperatureProperty.second,
-                         static_cast<std::uint16_t>(temp * 10.0f));
+                queueTransmission(targetTemperatureProperty.first, targetTemperatureProperty.second,
+                                  static_cast<std::uint16_t>(temp * 10.0f));
             }
         }
         // Publish updated state
