@@ -65,7 +65,8 @@ canbus:
     spi_id: McpSpi
     cs_pin: GPIO15
     bit_rate: 20kbps
-    clock: 8MHZ
+    clock: 8MHz        # 8MHz or 16MHz depending on the value of the crystal on your MCP2515
+    data_rate: 4MHz    # 8Mhz (4MHz, 2MHz or 1MHz in case you get CAN bus errors)
 
 #########################################
 #                                       #
