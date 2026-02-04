@@ -1,0 +1,37 @@
+defaults:
+  target: "Kessel"
+
+text:
+  - platform: template
+    id: ${name}
+    name: ${name}
+    mode: text
+    optimistic: false
+    lambda: |-
+          return {"xx:xx-xx:xx,xx:xx-xx:xx,xx:xx-xx:xx"};
+    set_action:
+      then:
+        - lambda: |-
+            ESP_LOGI("PROGRAM", "Setting new value %s for %s", x.c_str(), "${name}");
+
+esphome:
+  on_boot:
+    priority: 100.0 # AFTER_CONNECTION
+    then:
+      - lambda: |-
+          // Register callbacks
+          CallbackHandler::instance().addCallback({Kessel, Property::k${name}_0}, [](const SimpleVariant& v) {
+            id(${name}).publish_state(id(${name}).state.replace(0U,11U,v.get<std::string>()));
+          });
+
+          CallbackHandler::instance().addCallback({Kessel, Property::k${name}_1}, [](const SimpleVariant& v) {
+            id(${name}).publish_state(id(${name}).state.replace(12U,11U,v.get<std::string>()));
+          });
+
+          CallbackHandler::instance().addCallback({Kessel, Property::k${name}_2}, [](const SimpleVariant& v) {
+            id(${name}).publish_state(id(${name}).state.replace(24U,11U,v.get<std::string>()));
+          });
+
+          queueRequest(${target}, Property::k${name}_0);
+          queueRequest(${target}, Property::k${name}_1);
+          queueRequest(${target}, Property::k${name}_2);

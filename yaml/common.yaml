@@ -12,6 +12,7 @@ esphome:
     - OneESP32ToRuleThemAll/src/util.h
   platformio_options:
     build_flags:
+      - "-DUSE_API_HOMEASSISTANT_SERVICES"
       - "-DESPCLIENT_ID=$espclient_can_id"
       - "-DMANAGER_ID=$manager_can_id"
       - "-DKESSEL_ID=$kessel_can_id"
@@ -142,7 +143,7 @@ packages:
   WAERMEERTRAG_WW_TAG_SUMME_KWH:     !include { file: wp_daily_energy_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_WW_TAG_SUMME_KWH"     , property_wh: "WAERMEERTRAG_WW_TAG_WH"         , property_kwh: "WAERMEERTRAG_WW_TAG_KWH"         }}
   WAERMEERTRAG_HEIZ_TAG_SUMME_KWH:   !include { file: wp_daily_energy_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_HEIZ_TAG_SUMME_KWH"   , property_wh: "WAERMEERTRAG_HEIZ_TAG_WH"       , property_kwh: "WAERMEERTRAG_HEIZ_TAG_KWH"       }}
 
-  HEATPUMP_DATETIME: !include { file: wp_datetime.yaml }
+  HEATPUMP_DATETIME:                 !include { file: wp_datetime.yaml }
 
 
 #########################################

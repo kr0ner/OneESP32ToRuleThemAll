@@ -25,4 +25,14 @@ void syncTime() {
     queueTransmission(Kessel, Property::kMINUTE, toggleEndianness(time.minute));
 }
 
+/**
+ * @brief Formats the given time span string (hh:mm-hh:mm)
+ */
+std::string toJSON(std::string s, std::string enitity = "switch.dummy") {
+    if (s.length() < 11)
+        return "[]";
+    return "[{\"start\":\"" + s.substr(0, 5) + "\",\"stop\":\"" + s.substr(6, 5) +
+           "\",\"actions\":[{\"service\":\"switch.turn_on\",\"entity_id\":\"" + enitity + "\"}]}]";
+}
+
 #endif
