@@ -95,12 +95,14 @@ globals:
 #                                       #
 #########################################
 time:
-  - platform: sntp
-    id: sntp_time
+  - platform: homeassistant
+    id: homeassistant_time
+    timezone: $timezone
     on_time:
       - seconds: 0
-        minutes: 0
+        minutes: 5
         hours: 3 # sync at 3 am should be ok even with switch from/to daylight saving time
+        days_of_week: SUN
         then:
           - lambda: |-
               syncTime();

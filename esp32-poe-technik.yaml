@@ -28,10 +28,6 @@ ota:
   platform: esphome
   password: !secret ota_password
 
-time:
-  - platform: homeassistant
-    id: homeassistant_time
-
 substitutions:
   interval_very_fast: 15s
   interval_fast: 30s
@@ -42,6 +38,7 @@ substitutions:
 
   entity_room_temperature: "sensor.durchschnittstemperatur_haus_ohne_keller"
   entity_humidity: "sensor.durchschnitt_luftfeuchtigkeit_haus"
+  timezone: "Europe/Berlin"
 
 #########################################
 #                                       #

@@ -50,7 +50,7 @@ esphome:
 
 time:
   - platform: sntp
-    id: !extend sntp_time
+    id: !extend homeassistant_time
     on_time:
       # Every hour, every 5 minutes starting at 4th minute.
       - seconds: 0
