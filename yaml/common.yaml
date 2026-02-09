@@ -31,12 +31,6 @@ substitutions:
 #                                       #
 #########################################
 globals:
-  - id: gRAUMISTTEMP
-    type: float
-    initial_value: "0.0"
-  - id: gRAUMFEUCHTE
-    type: float
-    initial_value: "0.0"
   - id: gCOP_WW_TAG
     type: float
     initial_value: "1.0"
@@ -79,7 +73,7 @@ button:
 #                                       #
 #########################################
 interval:
-  - interval: 250ms
+  - interval: 100ms
     then:
       - lambda: |-
           // Request sensor value one after another.
@@ -96,21 +90,6 @@ interval:
                 }
                 conditionalTasks.erase(it);
             }
-          }
-  - interval: $interval_medium
-    then:
-      - lambda: |-
-          // Send current RAUMISTTEMP
-          const auto room_temp = id(gRAUMISTTEMP);
-          if(room_temp > 0.0f) {
-            ESP_LOGI("SET", "Sending cached room temperature %f to heatpump", room_temp);
-            queueTransmission(HK1, Property::kRAUMISTTEMP, static_cast<std::uint16_t>(room_temp * 10.0f));
-          }
-          // Send current RAUMFEUCHTE
-          const auto humidity = id(gRAUMFEUCHTE);
-          if(humidity > 0.0) {
-            ESP_LOGI("SET", "Sending cached humidity %f to heatpump", humidity);
-            queueTransmission(HK1, Property::kRAUMFEUCHTE, static_cast<std::uint16_t>(humidity * 10.0f));
           }
 
 #########################################
@@ -193,21 +172,33 @@ sensor:
     name: Temperature Sensor From Home Assistant
     id: ha_temperature_sensor
     entity_id: $entity_room_temperature
+    filters:
+      - heartbeat:
+          period: $interval_medium
+          optimistic: true
     on_value:
       then:
         - lambda: |-
-            ESP_LOGI("SET", "Updating room temperature to %f", x);
-            id(gRAUMISTTEMP) = x;
+            if (x > 0.0f) {
+              ESP_LOGI("SET", "Sending room temperature %f to heatpump", x);
+              queueTransmission(HK1, Property::kRAUMISTTEMP, static_cast<std::uint16_t>(x * 10.0f));
+            }
 
   - platform: homeassistant
     name: Humidity Sensor From Home Assistant
     id: ha_humidity_sensor
     entity_id: $entity_humidity
+    filters:
+      - heartbeat:
+          period: $interval_medium
+          optimistic: true
     on_value:
       then:
         - lambda: |-
-            ESP_LOGI("SET", "Updating humidity to %f", x);
-            id(gRAUMFEUCHTE) = x;
+            if (x > 0.0f) {
+              ESP_LOGI("SET", "Sending humidity %f to heatpump", x);
+              queueTransmission(HK1, Property::kRAUMFEUCHTE, static_cast<std::uint16_t>(x * 10.0f));
+            }
 
 #########################################
 #                                       #
