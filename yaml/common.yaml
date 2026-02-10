@@ -81,7 +81,7 @@ button:
 #                                       #
 #########################################
 interval:
-  - interval: 250ms
+  - interval: 50ms
     then:
       - lambda: |-
           // Request sensor value one after another.
