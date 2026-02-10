@@ -1,0 +1,45 @@
+script:
+  - id: sync_heat_pump_time
+    then:
+      # 1. Check if time is valid. If not, log and STOP the script.
+      - if:
+          condition:
+            lambda: return !id(homeassistant_time).now().is_valid();
+          then:
+            - lambda: ESP_LOGE("TIMESYNC", "Cannot sync time. HA time is invalid.");
+            - script.stop: sync_heat_pump_time
+
+      # 2. Log the sync action (Optional, for debugging)
+      - lambda: |-
+          auto time = id(homeassistant_time).now();
+          ESP_LOGI("TIMESYNC", "Synchronizing heat pump to %d.%d.%d %d:%d", 
+                   time.day_of_month, time.month, time.year, time.hour, time.minute);
+
+      # 3. Send Year
+      - lambda: |-
+          auto time = id(homeassistant_time).now();
+          sendData(Kessel, Property::kJAHR, toggleEndianness(time.year - 2000U));
+      - delay: 30ms
+
+      # 4. Send Month
+      - lambda: |-
+          auto time = id(homeassistant_time).now();
+          sendData(Kessel, Property::kMONAT, toggleEndianness(time.month));
+      - delay: 30ms
+
+      # 5. Send Day
+      - lambda: |-
+          auto time = id(homeassistant_time).now();
+          sendData(Kessel, Property::kTAG, toggleEndianness(time.day_of_month));
+      - delay: 30ms
+
+      # 6. Send Hour
+      - lambda: |-
+          auto time = id(homeassistant_time).now();
+          sendData(Kessel, Property::kSTUNDE, toggleEndianness(time.hour));
+      - delay: 30ms
+
+      # 7. Send Minute
+      - lambda: |-
+          auto time = id(homeassistant_time).now();
+          sendData(Kessel, Property::kMINUTE, toggleEndianness(time.minute));
