@@ -3,7 +3,7 @@ fan:
     name: ${property}
     id: ${property}
     speed_count: 3
-    restore_mode: RESTORE_DEFAULT_OFF
+    restore_mode: NO_RESTORE
     on_speed_set:
       - lambda: |-
           const auto fan_speed = std::min(3, x);
@@ -38,11 +38,15 @@ esphome:
           CallbackHandler::instance().addCallbacks({std::make_pair(Kessel,Property::k${property}),
                                                    std::make_pair(Manager,Property::k${property})},[](const SimpleVariant& value){
               const auto fan_speed = std::min(static_cast<std::uint16_t>(3U),static_cast<std::uint16_t>(value));
+              auto fan = id(${property});
+
               // only speeds between 1 and speed_count are allowed
               if(fan_speed == 0) {
-                id(${property}).turn_off().perform();
+                fan->state = false;
               } else {
-                id(${property}).turn_on().set_speed(fan_speed).perform();
+                fan->state = true;
+                fan->speed = fan_speed;
               }
+              fan->publish_state();
           });
           queueRequest(Kessel, Property::k${property});
