@@ -14,6 +14,12 @@ switch:
     turn_off_action:
       - lambda: |-
           queueTransmission(${target}, Property::k${property}, static_cast<std::uint16_t>(false));
+    on_state:
+      then:
+        - script.execute:
+            id: mqtt_push_event
+            suffix: ${property}
+            payload: !lambda 'return x ? "On" : "Off";'
 
 esphome:
   on_boot:

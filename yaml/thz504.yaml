@@ -3,6 +3,15 @@ esphome:
     build_flags:
       - "-DTHZ_504"
 
+#########################################
+#                                       #
+#   Global variables                    #
+#                                       #
+#########################################
+globals:
+  - id: heat_pump_variant
+    type: std::string
+    initial_value: '"THZ504"'
 packages:
   COMMON: !include { file: common.yaml }
   BASE:   !include { file: wp_base.yaml }

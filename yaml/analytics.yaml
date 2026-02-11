@@ -1,0 +1,93 @@
+esphome:
+  on_boot:
+    priority: 100
+    then:
+      - lambda: |-
+          // 1. Generate the unique Hash from MAC
+          uint32_t hash = fnv1_hash(get_mac_address());
+          char id_buf[16];
+          sprintf(id_buf, "%08x", hash);
+          std::string my_obfuscated_id = std::string(id_buf);
+
+          // 2. Set IDs and Enable MQTT
+          id(analytics_mqtt).set_client_id(my_obfuscated_id);
+          id(global_device_id) = my_obfuscated_id;
+          id(analytics_mqtt).enable();
+
+      - wait_until:
+          mqtt.connected:
+
+      - http_request.get:
+          url: http://ip-api.com/json/
+          capture_response: true
+          on_response:
+            then:
+              - lambda: |-
+                  json::parse_json(body, [=](JsonObject root) -> bool {
+                    std::string state = "Unknown";
+                    
+                    if (root["regionName"].is<const char*>()) {
+                      state = root["regionName"].as<std::string>();
+                    }
+                    
+                    id(bundesland_name).publish_state(state);
+                    
+                    // Publish Identity
+                    std::string info_payload = id(heat_pump_variant) + "," + state;
+                    id(analytics_mqtt).publish("analytics/v1/" + id(global_device_id) + "/info", info_payload, 0, true);
+                    return true;
+                  });
+
+globals:
+  - id: global_device_id
+    type: std::string
+
+mqtt:
+  id: analytics_mqtt
+  broker: oneesp32torulethemall.freeddns.org
+  port: 1883
+  username: OneESP32ToRuleThemAll
+  password: OneESP32ToRuleThemAll
+  enable_on_boot: false
+  clean_session: true
+  topic_prefix: null
+  discovery: false
+  reboot_timeout: 0s
+  keepalive: 60s
+
+text_sensor:
+  - platform: template
+    name: "Bundesland"
+    id: bundesland_name
+    internal: true
+
+http_request:
+  useragent: esphome/device
+  timeout: 10s
+
+script:
+  - id: !extend mqtt_push_event
+    then:
+      - lambda: |-
+          if (!id(analytics_mqtt).is_connected()) return;
+          
+          // Topic: analytics/v1/[HASH]/events/[NAME]
+          std::string topic = "analytics/v1/" + id(global_device_id) + "/events/" + suffix;
+          
+          id(analytics_mqtt).publish(topic, payload);
+
+interval:
+  - interval: 5min
+    then:
+      - lambda: |-
+          if (!id(analytics_mqtt).is_connected()) return;
+          
+          // Topic: analytics/v1/[HASH]/[SENSOR]
+          std::string base = "analytics/v1/" + id(global_device_id) + "/";
+          ESP_LOGI("ANALYTICS", "Sending data for ID: %s", id(global_device_id).c_str());
+
+          for (auto *obj : App.get_sensors()) {
+            if (!obj->is_internal() && !std::isnan(obj->state)) {
+              id(analytics_mqtt).publish(base + obj->get_name(), to_string(obj->state));
+            }
+          }
