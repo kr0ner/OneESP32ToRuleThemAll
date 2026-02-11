@@ -1,0 +1,183 @@
+#########################################
+#                                       #
+#   Substitutions                       #
+#                                       #
+#########################################
+substitutions:
+  kessel_can_id: "0x180"
+  hk1_can_id: "0x601"
+  hk2_can_id: "0x602"
+  manager_can_id: "0x514"
+  espclient_can_id: "0x6a2"
+
+#########################################
+#                                       #
+#   ESPHome Base Setup                  #
+#                                       #
+#########################################
+esphome:
+  on_boot:
+    priority: 100.0
+    then:
+      - lambda: |-
+          CallbackHandler::instance().addCallback(std::make_pair(WPM2,Property::kPROGRAMMSCHALTER),[](const SimpleVariant& value){
+            const auto stringValue{value.get<std::string>()};
+            ESP_LOGI("PROGRAMMSCHALTER", "mapped value %s", stringValue.c_str());
+            const auto index = id(PROGRAMMSCHALTER).index_of(stringValue);
+            if(index.has_value()) {
+              id(PROGRAMMSCHALTER).publish_state(stringValue);
+            }
+          });
+          queueRequest(WPM2, Property::kPROGRAMMSCHALTER);
+
+          CallbackHandler::instance().addCallback(std::make_pair(WPM2,Property::kBETRIEBS_STATUS),[](const SimpleVariant& value){
+            const std::bitset<12U> status_bits{static_cast<std::uint16_t>(value)};
+            id(HEIZKREISPUMPE_1).publish_state(status_bits.test(0U));
+            id(HEIZKREISPUMPE_2).publish_state(status_bits.test(1U));
+            id(PUFFERLADEPUMPE_1).publish_state(status_bits.test(2U));
+            id(QUELLENPUMPE).publish_state(status_bits.test(3U));
+            id(STOERAUSGANG).publish_state(status_bits.test(4U));
+            id(KUEHLBETRIEB).publish_state(status_bits.test(5U));
+            id(MISCHER_AUF_HEIZKREIS_2).publish_state(status_bits.test(6U));
+            id(MISCHER_ZU_HEIZKREIS_2).publish_state(status_bits.test(7U));
+            id(NHZ_1).publish_state(status_bits.test(8U));
+            id(NHZ_2).publish_state(status_bits.test(9U));
+            id(NHZ_3).publish_state(status_bits.test(10U));
+            id(EVU_SPERRE).publish_state(status_bits.test(11U));
+          });
+          queueRequest(WPM2, Property::kBETRIEBS_STATUS);
+
+#########################################
+#                                       #
+#   Selects                             #
+#                                       #
+#########################################
+select:
+  - platform: template
+    name: "PROGRAMMSCHALTER"
+    id: PROGRAMMSCHALTER
+    options:
+      - "Notbetrieb"
+      - "Bereitschaft"
+      - "Programm"
+      - "Komfort"
+      - "Eco"
+      - "Unbekannt"
+    initial_option: "Unbekannt"
+    optimistic: true
+    setup_priority: 100
+    set_action:
+      then:
+        - lambda: |-
+            const auto betriebsartId = Mapper::instance().getBetriebsartId(x);
+            if(betriebsartId.has_value()) {
+              queueTransmission(WPM2, Property::kPROGRAMMSCHALTER, (betriebsartId.value() >> 8U) & 0xFF);
+            }
+
+#########################################
+#                                       #
+#   Packages                            #
+#                                       #
+#########################################
+packages:
+  CORE:                                 !include { file: core.yaml }
+
+  HEIZKREISPUMPE_1:                     !include { file: templates/wp_binary.yaml, vars: { name: "HEIZKREISPUMPE_1" }}
+  HEIZKREISPUMPE_2:                     !include { file: templates/wp_binary.yaml, vars: { name: "HEIZKREISPUMPE_2" }}
+  PUFFERLADEPUMPE_1:                    !include { file: templates/wp_binary.yaml, vars: { name: "PUFFERLADEPUMPE_1" }}
+  QUELLENPUMPE:                         !include { file: templates/wp_binary.yaml, vars: { name: "QUELLENPUMPE" }}
+  STOERAUSGANG:                         !include { file: templates/wp_binary.yaml, vars: { name: "STOERAUSGANG" }}
+  KUEHLBETRIEB:                         !include { file: templates/wp_binary.yaml, vars: { name: "KUEHLBETRIEB" }}
+  MISCHER_AUF_HEIZKREIS_2:              !include { file: templates/wp_binary.yaml, vars: { name: "MISCHER_AUF_HEIZKREIS_2" }}
+  MISCHER_ZU_HEIZKREIS_2:               !include { file: templates/wp_binary.yaml, vars: { name: "MISCHER_ZU_HEIZKREIS_2" }}
+  NHZ_1:                                !include { file: templates/wp_binary.yaml, vars: { name: "NHZ_1" }}
+  NHZ_2:                                !include { file: templates/wp_binary.yaml, vars: { name: "NHZ_2" }}
+  NHZ_3:                                !include { file: templates/wp_binary.yaml, vars: { name: "NHZ_3" }}
+  EVU_SPERRE:                           !include { file: templates/wp_binary.yaml, vars: { name: "EVU_SPERRE" }}
+
+  ISTTEMPERATUR_HK1:                    !include { file: templates/wp_temperature.yaml, vars: { property: "ISTTEMPERATUR"     , name_suffix: "_HK1" , target: "HK1"  }}
+  SOLLTEMPERATUR_HK1:                   !include { file: templates/wp_temperature.yaml, vars: { property: "SOLLTEMPERATUR"    , name_suffix: "_HK1" , target: "HK1"  }}
+  KOMFORTTEMPERATUR_HK1:                !include { file: templates/wp_temperature.yaml, vars: { property: "KOMFORTTEMPERATUR" , name_suffix: "_HK1" , target: "HK1"  }}
+  ECOTEMPERATUR_HK1:                    !include { file: templates/wp_temperature.yaml, vars: { property: "ECOTEMPERATUR"     , name_suffix: "_HK1" , target: "HK1"  }}
+  ISTTEMPERATUR_HK2:                    !include { file: templates/wp_temperature.yaml, vars: { property: "ISTTEMPERATUR"     , name_suffix: "_HK2" , target: "HK2"  }}
+  SOLLTEMPERATUR_HK2:                   !include { file: templates/wp_temperature.yaml, vars: { property: "SOLLTEMPERATUR"    , name_suffix: "_HK2" , target: "HK2"  }}
+  KOMFORTTEMPERATUR_HK2:                !include { file: templates/wp_temperature.yaml, vars: { property: "KOMFORTTEMPERATUR" , name_suffix: "_HK2" , target: "HK2"  }}
+  ECOTEMPERATUR_HK2:                    !include { file: templates/wp_temperature.yaml, vars: { property: "ECOTEMPERATUR"     , name_suffix: "_HK2" , target: "HK2"  }}
+  RAUMISTTEMP:                          !include { file: templates/wp_temperature.yaml, vars: { property: "RAUMISTTEMP"       , target: "FET"  }}
+  RAUMSOLLTEMP:                         !include { file: templates/wp_temperature.yaml, vars: { property: "RAUMSOLLTEMP"      , target: "FET"  }}
+  PUFFERISTTEMPERATUR:                  !include { file: templates/wp_temperature.yaml, vars: { property: "PUFFERISTTEMPERATUR" }}
+  FROSTSCHUTZ:                          !include { file: templates/wp_temperature.yaml, vars: { property: "FROSTSCHUTZ"       , target: "MFG"  }}
+  VORLAUFTEMP_QUELLE:                   !include { file: templates/wp_temperature.yaml, vars: { property: "VORLAUFTEMP_QUELLE" , target: "Manager"  }}
+  RUECKLAUFTEMP_QUELLE:                 !include { file: templates/wp_temperature.yaml, vars: { property: "RUECKLAUFTEMP_QUELLE" , target: "Manager"  }}
+  VORLAUFISTTEMP:                       !include { file: templates/wp_temperature.yaml, vars: { property: "VORLAUFISTTEMP"     , update_interval: $interval_medium, target: "MFG"  }}
+  VORLAUFSOLLTEMP:                      !include { file: templates/wp_temperature.yaml, vars: { property: "VORLAUFSOLLTEMP"    , target: "HK1"  }}
+  VERDAMPFERTEMP:                       !include { file: templates/wp_temperature.yaml, vars: { property: "VERDAMPFERTEMP"     , target: "Manager"  }}
+  RUECKLAUFISTTEMP:                     !include { file: templates/wp_temperature.yaml, vars: { property: "RUECKLAUFISTTEMP"   , update_interval: $interval_medium , target: "MFG" }}
+  MAXVORLAUFTEMP:                       !include { file: templates/wp_temperature.yaml, vars: { property: "MAXVORLAUFTEMP"     , target: "Kessel"  }}
+  MAXRUECKLAUFTEMP:                     !include { file: templates/wp_temperature.yaml, vars: { property: "MAXRUECKLAUFTEMP"   , target: "Kessel"  }}
+  AUSSENTEMP:                           !include { file: templates/wp_temperature.yaml, vars: { property: "AUSSENTEMP"         , update_interval: $interval_medium , target: "Kessel" }}
+  HEISSGAS_TEMP:                        !include { file: templates/wp_temperature.yaml, vars: { property: "HEISSGAS_TEMP"      , update_interval: $interval_medium , target: "Manager" }}
+  VORLAUFTEMP:                          !include { file: templates/wp_temperature.yaml, vars: { property: "VORLAUFTEMP"        , update_interval: $interval_medium , target: "Manager" }}
+  VERFLUESSIGER_TEMP:                   !include { file: templates/wp_temperature.yaml, vars: { property: "VERFLUESSIGER_TEMP" , update_interval: $interval_medium , target: "Manager" }}
+  OELSUMPFTEMP:                         !include { file: templates/wp_temperature.yaml, vars: { property: "OELSUMPFTEMP"       , update_interval: $interval_medium , target: "Manager" }}
+  VORLAUFISTTEMP_WP:                    !include { file: templates/wp_temperature.yaml, vars: { property: "VORLAUFISTTEMP_WP"  , update_interval: $interval_medium , target: "Kessel" }}
+  RUECKLAUFISTTEMP_WP:                  !include { file: templates/wp_temperature.yaml, vars: { property: "RUECKLAUFISTTEMP_WP", update_interval: $interval_medium , target: "Kessel" }}
+  RUECKLAUFTEMP:                        !include { file: templates/wp_temperature.yaml, vars: { property: "RUECKLAUFTEMP"      , update_interval: $interval_medium , target: "Manager" }}
+  KUEHLEN_SOLLTEMP:                     !include { file: templates/wp_temperature.yaml, vars: { property: "KUEHLEN_SOLLTEMP"   , update_interval: $interval_medium , target: "Kessel" }}
+  KUEHLEN_ISTTEMP:                      !include { file: templates/wp_temperature.yaml, vars: { property: "KUEHLEN_ISTTEMP"    , update_interval: $interval_medium , target: "Kessel" }}
+  ISTTEMPERATUR_KK_2:                   !include { file: templates/wp_temperature.yaml, vars: { property: "ISTTEMPERATUR_KK_2" , update_interval: $interval_medium , target: "HK2" }}
+  SOLLTEMPERATUR_KK_2:                  !include { file: templates/wp_temperature.yaml, vars: { property: "SOLLTEMPERATUR_KK_2", update_interval: $interval_medium , target: "HK2" }}
+  ANLAGEFROST:                          !include { file: templates/wp_temperature.yaml, vars: { property: "ANLAGEFROST"        , update_interval: $interval_medium , target: "Kessel" }}
+  VORLAUFISTTEMP_NHZ:                   !include { file: templates/wp_temperature.yaml, vars: { property: "VORLAUFISTTEMP_NHZ" , update_interval: $interval_medium , target: "Kessel" }}
+  HYSTERESE_VORLAUFTEMP_KUEHLEN:        !include { file: templates/wp_temperature.yaml, vars: { property: "HYSTERESE_VORLAUFTEMP_KUEHLEN", target: "Kessel", unit: "°K"  }}
+  STARTTEMPERATUR:                      !include { file: templates/wp_temperature.yaml, vars: { property: "STARTTEMPERATUR"              , target: "HK2"  }}
+  VERDICHTER_EINTRITTSTEMP:             !include { file: templates/wp_temperature.yaml, vars: { property: "VERDICHTER_EINTRITTSTEMP", target: "Manager"  }}
+  TAUPUNKTTEMP:                         !include { file: templates/wp_temperature.yaml, vars: { property: "TAUPUNKTTEMP", target: "HK2"  }}
+  RAUMSOLLTEMP_KUEHLEN:                 !include { file: templates/wp_temperature.yaml, vars: { property: "RAUMSOLLTEMP_KUEHLEN", target: "HK2"  }}
+  BIVALENZTEMPERATUR_HZG:               !include { file: templates/wp_temperature.yaml, vars: { property: "BIVALENZTEMPERATUR_HZG", target: "Kessel"  }}
+  UMGEBUNGSTEMPERATUR_INVERTER:         !include { file: templates/wp_temperature.yaml, vars: { property: "UMGEBUNGSTEMPERATUR_INVERTER" , target: "Manager"  }}
+  UNTERK_COND:                          !include { file: templates/wp_temperature.yaml, vars: { property: "UNTERK_COND" , target: "Manager"  }}
+  TEMPERATUR_INV_VERDICHTER:            !include { file: templates/wp_temperature.yaml, vars: { property: "TEMPERATUR_INV_VERDICHTER" , target: "Manager"  }}
+  IST_UEBERHITZUNG_SAUGGAS_VERDICHTER:  !include { file: templates/wp_temperature.yaml, vars: { property: "IST_UEBERHITZUNG_SAUGGAS_VERDICHTER", target: "Manager", unit: "°K"  }}
+  SOLL_UEBERHITZUNG_SAUGGAS_VERDICHTER: !include { file: templates/wp_temperature.yaml, vars: { property: "SOLL_UEBERHITZUNG_SAUGGAS_VERDICHTER", target: "Manager", unit: "°K"  }}
+  ADAPTION_UEBERHITZUNG:                !include { file: templates/wp_temperature.yaml, vars: { property: "ADAPTION_UEBERHITZUNG", target: "Manager", unit: "°K"  }}
+  MINTEMP:                              !include { file: templates/wp_temperature.yaml, vars: { property: "MINTEMP"            , target: "HK2"  }}
+  MAXTEMP:                              !include { file: templates/wp_temperature.yaml, vars: { property: "MAXTEMP"            , target: "HK2"  }}
+
+  EL_NACHERW_VERZ_ZEIT:                 !include { file: templates/wp_generic.yaml, vars: { property: "EL_NACHERW_VERZ_ZEIT", unit: "min"   , target: "Kessel"  }}
+  EL_NACHERW_ANZ_STUFEN:                !include { file: templates/wp_generic.yaml, vars: { property: "EL_NACHERW_ANZ_STUFEN", target: "Kessel"  }}
+  ISTDREHZAHL_VERDICHTER:               !include { file: templates/wp_generic.yaml, vars: { property: "ISTDREHZAHL_VERDICHTER" , unit: "Hz", target: "Manager"  }}
+  SOLLDREHZAHL_VERDICHTER:              !include { file: templates/wp_generic.yaml, vars: { property: "SOLLDREHZAHL_VERDICHTER", unit: "Hz", target: "Manager"  }}
+  LEISTUNG_KUEHLEN:                     !include { file: templates/wp_generic.yaml, vars: { property: "LEISTUNG_KUEHLEN", unit: "kW", target: "WPM2"  }}
+  STEIGUNG_KUEHLKURVE:                  !include { file: templates/wp_generic.yaml, vars: { property: "STEIGUNG_KUEHLKURVE"          , target: "HK2" , scaler: "0.1", accuracy_decimals: "2" }}
+  LAUFZEIT_PASSIVKUEHLUNG:              !include { file: templates/wp_generic.yaml, vars: { property: "LAUFZEIT_PASSIVKUEHLUNG", scaler: "10", unit: "h", target: "Manager"  }}
+  RAUMFEUCHTE:                          !include { file: templates/wp_generic.yaml, vars: { property: "RAUMFEUCHTE" , update_interval: $interval_very_slow, unit: "%", icon: "mdi:water-percent", accuracy_decimals: "1", target: "FET"  }}
+  HEIZEN_EFFIZIENZ_TAG:                 !include { file: templates/wp_generic.yaml, vars: { property: "HEIZEN_EFFIZIENZ_TAG"  , target: "WPM2", accuracy_decimals: "2" }}
+  HEIZEN_EFFIZIENZ_JAHR:                !include { file: templates/wp_generic.yaml, vars: { property: "HEIZEN_EFFIZIENZ_JAHR" , target: "WPM2", accuracy_decimals: "2" }}
+  DRUCK_NIEDERDRUCK:                    !include { file: templates/wp_generic.yaml, vars: { property: "DRUCK_NIEDERDRUCK"     , unit: "bar"  , icon: "mdi:water-pressure", scaler: "0.1" , accuracy_decimals: "2", target: "Manager"  }}
+  DRUCK_HOCHDRUCK:                      !include { file: templates/wp_generic.yaml, vars: { property: "DRUCK_HOCHDRUCK"       , unit: "bar"  , icon: "mdi:water-pressure", scaler: "0.1" , accuracy_decimals: "2", target: "Manager"  }}
+  HEIZUNGSDRUCK:                        !include { file: templates/wp_generic.yaml, vars: { property: "HEIZUNGSDRUCK"         , unit: "bar"  , icon: "mdi:water-pressure" , accuracy_decimals: "2", target: "Kessel"  }}
+  QUELLENDRUCK:                         !include { file: templates/wp_generic.yaml, vars: { property: "QUELLENDRUCK"          , unit: "bar"  , icon: "mdi:water-pressure" , accuracy_decimals: "1", target: "Manager"  }}
+  LEISTUNG_QUELLENPUMPE:                !include { file: templates/wp_generic.yaml, vars: { property: "LEISTUNG_QUELLENPUMPE" , unit: "%"    , icon: "mdi:water-percent", accuracy_decimals: "1", target: "Manager"  }}
+  VOLUMENSTROM:                         !include { file: templates/wp_generic.yaml, vars: { property: "VOLUMENSTROM"          , unit: "l/min", icon: "mdi:flow"           , accuracy_decimals: "2", target: "Kessel"  }}
+  STROM_INVERTER:                       !include { file: templates/wp_generic.yaml, vars: { property: "STROM_INVERTER"        , unit: "A"    , target: "Manager"          , accuracy_decimals: "1"  }}
+  SPANNUNG_INVERTER:                    !include { file: templates/wp_generic.yaml, vars: { property: "SPANNUNG_INVERTER"     , unit: "V"    , target: "Manager"          , accuracy_decimals: "1"  }}
+  ZEITINTERVALL:                        !include { file: templates/wp_generic.yaml, vars: { property: "ZEITINTERVALL", scaler: "10", target: "WPM2" }}
+  STROM_MOTOR:                          !include { file: templates/wp_generic.yaml, vars: { property: "STROM_MOTOR"     , unit: "A"    , target: "Manager"          , accuracy_decimals: "1"  }}
+  VERDICHTERDREHZAHLGRENZE:             !include { file: templates/wp_generic.yaml, vars: { property: "VERDICHTERDREHZAHLGRENZE", target: "Manager"  }}
+  STEIGUNG_HEIZKURVE_HK1:               !include { file: templates/wp_generic.yaml, vars: { property: "STEIGUNG_HEIZKURVE"    , target: "HK1" , name_suffix: "_HK1", scaler: "0.1", accuracy_decimals: "2" }}
+  STEIGUNG_HEIZKURVE_HK2:               !include { file: templates/wp_generic.yaml, vars: { property: "STEIGUNG_HEIZKURVE"    , target: "HK2" , name_suffix: "_HK2", scaler: "0.1", accuracy_decimals: "2" }}
+  MISCHERDYNAMIK:                       !include { file: templates/wp_generic.yaml, vars: { property: "MISCHERDYNAMIK", target: "HK2" }}
+
+  RAUMEINFLUSS:                         !include { file: templates/wp_number.yaml, vars: { property: "RAUMEINFLUSS", target: "HK2" }}
+
+  VERDICHTER_STARTS:                    !include { file: templates/wp_generic_combined.yaml, vars: { sensor_name: "VERDICHTER_STARTS"           , scaled_property: "VERDICHTER_STARTS_K"       , property: "VERDICHTER_STARTS"         , unit: ""   , accuracy_decimals: "0", scaler: "1000", icon: "mdi:counter" , target: "Manager" }}
+  WAERMEERTRAG_WW_SUMME_MWH:            !include { file: templates/wp_generic_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_WW_SUMME_MWH"   , scaled_property: "WAERMEERTRAG_WW_SUM_KWH"   , property: "WAERMEERTRAG_WW_SUM_MWH"   , unit: "MWh", accuracy_decimals: "3", icon: "mdi:fire" , target: "Manager"  }}
+  WAERMEERTRAG_HEIZ_SUMME_MWH:          !include { file: templates/wp_generic_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_HEIZ_SUMME_MWH" , scaled_property: "WAERMEERTRAG_HEIZ_SUM_KWH" , property: "WAERMEERTRAG_HEIZ_SUM_MWH" , unit: "MWh", accuracy_decimals: "3", icon: "mdi:fire" , target: "Manager"  }}
+
+  EL_ENERGIEAUFNAHME_WW_SUMME_KWH:      !include { file: templates/wp_daily_energy_combined.yaml, vars: { sensor_name: "EL_ENERGIEAUFNAHME_WW_SUMME_KWH"   , property_wh: "EL_ENERGIEAUFNAHME_WW_TAG_WH"   , property_kwh: "EL_ENERGIEAUFNAHME_WW_TAG_KWH"   , target: "Manager" }}
+  EL_ENERGIEAUFNAHME_HEIZ_SUMME_KWH:    !include { file: templates/wp_daily_energy_combined.yaml, vars: { sensor_name: "EL_ENERGIEAUFNAHME_HEIZ_SUMME_KWH" , property_wh: "EL_ENERGIEAUFNAHME_HEIZ_TAG_WH" , property_kwh: "EL_ENERGIEAUFNAHME_HEIZ_TAG_KWH" , target: "Manager" }}
+  WAERMEERTRAG_WW_TAG_SUMME_KWH:        !include { file: templates/wp_daily_energy_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_WW_TAG_SUMME_KWH"     , property_wh: "WAERMEERTRAG_WW_TAG_WH"         , property_kwh: "WAERMEERTRAG_WW_TAG_KWH"         , target: "Manager" }}
+  WAERMEERTRAG_HEIZ_TAG_SUMME_KWH:      !include { file: templates/wp_daily_energy_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_HEIZ_TAG_SUMME_KWH"   , property_wh: "WAERMEERTRAG_HEIZ_TAG_WH"       , property_kwh: "WAERMEERTRAG_HEIZ_TAG_KWH"       , target: "Manager" }}
+
+  HEATPUMP_DATETIME:                    !include { file: templates/wp_datetime.yaml }
