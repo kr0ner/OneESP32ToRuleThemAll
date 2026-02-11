@@ -29,6 +29,12 @@ number:
               ESP_LOGE("Number", "Setting new value failed!");
             }
           }
+    on_value:
+      then:
+        - script.execute:
+            id: mqtt_push_event
+            suffix: ${property}
+            payload: !lambda 'return to_string(x);'
 
 esphome:
   on_boot:

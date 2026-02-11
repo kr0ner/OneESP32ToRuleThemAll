@@ -14,10 +14,16 @@ esphome:
 #                                       #
 #########################################
 globals:
+  - id: heat_pump_variant
+    type: std::string
+    initial_value: '"THZ404"'
   - id: sommermodus_state
     type: bool
     restore_value: yes
     initial_value: 'false'
+  - id: heat_pump_variant
+    type: std::string
+    initial_value: '"THZ404"'
 
 #########################################
 #                                       #

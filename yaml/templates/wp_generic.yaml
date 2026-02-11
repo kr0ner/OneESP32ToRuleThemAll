@@ -22,7 +22,7 @@ sensor:
 
 esphome:
   on_boot:
-    priority: 100.0 # AFTER_CONNECTION
+    priority: 110.0 # AFTER_CONNECTION
     then:
       - lambda: |-
           CallbackHandler::instance().addCallback(std::make_pair(${target},Property::k${property}),[](const SimpleVariant& value){

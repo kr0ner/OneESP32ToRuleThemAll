@@ -1,17 +1,5 @@
 #########################################
 #                                       #
-#   Substitutions                       #
-#                                       #
-#########################################
-substitutions:
-  kessel_can_id: "0x180"
-  hk1_can_id: "0x601"
-  hk2_can_id: "0x602"
-  manager_can_id: "0x514"
-  espclient_can_id: "0x6a2"
-
-#########################################
-#                                       #
 #   ESPHome                             #
 #                                       #
 #########################################
@@ -63,6 +51,40 @@ esphome:
             id(PASSIVKUEHLVENTIL_KUEHLEN).publish_state(status_bits.test(8U));
           });
           queueRequest(Manager, Property::kWAERMEPUMPEN_STATUS);
+
+#########################################
+#                                       #
+#   Substitutions                       #
+#                                       #
+#########################################
+substitutions:
+  kessel_can_id: "0x180"
+  hk1_can_id: "0x601"
+  hk2_can_id: "0x602"
+  manager_can_id: "0x514"
+  espclient_can_id: "0x6a2"
+
+#########################################
+#                                       #
+#   Global variables                    #
+#                                       #
+#########################################
+globals:
+  - id: gRAUMISTTEMP
+    type: float
+    initial_value: "0.0"
+  - id: gFEUCHTE
+    type: float
+    initial_value: "0.0"
+  - id: gCOP_WW_TAG
+    type: float
+    initial_value: "0.0"
+  - id: gCOP_HEIZ_TAG
+    type: float
+    initial_value: "0.0"
+  - id: heat_pump_variant
+    type: std::string
+    initial_value: '"WPL13"'
 
 #########################################
 #                                       #

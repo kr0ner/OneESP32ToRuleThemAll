@@ -1,3 +1,8 @@
+#########################################
+#                                       #
+#   ESPHome                             #
+#                                       #
+#########################################
 esphome:
   includes:
     - OneESP32ToRuleThemAll/src/callback_handler.h
@@ -22,6 +27,11 @@ esphome:
       - "-std=gnu++11"
       - "-fno-rtti"
 
+#########################################
+#                                       #
+#   Substitutions                       #
+#                                       #
+#########################################
 substitutions:
   interval_very_fast: 15s
   interval_fast: 30s
@@ -157,3 +167,16 @@ api:
             } else {
               ESP_LOGI("ACTION","No CanMember with name %s defined!", target.c_str());
             }
+
+#########################################
+#                                       #
+#   Scripts                             #
+#                                       #
+#########################################
+script:
+  - id: mqtt_push_event
+    mode: queued
+    parameters:
+      suffix: string
+      payload: string
+    then:
