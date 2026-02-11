@@ -1,22 +1,29 @@
+#########################################
+#                                       #
+#   ESPHome                             #
+#                                       #
+#########################################
 esphome:
   platformio_options:
     build_flags:
       - "-DTHZ_404"
 
-packages:
-  COMMON: !include { file: common.yaml }
-  BASE:   !include { file: wp_base.yaml }
-
-  SOMMERBETRIEB_HYSTERESE:    !include { file: wp_temperature.yaml, vars: { property: "SOMMERBETRIEB_HYSTERESE", update_interval: $interval_slow }}
-
-  AKTIVE_HEIZSTUFEN:          !include { file: wp_generic.yaml, vars: { property: "AKTIVE_HEIZSTUFEN", update_interval: $interval_medium, icon: "mdi:heat-pump-outline"}}
-
+#########################################
+#                                       #
+#   Global variables                    #
+#                                       #
+#########################################
 globals:
   - id: sommermodus_state
     type: bool
     restore_value: yes
     initial_value: 'false'
 
+#########################################
+#                                       #
+#   Binary Sensors                      #
+#                                       #
+#########################################
 binary_sensor:
   - platform: template
     name: "SOMMERMODUS"
@@ -29,6 +36,11 @@ binary_sensor:
       }
       return id(sommermodus_state);
 
+#########################################
+#                                       #
+#   Template Sensors                    #
+#                                       #
+#########################################
 sensor:
   - platform: template
     name: "HEIZKREIS_DIFF"
@@ -38,3 +50,15 @@ sensor:
     accuracy_decimals: 1
     lambda: |-
       return (id(RUECKLAUFISTTEMP).state - id(VORLAUFSOLLTEMP).state);
+
+#########################################
+#                                       #
+#   Packages                            #
+#                                       #
+#########################################
+packages:
+  THZ_BASE:                !include { file: thz_base.yaml }
+
+  SOMMERBETRIEB_HYSTERESE: !include { file: templates/wp_temperature.yaml, vars: { property: "SOMMERBETRIEB_HYSTERESE", update_interval: $interval_slow }}
+
+  AKTIVE_HEIZSTUFEN:       !include { file: templates/wp_generic.yaml, vars: { property: "AKTIVE_HEIZSTUFEN", update_interval: $interval_medium, icon: "mdi:heat-pump-outline"}}

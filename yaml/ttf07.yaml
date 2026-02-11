@@ -1,3 +1,8 @@
+#########################################
+#                                       #
+#   ESPHome                             #
+#                                       #
+#########################################
 esphome:
   platformio_options:
     build_flags:
@@ -61,37 +66,42 @@ select:
               queueTransmission(Kessel, Property::kPROGRAMMSCHALTER, betriebsartId.value());
             }
 
+#########################################
+#                                       #
+#   Packages                            #
+#                                       #
+#########################################
 packages:
-  COMMON: !include { file: common.yaml }
+  TXX_BASE:                 !include { file: txx_base.yaml }
 
-  NHZ1:                     !include { file: wp_binary.yaml, vars: { name: "NHZ1" }}
-  NHZ2:                     !include { file: wp_binary.yaml, vars: { name: "NHZ2" }}
-  NHZ3:                     !include { file: wp_binary.yaml, vars: { name: "NHZ3" }}
-  VERDICHTER:               !include { file: wp_binary.yaml, vars: { name: "VERDICHTER" }}
-  WARMWASSERBEREITUNG:      !include { file: wp_binary.yaml, vars: { name: "WARMWASSERBEREITUNG" }}
-  HEIZKREISPUMPE:           !include { file: wp_binary.yaml, vars: { name: "HEIZKREISPUMPE" }}
-  PUFFERLADEPUMPE:          !include { file: wp_binary.yaml, vars: { name: "PUFFERLADEPUMPE" }}
-  QUELLENPUMPE:             !include { file: wp_binary.yaml, vars: { name: "QUELLENPUMPE" }}
-  KUEHLBETRIEB:             !include { file: wp_binary.yaml, vars: { name: "KUEHLBETRIEB" }}
+  NHZ1:                     !include { file: templates/wp_binary.yaml, vars: { name: "NHZ1" }}
+  NHZ2:                     !include { file: templates/wp_binary.yaml, vars: { name: "NHZ2" }}
+  NHZ3:                     !include { file: templates/wp_binary.yaml, vars: { name: "NHZ3" }}
+  VERDICHTER:               !include { file: templates/wp_binary.yaml, vars: { name: "VERDICHTER" }}
+  WARMWASSERBEREITUNG:      !include { file: templates/wp_binary.yaml, vars: { name: "WARMWASSERBEREITUNG" }}
+  HEIZKREISPUMPE:           !include { file: templates/wp_binary.yaml, vars: { name: "HEIZKREISPUMPE" }}
+  PUFFERLADEPUMPE:          !include { file: templates/wp_binary.yaml, vars: { name: "PUFFERLADEPUMPE" }}
+  QUELLENPUMPE:             !include { file: templates/wp_binary.yaml, vars: { name: "QUELLENPUMPE" }}
+  KUEHLBETRIEB:             !include { file: templates/wp_binary.yaml, vars: { name: "KUEHLBETRIEB" }}
 
-  QUELLE_IST:               !include { file: wp_temperature.yaml, vars: { property: "QUELLE_IST" }}
-  HKISTTEMP:                !include { file: wp_temperature.yaml, vars: { property: "HKISTTEMP" }}
-  PUFFERISTTEMP:            !include { file: wp_temperature.yaml, vars: { property: "PUFFERISTTEMP" }}
-  PUFFERSOLLTEMP:           !include { file: wp_temperature.yaml, vars: { property: "PUFFERSOLLTEMP" }}
-  HKSOLLTEMP:               !include { file: wp_temperature.yaml, vars: { property: "HKSOLLTEMP"     , update_interval: "never" }}
-  HEIZGASTEMP:              !include { file: wp_temperature.yaml, vars: { property: "HEIZGASTEMP"    , update_interval: "${interval_slow}" }}
-  QUELLENTEMP_MIN:          !include { file: wp_temperature.yaml, vars: { property: "QUELLENTEMP_MIN", update_interval: "${interval_slow}" }} 
+  QUELLE_IST:               !include { file: templates/wp_temperature.yaml, vars: { property: "QUELLE_IST" }}
+  HKISTTEMP:                !include { file: templates/wp_temperature.yaml, vars: { property: "HKISTTEMP" }}
+  PUFFERISTTEMP:            !include { file: templates/wp_temperature.yaml, vars: { property: "PUFFERISTTEMP" }}
+  PUFFERSOLLTEMP:           !include { file: templates/wp_temperature.yaml, vars: { property: "PUFFERSOLLTEMP" }}
+  HKSOLLTEMP:               !include { file: templates/wp_temperature.yaml, vars: { property: "HKSOLLTEMP"     , update_interval: "never" }}
+  HEIZGASTEMP:              !include { file: templates/wp_temperature.yaml, vars: { property: "HEIZGASTEMP"    , update_interval: "${interval_slow}" }}
+  QUELLENTEMP_MIN:          !include { file: templates/wp_temperature.yaml, vars: { property: "QUELLENTEMP_MIN", update_interval: "${interval_slow}" }} 
 
-  DRUCK_HEIZKREIS:          !include { file: wp_generic.yaml, vars: { property: "DRUCK_HEIZKREIS"  , unit: "bar"  , icon: "mdi:water-pressure", accuracy_decimals: "1" }}
-  QUELLENDRUCK:             !include { file: wp_generic.yaml, vars: { property: "QUELLENDRUCK"     , unit: "bar"  , icon: "mdi:water-pressure", accuracy_decimals: "1" }}
-  DRUCK_HOCHDRUCK:          !include { file: wp_generic.yaml, vars: { property: "DRUCK_HOCHDRUCK"  , unit: "bar"  , icon: "mdi:water-pressure", accuracy_decimals: "2" }}
-  DRUCK_NIEDERDRUCK:        !include { file: wp_generic.yaml, vars: { property: "DRUCK_NIEDERDRUCK", unit: "bar"  , icon: "mdi:water-pressure", accuracy_decimals: "2" }}
-  VOLUMENSTROM:             !include { file: wp_generic.yaml, vars: { property: "VOLUMENSTROM"     , unit: "l/min", icon: "mdi:flow"          , accuracy_decimals: "1" }}
-  HDSENSORMAX:              !include { file: wp_generic.yaml, vars: { property: "HDSENSORMAX"      , unit: "bar"  , icon: "mdi:water-pressure", accuracy_decimals: "2" }}
-  LEISTUNG_HEIZKREISPUMPE:  !include { file: wp_generic.yaml, vars: { property: "LEISTUNG_HEIZKREISPUMPE" , update_interval: "${interval_once_in_a_while}", unit: "%", icon: "mdi:water-percent", accuracy_decimals: "1" }}
-  LEISTUNG_SOLEPUMPE:       !include { file: wp_generic.yaml, vars: { property: "LEISTUNG_SOLEPUMPE"      , update_interval: "${interval_once_in_a_while}", unit: "%", icon: "mdi:water-percent", accuracy_decimals: "1" }}
-  LEISTUNG_WARMWASSERPUMPE: !include { file: wp_generic.yaml, vars: { property: "LEISTUNG_WARMWASSERPUMPE", update_interval: "${interval_once_in_a_while}", unit: "%", icon: "mdi:water-percent", accuracy_decimals: "1" }}
-  EINPHASIGER_BETRIEB:      !include { file: wp_generic.yaml, vars: { property: "EINPHASIGER_BETRIEB"     , update_interval: "${interval_once_in_a_while}" }}
-  VERDICHTER_STILLSTAND:    !include { file: wp_generic.yaml, vars: { property: "VERDICHTER_STILLSTAND"   , update_interval: "${interval_once_in_a_while}", unit: "min" }}
-  REGLERDYNAMIK:            !include { file: wp_generic.yaml, vars: { property: "REGLERDYNAMIK"           , update_interval: "${interval_once_in_a_while}" }}
-  KUEHLEN_EINGESCHALTET:    !include { file: wp_generic.yaml, vars: { property: "KUEHLEN_EINGESCHALTET"   , update_interval: "${interval_slow}" }}
+  DRUCK_HEIZKREIS:          !include { file: templates/wp_generic.yaml, vars: { property: "DRUCK_HEIZKREIS"  , unit: "bar"  , icon: "mdi:water-pressure", accuracy_decimals: "1" }}
+  QUELLENDRUCK:             !include { file: templates/wp_generic.yaml, vars: { property: "QUELLENDRUCK"     , unit: "bar"  , icon: "mdi:water-pressure", accuracy_decimals: "1" }}
+  DRUCK_HOCHDRUCK:          !include { file: templates/wp_generic.yaml, vars: { property: "DRUCK_HOCHDRUCK"  , unit: "bar"  , icon: "mdi:water-pressure", accuracy_decimals: "2" }}
+  DRUCK_NIEDERDRUCK:        !include { file: templates/wp_generic.yaml, vars: { property: "DRUCK_NIEDERDRUCK", unit: "bar"  , icon: "mdi:water-pressure", accuracy_decimals: "2" }}
+  VOLUMENSTROM:             !include { file: templates/wp_generic.yaml, vars: { property: "VOLUMENSTROM"     , unit: "l/min", icon: "mdi:flow"          , accuracy_decimals: "1" }}
+  HDSENSORMAX:              !include { file: templates/wp_generic.yaml, vars: { property: "HDSENSORMAX"      , unit: "bar"  , icon: "mdi:water-pressure", accuracy_decimals: "2" }}
+  LEISTUNG_HEIZKREISPUMPE:  !include { file: templates/wp_generic.yaml, vars: { property: "LEISTUNG_HEIZKREISPUMPE" , update_interval: "${interval_once_in_a_while}", unit: "%", icon: "mdi:water-percent", accuracy_decimals: "1" }}
+  LEISTUNG_SOLEPUMPE:       !include { file: templates/wp_generic.yaml, vars: { property: "LEISTUNG_SOLEPUMPE"      , update_interval: "${interval_once_in_a_while}", unit: "%", icon: "mdi:water-percent", accuracy_decimals: "1" }}
+  LEISTUNG_WARMWASSERPUMPE: !include { file: templates/wp_generic.yaml, vars: { property: "LEISTUNG_WARMWASSERPUMPE", update_interval: "${interval_once_in_a_while}", unit: "%", icon: "mdi:water-percent", accuracy_decimals: "1" }}
+  EINPHASIGER_BETRIEB:      !include { file: templates/wp_generic.yaml, vars: { property: "EINPHASIGER_BETRIEB"     , update_interval: "${interval_once_in_a_while}" }}
+  VERDICHTER_STILLSTAND:    !include { file: templates/wp_generic.yaml, vars: { property: "VERDICHTER_STILLSTAND"   , update_interval: "${interval_once_in_a_while}", unit: "min" }}
+  REGLERDYNAMIK:            !include { file: templates/wp_generic.yaml, vars: { property: "REGLERDYNAMIK"           , update_interval: "${interval_once_in_a_while}" }}
+  KUEHLEN_EINGESCHALTET:    !include { file: templates/wp_generic.yaml, vars: { property: "KUEHLEN_EINGESCHALTET"   , update_interval: "${interval_slow}" }}
