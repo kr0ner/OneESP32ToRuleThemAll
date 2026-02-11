@@ -118,6 +118,7 @@ packages:
 #      - "yaml/ttf07.yaml"
 #      - "yaml/wpl13.yaml"
 #      - "yaml/wpl17.yaml"
+#      - "yaml/wpl23.yaml"
 #      - "yaml/features/fan.yaml"
 #      - "yaml/features/kondensatpumpe.yaml"
 #      - "yaml/features/energymeter.yaml"
