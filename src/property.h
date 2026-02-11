@@ -267,7 +267,7 @@ struct Property : public oe32trta::detail::Property {
 // =======================================================================
 // 7. WPL VARIANTS
 // =======================================================================
-#if defined(WPL_13) || defined(WPL_17)
+#if defined(WPL_13) || defined(WPL_17) || defined(WPL_23)
     PROPERTY(RUECKLAUFTEMP, 0x0016, Type::et_dec_val);
     PROPERTY(MAXRUECKLAUFTEMP, 0x0028, Type::et_dec_val);
     PROPERTY(PUFFERISTTEMPERATUR, 0x0078, Type::et_dec_val);
@@ -303,8 +303,6 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(BETRIEBS_STATUS, 0x4ecd);
     PROPERTY(RAUMSOLLTEMP, 0x4ece, Type::et_dec_val);
     PROPERTY(TAUPUNKTTEMP, 0x4ee0, Type::et_dec_val);
-    PROPERTY(VERDICHTER_STARTS_K, 0x4ef0);
-    PROPERTY(VERDICHTER_STARTS, 0x4ef1);
     PROPERTY(HYSTERESE_VORLAUFTEMP_KUEHLEN, 0x4f00, Type::et_dec_val);
     PROPERTY(RAUMSOLLTEMP_KUEHLEN, 0x4f04, Type::et_dec_val);
     PROPERTY(ISTTEMPERATUR_KK_2, 0x4f09, Type::et_dec_val);
@@ -318,7 +316,6 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(KUEHLEN_SOLLTEMP, 0x4f45, Type::et_dec_val);
     PROPERTY(HEIZUNGSDRUCK, 0x4f46, Type::et_cent_val);
     PROPERTY(VOLUMENSTROM, 0x4f47, Type::et_cent_val);
-    PROPERTY(ZEITINTERVALL, 0x4f4d, Type::et_dec_val);
     PROPERTY(LAUFZEIT_PASSIVKUEHLUNG, 0x4f9a, Type::et_dec_val);
     PROPERTY(ADAPTION_UEBERHITZUNG, 0x4f9e, Type::et_dec_val);
     PROPERTY(SOLL_UEBERHITZUNG_SAUGGAS_VERDICHTER, 0x4fa1, Type::et_dec_val);
@@ -340,21 +337,33 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(FROSTSCHUTZ, 0xfe07, Type::et_dec_val);
 #endif
 
+#if defined(WPL_13) || defined(WPL_17)
+    PROPERTY(VERDICHTER_STARTS_K, 0x4ef0);
+    PROPERTY(VERDICHTER_STARTS, 0x4ef1);
+    PROPERTY(ZEITINTERVALL, 0x4f4d, Type::et_dec_val);
+#endif
+
+#if defined(WPL_17) || defined(WPL_23)
+    PROPERTY(LAUFZEIT_NHZ1, 0x0259);
+    PROPERTY(LAUFZEIT_NHZ2, 0x025a);
+    PROPERTY(LAUFZEIT_NHZ1_2, 0x0805);
+    PROPERTY(STARTS_ABTAUEN, 0x0806);
+    PROPERTY(ZEIT_ABTAUEN, 0x0807);
+#endif
+
 #if defined(WPL_13)
     PROPERTY(WAERMEPUMPEN_STATUS, 0x02e2);
 #endif
 
 #if defined(WPL_17)
     PROPERTY(MAXIMALE_VORLAUFTEMP_WW, 0x0181, Type::et_dec_val);
+    PROPERTY(WP_WASSERVOLUMENSTROM, 0x02e2, Type::et_dec_val);
     PROPERTY(BIVALENZTEMPERATUR_WW, 0x01ad, Type::et_dec_val);
     PROPERTY(EINSATZGRENZE_HZG, 0x01ae, Type::et_dec_val);
     PROPERTY(EINSATZGRENZE_WW, 0x01af, Type::et_dec_val);
     PROPERTY(AUSSENTEMPERATUR_EINST, 0x01bf, Type::et_dec_val);
     PROPERTY(FESTWERTBETRIEB, 0x01c0, Type::et_dec_val);
-    PROPERTY(LAUFZEIT_NHZ1, 0x0259);
-    PROPERTY(LAUFZEIT_NHZ2, 0x025a);
     PROPERTY(WW_LERNFUNKTION, 0x027e);
-    PROPERTY(WP_WASSERVOLUMENSTROM, 0x02e2, Type::et_dec_val);
     PROPERTY(REGELABWEICHUNG, 0x033d, Type::et_dec_val);
     PROPERTY(GRENZE_KUEHLEN, 0x03dc, Type::et_dec_val);
     PROPERTY(VORLAUFANTEIL_HEIZKREIS, 0x049d);
@@ -393,9 +402,6 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(P_FAKTOR, 0x07f7, Type::et_cent_val);
     PROPERTY(I_FAKTOR, 0x07f8, Type::et_cent_val);
     PROPERTY(D_FAKTOR, 0x07f9, Type::et_cent_val);
-    PROPERTY(LAUFZEIT_NHZ1_2, 0x0805);
-    PROPERTY(STARTS_ABTAUEN, 0x0806);
-    PROPERTY(ZEIT_ABTAUEN, 0x0807);
     PROPERTY(LUEFTERLEISTUNG_REL, 0x0833);
     PROPERTY(MINIMALE_LAUFZEIT, 0x0914, Type::et_dec_val);
     PROPERTY(FROSTSCHUTZTEMPERATUR, 0x0a36, Type::et_dec_val);
@@ -461,6 +467,17 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(ISTDREHZAHL_LUEFTER, 0xc283);
     PROPERTY(TEMPERATUR_INV_LUEFTER, 0xc2c2, Type::et_dec_val);
     PROPERTY(OEFFNUNGSGRAD_BYPASSVENT, 0xc2c3, Type::et_dec_val);
+#endif
+
+#if defined(WPL_23)
+    PROPERTY(ZWISCHENEINSPRITZUNGSTEMP, 0x05d7, Type::et_dec_val);
+    PROPERTY(ZEITINTERVALL, 0x0691, Type::et_dec_val);
+    PROPERTY(VERDICHTER_STARTS_K, 0x071c);
+    PROPERTY(VERDICHTER_STARTS, 0x071d);
+    PROPERTY(REKUPERATORTEMPERATUR, 0x07a3, Type::et_dec_val);
+    PROPERTY(LAUFZEIT_VD_HEIZEN, 0x07fc);
+    PROPERTY(LAUFZEIT_VD_WW, 0x0802);
+    PROPERTY(LAUFZEIT_VD_ABTAUEN, 0x0808);
 #endif
 };
 
