@@ -1,12 +1,21 @@
+#########################################
+#                                       #
+#   ESPHome                             #
+#                                       #
+#########################################
 esphome:
   platformio_options:
     build_flags:
       - "-DTHZ_504"
 
+#########################################
+#                                       #
+#   Packages                            #
+#                                       #
+#########################################
 packages:
-  COMMON: !include { file: common.yaml }
-  BASE:   !include { file: wp_base.yaml }
+  THZ_BASE:        !include { file: thz_base.yaml }
 
-  ABLUFT_TAUPUNKT:      !include { file: wp_temperature.yaml, vars: { property: "ABLUFT_TAUPUNKT" }}
+  ABLUFT_TAUPUNKT: !include { file: templates/wp_temperature.yaml, vars: { property: "ABLUFT_TAUPUNKT" }}
 
-  DIFFERENZDRUCK:       !include { file: wp_generic.yaml, vars: { property: "DIFFERENZDRUCK" , icon: "mdi:air-filter", unit: "Pa", update_interval: $interval_medium }}
+  DIFFERENZDRUCK:  !include { file: templates/wp_generic.yaml, vars: { property: "DIFFERENZDRUCK" , icon: "mdi:air-filter", unit: "Pa", update_interval: $interval_medium }}

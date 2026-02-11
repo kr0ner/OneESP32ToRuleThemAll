@@ -18,13 +18,46 @@ If you like the project, help me code all night 😴
 ## HowTo:
 
 1. navigate to your esphome folder
-2. clone the repo (git clone https://github.com/kr0ner/OneESP32ToRuleThemAll.git)
+2. clone the repo
+   ```
+   git clone https://github.com/kr0ner/OneESP32ToRuleThemAll.git
+   ```
 3. copy or symlink OneESP32ToRuleThemAll/esp32-poe-technik.yaml to your esphome folder
 4. change board type if needed
 5. comment out packages you don't want/need
 6. add Wifi if necessary
 7. change pins for SPI/CAN if needed
 8. provide HA entities for temperature and humidity
+
+## Hierarchy
+
+```mermaid
+flowchart LR
+    core[core.yaml<br>System Core] --> wpl13([wpl13.yaml<br>Manifest])
+    core --> txx[txx_base.yaml<br>Common TXX Base]
+
+    txx --> ttf07([ttf07.yaml<br>Manifest])
+    txx --> thz[thz_base.yaml<br>Common THZ Base]
+
+    thz --> thz404([thz404.yaml<br>Manifest])
+    thz --> thz504([thz504.yaml<br>Manifest])
+    thz --> thz55([thz5_5_eco.yaml<br>Manifest])
+
+    style core stroke-width:2px,stroke-dasharray: 5 5
+    style wpl13 stroke-width:2px
+    style ttf07 stroke-width:2px
+    style thz404 stroke-width:2px
+    style thz504 stroke-width:2px
+    style thz55 stroke-width:2px
+```
+
+**System Core (`core.yaml`)**: Fundamental hardware and network operations.
+
+**Series Common Layer (`txx_base.yaml`)**: Shared logic specifically for the TXX (THZ/TTF) family.
+
+**Model Base Layer (`thz_base.yaml`)**: Heavy lifting and C++ logic for specific sub-families.
+
+**Device Manifests (e.g. `thz504.yaml`, `wpl13.yaml`)**: The clean, top-level "recipes" used to compile the firmware.
 
 ## Add new readings from heat pump / adopt to your device
 

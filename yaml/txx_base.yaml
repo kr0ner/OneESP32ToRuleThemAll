@@ -1,0 +1,124 @@
+#########################################
+#                                       #
+#   Substitutions                       #
+#                                       #
+#########################################
+substitutions:
+  kessel_can_id: "0x180"
+  hk1_can_id: "0x301"
+  hk2_can_id: "0x302"
+  manager_can_id: "0x6a1"
+  espclient_can_id: "0x6a2"
+
+#########################################
+#                                       #
+#   Global variables                    #
+#                                       #
+#########################################
+globals:
+  - id: gCOP_WW_TAG
+    type: float
+    initial_value: "1.0"
+  - id: gCOP_HEIZ_TAG
+    type: float
+    initial_value: "1.0"
+
+#########################################
+#                                       #
+#   Home Assistant Sensors              #
+#                                       #
+#########################################
+sensor:
+  - platform: homeassistant
+    name: Temperature Sensor From Home Assistant
+    id: ha_temperature_sensor
+    entity_id: $entity_room_temperature
+    filters:
+      - heartbeat:
+          period: $interval_medium
+          optimistic: true
+    on_value:
+      then:
+        - lambda: |-
+            if (x > 0.0f) {
+              ESP_LOGI("SET", "Sending room temperature %f to heatpump", x);
+              queueTransmission(HK1, Property::kRAUMISTTEMP, static_cast<std::uint16_t>(x * 10.0f));
+            }
+
+  - platform: homeassistant
+    name: Humidity Sensor From Home Assistant
+    id: ha_humidity_sensor
+    entity_id: $entity_humidity
+    filters:
+      - heartbeat:
+          period: $interval_medium
+          optimistic: true
+    on_value:
+      then:
+        - lambda: |-
+            if (x > 0.0f) {
+              ESP_LOGI("SET", "Sending humidity %f to heatpump", x);
+              queueTransmission(HK1, Property::kRAUMFEUCHTE, static_cast<std::uint16_t>(x * 10.0f));
+            }
+
+#########################################
+#                                       #
+#   Template Sensors                    #
+#                                       #
+#########################################
+  - platform: template
+    name: "COP WW TAG"
+    update_interval: $interval_very_slow
+    state_class: "measurement"
+    filters:
+      - median
+    lambda: |-
+      if (id(WAERMEERTRAG_WW_TAG_SUMME_KWH).state && id(EL_ENERGIEAUFNAHME_WW_SUMME_KWH).state && id(EL_ENERGIEAUFNAHME_WW_SUMME_KWH).state != 0.0f) {
+        id(gCOP_WW_TAG) = id(WAERMEERTRAG_WW_TAG_SUMME_KWH).state / id(EL_ENERGIEAUFNAHME_WW_SUMME_KWH).state;
+      }
+      return id(gCOP_WW_TAG);
+  - platform: template
+    name: "COP HEIZ TAG"
+    update_interval: $interval_very_slow
+    state_class: "measurement"
+    filters:
+      - median
+    lambda: |-
+      if (id(WAERMEERTRAG_HEIZ_TAG_SUMME_KWH).state && id(EL_ENERGIEAUFNAHME_HEIZ_SUMME_KWH).state && id(EL_ENERGIEAUFNAHME_HEIZ_SUMME_KWH).state != 0.0f) {
+        id(gCOP_HEIZ_TAG) = id(WAERMEERTRAG_HEIZ_TAG_SUMME_KWH).state / id(EL_ENERGIEAUFNAHME_HEIZ_SUMME_KWH).state;
+      }
+      return id(gCOP_HEIZ_TAG);
+
+#########################################
+#                                       #
+#   Packages                            #
+#                                       #
+#########################################
+packages:
+  CORE:                              !include { file: core.yaml }
+
+  VERDICHTER_STARTS:                 !include { file: templates/wp_generic_combined.yaml, vars: { sensor_name: "VERDICHTER_STARTS"           , scaled_property: "VERDICHTER_STARTS_K"       , property: "VERDICHTER_STARTS"         , unit: ""   , accuracy_decimals: "0", scaler: "1000", icon: "mdi:counter" }}
+  WAERMEERTRAG_WW_SUMME_MWH:         !include { file: templates/wp_generic_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_WW_SUMME_MWH"   , scaled_property: "WAERMEERTRAG_WW_SUM_KWH"   , property: "WAERMEERTRAG_WW_SUM_MWH"   , unit: "MWh", accuracy_decimals: "3", icon: "mdi:fire" }}
+  WAERMEERTRAG_HEIZ_SUMME_MWH:       !include { file: templates/wp_generic_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_HEIZ_SUMME_MWH" , scaled_property: "WAERMEERTRAG_HEIZ_SUM_KWH" , property: "WAERMEERTRAG_HEIZ_SUM_MWH" , unit: "MWh", accuracy_decimals: "3", icon: "mdi:fire" }}
+
+  SPEICHERSOLLTEMP:                  !include { file: templates/wp_temperature.yaml, vars: { property: "SPEICHERSOLLTEMP"          }}
+  SPEICHERISTTEMP:                   !include { file: templates/wp_temperature.yaml, vars: { property: "SPEICHERISTTEMP"          , update_interval: $interval_medium }}
+  AUSSENTEMP:                        !include { file: templates/wp_temperature.yaml, vars: { property: "AUSSENTEMP"       }}
+  RUECKLAUFISTTEMP:                  !include { file: templates/wp_temperature.yaml, vars: { property: "RUECKLAUFISTTEMP"         , update_interval: $interval_medium }}
+  VORLAUFISTTEMP:                    !include { file: templates/wp_temperature.yaml, vars: { property: "VORLAUFISTTEMP"           , update_interval: $interval_medium, target: "HK1" }}
+  RAUMISTTEMP:                       !include { file: templates/wp_temperature.yaml, vars: { property: "RAUMISTTEMP"              , target: "HK1" }}
+  VERSTELLTE_RAUMSOLLTEMP:           !include { file: templates/wp_temperature.yaml, vars: { property: "VERSTELLTE_RAUMSOLLTEMP"  , target: "HK1" }}
+  VORLAUFSOLLTEMP:                   !include { file: templates/wp_temperature.yaml, vars: { property: "VORLAUFSOLLTEMP"          , target: "HK1" }}
+
+  FEHLERMELDUNG:                     !include { file: templates/wp_generic.yaml, vars: { property: "FEHLERMELDUNG"      , icon: "mdi:alert-circle" }}
+  RAUMFEUCHTE:                       !include { file: templates/wp_generic.yaml, vars: { property: "RAUMFEUCHTE"        , update_interval: $interval_very_slow, unit: "%", icon: "mdi:water-percent", target: "HK1", accuracy_decimals: "1" }}
+
+  STEIGUNG_HK1:                      !include { file: templates/wp_number.yaml, vars: { property: "STEIGUNG_HK1"       , icon: "mdi:valve", target: "HK1", min: "0", max: "5.0", step: "0.01"}}
+  RAUMEINFLUSS:                      !include { file: templates/wp_number.yaml, vars: { property: "RAUMEINFLUSS", target: "HK1" }}
+
+  EL_ENERGIEAUFNAHME_WW_SUMME_KWH:   !include { file: templates/wp_daily_energy_combined.yaml, vars: { sensor_name: "EL_ENERGIEAUFNAHME_WW_SUMME_KWH"   , property_wh: "EL_ENERGIEAUFNAHME_WW_TAG_WH"   , property_kwh: "EL_ENERGIEAUFNAHME_WW_TAG_KWH"   }}
+  EL_ENERGIEAUFNAHME_HEIZ_SUMME_KWH: !include { file: templates/wp_daily_energy_combined.yaml, vars: { sensor_name: "EL_ENERGIEAUFNAHME_HEIZ_SUMME_KWH" , property_wh: "EL_ENERGIEAUFNAHME_HEIZ_TAG_WH" , property_kwh: "EL_ENERGIEAUFNAHME_HEIZ_TAG_KWH" }}
+  WAERMEERTRAG_WW_TAG_SUMME_KWH:     !include { file: templates/wp_daily_energy_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_WW_TAG_SUMME_KWH"     , property_wh: "WAERMEERTRAG_WW_TAG_WH"         , property_kwh: "WAERMEERTRAG_WW_TAG_KWH"         }}
+  WAERMEERTRAG_HEIZ_TAG_SUMME_KWH:   !include { file: templates/wp_daily_energy_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_HEIZ_TAG_SUMME_KWH"   , property_wh: "WAERMEERTRAG_HEIZ_TAG_WH"       , property_kwh: "WAERMEERTRAG_HEIZ_TAG_KWH"       }}
+
+  HEATPUMP_DATETIME:                 !include { file: templates/wp_datetime.yaml }
