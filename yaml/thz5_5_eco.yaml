@@ -1,10 +1,19 @@
+#########################################
+#                                       #
+#   ESPHome                             #
+#                                       #
+#########################################
 esphome:
   platformio_options:
     build_flags:
       - "-DTHZ_5_5_ECO"
 
+#########################################
+#                                       #
+#   Packages                            #
+#                                       #
+#########################################
 packages:
-  COMMON: !include { file: common.yaml }
-  BASE:   !include { file: wp_base.yaml }
+  THZ_BASE:      !include { file: thz_base.yaml }
 
-  ZEITSPERRE_NE:            !include { file: wp_number.yaml , vars: { property: "ZEITSPERRE_NE" , icon: "mdi:valve" , min: "0", max: "360", step: "5.0" }}
+  ZEITSPERRE_NE: !include { file: templates/wp_number.yaml , vars: { property: "ZEITSPERRE_NE" , icon: "mdi:valve" , min: "0", max: "360", step: "5.0" }}
