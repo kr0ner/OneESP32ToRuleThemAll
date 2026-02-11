@@ -1,0 +1,39 @@
+#########################################
+#                                       #
+#   ESPHome                             #
+#                                       #
+#########################################
+esphome:
+  platformio_options:
+    build_flags:
+      - "-DWPL_23"
+
+#########################################
+#                                       #
+#   Global variables                    #
+#                                       #
+#########################################
+globals:
+  - id: heat_pump_variant
+    type: std::string
+    initial_value: '"WPL13"'
+
+#########################################
+#                                       #
+#   Packages                            #
+#                                       #
+#########################################
+packages:
+  wpl_base: !include { file: wpl_base.yaml }
+
+  ZWISCHENEINSPRITZUNGSTEMP: !include { file: templates/wp_temperature.yaml, vars: { property: "ZWISCHENEINSPRITZUNGSTEMP", target: "Manager" }}
+  REKUPERATORTEMPERATUR:     !include { file: templates/wp_temperature.yaml, vars: { property: "REKUPERATORTEMPERATUR", target: "Manager" }}
+
+  LAUFZEIT_VD_HEIZEN:        !include { file: templates/wp_generic.yaml, vars: { property: "LAUFZEIT_VD_HEIZEN", unit: "h", target: "Manager" }}
+  LAUFZEIT_VD_WW:            !include { file: templates/wp_generic.yaml, vars: { property: "LAUFZEIT_VD_WW", unit: "h", target: "Manager" }}
+  LAUFZEIT_VD_ABTAUEN:       !include { file: templates/wp_generic.yaml, vars: { property: "LAUFZEIT_VD_ABTAUEN", unit: "h", target: "Manager" }}
+  LAUFZEIT_NHZ1:             !include { file: templates/wp_generic.yaml, vars: { property: "LAUFZEIT_NHZ1", unit: "h", target: "Kessel" }}
+  LAUFZEIT_NHZ2:             !include { file: templates/wp_generic.yaml, vars: { property: "LAUFZEIT_NHZ2", unit: "h", target: "Kessel" }}
+  LAUFZEIT_NHZ1_2:           !include { file: templates/wp_generic.yaml, vars: { property: "LAUFZEIT_NHZ1_2", unit: "h", target: "Kessel" }}
+  ZEIT_ABTAUEN:              !include { file: templates/wp_generic.yaml, vars: { property: "ZEIT_ABTAUEN", unit: "min", target: "Manager" }}
+  STARTS_ABTAUEN:            !include { file: templates/wp_generic.yaml, vars: { property: "STARTS_ABTAUEN", target: "Manager" }}
