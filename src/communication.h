@@ -36,19 +36,44 @@ static const std::vector<std::reference_wrapper<const CanMember>> canMembers{Kes
                                                                              ESPClient, FET, MFG, WPM2};
 
 using Task = std::pair<const CanMember, const Property>;
-struct ConditionalTask {
-    ConditionalTask(Task task, std::optional<std::uint16_t> value = std::nullopt) : _task(task), _value(value){};
-    ConditionalTask(Task task, std::function<bool()> condition, std::optional<std::uint16_t> value = std::nullopt)
-        : _task(task), _condition(std::move(condition)), _value(value){};
+struct ConditionalRequest {
+    ConditionalRequest(Task task) : _task(std::move(task)){};
+    ConditionalRequest(Task task, std::function<bool()> condition)
+        : _task(std::move(task)), _condition(std::move(condition)){};
 
     Task _task;
-    std::optional<std::uint16_t> _value;
     std::function<bool()> _condition = []() {
         return true;
     };
 };
 
-static std::list<ConditionalTask> conditionalTasks;
+struct ConditionalTransmission {
+    ConditionalTransmission(Task task, std::uint16_t value) : _task(std::move(task)), _value(value){};
+    ConditionalTransmission(Task task, std::function<bool()> condition, std::uint16_t value)
+        : _task(std::move(task)), _condition(std::move(condition)), _value(value){};
+
+    Task _task;
+    std::uint16_t _value;
+    std::function<bool()> _condition = []() {
+        return true;
+    };
+};
+
+/**
+ * @brief Singleton accessor to ensure all files share the same list.
+ */
+inline std::list<ConditionalRequest>& getConditionalRequests() {
+    static std::list<ConditionalRequest> requests;
+    return requests;
+}
+
+/**
+ * @brief Singleton accessor to ensure all files share the same list.
+ */
+inline std::list<ConditionalTransmission>& getConditionalTransmissions() {
+    static std::list<ConditionalTransmission> transmissions;
+    return transmissions;
+}
 
 /**
  * @brief Splits the given integer into single bytes.
@@ -154,7 +179,7 @@ bool isResponse(const std::vector<std::uint8_t>& msg) {
  */
 void queueRequest(const CanMember& member, const Property& property) {
     ESP_LOGI("QUEUE", "Requesting data from %s for %s", member.name.c_str(), std::string(property.name).c_str());
-    conditionalTasks.emplace_back(std::make_pair(member, property));
+    getConditionalRequests().emplace_back(std::make_pair(member, property));
 }
 
 /**
@@ -165,7 +190,7 @@ void queueRequest(const CanMember& member, const Property& property) {
 void queueConditionalRequest(const CanMember& member, const Property& property, std::function<bool()> condition) {
     ESP_LOGI("QUEUE", "Adding conditional request for data from %s for %s", member.name.c_str(),
              std::string(property.name).c_str());
-    conditionalTasks.emplace_back(std::make_pair(member, property), std::move(condition));
+    getConditionalRequests().emplace_back(std::make_pair(member, property), std::move(condition));
 }
 
 /**
@@ -176,9 +201,9 @@ void queueConditionalRequest(const CanMember& member, const Property& property, 
 void scheduleRequest(const CanMember& member, const Property& property, std::chrono::seconds seconds) {
     ESP_LOGI("QUEUE", "Scheduling request for data from %s for %s in %lld seconds", member.name.c_str(),
              std::string(property.name).c_str(), seconds.count());
-    conditionalTasks.emplace_back(std::make_pair(member, property), [t = std::chrono::steady_clock::now() + seconds]() {
-        return t < std::chrono::steady_clock::now();
-    });
+    getConditionalRequests().emplace_back(
+        std::make_pair(member, property),
+        [t = std::chrono::steady_clock::now() + seconds]() { return t < std::chrono::steady_clock::now(); });
 }
 
 /**
@@ -188,7 +213,7 @@ void scheduleRequest(const CanMember& member, const Property& property, std::chr
  */
 void queueTransmission(const CanMember& member, const Property& property, const std::uint16_t value) {
     ESP_LOGI("QUEUE", "Sending %d for %s to %s ", value, std::string(property.name).c_str(), member.name.c_str());
-    conditionalTasks.emplace_back(std::make_pair(member, property), value);
+    getConditionalTransmissions().emplace_back(std::make_pair(member, property), value);
 }
 
 /**
