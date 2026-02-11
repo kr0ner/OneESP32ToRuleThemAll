@@ -1,32 +1,5 @@
 #########################################
 #                                       #
-#   ESPHome                             #
-#                                       #
-#########################################
-esphome:
-  platformio_options:
-    build_flags:
-      - "-DWPL_13"
-  on_boot:
-    priority: 100.0
-    then:
-      - lambda: |-
-          CallbackHandler::instance().addCallback(std::make_pair(Manager,Property::kWAERMEPUMPEN_STATUS),[](const SimpleVariant& value){
-            const std::bitset<9U> status_bits{static_cast<std::uint16_t>(value)};
-            id(VERDICHTER).publish_state(status_bits.test(0U));
-            id(OELSUMPFHEIZUNG).publish_state(status_bits.test(1U));
-            id(SICHERHEITSKETTE).publish_state(status_bits.test(2U));
-            id(NETZVERSORGUNG_INVERTER).publish_state(status_bits.test(3U));
-            id(STOERUNG).publish_state(status_bits.test(4U));
-            id(SOLEDRUCK_WAECHTER).publish_state(status_bits.test(5U));
-            id(WAERMEQUELLENPUMPE).publish_state(status_bits.test(6U));
-            id(PASSIVKUEHLVENTIL_HEIZEN).publish_state(status_bits.test(7U));
-            id(PASSIVKUEHLVENTIL_KUEHLEN).publish_state(status_bits.test(8U));
-          });
-          queueRequest(Manager, Property::kWAERMEPUMPEN_STATUS);
-
-#########################################
-#                                       #
 #   Substitutions                       #
 #                                       #
 #########################################
@@ -39,32 +12,88 @@ substitutions:
 
 #########################################
 #                                       #
-#   Global variables                    #
+#   ESPHome Base Setup                  #
 #                                       #
 #########################################
-globals:
-  - id: heat_pump_variant
-    type: std::string
-    initial_value: '"WPL13"'
+esphome:
+  on_boot:
+    priority: 100.0
+    then:
+      - lambda: |-
+          CallbackHandler::instance().addCallback(std::make_pair(WPM2,Property::kPROGRAMMSCHALTER),[](const SimpleVariant& value){
+            const auto stringValue{value.get<std::string>()};
+            ESP_LOGI("PROGRAMMSCHALTER", "mapped value %s", stringValue.c_str());
+            const auto index = id(PROGRAMMSCHALTER).index_of(stringValue);
+            if(index.has_value()) {
+              id(PROGRAMMSCHALTER).publish_state(stringValue);
+            }
+          });
+          queueRequest(WPM2, Property::kPROGRAMMSCHALTER);
+
+          CallbackHandler::instance().addCallback(std::make_pair(WPM2,Property::kBETRIEBS_STATUS),[](const SimpleVariant& value){
+            const std::bitset<12U> status_bits{static_cast<std::uint16_t>(value)};
+            id(HEIZKREISPUMPE_1).publish_state(status_bits.test(0U));
+            id(HEIZKREISPUMPE_2).publish_state(status_bits.test(1U));
+            id(PUFFERLADEPUMPE_1).publish_state(status_bits.test(2U));
+            id(QUELLENPUMPE).publish_state(status_bits.test(3U));
+            id(STOERAUSGANG).publish_state(status_bits.test(4U));
+            id(KUEHLBETRIEB).publish_state(status_bits.test(5U));
+            id(MISCHER_AUF_HEIZKREIS_2).publish_state(status_bits.test(6U));
+            id(MISCHER_ZU_HEIZKREIS_2).publish_state(status_bits.test(7U));
+            id(NHZ_1).publish_state(status_bits.test(8U));
+            id(NHZ_2).publish_state(status_bits.test(9U));
+            id(NHZ_3).publish_state(status_bits.test(10U));
+            id(EVU_SPERRE).publish_state(status_bits.test(11U));
+          });
+          queueRequest(WPM2, Property::kBETRIEBS_STATUS);
+
+#########################################
+#                                       #
+#   Selects                             #
+#                                       #
+#########################################
+select:
+  - platform: template
+    name: "PROGRAMMSCHALTER"
+    id: PROGRAMMSCHALTER
+    options:
+      - "Notbetrieb"
+      - "Bereitschaft"
+      - "Programm"
+      - "Komfort"
+      - "Eco"
+      - "Unbekannt"
+    initial_option: "Unbekannt"
+    optimistic: true
+    setup_priority: 100
+    set_action:
+      then:
+        - lambda: |-
+            const auto betriebsartId = Mapper::instance().getBetriebsartId(x);
+            if(betriebsartId.has_value()) {
+              queueTransmission(WPM2, Property::kPROGRAMMSCHALTER, (betriebsartId.value() >> 8U) & 0xFF);
+            }
 
 #########################################
 #                                       #
 #   Packages                            #
 #                                       #
 #########################################
-
 packages:
-  wpl_base:                             !include { file: wpl_base.yaml }
+  CORE:                                 !include { file: core.yaml }
 
-  VERDICHTER:                           !include { file: templates/wp_binary.yaml, vars: { name: "VERDICHTER" }}
-  OELSUMPFHEIZUNG:                      !include { file: templates/wp_binary.yaml, vars: { name: "OELSUMPFHEIZUNG" }}
-  SICHERHEITSKETTE:                     !include { file: templates/wp_binary.yaml, vars: { name: "SICHERHEITSKETTE" }}
-  NETZVERSORGUNG_INVERTER:              !include { file: templates/wp_binary.yaml, vars: { name: "NETZVERSORGUNG_INVERTER" }}
-  STOERUNG:                             !include { file: templates/wp_binary.yaml, vars: { name: "STOERUNG" }}
-  SOLEDRUCK_WAECHTER:                   !include { file: templates/wp_binary.yaml, vars: { name: "SOLEDRUCK_WAECHTER" }}
-  WAERMEQUELLENPUMPE:                   !include { file: templates/wp_binary.yaml, vars: { name: "WAERMEQUELLENPUMPE" }}
-  PASSIVKUEHLVENTIL_HEIZEN:             !include { file: templates/wp_binary.yaml, vars: { name: "PASSIVKUEHLVENTIL_HEIZEN" }}
-  PASSIVKUEHLVENTIL_KUEHLEN:            !include { file: templates/wp_binary.yaml, vars: { name: "PASSIVKUEHLVENTIL_KUEHLEN" }}
+  HEIZKREISPUMPE_1:                     !include { file: templates/wp_binary.yaml, vars: { name: "HEIZKREISPUMPE_1" }}
+  HEIZKREISPUMPE_2:                     !include { file: templates/wp_binary.yaml, vars: { name: "HEIZKREISPUMPE_2" }}
+  PUFFERLADEPUMPE_1:                    !include { file: templates/wp_binary.yaml, vars: { name: "PUFFERLADEPUMPE_1" }}
+  QUELLENPUMPE:                         !include { file: templates/wp_binary.yaml, vars: { name: "QUELLENPUMPE" }}
+  STOERAUSGANG:                         !include { file: templates/wp_binary.yaml, vars: { name: "STOERAUSGANG" }}
+  KUEHLBETRIEB:                         !include { file: templates/wp_binary.yaml, vars: { name: "KUEHLBETRIEB" }}
+  MISCHER_AUF_HEIZKREIS_2:              !include { file: templates/wp_binary.yaml, vars: { name: "MISCHER_AUF_HEIZKREIS_2" }}
+  MISCHER_ZU_HEIZKREIS_2:               !include { file: templates/wp_binary.yaml, vars: { name: "MISCHER_ZU_HEIZKREIS_2" }}
+  NHZ_1:                                !include { file: templates/wp_binary.yaml, vars: { name: "NHZ_1" }}
+  NHZ_2:                                !include { file: templates/wp_binary.yaml, vars: { name: "NHZ_2" }}
+  NHZ_3:                                !include { file: templates/wp_binary.yaml, vars: { name: "NHZ_3" }}
+  EVU_SPERRE:                           !include { file: templates/wp_binary.yaml, vars: { name: "EVU_SPERRE" }}
 
   ISTTEMPERATUR_HK1:                    !include { file: templates/wp_temperature.yaml, vars: { property: "ISTTEMPERATUR"     , name_suffix: "_HK1" , target: "HK1"  }}
   SOLLTEMPERATUR_HK1:                   !include { file: templates/wp_temperature.yaml, vars: { property: "SOLLTEMPERATUR"    , name_suffix: "_HK1" , target: "HK1"  }}

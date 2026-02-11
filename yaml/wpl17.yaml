@@ -1,0 +1,144 @@
+#########################################
+#                                       #
+#   ESPHome                             #
+#                                       #
+#########################################
+esphome:
+  platformio_options:
+    build_flags:
+      - "-DWPL_17"
+
+#########################################
+#                                       #
+#   Global variables                    #
+#                                       #
+#########################################
+globals:
+  - id: heat_pump_variant
+    type: std::string
+    initial_value: '"WPL13"'
+
+#########################################
+#                                       #
+#   Packages                            #
+#                                       #
+#########################################
+packages:
+  wpl_base:                     !include { file: wpl_base.yaml }
+
+  WP_WASSERVOLUMENSTROM:        !include { file: templates/wp_generic.yaml, vars: { property: "WP_WASSERVOLUMENSTROM", unit: "l/min", icon: "mdi:water", accuracy_decimals: "1", target: "Manager" }}
+  FET_ECO:                      !include { file: templates/wp_generic.yaml, vars: { property: "FET_ECO", target: "HK1" }}
+  LUEFTERLEISTUNG_REL:          !include { file: templates/wp_generic.yaml, vars: { property: "LUEFTERLEISTUNG_REL", unit: "%", icon: "mdi:fan", target: "Manager" }}
+  SOLLDREHZAHL_LUEFTER:         !include { file: templates/wp_generic.yaml, vars: { property: "SOLLDREHZAHL_LUEFTER", unit: "Hz", icon: "mdi:fan", target: "Manager" }}
+  ISTDREHZAHL_LUEFTER:          !include { file: templates/wp_generic.yaml, vars: { property: "ISTDREHZAHL_LUEFTER", unit: "Hz", icon: "mdi:fan", target: "Manager" }}
+  LAUFZEIT_VD_HEIZEN:           !include { file: templates/wp_generic.yaml, vars: { property: "LAUFZEIT_VD_HEIZEN", unit: "h", target: "Kessel" }}
+  LAUFZEIT_VD_WW:               !include { file: templates/wp_generic.yaml, vars: { property: "LAUFZEIT_VD_WW", unit: "h", target: "Kessel" }}
+  LAUFZEIT_VD_KUEHLEN:          !include { file: templates/wp_generic.yaml, vars: { property: "LAUFZEIT_VD_KUEHLEN", unit: "h", target: "Kessel" }}
+  LAUFZEIT_VD_ABTAUEN:          !include { file: templates/wp_generic.yaml, vars: { property: "LAUFZEIT_VD_ABTAUEN", unit: "h", target: "Kessel" }}
+  LAUFZEIT_NHZ1:                !include { file: templates/wp_generic.yaml, vars: { property: "LAUFZEIT_NHZ1", unit: "h", target: "Manager" }}
+  LAUFZEIT_NHZ2:                !include { file: templates/wp_generic.yaml, vars: { property: "LAUFZEIT_NHZ2", unit: "h", target: "Manager" }}
+  LAUFZEIT_NHZ1_2:              !include { file: templates/wp_generic.yaml, vars: { property: "LAUFZEIT_NHZ1_2", unit: "h", target: "Manager" }}
+  ZEIT_ABTAUEN:                 !include { file: templates/wp_generic.yaml, vars: { property: "ZEIT_ABTAUEN", unit: "min", target: "Manager" }}
+  STARTS_ABTAUEN:               !include { file: templates/wp_generic.yaml, vars: { property: "STARTS_ABTAUEN", target: "Manager" }}
+  P_FAKTOR:                     !include { file: templates/wp_generic.yaml, vars: { property: "P_FAKTOR", target: "Manager" }}
+  I_FAKTOR:                     !include { file: templates/wp_generic.yaml, vars: { property: "I_FAKTOR", target: "Manager" }}
+  D_FAKTOR:                     !include { file: templates/wp_generic.yaml, vars: { property: "D_FAKTOR", target: "Manager" }}
+  VORSTEUER_OEFFNUNGSGRAD_EXV:  !include { file: templates/wp_generic.yaml, vars: { property: "VORSTEUER_OEFFNUNGSGRAD_EXV", unit: "%", target: "Manager" }}
+  OEFFNUNGSGRAD_EXV:            !include { file: templates/wp_generic.yaml, vars: { property: "OEFFNUNGSGRAD_EXV", unit: "%", target: "Manager" }}
+  OEFFNUNGSGRAD_BYPASSVENT:     !include { file: templates/wp_generic.yaml, vars: { property: "OEFFNUNGSGRAD_BYPASSVENT", unit: "%", target: "Manager" }}
+  EINGESCHALTETE_STUFEN:        !include { file: templates/wp_generic.yaml, vars: { property: "EINGESCHALTETE_STUFEN", target: "WPM2" }}
+  MELDUNGSLISTE:                !include { file: templates/wp_generic.yaml, vars: { property: "MELDUNGSLISTE", target: "Kessel" }}
+  RELAIS_X_2_3:                 !include { file: templates/wp_generic.yaml, vars: { property: "RELAIS_X_2_3", target: "Kessel" }}
+  RELAIS_X_2_4:                 !include { file: templates/wp_generic.yaml, vars: { property: "RELAIS_X_2_4", target: "Kessel" }}
+  RELAIS_X_2_5:                 !include { file: templates/wp_generic.yaml, vars: { property: "RELAIS_X_2_5", target: "Kessel" }}
+  RELAIS_X_2_6:                 !include { file: templates/wp_generic.yaml, vars: { property: "RELAIS_X_2_6", target: "Kessel" }}
+  RELAIS_X_2_7:                 !include { file: templates/wp_generic.yaml, vars: { property: "RELAIS_X_2_7", target: "Kessel" }}
+  RELAIS_X_2_8:                 !include { file: templates/wp_generic.yaml, vars: { property: "RELAIS_X_2_8", target: "Kessel" }}
+  RELAIS_X_2_9:                 !include { file: templates/wp_generic.yaml, vars: { property: "RELAIS_X_2_9", target: "Kessel" }}
+  RELAIS_X_2_10:                !include { file: templates/wp_generic.yaml, vars: { property: "RELAIS_X_2_10", target: "Kessel" }}
+  RELAIS_X_2_11:                !include { file: templates/wp_generic.yaml, vars: { property: "RELAIS_X_2_11", target: "Kessel" }}
+  RELAIS_X_2_12:                !include { file: templates/wp_generic.yaml, vars: { property: "RELAIS_X_2_12", target: "Kessel" }}
+  RELAIS_X_2_13:                !include { file: templates/wp_generic.yaml, vars: { property: "RELAIS_X_2_13", target: "Kessel" }}
+  RELAIS_X_2_14_1:              !include { file: templates/wp_generic.yaml, vars: { property: "RELAIS_X_2_14_1", target: "Kessel" }}
+  RELAIS_X_2_14_2:              !include { file: templates/wp_generic.yaml, vars: { property: "RELAIS_X_2_14_2", target: "Kessel" }}
+  RELAIS_X_2_15_1:              !include { file: templates/wp_generic.yaml, vars: { property: "RELAIS_X_2_15_1", target: "Kessel" }}
+  RELAIS_X_2_15_2:              !include { file: templates/wp_generic.yaml, vars: { property: "RELAIS_X_2_15_2", target: "Kessel" }}
+  ENTLEERUNG_HYD_1:             !include { file: templates/wp_generic.yaml, vars: { property: "ENTLEERUNG_HYD_1", target: "Kessel" }}
+  ENTLEERUNG_HYD_2:             !include { file: templates/wp_generic.yaml, vars: { property: "ENTLEERUNG_HYD_2", target: "Kessel" }}
+  RELAIS_NHZ1:                  !include { file: templates/wp_generic.yaml, vars: { property: "RELAIS_NHZ1", target: "Kessel" }}
+  RELAIS_NHZ2:                  !include { file: templates/wp_generic.yaml, vars: { property: "RELAIS_NHZ2", target: "Kessel" }}
+  RELAIS_NHZ3:                  !include { file: templates/wp_generic.yaml, vars: { property: "RELAIS_NHZ3", target: "Kessel" }}
+  SCHRITTMOTOR_PHASE_1:         !include { file: templates/wp_generic.yaml, vars: { property: "SCHRITTMOTOR_PHASE_1", target: "Kessel" }}
+  SCHRITTMOTOR_PHASE_2:         !include { file: templates/wp_generic.yaml, vars: { property: "SCHRITTMOTOR_PHASE_2", target: "Kessel" }}
+  SCHRITTMOTOR_PHASE_3:         !include { file: templates/wp_generic.yaml, vars: { property: "SCHRITTMOTOR_PHASE_3", target: "Kessel" }}
+  SCHRITTMOTOR_PHASE_4:         !include { file: templates/wp_generic.yaml, vars: { property: "SCHRITTMOTOR_PHASE_4", target: "Kessel" }}
+  REGLERDYNAMIK_HEIZEN:         !include { file: templates/wp_generic.yaml, vars: { property: "REGLERDYNAMIK_HEIZEN", target: "Kessel" }}
+  SOLLSPREIZUNG:                !include { file: templates/wp_generic.yaml, vars: { property: "SOLLSPREIZUNG", target: "Kessel" }}
+  MAXIMALE_PUMPENLEISTUNG:      !include { file: templates/wp_generic.yaml, vars: { property: "MAXIMALE_PUMPENLEISTUNG", unit: "%", target: "Manager" }}
+  STANDBY_PUMPENLEISTUNG:       !include { file: templates/wp_generic.yaml, vars: { property: "STANDBY_PUMPENLEISTUNG", unit: "%", target: "Manager" }}
+  LEISTUNG_WARMWASSERPUMPE:     !include { file: templates/wp_generic.yaml, vars: { property: "LEISTUNG_WARMWASSERPUMPE", unit: "%", target: "Manager" }}
+  MINIMALE_ABTAUZEIT:           !include { file: templates/wp_generic.yaml, vars: { property: "MINIMALE_ABTAUZEIT", unit: "min", target: "Kessel" }}
+  ABTAUEN_EINLEITEN:            !include { file: templates/wp_generic.yaml, vars: { property: "ABTAUEN_EINLEITEN", target: "Kessel" }}
+  STILLSTANDSZEIT:              !include { file: templates/wp_generic.yaml, vars: { property: "STILLSTANDSZEIT", unit: "min", target: "Kessel" }}
+  MAXIMALER_STROM:              !include { file: templates/wp_generic.yaml, vars: { property: "MAXIMALER_STROM", unit: "A", target: "Kessel" }}
+  MINIMALE_LAUFZEIT:            !include { file: templates/wp_generic.yaml, vars: { property: "MINIMALE_LAUFZEIT", unit: "min", target: "Kessel" }}
+  WAERMEBEDARF:                 !include { file: templates/wp_generic.yaml, vars: { property: "WAERMEBEDARF", unit: "kW", target: "Kessel" }}
+  KONSTANTE_LEISTUNG:           !include { file: templates/wp_generic.yaml, vars: { property: "KONSTANTE_LEISTUNG", unit: "kW", target: "Kessel" }}
+  VERDICHTER_SOFORTSTART:       !include { file: templates/wp_generic.yaml, vars: { property: "VERDICHTER_SOFORTSTART", target: "Kessel" }}
+  REDUZIERUNG_LEISTUNG:         !include { file: templates/wp_generic.yaml, vars: { property: "REDUZIERUNG_LEISTUNG", target: "Kessel" }}
+  SILENT_LEISTUNG:              !include { file: templates/wp_generic.yaml, vars: { property: "SILENT_LEISTUNG", unit: "%", target: "Kessel" }}
+  SILENT_LUEFTER:               !include { file: templates/wp_generic.yaml, vars: { property: "SILENT_LUEFTER", unit: "%", target: "Kessel" }}
+  WAERMEPUMPE_AUS:              !include { file: templates/wp_generic.yaml, vars: { property: "WAERMEPUMPE_AUS", target: "Kessel" }}
+  EVU_SPERRE_CONFIG:            !include { file: templates/wp_generic.yaml, vars: { property: "EVU_SPERRE_CONFIG", target: "Kessel" }}
+  INBETRIEBNAHME_NOTBETRIEB:    !include { file: templates/wp_generic.yaml, vars: { property: "INBETRIEBNAHME_NOTBETRIEB", target: "Kessel" }}
+  EINGANG_X1_13:                !include { file: templates/wp_generic.yaml, vars: { property: "EINGANG_X1_13", target: "Kessel" }}
+  EINGANG_X1_14:                !include { file: templates/wp_generic.yaml, vars: { property: "EINGANG_X1_14", target: "Kessel" }}
+  FUNKTION_X1_16:               !include { file: templates/wp_generic.yaml, vars: { property: "FUNKTION_X1_16", target: "Kessel" }}
+  PUMPE_X1_16:                  !include { file: templates/wp_generic.yaml, vars: { property: "PUMPE_X1_16", target: "Kessel" }}
+  LEISTUNG_PWM_X1_16:           !include { file: templates/wp_generic.yaml, vars: { property: "LEISTUNG_PWM_X1_16", unit: "%", target: "Kessel" }}
+  LEISTUNG_VOLT_X1_16:          !include { file: templates/wp_generic.yaml, vars: { property: "LEISTUNG_VOLT_X1_16", unit: "V", target: "Kessel" }}
+  FUNKTION_X1_17:               !include { file: templates/wp_generic.yaml, vars: { property: "FUNKTION_X1_17", target: "Kessel" }}
+  PUMPE_X1_17:                  !include { file: templates/wp_generic.yaml, vars: { property: "PUMPE_X1_17", target: "Kessel" }}
+  LEISTUNG_PWM_X1_17:           !include { file: templates/wp_generic.yaml, vars: { property: "LEISTUNG_PWM_X1_17", unit: "%", target: "Kessel" }}
+  LEISTUNG_VOLT_X1_17:          !include { file: templates/wp_generic.yaml, vars: { property: "LEISTUNG_VOLT_X1_17", unit: "V", target: "Kessel" }}
+  FEHLERAUSGANG:                !include { file: templates/wp_generic.yaml, vars: { property: "FEHLERAUSGANG", target: "Kessel" }}
+  PUFFERTRIEB:                  !include { file: templates/wp_generic.yaml, vars: { property: "PUFFERTRIEB", target: "Kessel" }}
+  SOMMERBETRIEB:                !include { file: templates/wp_generic.yaml, vars: { property: "SOMMERBETRIEB", target: "Kessel" }}
+  GEBAEUDEDAEMPFUNG:            !include { file: templates/wp_generic.yaml, vars: { property: "GEBAEUDEDAEMPFUNG", target: "Kessel" }}
+  VORLAUFANTEIL_HEIZKREIS:      !include { file: templates/wp_generic.yaml, vars: { property: "VORLAUFANTEIL_HEIZKREIS", unit: "%", target: "Kessel" }}
+  PUMPENZYKLEN:                 !include { file: templates/wp_generic.yaml, vars: { property: "PUMPENZYKLEN", target: "Kessel" }}
+  WARMWASSERBETRIEB:            !include { file: templates/wp_generic.yaml, vars: { property: "WARMWASSERBETRIEB", target: "Kessel" }}
+  WW_LERNFUNKTION:              !include { file: templates/wp_generic.yaml, vars: { property: "WW_LERNFUNKTION", target: "Kessel" }}
+  KOMBISPEICHER:                !include { file: templates/wp_generic.yaml, vars: { property: "KOMBISPEICHER", target: "Kessel" }}
+  WW_LEISTUNG_SOMMER:           !include { file: templates/wp_generic.yaml, vars: { property: "WW_LEISTUNG_SOMMER", unit: "kW", target: "Kessel" }}
+  WW_LEISTUNG_WINTER:           !include { file: templates/wp_generic.yaml, vars: { property: "WW_LEISTUNG_WINTER", unit: "kW", target: "Kessel" }}
+  ANTILEGIONELLENBEHANDLUNG:    !include { file: templates/wp_generic.yaml, vars: { property: "ANTILEGIONELLENBEHANDLUNG", target: "Kessel" }}
+  WW_ANFORDERUNG:               !include { file: templates/wp_generic.yaml, vars: { property: "WW_ANFORDERUNG", target: "Kessel" }}
+  KUEHLEN:                      !include { file: templates/wp_generic.yaml, vars: { property: "KUEHLEN", target: "Kessel" }}
+  KUEHLEN_LEISTUNG:             !include { file: templates/wp_generic.yaml, vars: { property: "KUEHLEN_LEISTUNG", unit: "kW", target: "Kessel" }}
+  KUEHLKREIS:                   !include { file: templates/wp_generic.yaml, vars: { property: "KUEHLKREIS", target: "HK1" }}
+  KUEHLART:                     !include { file: templates/wp_generic.yaml, vars: { property: "KUEHLART", target: "HK1" }}
+
+  BIVALENZTEMPERATUR_WW:                    !include { file: templates/wp_temperature.yaml, vars: { property: "BIVALENZTEMPERATUR_WW", target: "Kessel" }}
+  EINSATZGRENZE_HZG:                        !include { file: templates/wp_temperature.yaml, vars: { property: "EINSATZGRENZE_HZG", target: "Kessel" }}
+  EINSATZGRENZE_WW:                         !include { file: templates/wp_temperature.yaml, vars: { property: "EINSATZGRENZE_WW", target: "Kessel" }}
+  FROSTSCHUTZTEMPERATUR:                    !include { file: templates/wp_temperature.yaml, vars: { property: "FROSTSCHUTZTEMPERATUR", target: "Kessel" }}
+  SOLL_UEBERHITZUNG:                        !include { file: templates/wp_temperature.yaml, vars: { property: "SOLL_UEBERHITZUNG", target: "Manager" }}
+  IST_UEBERHITZUNG_V:                       !include { file: templates/wp_temperature.yaml, vars: { property: "IST_UEBERHITZUNG_V", target: "Manager" }}
+  REGELABWEICHUNG:                          !include { file: templates/wp_temperature.yaml, vars: { property: "REGELABWEICHUNG", target: "Manager" }}
+  TEMPERATUR_INV_LUEFTER:                   !include { file: templates/wp_temperature.yaml, vars: { property: "TEMPERATUR_INV_LUEFTER", target: "Manager" }}
+  KONDENSATBEGLEITHEIZUNG_AUSSENTEMPERATUR: !include { file: templates/wp_temperature.yaml, vars: { property: "KONDENSATBEGLEITHEIZUNG_AUSSENTEMPERATUR", target: "Kessel" }}
+  HEIZEN_TEMPERATURVORGABE_1V:              !include { file: templates/wp_temperature.yaml, vars: { property: "HEIZEN_TEMPERATURVORGABE_1V", target: "Kessel" }}
+  HEIZEN_TEMPERATURVORGABE_10V:             !include { file: templates/wp_temperature.yaml, vars: { property: "HEIZEN_TEMPERATURVORGABE_10V", target: "Kessel" }}
+  KUEHLEN_TEMPERATURVORGABE_1V:             !include { file: templates/wp_temperature.yaml, vars: { property: "KUEHLEN_TEMPERATURVORGABE_1V", target: "Kessel" }}
+  KUEHLEN_TEMPERATURVORGABE_10V:            !include { file: templates/wp_temperature.yaml, vars: { property: "KUEHLEN_TEMPERATURVORGABE_10V", target: "Kessel" }}
+  AUSLEGUNGSTEMPERATUR:                     !include { file: templates/wp_temperature.yaml, vars: { property: "AUSLEGUNGSTEMPERATUR", target: "Kessel" }}
+  SENSORABGLEICH_VORLAUF_WP:                !include { file: templates/wp_temperature.yaml, vars: { property: "SENSORABGLEICH_VORLAUF_WP", target: "Kessel" }}
+  SENSORABGLEICH_VORLAUF_NHZ:               !include { file: templates/wp_temperature.yaml, vars: { property: "SENSORABGLEICH_VORLAUF_NHZ", target: "Kessel" }}
+  SENSORABGLEICH_RUECKLAUF_WP:              !include { file: templates/wp_temperature.yaml, vars: { property: "SENSORABGLEICH_RUECKLAUF_WP", target: "Kessel" }}
+  AUSSENTEMPERATUR_EINST:                   !include { file: templates/wp_temperature.yaml, vars: { property: "AUSSENTEMPERATUR_EINST", target: "Kessel" }}
+  WARMWASSERHYSTERESE:                      !include { file: templates/wp_temperature.yaml, vars: { property: "WARMWASSERHYSTERESE", target: "Kessel" }}
+  MAXIMALE_VORLAUFTEMP_WW:                  !include { file: templates/wp_temperature.yaml, vars: { property: "MAXIMALE_VORLAUFTEMP_WW", target: "Kessel" }}
+  FESTWERTBETRIEB:                          !include { file: templates/wp_temperature.yaml, vars: { property: "FESTWERTBETRIEB", target: "Kessel" }}
+  WW_SOLLTEMPERATUR:                        !include { file: templates/wp_temperature.yaml, vars: { property: "WW_SOLLTEMPERATUR", target: "Kessel" }}
+  GRENZE_KUEHLEN:                           !include { file: templates/wp_temperature.yaml, vars: { property: "GRENZE_KUEHLEN", target: "Kessel" }}
