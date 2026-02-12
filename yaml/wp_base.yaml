@@ -165,7 +165,6 @@ climate:
   - platform: custom
     lambda: |-
       auto heating = new Heating(id(RAUMISTTEMP),id(RAUMSOLLTEMP_TAG), id(HEIZEN), id(KUEHLEN), id(LUEFTUNG), Property::kRAUMSOLLTEMP_TAG, Property::kKUEHL_RAUMSOLL_TAG);
-      App.register_component(heating);
       return {heating};
     climates:
       name: "Heating Day"
@@ -179,7 +178,6 @@ climate:
   - platform: custom
     lambda: |-
       auto heating = new Heating(id(RAUMISTTEMP),id(RAUMSOLLTEMP_NACHT), id(HEIZEN), id(KUEHLEN), id(LUEFTUNG), Property::kRAUMSOLLTEMP_NACHT, Property::kKUEHL_RAUMSOLL_NACHT);
-      App.register_component(heating);
       return {heating};
     climates:
       name: "Heating Night"
@@ -193,7 +191,6 @@ climate:
   - platform: custom
     lambda: |-
       auto hot_water = new HotWater(id(SPEICHERISTTEMP),id(SPEICHERSOLLTEMP_TAG), id(WARMWASSERBEREITUNG), Property::kSPEICHERSOLLTEMP_TAG);
-      App.register_component(hot_water);
       return {hot_water};
     climates:
       name: "Hot Water Day"
@@ -207,7 +204,6 @@ climate:
   - platform: custom
     lambda: |-
       auto hot_water = new HotWater(id(SPEICHERISTTEMP),id(SPEICHERSOLLTEMP_NACHT), id(WARMWASSERBEREITUNG), Property::kSPEICHERSOLLTEMP_NACHT);
-      App.register_component(hot_water);
       return {hot_water};
     climates:
       name: "Hot Water Night"
