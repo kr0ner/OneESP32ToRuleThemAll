@@ -5,6 +5,7 @@ defaults:
   max: "100"
   icon: "mdi:valve"
   unit: ""
+  exposed: "true"
 
 number:
   - platform: template
@@ -31,10 +32,14 @@ number:
           }
     on_value:
       then:
-        - script.execute:
-            id: mqtt_push_event
-            suffix: ${property}
-            payload: !lambda 'return to_string(x);'
+        - if:
+            condition:
+              lambda: 'return getWhitelistedEntities().contains(id(${property}));'
+            then:
+              - script.execute:
+                  id: mqtt_push_event
+                  suffix: ${property}
+                  payload: !lambda 'return to_string(x);'
 
 esphome:
   on_boot:
@@ -46,3 +51,7 @@ esphome:
               id(${property}).publish_state(value);
           });
           queueRequest(${target}, Property::k${property});
+
+          if(${exposed}) {
+            getWhitelistedEntities().insert(id(${property}));
+          }

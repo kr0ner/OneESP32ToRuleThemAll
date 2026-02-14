@@ -2,6 +2,7 @@ defaults:
   icon: "mdi:lightning-bolt"
   accuracy_decimals: "2"
   target: "Kessel"
+  exposed: "true"
 
 globals:
   - id: gOFFSET_${property_wh}
@@ -47,6 +48,10 @@ esphome:
           // initial queueing of the Wh and kWh value
           queueRequest(${target}, Property::k${property_wh});
           queueRequest(${target}, Property::k${property_kwh});
+
+          if(${exposed}) {
+            getWhitelistedEntities().insert(id(${sensor_name}));
+          }
 
 time:
   - platform: sntp

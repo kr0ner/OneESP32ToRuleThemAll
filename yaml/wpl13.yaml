@@ -70,12 +70,6 @@ substitutions:
 #                                       #
 #########################################
 globals:
-  - id: gRAUMISTTEMP
-    type: float
-    initial_value: "0.0"
-  - id: gFEUCHTE
-    type: float
-    initial_value: "0.0"
   - id: gCOP_WW_TAG
     type: float
     initial_value: "0.0"

@@ -106,4 +106,10 @@ packages:
 # watermeter: !include OneESP32ToRuleThemAll/yaml/features/watermeter.yaml
 # kondensatpumpe: !include OneESP32ToRuleThemAll/yaml/features/kondensatpumpe.yaml
 # sgready: !include OneESP32ToRuleThemAll/yaml/features/sg_ready.yaml
-# analytics: !include OneESP32ToRuleThemAll/yaml/features/analytics.yaml
+
+# To opt-in to community stats, uncomment the line below.
+# This sends anonymous data to an MQTT server:
+# - Events: Triggered by switch/setting changes.
+# - Telemetry: Every 15 minutes for standard sensors (custom sensors are NEVER exposed!).
+# A unique Device ID will be visible as a sensor. This can be used to access the Grafana dashboard and compare your data with the community.
+# analytics: !include { file: OneESP32ToRuleThemAll/yaml/features/analytics.yaml, vars: { district: '"Landkreis"' }} <-- remember to change the district

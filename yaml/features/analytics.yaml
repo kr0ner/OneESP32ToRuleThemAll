@@ -1,6 +1,6 @@
 esphome:
   on_boot:
-    priority: 100
+    priority: -100
     then:
       - lambda: |-
           // 1. Generate the unique Hash from MAC
@@ -11,36 +11,21 @@ esphome:
 
           // 2. Set IDs and Enable MQTT
           id(analytics_mqtt).set_client_id(my_obfuscated_id);
-          id(global_device_id) = my_obfuscated_id;
+          id(global_device_id).publish_state(my_obfuscated_id);
           id(analytics_mqtt).enable();
-
       - wait_until:
           mqtt.connected:
+      - lambda: |-
+          // Publish Identity
+          std::string info_payload = id(heat_pump_variant) + "," + ${district};
+          id(analytics_mqtt).publish("analytics/v1/" + id(global_device_id).state + "/info", info_payload, 0, true);
 
-      - http_request.get:
-          url: http://ip-api.com/json/
-          capture_response: true
-          on_response:
-            then:
-              - lambda: |-
-                  json::parse_json(body, [=](JsonObject root) -> bool {
-                    std::string state = "Unknown";
-                    
-                    if (root["regionName"].is<const char*>()) {
-                      state = root["regionName"].as<std::string>();
-                    }
-                    
-                    id(bundesland_name).publish_state(state);
-                    
-                    // Publish Identity
-                    std::string info_payload = id(heat_pump_variant) + "," + state;
-                    id(analytics_mqtt).publish("analytics/v1/" + id(global_device_id) + "/info", info_payload, 0, true);
-                    return true;
-                  });
-
-globals:
-  - id: global_device_id
-    type: std::string
+text_sensor:
+  - platform: template
+    name: "Global Device ID"
+    id: global_device_id
+    icon: "mdi:identifier"
+    entity_category: "diagnostic"
 
 mqtt:
   id: analytics_mqtt
@@ -55,39 +40,44 @@ mqtt:
   reboot_timeout: 0s
   keepalive: 60s
 
-text_sensor:
-  - platform: template
-    name: "Bundesland"
-    id: bundesland_name
-    internal: true
-
-http_request:
-  useragent: esphome/device
-  timeout: 10s
-
 script:
   - id: !extend mqtt_push_event
     then:
       - lambda: |-
-          if (!id(analytics_mqtt).is_connected()) return;
+          if (!id(analytics_mqtt).is_connected()) {
+            return;
+          }
+
+          // Determine if payload is numeric
+          bool is_numeric = true;
+          for(char const &c : payload) {
+              if(!std::isdigit(c) && c != '.' && c != '-') {
+                  is_numeric = false;
+                  break;
+              }
+          }
+
+          std::string type_path = is_numeric ? "numeric" : "status";
           
-          // Topic: analytics/v1/[HASH]/events/[NAME]
-          std::string topic = "analytics/v1/" + id(global_device_id) + "/events/" + suffix;
-          
+          // New Topic Structure: analytics/v1/[HASH]/events/[TYPE]/[NAME]
+          std::string topic = "analytics/v1/" + id(global_device_id).state +
+                            "/events/" + type_path + "/" + suffix;
+
           id(analytics_mqtt).publish(topic, payload);
 
 interval:
-  - interval: 5min
+  - interval: 15min
     then:
       - lambda: |-
           if (!id(analytics_mqtt).is_connected()) return;
           
           // Topic: analytics/v1/[HASH]/[SENSOR]
-          std::string base = "analytics/v1/" + id(global_device_id) + "/";
-          ESP_LOGI("ANALYTICS", "Sending data for ID: %s", id(global_device_id).c_str());
+          std::string base = "analytics/v1/" + id(global_device_id).state + "/";
 
           for (auto *obj : App.get_sensors()) {
-            if (!obj->is_internal() && !std::isnan(obj->state)) {
+            if (!obj->is_internal() &&
+                !std::isnan(obj->state) &&
+                getWhitelistedEntities().contains(static_cast<esphome::EntityBase*>(obj))) {
               id(analytics_mqtt).publish(base + obj->get_name(), to_string(obj->state));
             }
           }

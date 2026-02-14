@@ -1,3 +1,6 @@
+defaults:
+  exposed: "true"
+
 fan:
   - platform: template
     name: ${property}
@@ -29,6 +32,16 @@ fan:
           scheduleRequest(Kessel, Property::kZULUFT_IST, std::chrono::seconds(10));
           scheduleRequest(Kessel, Property::kABLUFT_SOLL, std::chrono::seconds(10));
           scheduleRequest(Kessel, Property::kABLUFT_IST, std::chrono::seconds(10));
+    on_state:
+      then:
+        - if:
+            condition:
+              lambda: 'return getWhitelistedEntities().contains(id(${property}));'
+            then:
+              - script.execute:
+                  id: mqtt_push_event
+                  suffix: ${property}
+                  payload: !lambda 'return x->state ? to_string(x->speed) : "0";'
 
 esphome:
   on_boot:
@@ -50,3 +63,7 @@ esphome:
               fan->publish_state();
           });
           queueRequest(Kessel, Property::k${property});
+
+          if(${exposed}) {
+            getWhitelistedEntities().insert(id(${property}));
+          }

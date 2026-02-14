@@ -1,3 +1,6 @@
+defaults:
+  exposed: "true"
+
 binary_sensor:
   - platform: template
     name: ${name}
@@ -5,7 +8,20 @@ binary_sensor:
     trigger_on_initial_state: false
     on_state:
       then:
-        - script.execute:
-            id: mqtt_push_event
-            suffix: ${name}
-            payload: !lambda 'return x ? "ON" : "OFF";'
+        - if:
+            condition:
+              lambda: 'return getWhitelistedEntities().contains(id(${name}));'
+            then:
+              - script.execute:
+                  id: mqtt_push_event
+                  suffix: ${name}
+                  payload: !lambda 'return x ? "On" : "Off";'
+
+esphome:
+  on_boot:
+    priority: 100.0 # AFTER_CONNECTION
+    then:
+      - lambda: |-
+          if(${exposed}) {
+            getWhitelistedEntities().insert(id(${name}));
+          }

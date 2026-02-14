@@ -27,6 +27,11 @@ esphome:
       - "-std=gnu++11"
       - "-fno-rtti"
 
+esp32:
+  framework:
+    advanced:
+      loop_task_stack_size: 16384
+
 #########################################
 #                                       #
 #   Substitutions                       #

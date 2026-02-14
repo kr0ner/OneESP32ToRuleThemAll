@@ -2,6 +2,7 @@ defaults:
   target: "Kessel"
   scaler: "0.001"
   update_interval: $interval_very_slow
+  exposed: "true"
 
 sensor:
   - platform: template
@@ -41,3 +42,7 @@ esphome:
           // initial queueing of the values
           queueRequest(${target}, Property::k${scaled_property});
           queueRequest(${target}, Property::k${property});
+
+          if(${exposed}) {
+            getWhitelistedEntities().insert(id(${sensor_name}));
+          }

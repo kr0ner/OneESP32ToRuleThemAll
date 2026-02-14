@@ -6,6 +6,7 @@ defaults:
   unit: ""
   scaler: "1.0"
   name_suffix: ""
+  exposed: "true"
 
 sensor:
   - platform: template
@@ -29,3 +30,7 @@ esphome:
               id(${property}${name_suffix}).publish_state(${scaler} * value.get<float>());
           });
           queueRequest(${target}, Property::k${property});
+
+          if(${exposed}) {
+            getWhitelistedEntities().insert(id(${property}${name_suffix}));
+          }

@@ -4,6 +4,7 @@ defaults:
   writable: "false"
   name_suffix: ""
   unit: "°C"
+  exposed: "true"
 
 sensor:
   - platform: template
@@ -32,3 +33,7 @@ esphome:
             CallbackHandler::instance().addCallback(std::make_pair(Manager,Property::k${property}),callback);
           }
           queueRequest(${target}, Property::k${property});
+
+          if(${exposed}) {
+            getWhitelistedEntities().insert(id(${property}${name_suffix}));
+          }

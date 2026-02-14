@@ -1,6 +1,7 @@
 #if !defined(UTIL_H)
 #define UTIL_H
 
+#include <unordered_set>
 #include "communication.h"
 #include "esp_log.h"
 #include "esphome.h"
@@ -24,6 +25,22 @@ void syncTime() {
     queueTransmission(Kessel, Property::kTAG, toggleEndianness(time.day_of_month));
     queueTransmission(Kessel, Property::kMONAT, toggleEndianness(time.month));
     queueTransmission(Kessel, Property::kJAHR, toggleEndianness(time.year - 2000U));
+}
+
+/**
+ * @brief Singleton access to whitelisted entities that shall be included in analytics.
+ */
+std::unordered_set<esphome::EntityBase*>& getWhitelistedEntities() {
+    static std::unordered_set<esphome::EntityBase*> entities;
+    return entities;
+}
+
+/**
+ * @brief Whitelist a set of entities that shall be included in analytics.
+ */
+template <typename... Args>
+void addToWhitelist(Args... args) {
+    (getWhitelistedEntities().insert(static_cast<esphome::EntityBase*>(args)), ...);
 }
 
 #endif
