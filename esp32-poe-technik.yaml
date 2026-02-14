@@ -106,3 +106,17 @@ packages:
 # wpl13: !include OneESP32ToRuleThemAll/yaml/wpl13.yaml
 # kondensatpumpe: !include OneESP32ToRuleThemAll/yaml/kondensatpumpe.yaml
 # sgready: !include OneESP32ToRuleThemAll/yaml/sg_ready.yaml
+# analytics: !include OneESP32ToRuleThemAll/yaml/analytics.yaml
+
+#########################################
+#                                       #
+#   Scripts (to be moved to core.yaml)  #
+#                                       #
+#########################################
+script:
+  - id: mqtt_push_event
+    mode: queued
+    parameters:
+      suffix: string
+      payload: string
+    then:

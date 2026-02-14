@@ -6,6 +6,7 @@ defaults:
   unit: ""
   scaler: "1.0"
   name_suffix: ""
+  exposed: "false"
 
 sensor:
   - platform: template
@@ -22,10 +23,14 @@ sensor:
 
 esphome:
   on_boot:
-    priority: 100.0 # AFTER_CONNECTION
+    priority: 110.0 # AFTER_CONNECTION
     then:
       - lambda: |-
           CallbackHandler::instance().addCallback(std::make_pair(${target},Property::k${property}),[](const SimpleVariant& value){
               id(${property}${name_suffix}).publish_state(${scaler} * value.get<float>());
           });
           queueRequest(${target}, Property::k${property});
+
+          if(${exposed}) {
+            getWhitelistedEntities().insert(id(${property}));
+          }

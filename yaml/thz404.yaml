@@ -11,7 +11,15 @@ packages:
 
   AKTIVE_HEIZSTUFEN:          !include { file: wp_generic.yaml, vars: { property: "AKTIVE_HEIZSTUFEN", update_interval: $interval_medium, icon: "mdi:heat-pump-outline"}}
 
+#########################################
+#                                       #
+#   Global variables                    #
+#                                       #
+#########################################
 globals:
+  - id: heat_pump_variant
+    type: std::string
+    initial_value: '"THZ404"'
   - id: sommermodus_state
     type: bool
     restore_value: yes

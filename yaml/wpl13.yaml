@@ -88,6 +88,9 @@ globals:
   - id: gCOP_HEIZ_TAG
     type: float
     initial_value: "0.0"
+  - id: heat_pump_variant
+    type: std::string
+    initial_value: '"WPL13"'
 
 #########################################
 #                                       #

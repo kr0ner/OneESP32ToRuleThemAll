@@ -3,6 +3,16 @@ esphome:
     build_flags:
       - "-DTHZ_5_5_ECO"
 
+#########################################
+#                                       #
+#   Global variables                    #
+#                                       #
+#########################################
+globals:
+  - id: heat_pump_variant
+    type: std::string
+    initial_value: '"THZ55ECO"'
+
 packages:
   COMMON: !include { file: common.yaml }
   BASE:   !include { file: wp_base.yaml }
