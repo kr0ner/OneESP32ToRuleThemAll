@@ -8,13 +8,7 @@ namespace custom_component {
 
 class CustomComponentConstructor {
    public:
-    CustomComponentConstructor(const std::function<std::vector<Component*>()>& init) {
-        this->components_ = init();
-
-        for (auto* comp : this->components_) {
-            App.register_component(comp);
-        }
-    }
+    CustomComponentConstructor(const std::function<std::vector<Component*>()>& init) { this->components_ = init(); }
 
     Component* get_component(int i) const { return this->components_[i]; }
 

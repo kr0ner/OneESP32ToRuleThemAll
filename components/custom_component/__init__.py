@@ -10,7 +10,7 @@ CONFIG_SCHEMA = cv.Schema(
     {
         cv.GenerateID(): cv.declare_id(CustomComponentConstructor),
         cv.Required(CONF_LAMBDA): cv.returning_lambda,
-        cv.Optional(CONF_COMPONENTS): cv.ensure_list(
+        cv.Required(CONF_COMPONENTS): cv.ensure_list(
             cv.Schema({cv.GenerateID(): cv.declare_id(cg.Component)}).extend(
                 cv.COMPONENT_SCHEMA
             )

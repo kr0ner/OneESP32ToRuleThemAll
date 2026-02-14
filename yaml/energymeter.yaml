@@ -39,6 +39,8 @@ custom_component:
   - lambda: |-
       auto sml_reader = new SMLReader(id(smartmeter_uart),"${mqtt_server}","${mqtt_user}","${mqtt_password}");
       return {sml_reader};
+    components:
+      - id: sml_reader_component
 
 #########################################
 #                                       #
