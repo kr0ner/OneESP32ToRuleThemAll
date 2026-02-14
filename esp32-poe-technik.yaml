@@ -9,13 +9,13 @@ esphome:
       - "-fno-rtti"
 
 esp32:
-  board: esp32-poe
+  board: esp32dev
   framework:
-    type: esp-idf
+    type: arduino
 
 # Enable logging
 logger:
-  level: INFO
+  level: DEBUG
   baud_rate: 0
   hardware_uart: UART1
 
@@ -36,8 +36,8 @@ substitutions:
   interval_very_slow: 15min
   interval_once_in_a_while: 1h
 
-  entity_room_temperature: "sensor.durchschnittstemperatur_haus_ohne_keller"
-  entity_humidity: "sensor.durchschnitt_luftfeuchtigkeit_haus"
+  entity_room_temperature: "sensor.hk1_temperatur_ist"
+  entity_humidity: "sensor.hk1_luftfeuchte_neu"
   timezone: "Europe/Berlin"
 
 #########################################
@@ -47,9 +47,9 @@ substitutions:
 #########################################
 spi:
   id: McpSpi
-  clk_pin: GPIO14
-  mosi_pin: GPIO13
-  miso_pin: GPIO4
+  clk_pin: GPIO16
+  mosi_pin: GPIO22
+  miso_pin: GPIO21
 
 #########################################
 #                                       #
@@ -60,7 +60,7 @@ canbus:
   - id: !extend wp_can
     platform: mcp2515
     spi_id: McpSpi
-    cs_pin: GPIO15
+    cs_pin: GPIO18
     bit_rate: 20kbps
     clock: 8MHz        # 8MHz or 16MHz depending on the value of the crystal on your MCP2515
     data_rate: 4MHz    # 8Mhz (4MHz, 2MHz or 1MHz in case you get CAN bus errors)
@@ -79,15 +79,15 @@ button:
 #   Ethernet Konfiguration              #
 #                                       #
 #########################################
-ethernet:
-  type: LAN8720
-  mdc_pin: GPIO23
-  mdio_pin: GPIO18
-  clk:
-    pin: GPIO0
-    mode: CLK_OUT
-  phy_addr: 0
-  power_pin: GPIO12
+#ethernet:
+#  type: LAN8720
+#  mdc_pin: GPIO23
+#  mdio_pin: GPIO18
+#  clk:
+#    pin: GPIO0
+#    mode: CLK_OUT
+#  phy_addr: 0
+#  power_pin: GPIO12
 
 #########################################
 #                                       #
@@ -100,8 +100,8 @@ packages:
 # watermeter: !include OneESP32ToRuleThemAll/yaml/watermeter.yaml
 # sensors: !include OneESP32ToRuleThemAll/yaml/sensors.yaml
 # thz404: !include OneESP32ToRuleThemAll/yaml/thz404.yaml
-  thz504: !include OneESP32ToRuleThemAll/yaml/thz504.yaml
-# thz55eco: !include OneESP32ToRuleThemAll/yaml/thz5_5_eco.yaml
+# thz504: !include OneESP32ToRuleThemAll/yaml/thz504.yaml
+  thz55eco: !include OneESP32ToRuleThemAll/yaml/thz5_5_eco.yaml
 # ttf07: !include OneESP32ToRuleThemAll/yaml/ttf07.yaml
 # wpl13: !include OneESP32ToRuleThemAll/yaml/wpl13.yaml
 # kondensatpumpe: !include OneESP32ToRuleThemAll/yaml/kondensatpumpe.yaml
