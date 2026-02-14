@@ -14,6 +14,9 @@ esphome:
           id(global_device_id) = my_obfuscated_id;
           id(analytics_mqtt).enable();
 
+          // 3. Whitelist components
+          addToWhitelist(${whitelisted_sensors});
+
       - wait_until:
           mqtt.connected:
 
@@ -77,7 +80,7 @@ script:
           id(analytics_mqtt).publish(topic, payload);
 
 interval:
-  - interval: 5min
+  - interval: 15min
     then:
       - lambda: |-
           if (!id(analytics_mqtt).is_connected()) return;
@@ -87,7 +90,9 @@ interval:
           ESP_LOGI("ANALYTICS", "Sending data for ID: %s", id(global_device_id).c_str());
 
           for (auto *obj : App.get_sensors()) {
-            if (!obj->is_internal() && !std::isnan(obj->state)) {
+            if (!obj->is_internal() &&
+                !std::isnan(obj->state) &&
+                getWhitelistedEntities().contains(static_cast<esphome::EntityBase*>(obj))) {
               id(analytics_mqtt).publish(base + obj->get_name(), to_string(obj->state));
             }
           }
