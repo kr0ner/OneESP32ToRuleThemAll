@@ -1,0 +1,49 @@
+defaults:
+  target: "Kessel"
+  dummy_entity: "switch.dummy"
+
+text_sensor:
+  - platform: homeassistant
+    id: sched_raw_timeslots
+    entity_id: ${scheduler}
+    attribute: timeslots
+    internal: true
+    on_raw_value:
+      then:
+        - lambda: |-
+            ESP_LOGI("PROGRAM", "Setting new value %s for %s", x.c_str(), "${name}");
+
+esphome:
+  on_boot:
+    priority: 100.0 # AFTER_CONNECTION
+    then:
+      - lambda: |-
+          // Register callbacks
+          CallbackHandler::instance().addCallbacks({std::make_pair(Kessel, Property::k${name}_0),
+                                                    std::make_pair(Kessel, Property::k${name}_1),
+                                                    std::make_pair(Kessel, Property::k${name}_2)}, 
+                                                    [](const SimpleVariant& v) {
+            if (esphome::api::global_api_server == nullptr){
+              return;
+            }
+
+            esphome::api::HomeassistantActionRequest call;
+            
+            call.service = esphome::StringRef("${scheduler}.edit"); 
+
+            esphome::api::HomeassistantServiceMap kv_entity;
+            kv_entity.key = esphome::StringRef("entity_id");
+            kv_entity.value = esphome::StringRef("${scheduler}");
+            call.data.push_back(kv_entity);
+
+            esphome::api::HomeassistantServiceMap kv_slots;
+            kv_slots.key = esphome::StringRef("timeslots");
+            kv_slots.value = esphome::StringRef(toJSON(v.get<std::string>(), "${dummy_entity}"));
+            call.data.push_back(kv_slots);
+
+            esphome::api::global_api_server->send_homeassistant_action(call);
+          });
+
+          queueRequest(${target}, Property::k${name}_0);
+          queueRequest(${target}, Property::k${name}_1);
+          queueRequest(${target}, Property::k${name}_2);

@@ -61,7 +61,7 @@ SimpleVariant GetValueByType(const std::uint16_t value, const Type type) {
             return std::string(buffer);
         case Type::et_time_domain:
             if (value & 0x8080) {
-                return std::string("xx:xx-xx:xx?");
+                return std::string("xx:xx-xx:xx");
             }
             sprintf(buffer, "%2.2d:%2.2d-%2.2d:%2.2d", (value >> 8U) / 4U, 15U * ((value >> 8U) % 4U),
                     (value & 0xff) / 4U, 15U * (value % 4U));

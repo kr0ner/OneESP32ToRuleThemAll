@@ -106,3 +106,6 @@ packages:
 # wpl13: !include OneESP32ToRuleThemAll/yaml/wpl13.yaml
 # kondensatpumpe: !include OneESP32ToRuleThemAll/yaml/kondensatpumpe.yaml
 # sgready: !include OneESP32ToRuleThemAll/yaml/sg_ready.yaml
+
+# PROGRAMM_HK1_MO_SO: !include { file: OneESP32ToRuleThemAll/yaml/wp_program_scheduler.yaml, vars: { name: "PROGRAMM_HK1_MO_SO", scheduler: "switch.schedule_021ace" }}
+# PROGRAMM_FAN_MO_SO: !include { file: OneESP32ToRuleThemAll/yaml/wp_program_text.yaml     , vars: { name: "PROGRAMM_FAN_MO_SO" }}
