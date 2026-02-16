@@ -280,6 +280,8 @@ packages:
   VERDAMPFERTEMP:                      !include { file: templates/wp_temperature.yaml, vars: { property: "VERDAMPFERTEMP"         , update_interval: $interval_slow }}
   HEISSGAS_TEMP:                       !include { file: templates/wp_temperature.yaml, vars: { property: "HEISSGAS_TEMP"          , update_interval: $interval_slow }}
   VERFLUESSIGER_TEMP:                  !include { file: templates/wp_temperature.yaml, vars: { property: "VERFLUESSIGER_TEMP"     , update_interval: $interval_slow }}
+  INVERTERTEMPERATUR:                  !include { file: templates/wp_temperature.yaml, vars: { property: "INVERTERTEMPERATUR"     , update_interval: $interval_slow }}
+  OLSUMPFTEMPERATUR:                   !include { file: templates/wp_temperature.yaml, vars: { property: "OLSUMPFTEMPERATUR"      , update_interval: $interval_slow, icon: "mdi:oil-temperature" }}
 
   LUEFT_STUFE_TAG:                     !include { file: templates/wp_ventilation.yaml, vars: { property: "LUEFT_STUFE_TAG" }}
   LUEFT_STUFE_NACHT:                   !include { file: templates/wp_ventilation.yaml, vars: { property: "LUEFT_STUFE_NACHT" }}
@@ -312,26 +314,30 @@ packages:
   DRUCK_NIEDERDRUCK:                   !include { file: templates/wp_generic.yaml, vars: { property: "DRUCK_NIEDERDRUCK"         , update_interval: $interval_slow            , unit: "bar"  , icon: "mdi:gauge", accuracy_decimals: "2" }}
   FIRMWARE_VERSION:                    !include { file: templates/wp_generic.yaml, vars: { property: "FIRMWARE_VERSION"          , icon: "mdi:code-block-tags"              , accuracy_decimals: "2" }}
 
-  FUSSPUNKT_HK1:                       !include { file: templates/wp_number.yaml, vars: { property: "FUSSPUNKT_HK1"              , min: "0"  , max: "20", step: "0.1" , unit: "°C", icon: "mdi:temperature-celsius" , target: "HK1", accuracy_decimals: "1" }}
-  NE_STUFE_WW:                         !include { file: templates/wp_number.yaml, vars: { property: "NE_STUFE_WW"                , min: "0"  , max: "3"  }}
-  LEISTUNG_AUSLEGUNG_HEIZUNG:          !include { file: templates/wp_number.yaml, vars: { property: "LEISTUNG_AUSLEGUNG_HEIZUNG" , min: "40" , max: "100"}}
-  LEISTUNG_AUSLEGUNG_KUEHLEN:          !include { file: templates/wp_number.yaml, vars: { property: "LEISTUNG_AUSLEGUNG_KUEHLEN" , min: "30" , max: "50" }}
-  PUMPENDREHZAHL_HEIZEN:               !include { file: templates/wp_number.yaml, vars: { property: "PUMPENDREHZAHL_HEIZEN"      , step: "0.1" }}
-  HYSTERESE_WW:                        !include { file: templates/wp_number.yaml, vars: { property: "HYSTERESE_WW"               , min: "2.0" , max: "10.0" , step: "0.1" , unit: "°C" }}
-  LUEFT_ZULUFT_STUFE1:                 !include { file: templates/wp_number.yaml, vars: { property: "LUEFT_ZULUFT_STUFE1"        , min: "0.0" , max: "300.0", unit: "m³/h", icon: "mdi:air-filter" }}
-  LUEFT_ZULUFT_STUFE2:                 !include { file: templates/wp_number.yaml, vars: { property: "LUEFT_ZULUFT_STUFE2"        , min: "0.0" , max: "300.0", unit: "m³/h", icon: "mdi:air-filter" }}
-  LUEFT_ZULUFT_STUFE3:                 !include { file: templates/wp_number.yaml, vars: { property: "LUEFT_ZULUFT_STUFE3"        , min: "0.0" , max: "300.0", unit: "m³/h", icon: "mdi:air-filter" }}
-  LUEFT_ABLUFT_STUFE1:                 !include { file: templates/wp_number.yaml, vars: { property: "LUEFT_ABLUFT_STUFE1"        , min: "0.0" , max: "300.0", unit: "m³/h", icon: "mdi:air-filter" }}
-  LUEFT_ABLUFT_STUFE2:                 !include { file: templates/wp_number.yaml, vars: { property: "LUEFT_ABLUFT_STUFE2"        , min: "0.0" , max: "300.0", unit: "m³/h", icon: "mdi:air-filter" }}
-  LUEFT_ABLUFT_STUFE3:                 !include { file: templates/wp_number.yaml, vars: { property: "LUEFT_ABLUFT_STUFE3"        , min: "0.0" , max: "300.0", unit: "m³/h", icon: "mdi:air-filter" }}
-  SOMMERBETRIEB_TEMP:                  !include { file: templates/wp_number.yaml, vars: { property: "SOMMERBETRIEB_TEMP"         , min: "10.0", max: "25.0" , step: "0.5" , unit: "°C", icon: "mdi:sun-thermometer" }}
-  ANTILEGIONELLEN:                     !include { file: templates/wp_number.yaml, vars: { property: "ANTILEGIONELLEN"            , min: "1.0" , max: "30.0" , step: "1.0" , unit: "d" , icon: "mdi:bacteria" }}
-  WW_TEMP_LEGIONELLEN:                 !include { file: templates/wp_number.yaml, vars: { property: "WW_TEMP_LEGIONELLEN"        , min: "10.0", max: "65.0" , step: "0.1" , unit: "°C", icon: "mdi:temperature-celsius" }}
-  SOLLWERT_MAX_HK1:                    !include { file: templates/wp_number.yaml, vars: { property: "SOLLWERT_MAX_HK1"           , min: "10.0", max: "65.0" , step: "0.1" , unit: "°C", icon: "mdi:temperature-celsius" , target: "HK1", accuracy_decimals: "1" }}
-  SOLLWERT_MIN_HK1:                    !include { file: templates/wp_number.yaml, vars: { property: "SOLLWERT_MIN_HK1"           , min: "0.0" , max: "40.0" , step: "0.1" , unit: "°C", icon: "mdi:temperature-celsius" , target: "HK1", accuracy_decimals: "1" }}
-  ANTEIL_VORLAUF_HK1:                  !include { file: templates/wp_number.yaml, vars: { property: "ANTEIL_VORLAUF_HK1"         , min: "0.0" , max: "100.0", unit: "%" , icon: "mdi:percent-box"         , target: "HK1" }}
-  PUMPENZYKLEN_AUSSENTEMP_MIN:         !include { file: templates/wp_number.yaml, vars: { property: "PUMPENZYKLEN_AUSSENTEMP_MIN", min: "0.0" , max: "25.0" , unit: "°C", icon: "mdi:temperature-celsius" }}
-  PUMPENZYKLEN_AUSSENTEMP_MAX:         !include { file: templates/wp_number.yaml, vars: { property: "PUMPENZYKLEN_AUSSENTEMP_MAX", min: "0.0" , max: "20.0" , unit: "°C", icon: "mdi:temperature-celsius" }}
+  FUSSPUNKT_HK1:                       !include { file: templates/wp_number.yaml, vars: { property: "FUSSPUNKT_HK1"              , min: "0"   , max: "20", step: "0.1" , unit: "°C", icon: "mdi:temperature-celsius" , target: "HK1", accuracy_decimals: "1" }}
+  NE_STUFE_WW:                         !include { file: templates/wp_number.yaml, vars: { property: "NE_STUFE_WW"                , min: "0"   , max: "3"  }}
+  LEISTUNG_AUSLEGUNG_HEIZUNG:          !include { file: templates/wp_number.yaml, vars: { property: "LEISTUNG_AUSLEGUNG_HEIZUNG" , min: "40"  , max: "100"}}
+  LEISTUNG_AUSLEGUNG_KUEHLEN:          !include { file: templates/wp_number.yaml, vars: { property: "LEISTUNG_AUSLEGUNG_KUEHLEN" , min: "30"  , max: "50" }}
+  PUMPENDREHZAHL_HEIZEN:               !include { file: templates/wp_number.yaml, vars: { property: "PUMPENDREHZAHL_HEIZEN"      , min: "40", max: "100", step: "0.1", unit: "%" }}
+  PUMPENDREHZAHL_WW:                   !include { file: templates/wp_number.yaml, vars: { property: "PUMPENDREHZAHL_WW"          , min: "40", max: "100", step: "0.1", unit: "%" }}
+  HYSTERESE_WW:                        !include { file: templates/wp_number.yaml, vars: { property: "HYSTERESE_WW"               , min: "2.0"  , max: "10.0" , step: "0.1" , unit: "°C" }}
+  LUEFT_ZULUFT_STUFE1:                 !include { file: templates/wp_number.yaml, vars: { property: "LUEFT_ZULUFT_STUFE1"        , min: "0.0"  , max: "300.0", unit: "m³/h", icon: "mdi:air-filter" }}
+  LUEFT_ZULUFT_STUFE2:                 !include { file: templates/wp_number.yaml, vars: { property: "LUEFT_ZULUFT_STUFE2"        , min: "0.0"  , max: "300.0", unit: "m³/h", icon: "mdi:air-filter" }}
+  LUEFT_ZULUFT_STUFE3:                 !include { file: templates/wp_number.yaml, vars: { property: "LUEFT_ZULUFT_STUFE3"        , min: "0.0"  , max: "300.0", unit: "m³/h", icon: "mdi:air-filter" }}
+  LUEFT_ABLUFT_STUFE1:                 !include { file: templates/wp_number.yaml, vars: { property: "LUEFT_ABLUFT_STUFE1"        , min: "0.0"  , max: "300.0", unit: "m³/h", icon: "mdi:air-filter" }}
+  LUEFT_ABLUFT_STUFE2:                 !include { file: templates/wp_number.yaml, vars: { property: "LUEFT_ABLUFT_STUFE2"        , min: "0.0"  , max: "300.0", unit: "m³/h", icon: "mdi:air-filter" }}
+  LUEFT_ABLUFT_STUFE3:                 !include { file: templates/wp_number.yaml, vars: { property: "LUEFT_ABLUFT_STUFE3"        , min: "0.0"  , max: "300.0", unit: "m³/h", icon: "mdi:air-filter" }}
+  SOMMERBETRIEB_TEMP:                  !include { file: templates/wp_number.yaml, vars: { property: "SOMMERBETRIEB_TEMP"         , min: "10.0" , max: "25.0" , step: "0.5" , unit: "°C", icon: "mdi:sun-thermometer" }}
+  ANTILEGIONELLEN:                     !include { file: templates/wp_number.yaml, vars: { property: "ANTILEGIONELLEN"            , min: "1.0"  , max: "30.0" , step: "1.0" , unit: "d" , icon: "mdi:bacteria" }}
+  WW_TEMP_LEGIONELLEN:                 !include { file: templates/wp_number.yaml, vars: { property: "WW_TEMP_LEGIONELLEN"        , min: "10.0" , max: "65.0" , step: "0.1" , unit: "°C", icon: "mdi:temperature-celsius" }}
+  SOLLWERT_MAX_HK1:                    !include { file: templates/wp_number.yaml, vars: { property: "SOLLWERT_MAX_HK1"           , min: "10.0" , max: "65.0" , step: "0.1" , unit: "°C", icon: "mdi:temperature-celsius" , target: "HK1", accuracy_decimals: "1" }}
+  SOLLWERT_MIN_HK1:                    !include { file: templates/wp_number.yaml, vars: { property: "SOLLWERT_MIN_HK1"           , min: "0.0"  , max: "40.0" , step: "0.1" , unit: "°C", icon: "mdi:temperature-celsius" , target: "HK1", accuracy_decimals: "1" }}
+  ANTEIL_VORLAUF_HK1:                  !include { file: templates/wp_number.yaml, vars: { property: "ANTEIL_VORLAUF_HK1"         , min: "0.0"  , max: "100.0", unit: "%" , icon: "mdi:percent-box"         , target: "HK1" }}
+  PUMPENZYKLEN_AUSSENTEMP_MIN:         !include { file: templates/wp_number.yaml, vars: { property: "PUMPENZYKLEN_AUSSENTEMP_MIN", min: "0.0"  , max: "25.0" , unit: "°C", icon: "mdi:temperature-celsius" }}
+  PUMPENZYKLEN_AUSSENTEMP_MAX:         !include { file: templates/wp_number.yaml, vars: { property: "PUMPENZYKLEN_AUSSENTEMP_MAX", min: "0.0"  , max: "20.0" , unit: "°C", icon: "mdi:temperature-celsius" }}
+  WW_LEISTUNG_SOMMER:                  !include { file: templates/wp_number.yaml, vars: { property: "WW_LEISTUNG_SOMMER"         , min: "30"   , max: "100" }}
+  WW_LEISTUNG_WINTER:                  !include { file: templates/wp_number.yaml, vars: { property: "WW_LEISTUNG_WINTER"         , min: "30"   , max: "100" }}
+  TEMP_FREIGABE_NE:                    !include { file: templates/wp_number.yaml, vars: { property: "TEMP_FREIGABE_NE"           , min: "-20.0", max: "10.0" , step: "0.5" , unit: "°C" , icon: "mdi:thermometer-lines" }}
 
   WAERMEERTRAG_RUECKGE_TAG_SUMME_KWH:  !include { file: templates/wp_daily_energy_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_RUECKGE_TAG_SUMME_KWH" , property_wh: "WAERMEERTRAG_RUECKGE_TAG_WH"  , property_kwh: "WAERMEERTRAG_RUECKGE_TAG_KWH"  }}
   WAERMEERTRAG_2WE_WW_TAG_SUMME_KWH:   !include { file: templates/wp_daily_energy_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_2WE_WW_TAG_SUMME_KWH"  , property_wh: "WAERMEERTRAG_2WE_WW_TAG_WH"   , property_kwh: "WAERMEERTRAG_2WE_WW_TAG_KWH"   }}
