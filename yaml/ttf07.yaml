@@ -89,7 +89,7 @@ packages:
   PUFFERISTTEMP:            !include { file: templates/wp_temperature.yaml, vars: { property: "PUFFERISTTEMP" }}
   PUFFERSOLLTEMP:           !include { file: templates/wp_temperature.yaml, vars: { property: "PUFFERSOLLTEMP" }}
   HKSOLLTEMP:               !include { file: templates/wp_temperature.yaml, vars: { property: "HKSOLLTEMP"     , update_interval: "never" }}
-  HEIZGASTEMP:              !include { file: templates/wp_temperature.yaml, vars: { property: "HEIZGASTEMP"    , update_interval: "${interval_slow}" }}
+  HEISSGAS_TEMP:            !include { file: templates/wp_temperature.yaml, vars: { property: "HEISSGAS_TEMP"  , update_interval: "${interval_slow}" }}
   QUELLENTEMP_MIN:          !include { file: templates/wp_temperature.yaml, vars: { property: "QUELLENTEMP_MIN", update_interval: "${interval_slow}" }} 
 
   DRUCK_HEIZKREIS:          !include { file: templates/wp_generic.yaml, vars: { property: "DRUCK_HEIZKREIS"  , unit: "bar"  , icon: "mdi:water-pressure", accuracy_decimals: "1" }}
