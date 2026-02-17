@@ -173,6 +173,7 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(MOTORSPANNUNG, 0x06a1);
     PROPERTY(INVERTERTEMPERATUR, 0x06a2, Type::et_dec_val);
     PROPERTY(DRUCK_HOCHDRUCK, 0x07a6, Type::et_cent_val);
+    PROPERTY(DRUCK_NIEDERDRUCK, 0x07a7, Type::et_cent_val);
     PROPERTY(WAERMEERTRAG_2WE_WW_TAG_WH, 0x0922);
     PROPERTY(WAERMEERTRAG_2WE_WW_TAG_KWH, 0x0923, Type::et_double_val);
     PROPERTY(WAERMEERTRAG_2WE_WW_SUM_KWH, 0x0924);
@@ -196,14 +197,6 @@ struct Property : public oe32trta::detail::Property {
 #if defined(THZ_504) || defined(THZ_5_5_ECO)
     PROPERTY(PUMPENZYKLEN_AUSSENTEMP_MIN, 0x05bb);
     PROPERTY(PUMPENZYKLEN_AUSSENTEMP_MAX, 0x05bc);
-#endif
-
-#if defined(THZ_504) || defined(THZ_404)
-    PROPERTY(DRUCK_NIEDERDRUCK, 0x07a7, Type::et_cent_val);
-#endif
-
-#if defined(THZ_5_5_ECO)
-    PROPERTY(DRUCK_NIEDERDRUCK, 0x07a7, Type::et_dec_val);
 #endif
 
 #if defined(TTF_07_C)
