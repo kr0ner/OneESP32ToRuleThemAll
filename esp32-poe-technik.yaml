@@ -63,18 +63,32 @@ button:
 
 #########################################
 #                                       #
+#   WiFi Configuration                  #
+#                                       #
+#########################################
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "ESP32-PoE Fallback Hotspot"
+    password: !secret fallback_password
+
+#########################################
+#                                       #
 #   Ethernet Konfiguration              #
 #                                       #
 #########################################
-ethernet:
-  type: LAN8720
-  mdc_pin: GPIO23
-  mdio_pin: GPIO18
-  clk:
-    pin: GPIO0
-    mode: CLK_OUT
-  phy_addr: 0
-  power_pin: GPIO12
+#ethernet:
+#  type: LAN8720
+#  mdc_pin: GPIO23
+#  mdio_pin: GPIO18
+#  clk:
+#    pin: GPIO0
+#    mode: CLK_OUT
+#  phy_addr: 0
+#  power_pin: GPIO12
 
 #########################################
 #                                       #
