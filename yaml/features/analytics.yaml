@@ -19,6 +19,9 @@ esphome:
           // Publish Identity
           std::string info_payload = id(heat_pump_variant) + "," + ${district};
           id(analytics_mqtt).publish("analytics/v1/" + id(global_device_id).state + "/info", info_payload, 0, true);
+  platformio_options:
+    build_flags:
+      - "-DANALYTICS"
 
 text_sensor:
   - platform: template
@@ -37,6 +40,7 @@ mqtt:
   clean_session: true
   topic_prefix: null
   discovery: false
+  discover_ip: false
   reboot_timeout: 0s
   keepalive: 60s
 
@@ -81,3 +85,17 @@ interval:
               id(analytics_mqtt).publish(base + obj->get_name(), to_string(obj->state));
             }
           }
+
+select:
+  - platform: template
+    id: !extend PROGRAMMSCHALTER
+    on_value:
+      then:
+        - if:
+            condition:
+              lambda: 'return getWhitelistedEntities().contains(id(PROGRAMMSCHALTER));'
+            then:
+              - script.execute:
+                  id: mqtt_push_event
+                  suffix: PROGRAMMSCHALTER
+                  payload: !lambda 'return x.c_str();'

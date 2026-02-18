@@ -49,12 +49,14 @@ esphome:
           queueRequest(${target}, Property::k${property_wh});
           queueRequest(${target}, Property::k${property_kwh});
 
-          if(${exposed}) {
-            getWhitelistedEntities().insert(id(${sensor_name}));
-          }
+          #if defined(ANALYTICS)
+            if(${exposed}) {
+              getWhitelistedEntities().insert(id(${sensor_name}));
+            }
+          #endif
 
 time:
-  - platform: sntp
+  - platform: homeassistant
     id: !extend homeassistant_time
     on_time:
       # Every hour, every 5 minutes starting at 4th minute.

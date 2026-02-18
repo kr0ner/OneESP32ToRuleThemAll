@@ -36,7 +36,12 @@ fan:
       then:
         - if:
             condition:
-              lambda: 'return getWhitelistedEntities().contains(id(${property}));'
+              lambda: |-
+                #if defined(ANALYTICS)
+                  return getWhitelistedEntities().contains(id(${property}));
+                #else
+                  return false;
+                #endif
             then:
               - script.execute:
                   id: mqtt_push_event
@@ -64,6 +69,8 @@ esphome:
           });
           queueRequest(Kessel, Property::k${property});
 
-          if(${exposed}) {
-            getWhitelistedEntities().insert(id(${property}));
-          }
+          #if defined(ANALYTICS)
+            if(${exposed}) {
+              getWhitelistedEntities().insert(id(${property}));
+            }
+          #endif

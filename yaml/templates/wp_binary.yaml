@@ -10,7 +10,12 @@ binary_sensor:
       then:
         - if:
             condition:
-              lambda: 'return getWhitelistedEntities().contains(id(${name}));'
+              lambda: |-
+                #if defined(ANALYTICS)
+                  return getWhitelistedEntities().contains(id(${name}));
+                #else
+                  return false;
+                #endif
             then:
               - script.execute:
                   id: mqtt_push_event
@@ -22,6 +27,8 @@ esphome:
     priority: 100.0 # AFTER_CONNECTION
     then:
       - lambda: |-
-          if(${exposed}) {
-            getWhitelistedEntities().insert(id(${name}));
-          }
+          #if defined(ANALYTICS)
+            if(${exposed}) {
+              getWhitelistedEntities().insert(id(${name}));
+            }
+          #endif

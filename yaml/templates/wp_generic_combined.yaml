@@ -43,6 +43,8 @@ esphome:
           queueRequest(${target}, Property::k${scaled_property});
           queueRequest(${target}, Property::k${property});
 
-          if(${exposed}) {
-            getWhitelistedEntities().insert(id(${sensor_name}));
-          }
+          #if defined(ANALYTICS)
+            if(${exposed}) {
+              getWhitelistedEntities().insert(id(${sensor_name}));
+            }
+          #endif

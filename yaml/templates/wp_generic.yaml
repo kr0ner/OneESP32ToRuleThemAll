@@ -31,6 +31,8 @@ esphome:
           });
           queueRequest(${target}, Property::k${property});
 
-          if(${exposed}) {
-            getWhitelistedEntities().insert(id(${property}${name_suffix}));
-          }
+          #if defined(ANALYTICS)
+            if(${exposed}) {
+              getWhitelistedEntities().insert(id(${property}${name_suffix}));
+            }
+          #endif
