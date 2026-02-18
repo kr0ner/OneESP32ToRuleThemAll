@@ -53,7 +53,11 @@ esphome:
       - lambda: |-
           CallbackHandler::instance().addCallbacks({std::make_pair(${target},Property::k${property}),
                                                     std::make_pair(Manager,Property::k${property})},[](const SimpleVariant& value){
-              id(${property}).publish_state(value);
+              const auto newValue{value.get<float>()};
+              auto property{id(${property})};
+              if(!std::is_eq(property->state <=> newValue)) {
+                property->publish_state(newValue);
+              }
           });
           queueRequest(${target}, Property::k${property});
 

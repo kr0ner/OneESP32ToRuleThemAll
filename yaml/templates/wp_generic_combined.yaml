@@ -37,7 +37,11 @@ esphome:
             id(${scaled_property}).publish_state(value.get<std::uint16_t>());
           });
           CallbackHandler::instance().addCallback(std::make_pair(${target},Property::k${property}),[](const SimpleVariant& value){
-            id(${sensor_name}).publish_state(value.get<std::uint16_t>() + id(${scaled_property}).state);
+            const auto newValue{value.get<std::uint16_t>() + id(${scaled_property}).state};
+            auto property{id(${sensor_name})};
+            if(!std::is_eq(property->state <=> newValue)) {
+              property->publish_state(newValue);
+            }
           });
           // initial queueing of the values
           queueRequest(${target}, Property::k${scaled_property});

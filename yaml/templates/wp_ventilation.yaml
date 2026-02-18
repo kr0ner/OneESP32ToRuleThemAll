@@ -58,6 +58,12 @@ esphome:
               const auto fan_speed = std::min(static_cast<std::uint16_t>(3U),static_cast<std::uint16_t>(value));
               auto fan = id(${property});
 
+              const bool is_already_off = (fan_speed == 0 && !fan->state);
+              const bool is_already_at_speed = (fan_speed > 0 && fan->state && fan->speed == fan_speed);
+              if (is_already_off || is_already_at_speed) {
+                  return;
+              }
+
               // only speeds between 1 and speed_count are allowed
               if(fan_speed == 0) {
                 fan->state = false;

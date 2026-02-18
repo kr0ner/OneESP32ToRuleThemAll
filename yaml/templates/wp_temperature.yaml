@@ -26,7 +26,11 @@ esphome:
     then:
       - lambda: |-
           auto callback= [](const SimpleVariant& value){
-              id(${property}${name_suffix}).publish_state(value);
+              const auto newValue{value.get<float>()};
+              auto property{id(${property}${name_suffix})};
+              if(!std::is_eq(property->state <=> newValue)) {
+                property->publish_state(newValue);
+              }
           };
           CallbackHandler::instance().addCallback(std::make_pair(${target},Property::k${property}),callback);
           if constexpr(${writable}) {
