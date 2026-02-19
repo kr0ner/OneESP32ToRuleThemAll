@@ -71,6 +71,7 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(JAHR, 0x0124, Type::et_little_endian);
     PROPERTY(STUNDE, 0x0125, Type::et_little_endian);
     PROPERTY(MINUTE, 0x0126, Type::et_little_endian);
+    PROPERTY(SEKUNDE, 0x0127, Type::et_little_endian);
     PROPERTY(HEISSGAS_TEMP, 0x0265, Type::et_dec_val);
     PROPERTY(ANTEIL_VORLAUF_HK1, 0x059d);
     PROPERTY(FUSSPUNKT_HK1, 0x059e, Type::et_dec_val);

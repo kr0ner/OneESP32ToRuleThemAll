@@ -18,11 +18,12 @@ void syncTime() {
     }
     ESP_LOGI("TIMESYNC", "Synchronizing heat pump time to %d.%d.%d %d:%d", time.day_of_month, time.month, time.year,
              time.hour, time.minute);
-    queueTransmission(Kessel, Property::kJAHR, toggleEndianness(time.year - 2000U));
-    queueTransmission(Kessel, Property::kMONAT, toggleEndianness(time.month));
-    queueTransmission(Kessel, Property::kTAG, toggleEndianness(time.day_of_month));
-    queueTransmission(Kessel, Property::kSTUNDE, toggleEndianness(time.hour));
+    queueTransmission(Kessel, Property::kSEKUNDE, toggleEndianness(time.second));
     queueTransmission(Kessel, Property::kMINUTE, toggleEndianness(time.minute));
+    queueTransmission(Kessel, Property::kSTUNDE, toggleEndianness(time.hour));
+    queueTransmission(Kessel, Property::kTAG, toggleEndianness(time.day_of_month));
+    queueTransmission(Kessel, Property::kMONAT, toggleEndianness(time.month));
+    queueTransmission(Kessel, Property::kJAHR, toggleEndianness(time.year - 2000U));
 }
 
 #endif
