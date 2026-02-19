@@ -25,7 +25,7 @@ esphome:
 
 text_sensor:
   - platform: template
-    name: "Global Device ID"
+    name: "Analytics Global Device ID"
     id: global_device_id
     icon: "mdi:identifier"
     entity_category: "diagnostic"
@@ -43,6 +43,20 @@ mqtt:
   discover_ip: false
   reboot_timeout: 0s
   keepalive: 60s
+  on_connect:
+    then:
+      - binary_sensor.template.publish:
+          id: analytics_mqtt_connected
+          state: ON
+      - lambda: |-
+          if (id(homeassistant_time).now().is_valid()) {
+            id(analytics_last_update).publish_state(id(homeassistant_time).now().timestamp);
+          }
+  on_disconnect:
+    then:
+      - binary_sensor.template.publish:
+          id: analytics_mqtt_connected
+          state: OFF
 
 script:
   - id: !extend mqtt_push_event
@@ -68,6 +82,9 @@ script:
                             "/events/" + type_path + "/" + suffix;
 
           id(analytics_mqtt).publish(topic, payload);
+          if (id(homeassistant_time).now().is_valid()) {
+            id(analytics_last_update).publish_state(id(homeassistant_time).now().timestamp);
+          }
 
 interval:
   - interval: 15min
@@ -86,6 +103,10 @@ interval:
             }
           }
 
+          if (id(homeassistant_time).now().is_valid()) {
+            id(analytics_last_update).publish_state(id(homeassistant_time).now().timestamp);
+          }
+
 select:
   - platform: template
     id: !extend PROGRAMMSCHALTER
@@ -99,3 +120,18 @@ select:
                   id: mqtt_push_event
                   suffix: PROGRAMMSCHALTER
                   payload: !lambda 'return x.c_str();'
+
+binary_sensor:
+  - platform: template
+    name: "Analytics MQTT Connected"
+    id: analytics_mqtt_connected
+    entity_category: "diagnostic"
+    device_class: "connectivity"
+
+sensor:
+  - platform: template
+    name: "Analytics Last Update"
+    id: analytics_last_update
+    device_class: "timestamp"
+    entity_category: "diagnostic"
+    icon: "mdi:clock-check-outline"
