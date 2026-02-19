@@ -13,11 +13,14 @@ esphome:
           CallbackHandler::instance().addCallback(std::make_pair(Kessel,Property::kPASSIVKUEHLUNG),[](const SimpleVariant& value){
             const auto stringValue{Mapper::instance().getPassivkuehlung(value).value_or("Unbekannt")};
             const auto index = id(PASSIVKUEHLUNG).index_of(stringValue);
-            if(index.has_value()) {
+            if(index.has_value() && id(PASSIVKUEHLUNG).active_index() != index.value()) {
               id(PASSIVKUEHLUNG).publish_state(stringValue);
             }
           });
           scheduleRequest(Kessel, Property::kPASSIVKUEHLUNG, std::chrono::seconds(10));
+          #if defined(ANALYTICS)
+            getWhitelistedEntities().insert(id(PASSIVKUEHLUNG));
+          #endif
 
           CallbackHandler::instance().addCallback(std::make_pair(Kessel,Property::kZULUFT_IST),[](const SimpleVariant& value){
             // workaround for broken ninth bit of BETRIEBSSTATUS
@@ -53,11 +56,14 @@ esphome:
           CallbackHandler::instance().addCallback(std::make_pair(Kessel,Property::kPROGRAMMSCHALTER),[](const SimpleVariant& value){
             const auto stringValue{value.get<std::string>()};
             const auto index = id(PROGRAMMSCHALTER).index_of(stringValue);
-            if(index.has_value()) {
+            if(index.has_value() && id(PROGRAMMSCHALTER).active_index() != index.value()) {
               id(PROGRAMMSCHALTER).publish_state(stringValue);
             }
           });
           scheduleRequest(Kessel, Property::kPROGRAMMSCHALTER, std::chrono::seconds(10));
+          #if defined(ANALYTICS)
+            getWhitelistedEntities().insert(id(PROGRAMMSCHALTER));
+          #endif
 
           CallbackHandler::instance().addCallback(std::make_pair(Kessel,Property::kBETRIEBS_STATUS_2),[](const SimpleVariant& value){
             const std::bitset<2U> status_bits{static_cast<std::uint16_t>(value)};
@@ -96,7 +102,7 @@ esphome:
 #########################################
 select:
   - platform: template
-    name: "PASSIVKUEHLUNG"
+    name: PASSIVKUEHLUNG
     id: PASSIVKUEHLUNG
     options:
       - "Aus"
@@ -115,9 +121,24 @@ select:
             if(passivkuehlungId.has_value()) {
               queueTransmission(Kessel, Property::kPASSIVKUEHLUNG, passivkuehlungId.value());
             }
+    on_value:
+      then:
+        - if:
+            condition:
+              lambda: |-
+                #if defined(ANALYTICS)
+                  return getWhitelistedEntities().contains(id(PASSIVKUEHLUNG));
+                #else
+                  return false;
+                #endif
+            then:
+              - script.execute:
+                  id: mqtt_push_event
+                  suffix: PASSIVKUEHLUNG
+                  payload: !lambda 'return x.c_str();'
 
   - platform: template
-    name: "PROGRAMMSCHALTER"
+    name: PROGRAMMSCHALTER
     id: PROGRAMMSCHALTER
     options:
       - "Notbetrieb"

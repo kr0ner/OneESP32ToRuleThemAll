@@ -1,6 +1,7 @@
 defaults:
   target: "Kessel"
   icon: "mdi:toggle-switch-variant"
+  exposed: "true"
 
 switch:
   - platform: template
@@ -14,6 +15,21 @@ switch:
     turn_off_action:
       - lambda: |-
           queueTransmission(${target}, Property::k${property}, static_cast<std::uint16_t>(false));
+    on_state:
+      then:
+        - if:
+            condition:
+              lambda: |-
+                #if defined(ANALYTICS)
+                  return getWhitelistedEntities().contains(id(${property}));
+                #else
+                  return false;
+                #endif
+            then:
+              - script.execute:
+                  id: mqtt_push_event
+                  suffix: ${property}
+                  payload: !lambda 'return x ? "On" : "Off";'
 
 esphome:
   on_boot:
@@ -24,6 +40,16 @@ esphome:
 
           CallbackHandler::instance().addCallbacks({std::make_pair(${target},Property::k${property}),
                                                     std::make_pair(Manager,Property::k${property})}, [](const SimpleVariant& value){
-              id(${property}).publish_state(value);
+              const auto newValue{value.get<bool>()};
+              auto property{id(${property})};
+              if(property->state != newValue) {
+                property->publish_state(newValue);
+              }
           });
           queueRequest(${target}, Property::k${property});
+
+          #if defined(ANALYTICS)
+            if(${exposed}) {
+              getWhitelistedEntities().insert(id(${property}));
+            }
+          #endif

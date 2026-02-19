@@ -96,13 +96,20 @@ wifi:
 #                                       #
 #########################################
 packages:
-# energymeter: !include OneESP32ToRuleThemAll/yaml/features/energymeter.yaml
-# evu: !include OneESP32ToRuleThemAll/yaml/features/evu.yaml
-# watermeter: !include OneESP32ToRuleThemAll/yaml/features/watermeter.yaml
 # thz404: !include OneESP32ToRuleThemAll/yaml/thz404.yaml
   thz504: !include OneESP32ToRuleThemAll/yaml/thz504.yaml
 # thz55eco: !include OneESP32ToRuleThemAll/yaml/thz5_5_eco.yaml
 # ttf07: !include OneESP32ToRuleThemAll/yaml/ttf07.yaml
 # wpl13: !include OneESP32ToRuleThemAll/yaml/wpl13.yaml
+# energymeter: !include OneESP32ToRuleThemAll/yaml/features/energymeter.yaml
+# evu: !include OneESP32ToRuleThemAll/yaml/features/evu.yaml
+# watermeter: !include OneESP32ToRuleThemAll/yaml/features/watermeter.yaml
 # kondensatpumpe: !include OneESP32ToRuleThemAll/yaml/features/kondensatpumpe.yaml
 # sgready: !include OneESP32ToRuleThemAll/yaml/features/sg_ready.yaml
+
+# To opt-in to community stats, uncomment the line below.
+# This sends anonymous data to an MQTT server:
+# - Events: Triggered by switch/setting changes.
+# - Telemetry: Every 15 minutes for standard sensors (custom sensors are NEVER exposed!).
+# A unique Device ID will be visible as a sensor. This can be used to access the Grafana dashboard and compare your data with the community.
+# analytics: !include { file: OneESP32ToRuleThemAll/yaml/features/analytics.yaml, vars: { district: '"Landkreis"' }} <-- remember to change the district

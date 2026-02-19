@@ -1,0 +1,137 @@
+esphome:
+  on_boot:
+    priority: -100
+    then:
+      - lambda: |-
+          // 1. Generate the unique Hash from MAC
+          uint32_t hash = fnv1_hash(get_mac_address());
+          char id_buf[16];
+          sprintf(id_buf, "%08x", hash);
+          std::string my_obfuscated_id = std::string(id_buf);
+
+          // 2. Set IDs and Enable MQTT
+          id(analytics_mqtt).set_client_id(my_obfuscated_id);
+          id(global_device_id).publish_state(my_obfuscated_id);
+          id(analytics_mqtt).enable();
+      - wait_until:
+          mqtt.connected:
+      - lambda: |-
+          // Publish Identity
+          std::string info_payload = id(heat_pump_variant) + "," + ${district};
+          id(analytics_mqtt).publish("analytics/v1/" + id(global_device_id).state + "/info", info_payload, 0, true);
+  platformio_options:
+    build_flags:
+      - "-DANALYTICS"
+
+text_sensor:
+  - platform: template
+    name: "Analytics Global Device ID"
+    id: global_device_id
+    icon: "mdi:identifier"
+    entity_category: "diagnostic"
+
+mqtt:
+  id: analytics_mqtt
+  broker: oneesp32torulethemall.freeddns.org
+  port: 1883
+  username: OneESP32ToRuleThemAll
+  password: OneESP32ToRuleThemAll
+  enable_on_boot: false
+  clean_session: true
+  topic_prefix: null
+  discovery: false
+  discover_ip: false
+  reboot_timeout: 0s
+  keepalive: 60s
+  on_connect:
+    then:
+      - binary_sensor.template.publish:
+          id: analytics_mqtt_connected
+          state: ON
+      - lambda: |-
+          if (id(homeassistant_time).now().is_valid()) {
+            id(analytics_last_update).publish_state(id(homeassistant_time).now().timestamp);
+          }
+  on_disconnect:
+    then:
+      - binary_sensor.template.publish:
+          id: analytics_mqtt_connected
+          state: OFF
+
+script:
+  - id: !extend mqtt_push_event
+    then:
+      - lambda: |-
+          if (!id(analytics_mqtt).is_connected()) {
+            return;
+          }
+
+          // Determine if payload is numeric
+          bool is_numeric = true;
+          for(char const &c : payload) {
+              if(!std::isdigit(c) && c != '.' && c != '-') {
+                  is_numeric = false;
+                  break;
+              }
+          }
+
+          std::string type_path = is_numeric ? "numeric" : "status";
+          
+          // New Topic Structure: analytics/v1/[HASH]/events/[TYPE]/[NAME]
+          std::string topic = "analytics/v1/" + id(global_device_id).state +
+                            "/events/" + type_path + "/" + suffix;
+
+          id(analytics_mqtt).publish(topic, payload, 0, true);
+          if (id(homeassistant_time).now().is_valid()) {
+            id(analytics_last_update).publish_state(id(homeassistant_time).now().timestamp);
+          }
+
+interval:
+  - interval: 15min
+    then:
+      - lambda: |-
+          if (!id(analytics_mqtt).is_connected()) return;
+          
+          // Topic: analytics/v1/[HASH]/[SENSOR]
+          std::string base = "analytics/v1/" + id(global_device_id).state + "/";
+
+          for (auto *obj : App.get_sensors()) {
+            if (!obj->is_internal() &&
+                !std::isnan(obj->state) &&
+                getWhitelistedEntities().contains(static_cast<esphome::EntityBase*>(obj))) {
+              id(analytics_mqtt).publish(base + obj->get_name(), to_string(obj->state), 0, true);
+            }
+          }
+
+          if (id(homeassistant_time).now().is_valid()) {
+            id(analytics_last_update).publish_state(id(homeassistant_time).now().timestamp);
+          }
+
+select:
+  - platform: template
+    id: !extend PROGRAMMSCHALTER
+    on_value:
+      then:
+        - if:
+            condition:
+              lambda: 'return getWhitelistedEntities().contains(id(PROGRAMMSCHALTER));'
+            then:
+              - script.execute:
+                  id: mqtt_push_event
+                  suffix: PROGRAMMSCHALTER
+                  payload: !lambda 'return x.c_str();'
+
+binary_sensor:
+  - platform: template
+    name: "Analytics MQTT Connected"
+    id: analytics_mqtt_connected
+    entity_category: "diagnostic"
+    device_class: "connectivity"
+
+sensor:
+  - platform: template
+    name: "Analytics Last Update"
+    id: analytics_last_update
+    device_class: "timestamp"
+    entity_category: "diagnostic"
+    icon: "mdi:clock-check-outline"
