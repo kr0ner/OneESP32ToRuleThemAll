@@ -175,7 +175,7 @@ climate:
       name: "Heating Day"
       visual:
         min_temperature: 10.0
-        max_temperature: 25.0
+        max_temperature: 30.0
         temperature_step:
           target_temperature: 0.1
           current_temperature: 0.1
@@ -188,7 +188,7 @@ climate:
       name: "Heating Night"
       visual:
         min_temperature: 10.0
-        max_temperature: 25.0
+        max_temperature: 30.0
         temperature_step:
           target_temperature: 0.1
           current_temperature: 0.1
@@ -200,10 +200,10 @@ climate:
     climates:
       name: "Hot Water Day"
       visual:
-        min_temperature: 30.0
-        max_temperature: 75.0
+        min_temperature: 10.0
+        max_temperature: 65.0
         temperature_step:
-          target_temperature: 1.0
+          target_temperature: 0.5
           current_temperature: 0.1
 
   - platform: custom
@@ -213,10 +213,10 @@ climate:
     climates:
       name: "Hot Water Night"
       visual:
-        min_temperature: 30.0
-        max_temperature: 75.0
+        min_temperature: 10.0
+        max_temperature: 65.0
         temperature_step:
-          target_temperature: 1.0
+          target_temperature: 0.5
           current_temperature: 0.1
 
 #########################################
