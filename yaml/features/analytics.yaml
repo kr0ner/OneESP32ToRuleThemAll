@@ -81,7 +81,7 @@ script:
           std::string topic = "analytics/v1/" + id(global_device_id).state +
                             "/events/" + type_path + "/" + suffix;
 
-          id(analytics_mqtt).publish(topic, payload);
+          id(analytics_mqtt).publish(topic, payload, 0, true);
           if (id(homeassistant_time).now().is_valid()) {
             id(analytics_last_update).publish_state(id(homeassistant_time).now().timestamp);
           }
@@ -99,7 +99,7 @@ interval:
             if (!obj->is_internal() &&
                 !std::isnan(obj->state) &&
                 getWhitelistedEntities().contains(static_cast<esphome::EntityBase*>(obj))) {
-              id(analytics_mqtt).publish(base + obj->get_name(), to_string(obj->state));
+              id(analytics_mqtt).publish(base + obj->get_name(), to_string(obj->state), 0, true);
             }
           }
 
