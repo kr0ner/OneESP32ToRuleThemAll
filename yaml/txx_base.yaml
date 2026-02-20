@@ -34,8 +34,9 @@ sensor:
     id: ha_temperature_sensor
     entity_id: $entity_room_temperature
     filters:
+      - delta: 0.1
       - heartbeat:
-          period: $interval_medium
+          period: $interval_once_in_a_while
           optimistic: true
     on_value:
       then:
@@ -50,8 +51,9 @@ sensor:
     id: ha_humidity_sensor
     entity_id: $entity_humidity
     filters:
+      - delta: 0.1
       - heartbeat:
-          period: $interval_medium
+          period: $interval_once_in_a_while
           optimistic: true
     on_value:
       then:
