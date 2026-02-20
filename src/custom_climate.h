@@ -111,6 +111,9 @@ class CustomClimate : public Component, public Climate {
 
 class Heating : public CustomClimate {
    public:
+    // -------------------------------------------------------------------
+    // Full features (Heating + Cooling + Fan)
+    // -------------------------------------------------------------------
     template <typename Sensor, typename BinarySensor>
     Heating(Sensor* current_temperature_sensor, Sensor* target_temperature_sensor, BinarySensor* heating_sensor,
             BinarySensor* cooling_sensor, BinarySensor* fan_sensor, const Property targetHeatingTemperature,
@@ -125,7 +128,36 @@ class Heating : public CustomClimate {
         register_heating_callback(heating_sensor);
         register_cooling_callback(cooling_sensor);
         register_fan_callback(fan_sensor);
-    };
+    }
+
+    // -------------------------------------------------------------------
+    // Heating + Fan (No Cooling)
+    // -------------------------------------------------------------------
+    template <typename Sensor, typename BinarySensor>
+    Heating(Sensor* current_temperature_sensor, Sensor* target_temperature_sensor, BinarySensor* heating_sensor,
+            BinarySensor* fan_sensor, const Property targetHeatingTemperature)
+        : CustomClimate({climate::CLIMATE_MODE_HEAT, climate::CLIMATE_MODE_FAN_ONLY, climate::CLIMATE_MODE_OFF},
+                        {climate::CLIMATE_PRESET_NONE, climate::CLIMATE_PRESET_HOME, climate::CLIMATE_PRESET_AWAY},
+                        {std::make_pair(HK1, targetHeatingTemperature)}) {
+        register_current_temperature_callback(current_temperature_sensor);
+        register_target_temperature_callback(target_temperature_sensor);
+        register_heating_callback(heating_sensor);
+        register_fan_callback(fan_sensor);
+    }
+
+    // -------------------------------------------------------------------
+    // Basic Heating Only (No Cooling, No Fan)
+    // -------------------------------------------------------------------
+    template <typename Sensor, typename BinarySensor>
+    Heating(Sensor* current_temperature_sensor, Sensor* target_temperature_sensor, BinarySensor* heating_sensor,
+            const Property targetHeatingTemperature)
+        : CustomClimate({climate::CLIMATE_MODE_HEAT, climate::CLIMATE_MODE_OFF},
+                        {climate::CLIMATE_PRESET_NONE, climate::CLIMATE_PRESET_HOME, climate::CLIMATE_PRESET_AWAY},
+                        {std::make_pair(HK1, targetHeatingTemperature)}) {
+        register_current_temperature_callback(current_temperature_sensor);
+        register_target_temperature_callback(target_temperature_sensor);
+        register_heating_callback(heating_sensor);
+    }
 };
 
 class HotWater : public CustomClimate {
@@ -139,5 +171,5 @@ class HotWater : public CustomClimate {
         register_current_temperature_callback(current_temperature_sensor);
         register_target_temperature_callback(target_temperature_sensor);
         register_heating_callback(heating_sensor);
-    };
+    }
 };

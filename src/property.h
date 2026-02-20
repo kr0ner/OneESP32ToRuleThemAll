@@ -57,6 +57,9 @@ struct Property : public oe32trta::detail::Property {
     constexpr Property(const oe32trta::detail::Property& p) : oe32trta::detail::Property{p.name, p.id, p.type} {}
     Property(const std::uint16_t _id) : oe32trta::detail::Property{getProperty(_id)} {}
 
+    // =======================================================================
+    // 1. COMMON PROPERTIES (Shared across all device families)
+    // =======================================================================
     PROPERTY(INDEX_NOT_FOUND, 0x0000);
     PROPERTY(FEHLERMELDUNG, 0x0001);
     PROPERTY(SPEICHERSOLLTEMP, 0x0003, Type::et_dec_val);
@@ -71,7 +74,9 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(JAHR, 0x0124, Type::et_little_endian);
     PROPERTY(STUNDE, 0x0125, Type::et_little_endian);
     PROPERTY(MINUTE, 0x0126, Type::et_little_endian);
+#if !defined(THZ_304)
     PROPERTY(SEKUNDE, 0x0127, Type::et_little_endian);
+#endif
     PROPERTY(HEISSGAS_TEMP, 0x0265, Type::et_dec_val);
     PROPERTY(ANTEIL_VORLAUF_HK1, 0x059d);
     PROPERTY(FUSSPUNKT_HK1, 0x059e, Type::et_dec_val);
@@ -92,7 +97,10 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(WAERMEERTRAG_HEIZ_SUM_KWH, 0x0930);
     PROPERTY(WAERMEERTRAG_HEIZ_SUM_MWH, 0x0931, Type::et_double_val);
 
-#if defined(THZ_504) || defined(THZ_404) || defined(THZ_5_5_ECO) || defined(TTF_07_C)
+// =======================================================================
+// 2. THZ & TTF SHARED PROPERTIES
+// =======================================================================
+#if defined(THZ_504) || defined(THZ_404) || defined(THZ_5_5_ECO) || defined(THZ_304) || defined(TTF_07_C)
     PROPERTY(RAUMISTTEMP, 0x0011, Type::et_dec_val);
     PROPERTY(VERDAMPFERTEMP, 0x0014, Type::et_dec_val);
     PROPERTY(RUECKLAUFISTTEMP, 0x0016, Type::et_dec_val);
@@ -101,7 +109,10 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(PROGRAMMSCHALTER, 0x0112, Type::et_betriebsart);
 #endif
 
-#if defined(THZ_504) || defined(THZ_404) || defined(THZ_5_5_ECO)
+// =======================================================================
+// 3. THZ PROPERTIES (All THZ variants including THZ_304)
+// =======================================================================
+#if defined(THZ_504) || defined(THZ_404) || defined(THZ_5_5_ECO) || defined(THZ_304)
     PROPERTY(RAUMSOLLTEMP_TAG, 0x0005, Type::et_dec_val);
     PROPERTY(RAUMSOLLTEMP_NACHT, 0x0008, Type::et_dec_val);
     PROPERTY(SAMMLERISTTEMP, 0x000d, Type::et_dec_val);
@@ -114,27 +125,22 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(BETRIEBS_STATUS, 0x0176);
     PROPERTY(FIRMWARE_VERSION, 0x019a, et_cent_val);
     PROPERTY(VOLUMENSTROM, 0x01da, Type::et_dec_val);
-    PROPERTY(TAUPUNKT_HK1, 0x0264, Type::et_dec_val);
-    PROPERTY(KUEHLMODE, 0x0287, Type::et_bool);
     PROPERTY(PUMPENDREHZAHL_HEIZEN, 0x02cb, Type::et_dec_val);
     PROPERTY(PUMPENDREHZAHL_WW, 0x02cc, Type::et_dec_val);
+    PROPERTY(RESET_FILTER, 0x033b, Type::et_bool);
     PROPERTY(LAUFZEIT_FILTER_TAGE, 0x0341);
     PROPERTY(WAERMEERTRAG_RUECKGE_TAG_WH, 0x03ae);
     PROPERTY(WAERMEERTRAG_RUECKGE_TAG_KWH, 0x03af);
     PROPERTY(WAERMEERTRAG_RUECKGE_SUM_KWH, 0x03b0);
     PROPERTY(WAERMEERTRAG_RUECKGE_SUM_MWH, 0x03b1);
-    PROPERTY(RESET_FILTER, 0x033b, Type::et_bool);
-    PROPERTY(KUEHL_RAUMSOLL_TAG, 0x0569, Type::et_dec_val);
-    PROPERTY(KUEHL_RAUMSOLL_ABWESEND, 0x056a, Type::et_dec_val);
-    PROPERTY(KUEHL_RAUMSOLL_NACHT, 0x056b, Type::et_dec_val);
     PROPERTY(LUEFT_STUFE_TAG, 0x056c);
     PROPERTY(LUEFT_STUFE_NACHT, 0x056d);
     PROPERTY(LUEFT_STUFE_BEREITSCHAFT, 0x056f);
     PROPERTY(LUEFT_STUFE_PARTY, 0x0570);
-    PROPERTY(PASSIVKUEHLUNG, 0x0575);
     PROPERTY(LUEFT_ZEIT_AUSSERPLAN_STUFE1, 0x0572);
     PROPERTY(LUEFT_ZEIT_AUSSERPLAN_STUFE2, 0x0573);
     PROPERTY(LUEFT_ZEIT_AUSSERPLAN_STUFE3, 0x0574);
+    PROPERTY(PASSIVKUEHLUNG, 0x0575);
     PROPERTY(LUEFT_ZULUFT_STUFE1, 0x0576);
     PROPERTY(LUEFT_ZULUFT_STUFE2, 0x0577);
     PROPERTY(LUEFT_ZULUFT_STUFE3, 0x0578);
@@ -143,6 +149,7 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(LUEFT_ABLUFT_STUFE3, 0x057b);
     PROPERTY(ANTILEGIONELLEN, 0x0586);
     PROPERTY(WW_TEMP_LEGIONELLEN, 0x0587, Type::et_dec_val);
+    PROPERTY(ZEITSPERRE_NE, 0x0588);
     PROPERTY(TEMP_FREIGABE_NE, 0x0589, Type::et_dec_val);
     PROPERTY(NE_STUFE_WW, 0x058a);
     PROPERTY(WARMWASSER_ECO, 0x058d, Type::et_bool);
@@ -160,8 +167,32 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(LAUFZEIT_NHZ_HEIZEN, 0x05a8);
     PROPERTY(SPEICHERSOLLTEMP_NACHT, 0x05bf, Type::et_dec_val);
     PROPERTY(LUEFT_STUFE_HAND, 0x0612);
-    PROPERTY(KUEHLSYSTEM, 0x0613);
     PROPERTY(DRUCK_HEIZKREIS, 0x064a, Type::et_dec_val);
+    PROPERTY(DRUCK_HOCHDRUCK, 0x07a6, Type::et_cent_val);
+    PROPERTY(DRUCK_NIEDERDRUCK, 0x07a7, Type::et_cent_val);
+    PROPERTY(WAERMEERTRAG_2WE_WW_SUM_KWH, 0x0924);
+    PROPERTY(WAERMEERTRAG_2WE_WW_SUM_MWH, 0x0925, Type::et_double_val);
+    PROPERTY(WAERMEERTRAG_2WE_HEIZ_SUM_KWH, 0x0928);
+    PROPERTY(WAERMEERTRAG_2WE_HEIZ_SUM_MWH, 0x0929, Type::et_double_val);
+    PROPERTY(HEIZ_KUEHL_LEISTUNG, 0xc0ee, Type::et_cent_val);
+    PROPERTY(ABLUFTFEUCHTE, 0xc0ef);
+    PROPERTY(VERDICHTER_STARTS, 0xc0f4);
+    PROPERTY(VERDICHTER_STARTS_K, 0xc0f5);
+    PROPERTY(ABLUFT_TAUPUNKT, 0xc0f6, Type::et_dec_val);
+    PROPERTY(DIFFERENZDRUCK, 0xc11e);
+    PROPERTY(BETRIEBS_STATUS_2, 0xc356);
+#endif
+
+// =======================================================================
+// 4. THZ RESTRICTED PROPERTIES (Not supported on THZ_304)
+// =======================================================================
+#if defined(THZ_504) || defined(THZ_404) || defined(THZ_5_5_ECO)
+    PROPERTY(TAUPUNKT_HK1, 0x0264, Type::et_dec_val);
+    PROPERTY(KUEHLMODE, 0x0287, Type::et_bool);
+    PROPERTY(KUEHL_RAUMSOLL_TAG, 0x0569, Type::et_dec_val);
+    PROPERTY(KUEHL_RAUMSOLL_ABWESEND, 0x056a, Type::et_dec_val);
+    PROPERTY(KUEHL_RAUMSOLL_NACHT, 0x056b, Type::et_dec_val);
+    PROPERTY(KUEHLSYSTEM, 0x0613);
     PROPERTY(WW_LEISTUNG_SOMMER, 0x0690);
     PROPERTY(WW_LEISTUNG_WINTER, 0x0691);
     PROPERTY(LEISTUNG_AUSLEGUNG_KUEHLEN, 0x0692);
@@ -173,33 +204,33 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(MOTORLEISTUNG, 0x06a0, Type::et_cent_val);
     PROPERTY(MOTORSPANNUNG, 0x06a1);
     PROPERTY(INVERTERTEMPERATUR, 0x06a2, Type::et_dec_val);
-    PROPERTY(DRUCK_HOCHDRUCK, 0x07a6, Type::et_cent_val);
-    PROPERTY(DRUCK_NIEDERDRUCK, 0x07a7, Type::et_cent_val);
     PROPERTY(WAERMEERTRAG_2WE_WW_TAG_WH, 0x0922);
     PROPERTY(WAERMEERTRAG_2WE_WW_TAG_KWH, 0x0923, Type::et_double_val);
-    PROPERTY(WAERMEERTRAG_2WE_WW_SUM_KWH, 0x0924);
-    PROPERTY(WAERMEERTRAG_2WE_WW_SUM_MWH, 0x0925, Type::et_double_val);
     PROPERTY(WAERMEERTRAG_2WE_HEIZ_TAG_WH, 0x0926);
     PROPERTY(WAERMEERTRAG_2WE_HEIZ_TAG_KWH, 0x0927, Type::et_double_val);
-    PROPERTY(WAERMEERTRAG_2WE_HEIZ_SUM_KWH, 0x0928);
-    PROPERTY(WAERMEERTRAG_2WE_HEIZ_SUM_MWH, 0x0929, Type::et_double_val);
-    PROPERTY(HEIZ_KUEHL_LEISTUNG, 0xc0ee, Type::et_cent_val);
-    PROPERTY(ABLUFTFEUCHTE, 0xc0ef);
     PROPERTY(LEISTUNG_AUSLEGUNG_HEIZUNG, 0xc0f1);
-    PROPERTY(VERDICHTER_STARTS, 0xc0f4);
-    PROPERTY(VERDICHTER_STARTS_K, 0xc0f5);
-    PROPERTY(ABLUFT_TAUPUNKT, 0xc0f6, Type::et_dec_val);
     PROPERTY(LAUFZEIT_FILTER, 0xc111);
-    PROPERTY(DIFFERENZDRUCK, 0xc11e);
-    PROPERTY(BETRIEBS_STATUS_2, 0xc356);
-    PROPERTY(ZEITSPERRE_NE, 0x0588);
 #endif
 
+// =======================================================================
+// 5. THZ VARIANT SPECIFICS
+// =======================================================================
 #if defined(THZ_504) || defined(THZ_5_5_ECO)
     PROPERTY(PUMPENZYKLEN_AUSSENTEMP_MIN, 0x05bb);
     PROPERTY(PUMPENZYKLEN_AUSSENTEMP_MAX, 0x05bc);
 #endif
 
+#if defined(THZ_404)
+    PROPERTY(PUMPENZYKLEN_MIN_TAG, 0x05b8);
+    PROPERTY(PUMPENZYKLEN_MAX_TAG, 0x05b7);
+    PROPERTY(PUMPENZYKLEN_AUSSENTEMP_MAX, 0x05b9, Type::et_dec_val);
+    PROPERTY(PUMPENZYKLEN_AUSSENTEMP_MIN, 0x05ba, Type::et_dec_val);
+    PROPERTY(AKTIVE_HEIZSTUFEN, 0x05bb);
+#endif
+
+// =======================================================================
+// 6. TTF VARIANTS
+// =======================================================================
 #if defined(TTF_07_C)
     PROPERTY(WW_KOMF_TEMP, 0x0013, Type::et_dec_val);
     PROPERTY(WW_HYSTERESE, 0x0022, Type::et_dec_val);
@@ -232,6 +263,9 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(VERDICHTER_STILLSTAND, 0xfdb1, Type::et_little_endian);
 #endif
 
+// =======================================================================
+// 7. WPL VARIANTS
+// =======================================================================
 #if defined(WPL_13)
     PROPERTY(PUFFERISTTEMPERATUR, 0x0078, Type::et_dec_val);
     PROPERTY(BIVALENZTEMPERATUR_HZG, 0x01ac, Type::et_dec_val);
@@ -304,14 +338,6 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(VERDICHTERDREHZAHLGRENZE, 0x4fac, Type::et_dec_val);
     PROPERTY(IST_UEBERHITZUNG_SAUGGAS_VERDICHTER, 0x4fa2, Type::et_dec_val);
     PROPERTY(SOLL_UEBERHITZUNG_SAUGGAS_VERDICHTER, 0x4fa1, Type::et_dec_val);
-#endif
-
-#if defined(THZ_404)
-    PROPERTY(PUMPENZYKLEN_MIN_TAG, 0x05b8);
-    PROPERTY(PUMPENZYKLEN_MAX_TAG, 0x05b7);
-    PROPERTY(PUMPENZYKLEN_AUSSENTEMP_MAX, 0x05b9, Type::et_dec_val);
-    PROPERTY(PUMPENZYKLEN_AUSSENTEMP_MIN, 0x05ba, Type::et_dec_val);
-    PROPERTY(AKTIVE_HEIZSTUFEN, 0x05bb);
 #endif
 };
 
