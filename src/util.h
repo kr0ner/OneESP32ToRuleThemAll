@@ -19,7 +19,9 @@ void syncTime() {
     }
     ESP_LOGI("TIMESYNC", "Synchronizing heat pump time to %d.%d.%d %d:%d", time.day_of_month, time.month, time.year,
              time.hour, time.minute);
+#if !defined(THZ_304)
     queueTransmission(Kessel, Property::kSEKUNDE, toggleEndianness(time.second));
+#endif
     queueTransmission(Kessel, Property::kMINUTE, toggleEndianness(time.minute));
     queueTransmission(Kessel, Property::kSTUNDE, toggleEndianness(time.hour));
     queueTransmission(Kessel, Property::kTAG, toggleEndianness(time.day_of_month));

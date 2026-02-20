@@ -96,6 +96,7 @@ wifi:
 #                                       #
 #########################################
 packages:
+# thz304: !include OneESP32ToRuleThemAll/yaml/thz304.yaml
 # thz404: !include OneESP32ToRuleThemAll/yaml/thz404.yaml
   thz504: !include OneESP32ToRuleThemAll/yaml/thz504.yaml
 # thz55eco: !include OneESP32ToRuleThemAll/yaml/thz5_5_eco.yaml
