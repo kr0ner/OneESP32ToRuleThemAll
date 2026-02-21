@@ -336,6 +336,7 @@ packages:
   DRUCK_HOCHDRUCK:                     !include { file: templates/wp_generic.yaml, vars: { property: "DRUCK_HOCHDRUCK"           , update_interval: $interval_slow            , unit: "bar"  , icon: "mdi:gauge", accuracy_decimals: "2" }}
   DRUCK_NIEDERDRUCK:                   !include { file: templates/wp_generic.yaml, vars: { property: "DRUCK_NIEDERDRUCK"         , update_interval: $interval_slow            , unit: "bar"  , icon: "mdi:gauge", accuracy_decimals: "2" }}
   FIRMWARE_VERSION:                    !include { file: templates/wp_generic.yaml, vars: { property: "FIRMWARE_VERSION"          , icon: "mdi:code-block-tags"              , accuracy_decimals: "2" }}
+  AKTIVE_HEIZSTUFEN:                   !include { file: templates/wp_generic.yaml, vars: { property: "AKTIVE_HEIZSTUFEN"         , update_interval: $interval_medium                         , icon: "mdi:heat-pump-outline" }}
 
   FUSSPUNKT_HK1:                       !include { file: templates/wp_number.yaml, vars: { property: "FUSSPUNKT_HK1"              , min: "0"     , max: "20", step: "0.1" , unit: "°C", icon: "mdi:temperature-celsius" , target: "HK1", accuracy_decimals: "1" }}
   NE_STUFE_WW:                         !include { file: templates/wp_number.yaml, vars: { property: "NE_STUFE_WW"                , min: "0"     , max: "3"  }}
@@ -354,10 +355,14 @@ packages:
   SOLLWERT_MAX_HK1:                    !include { file: templates/wp_number.yaml, vars: { property: "SOLLWERT_MAX_HK1"           , min: "10.0"  , max: "65.0" , step: "0.1" , unit: "°C", icon: "mdi:temperature-celsius" , target: "HK1", accuracy_decimals: "1" }}
   SOLLWERT_MIN_HK1:                    !include { file: templates/wp_number.yaml, vars: { property: "SOLLWERT_MIN_HK1"           , min: "0.0"   , max: "40.0" , step: "0.1" , unit: "°C", icon: "mdi:temperature-celsius" , target: "HK1", accuracy_decimals: "1" }}
   ANTEIL_VORLAUF_HK1:                  !include { file: templates/wp_number.yaml, vars: { property: "ANTEIL_VORLAUF_HK1"         , min: "0.0"   , max: "100.0", unit: "%" , icon: "mdi:percent-box"         , target: "HK1" }}
+  PUMPENZYKLEN_AUSSENTEMP_MIN:         !include { file: templates/wp_number.yaml, vars: { property: "PUMPENZYKLEN_AUSSENTEMP_MIN", min: "0.0"   , max: "25.0" , unit: "°C", icon: "mdi:temperature-celsius" }}
+  PUMPENZYKLEN_AUSSENTEMP_MAX:         !include { file: templates/wp_number.yaml, vars: { property: "PUMPENZYKLEN_AUSSENTEMP_MAX", min: "0.0"   , max: "20.0" , unit: "°C", icon: "mdi:temperature-celsius" }}
   TEMP_FREIGABE_NE:                    !include { file: templates/wp_number.yaml, vars: { property: "TEMP_FREIGABE_NE"           , min: "-20.0" , max: "10.0" , step: "0.5" , unit: "°C" , icon: "mdi:thermometer-lines" }}
 
   WAERMEERTRAG_RUECKGE_TAG_SUMME_KWH:  !include { file: templates/wp_daily_energy_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_RUECKGE_TAG_SUMME_KWH" , property_wh: "WAERMEERTRAG_RUECKGE_TAG_WH"  , property_kwh: "WAERMEERTRAG_RUECKGE_TAG_KWH"  }}
 
   WAERMEERTRAG_RUECKGE_SUMME_MWH:      !include { file: templates/wp_generic_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_RUECKGE_SUMME_MWH"  , scaled_property: "WAERMEERTRAG_RUECKGE_SUM_KWH" , property: "WAERMEERTRAG_RUECKGE_SUM_MWH" , unit: "MWh", accuracy_decimals: "3", icon: "mdi:fire"  }}
+  WAERMEERTRAG_2WE_WW_SUMME_MWH:       !include { file: templates/wp_generic_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_2WE_WW_SUMME_MWH"   , scaled_property: "WAERMEERTRAG_2WE_WW_SUM_KWH"  , property: "WAERMEERTRAG_2WE_WW_SUM_MWH"  , unit: "MWh", accuracy_decimals: "3", icon: "mdi:fire"  }}
+  WAERMEERTRAG_2WE_HEIZ_SUMME_MWH:     !include { file: templates/wp_generic_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_2WE_HEIZ_SUMME_MWH" , scaled_property: "WAERMEERTRAG_2WE_HEIZ_SUM_KWH", property: "WAERMEERTRAG_2WE_HEIZ_SUM_MWH", unit: "MWh", accuracy_decimals: "3", icon: "mdi:fire"  }}
 
   WARMWASSER_ECO:                      !include { file: templates/wp_switch.yaml, vars: { property: "WARMWASSER_ECO", icon: "mdi:sprout" }}

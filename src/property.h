@@ -178,8 +178,6 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(ABLUFTFEUCHTE, 0xc0ef);
     PROPERTY(VERDICHTER_STARTS, 0xc0f4);
     PROPERTY(VERDICHTER_STARTS_K, 0xc0f5);
-    PROPERTY(ABLUFT_TAUPUNKT, 0xc0f6, Type::et_dec_val);
-    PROPERTY(DIFFERENZDRUCK, 0xc11e);
     PROPERTY(BETRIEBS_STATUS_2, 0xc356);
 #endif
 
@@ -209,7 +207,9 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(WAERMEERTRAG_2WE_HEIZ_TAG_WH, 0x0926);
     PROPERTY(WAERMEERTRAG_2WE_HEIZ_TAG_KWH, 0x0927, Type::et_double_val);
     PROPERTY(LEISTUNG_AUSLEGUNG_HEIZUNG, 0xc0f1);
+    PROPERTY(ABLUFT_TAUPUNKT, 0xc0f6, Type::et_dec_val);
     PROPERTY(LAUFZEIT_FILTER, 0xc111);
+    PROPERTY(DIFFERENZDRUCK, 0xc11e);
 #endif
 
 // =======================================================================
@@ -220,7 +220,7 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(PUMPENZYKLEN_AUSSENTEMP_MAX, 0x05bc);
 #endif
 
-#if defined(THZ_404)
+#if defined(THZ_404) || defined(THZ_304)
     PROPERTY(PUMPENZYKLEN_MIN_TAG, 0x05b8);
     PROPERTY(PUMPENZYKLEN_MAX_TAG, 0x05b7);
     PROPERTY(PUMPENZYKLEN_AUSSENTEMP_MAX, 0x05b9, Type::et_dec_val);
