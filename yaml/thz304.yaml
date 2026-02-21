@@ -358,7 +358,6 @@ packages:
   PUMPENZYKLEN_AUSSENTEMP_MIN:         !include { file: templates/wp_number.yaml, vars: { property: "PUMPENZYKLEN_AUSSENTEMP_MIN", min: "0.0"   , max: "25.0" , unit: "°C", icon: "mdi:temperature-celsius" }}
   PUMPENZYKLEN_AUSSENTEMP_MAX:         !include { file: templates/wp_number.yaml, vars: { property: "PUMPENZYKLEN_AUSSENTEMP_MAX", min: "0.0"   , max: "20.0" , unit: "°C", icon: "mdi:temperature-celsius" }}
   TEMP_FREIGABE_NE:                    !include { file: templates/wp_number.yaml, vars: { property: "TEMP_FREIGABE_NE"           , min: "-20.0" , max: "10.0" , step: "0.5" , unit: "°C" , icon: "mdi:thermometer-lines" }}
-  BIVALENZTEMPERATUR_HZG:              !include { file: templates/wp_number.yaml, vars: { property: "BIVALENZTEMPERATUR_HZG"     , min: "-20.0" , max: "10.0" , unit: "°C" , icon: "mdi:temperature-celsius", target: "Kessel" }}
 
   WAERMEERTRAG_RUECKGE_TAG_SUMME_KWH:  !include { file: templates/wp_daily_energy_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_RUECKGE_TAG_SUMME_KWH" , property_wh: "WAERMEERTRAG_RUECKGE_TAG_WH"  , property_kwh: "WAERMEERTRAG_RUECKGE_TAG_KWH"  }}
 
