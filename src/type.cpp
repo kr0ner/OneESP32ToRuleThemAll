@@ -53,6 +53,14 @@ SimpleVariant GetValueByType(const std::uint16_t value, const Type type) {
                 return std::string("Unknown");
             }
         }
+        case Type::et_passivkuehlung: {
+            const auto result = Mapper::instance().getPassivkuehlung(value);
+            if (result.has_value()) {
+                return result.value();
+            } else {
+                return std::string("Unknown");
+            }
+        }
         case Type::et_zeit:
             sprintf(buffer, "%2.2d:%2.2d", ((value >> 8U) & 0xff), (value & 0xff));
             return std::string(buffer);
@@ -162,6 +170,18 @@ std::optional<uint16_t> GetRawByType(const SimpleVariant& value, Type type) {
 #else
             return result;
 #endif
+        }
+
+        case Type::et_passivkuehlung: {
+            if (!value.holds_alternative<std::string>()) {
+                return std::nullopt;
+            }
+            const auto& s = value.get<std::string>();
+            const auto result = Mapper::instance().getPassivkuehlungId(s);
+            if (!result.has_value()) {
+                return std::nullopt;
+            }
+            return result;
         }
 
         case Type::et_zeit: {

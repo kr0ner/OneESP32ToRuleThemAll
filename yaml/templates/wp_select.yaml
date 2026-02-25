@@ -1,0 +1,56 @@
+defaults:
+  target: "Kessel"
+  name_suffix: ""
+  exposed: "true"
+  initial_option: "Unbekannt"
+
+select:
+  - platform: template
+    name: ${property}
+    id: ${property}
+    options: ${options}
+    initial_option: "${initial_option}"
+    optimistic: true
+    setup_priority: 100
+    set_action:
+      then:
+        - lambda: |-
+            const auto id_val = Mapper::instance().${mapper_func_set}(x);
+            if(id_val.has_value()) {
+              queueTransmission(${target}, Property::k${property}, id_val.value());
+            }
+    on_value:
+      then:
+        - if:
+            condition:
+              lambda: |-
+                #if defined(ANALYTICS)
+                  return getWhitelistedEntities().contains(id(${property}));
+                #else
+                  return false;
+                #endif
+            then:
+              - script.execute:
+                  id: mqtt_push_event
+                  suffix: ${property}
+                  payload: !lambda 'return x.c_str();'
+
+esphome:
+  on_boot:
+    priority: 100.0 # AFTER_CONNECTION
+    then:
+      - lambda: |-
+          CallbackHandler::instance().addCallback(std::make_pair(${target}, Property::k${property}), [](const SimpleVariant& value) {
+            const auto stringValue{value.get<std::string>()};
+            const auto index = id(${property}).index_of(stringValue);
+            if(index.has_value() && id(${property}).active_index() != index.value()) {
+              id(${property}).publish_state(stringValue);
+            }
+          });
+          scheduleRequest(${target}, Property::k${property}, std::chrono::seconds(10));
+          
+          #if defined(ANALYTICS)
+            if(${exposed}) {
+              getWhitelistedEntities().insert(id(${property}));
+            }
+          #endif

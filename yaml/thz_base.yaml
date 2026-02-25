@@ -10,18 +10,6 @@ esphome:
     priority: 100.0 # AFTER_CONNECTION
     then:
       - lambda: |-
-          CallbackHandler::instance().addCallback(std::make_pair(Kessel,Property::kPASSIVKUEHLUNG),[](const SimpleVariant& value){
-            const auto stringValue{Mapper::instance().getPassivkuehlung(value).value_or("Unbekannt")};
-            const auto index = id(PASSIVKUEHLUNG).index_of(stringValue);
-            if(index.has_value() && id(PASSIVKUEHLUNG).active_index() != index.value()) {
-              id(PASSIVKUEHLUNG).publish_state(stringValue);
-            }
-          });
-          scheduleRequest(Kessel, Property::kPASSIVKUEHLUNG, std::chrono::seconds(10));
-          #if defined(ANALYTICS)
-            getWhitelistedEntities().insert(id(PASSIVKUEHLUNG));
-          #endif
-
           CallbackHandler::instance().addCallback(std::make_pair(Kessel,Property::kZULUFT_IST),[](const SimpleVariant& value){
             // workaround for broken ninth bit of BETRIEBSSTATUS
             const auto zuluftIst = static_cast<std::uint16_t>(value);
@@ -53,18 +41,6 @@ esphome:
             id(ELECTRIC_HEATING_POWER).publish_state(electricHeatingPower);
           });
 
-          CallbackHandler::instance().addCallback(std::make_pair(Kessel,Property::kPROGRAMMSCHALTER),[](const SimpleVariant& value){
-            const auto stringValue{value.get<std::string>()};
-            const auto index = id(PROGRAMMSCHALTER).index_of(stringValue);
-            if(index.has_value() && id(PROGRAMMSCHALTER).active_index() != index.value()) {
-              id(PROGRAMMSCHALTER).publish_state(stringValue);
-            }
-          });
-          scheduleRequest(Kessel, Property::kPROGRAMMSCHALTER, std::chrono::seconds(10));
-          #if defined(ANALYTICS)
-            getWhitelistedEntities().insert(id(PROGRAMMSCHALTER));
-          #endif
-
           CallbackHandler::instance().addCallback(std::make_pair(Kessel,Property::kBETRIEBS_STATUS_2),[](const SimpleVariant& value){
             const std::bitset<2U> status_bits{static_cast<std::uint16_t>(value)};
             id(SOMMERBETRIEB_AKTIV).publish_state(status_bits.test(0U));
@@ -94,71 +70,6 @@ esphome:
 
           // Query firmware only once
           scheduleRequest(Kessel, Property::kFIRMWARE_VERSION, std::chrono::seconds(10));
-
-#########################################
-#                                       #
-#   Selects                             #
-#                                       #
-#########################################
-select:
-  - platform: template
-    name: PASSIVKUEHLUNG
-    id: PASSIVKUEHLUNG
-    options:
-      - "Aus"
-      - "Ablüften"
-      - "Zulüften"
-      - "Bypass"
-      - "Sommerkassette"
-      - "Unbekannt"
-    initial_option: "Unbekannt"
-    optimistic: true
-    setup_priority: 100
-    set_action:
-      then:
-        - lambda: |-
-            const auto passivkuehlungId = Mapper::instance().getPassivkuehlungId(x);
-            if(passivkuehlungId.has_value()) {
-              queueTransmission(Kessel, Property::kPASSIVKUEHLUNG, passivkuehlungId.value());
-            }
-    on_value:
-      then:
-        - if:
-            condition:
-              lambda: |-
-                #if defined(ANALYTICS)
-                  return getWhitelistedEntities().contains(id(PASSIVKUEHLUNG));
-                #else
-                  return false;
-                #endif
-            then:
-              - script.execute:
-                  id: mqtt_push_event
-                  suffix: PASSIVKUEHLUNG
-                  payload: !lambda 'return x.c_str();'
-
-  - platform: template
-    name: PROGRAMMSCHALTER
-    id: PROGRAMMSCHALTER
-    options:
-      - "Notbetrieb"
-      - "Bereitschaft"
-      - "Automatik"
-      - "Tagbetrieb"
-      - "Absenkbetrieb"
-      - "Warmwasser"
-      - "Handbetrieb"
-      - "Unbekannt"
-    initial_option: "Unbekannt"
-    optimistic: true
-    setup_priority: 100
-    set_action:
-      then:
-        - lambda: |-
-            const auto betriebsartId = Mapper::instance().getBetriebsartId(x);
-            if(betriebsartId.has_value()) {
-              queueTransmission(Kessel, Property::kPROGRAMMSCHALTER, betriebsartId.value());
-            }
 
 #########################################
 #                                       #
@@ -370,3 +281,6 @@ packages:
 
   WARMWASSER_ECO:                      !include { file: templates/wp_switch.yaml, vars: { property: "WARMWASSER_ECO", icon: "mdi:sprout" }}
   KUEHLMODE:                           !include { file: templates/wp_switch.yaml, vars: { property: "KUEHLMODE" , target: "HK1" }}
+
+  PASSIVKUEHLUNG:                      !include { file: templates/wp_select.yaml, vars: { property: PASSIVKUEHLUNG, mapper_func_set: getPassivkuehlungId, mapper_func_get: getPassivkuehlung, options: ["Aus", "Ablüften", "Zulüften", "Bypass", "Sommerkassette", "Unbekannt"] }}
+  PROGRAMMSCHALTER:                    !include { file: templates/wp_select.yaml, vars: { property: PROGRAMMSCHALTER, mapper_func_set: getBetriebsartId, mapper_func_get: getBetriebsart, options: ["Notbetrieb", "Bereitschaft", "Automatik", "Tagbetrieb", "Absenkbetrieb", "Warmwasser", "Handbetrieb", "Unbekannt"] }}
