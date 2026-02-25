@@ -11,15 +11,6 @@ esphome:
     priority: 100.0 # AFTER_CONNECTION
     then:
       - lambda: |-
-          CallbackHandler::instance().addCallback(std::make_pair(Kessel,Property::kPROGRAMMSCHALTER),[](const SimpleVariant& value){
-            const auto stringValue{value.get<std::string>()};
-            const auto index = id(PROGRAMMSCHALTER).index_of(stringValue);
-            if(index.has_value()) {
-              id(PROGRAMMSCHALTER).publish_state(stringValue);
-            }
-          });
-          queueRequest(Kessel, Property::kPROGRAMMSCHALTER);
-
           CallbackHandler::instance().addCallback(std::make_pair(Kessel,Property::kBETRIEBS_STATUS),[](const SimpleVariant& value){
             const std::bitset<15U> status_bits{static_cast<std::uint16_t>(value)};
             id(NHZ1).publish_state(status_bits.test(0) && !status_bits.test(1U));
@@ -46,35 +37,6 @@ globals:
   - id: heat_pump_variant
     type: std::string
     initial_value: '"TTF07"'
-
-#########################################
-#                                       #
-#   Selects                             #
-#                                       #
-#########################################
-select:
-  - platform: template
-    name: "PROGRAMMSCHALTER"
-    id: PROGRAMMSCHALTER
-    options:
-      - "Notbetrieb"
-      - "Bereitschaft"
-      - "Programm"
-      - "Komfort"
-      - "Eco"
-      - "Warmwasser"
-      - "Unbekannt"
-    initial_option: "Unbekannt"
-    optimistic: true
-    setup_priority: 100
-    set_action:
-      then:
-        - lambda: |-
-            const auto betriebsartId = Mapper::instance().getBetriebsartId(x);
-            if(betriebsartId.has_value()) {
-              ESP_LOGI("ttf07.yaml:select", "Updating PROGRAMMSCHALTER to %s betriebsartId=0x%0x", x.c_str(), betriebsartId.value());
-              queueTransmission(Kessel, Property::kPROGRAMMSCHALTER, betriebsartId.value());
-            }
 
 #########################################
 #                                       #
@@ -115,3 +77,5 @@ packages:
   VERDICHTER_STILLSTAND:    !include { file: templates/wp_generic.yaml, vars: { property: "VERDICHTER_STILLSTAND"   , update_interval: "${interval_once_in_a_while}", unit: "min" }}
   REGLERDYNAMIK:            !include { file: templates/wp_generic.yaml, vars: { property: "REGLERDYNAMIK"           , update_interval: "${interval_once_in_a_while}" }}
   KUEHLEN_EINGESCHALTET:    !include { file: templates/wp_generic.yaml, vars: { property: "KUEHLEN_EINGESCHALTET"   , update_interval: "${interval_slow}" }}
+
+  PROGRAMMSCHALTER:         !include { file: templates/wp_select.yaml, vars: { property: PROGRAMMSCHALTER, mapper_func_set: getBetriebsartId, mapper_func_get: getBetriebsart, options: ["Notbetrieb", "Bereitschaft", "Programm", "Komfort", "Eco", "Warmwasser", "Unbekannt"] }}

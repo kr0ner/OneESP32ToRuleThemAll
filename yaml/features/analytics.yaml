@@ -107,20 +107,6 @@ interval:
             id(analytics_last_update).publish_state(id(homeassistant_time).now().timestamp);
           }
 
-select:
-  - platform: template
-    id: !extend PROGRAMMSCHALTER
-    on_value:
-      then:
-        - if:
-            condition:
-              lambda: 'return getWhitelistedEntities().contains(id(PROGRAMMSCHALTER));'
-            then:
-              - script.execute:
-                  id: mqtt_push_event
-                  suffix: PROGRAMMSCHALTER
-                  payload: !lambda 'return x.c_str();'
-
 binary_sensor:
   - platform: template
     name: "Analytics MQTT Connected"

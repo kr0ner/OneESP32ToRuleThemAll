@@ -11,16 +11,6 @@ esphome:
     priority: 100.0 # AFTER_CONNECTION
     then:
       - lambda: |-
-          CallbackHandler::instance().addCallback(std::make_pair(WPM2,Property::kPROGRAMMSCHALTER),[](const SimpleVariant& value){
-            const auto stringValue{value.get<std::string>()};
-            ESP_LOGI("PROGRAMMSCHALTER", "mapped value %s", stringValue.c_str());
-            const auto index = id(PROGRAMMSCHALTER).index_of(stringValue);
-            if(index.has_value()) {
-              id(PROGRAMMSCHALTER).publish_state(stringValue);
-            }
-          });
-          queueRequest(WPM2, Property::kPROGRAMMSCHALTER);
-
           CallbackHandler::instance().addCallback(std::make_pair(WPM2,Property::kBETRIEBS_STATUS),[](const SimpleVariant& value){
             const std::bitset<12U> status_bits{static_cast<std::uint16_t>(value)};
             id(HEIZKREISPUMPE_1).publish_state(status_bits.test(0U));
@@ -79,33 +69,6 @@ globals:
   - id: heat_pump_variant
     type: std::string
     initial_value: '"WPL13"'
-
-#########################################
-#                                       #
-#   Selects                             #
-#                                       #
-#########################################
-select:
-  - platform: template
-    name: "PROGRAMMSCHALTER"
-    id: PROGRAMMSCHALTER
-    options:
-      - "Notbetrieb"
-      - "Bereitschaft"
-      - "Programm"
-      - "Komfort"
-      - "Eco"
-      - "Unbekannt"
-    initial_option: "Unbekannt"
-    optimistic: true
-    setup_priority: 100
-    set_action:
-      then:
-        - lambda: |-
-            const auto betriebsartId = Mapper::instance().getBetriebsartId(x);
-            if(betriebsartId.has_value()) {
-              queueTransmission(WPM2, Property::kPROGRAMMSCHALTER, (betriebsartId.value() >> 8U) & 0xFF);
-            }
 
 #########################################
 #                                       #
@@ -223,3 +186,5 @@ packages:
   WAERMEERTRAG_HEIZ_TAG_SUMME_KWH:      !include { file: templates/wp_daily_energy_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_HEIZ_TAG_SUMME_KWH"   , property_wh: "WAERMEERTRAG_HEIZ_TAG_WH"       , property_kwh: "WAERMEERTRAG_HEIZ_TAG_KWH"       , target: "Manager" }}
 
   HEATPUMP_DATETIME:                    !include { file: templates/wp_datetime.yaml }
+
+  PROGRAMMSCHALTER:                     !include { file: templates/wp_select.yaml, vars: { property: PROGRAMMSCHALTER, target: "WPM2", mapper_func_set: getBetriebsartId, mapper_func_get: getBetriebsart, options: ["Notbetrieb", "Bereitschaft", "Programm", "Komfort", "Eco", "Unbekannt"] }}

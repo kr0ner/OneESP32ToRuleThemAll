@@ -17,6 +17,7 @@ enum Type : std::uint8_t {
     et_triple_val,
     et_little_endian,
     et_betriebsart,
+    et_passivkuehlung,
     et_zeit,
     et_datum,
     et_time_domain,
