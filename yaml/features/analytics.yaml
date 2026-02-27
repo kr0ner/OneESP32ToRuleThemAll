@@ -16,12 +16,16 @@ esphome:
       - wait_until:
           mqtt.connected:
       - lambda: |-
-          // Publish Identity
-          std::string info_payload = id(heat_pump_variant) + "," + ${district};
+          // Publish identity incl.. Git-Hash
+          // Format: variant,district,githash
+          std::string info_payload = id(heat_pump_variant) + "," + ${district} + "," + "${version_hash}";
           id(analytics_mqtt).publish("analytics/v1/" + id(global_device_id).state + "/info", info_payload, 0, true);
   platformio_options:
     build_flags:
       - "-DANALYTICS"
+
+substitutions:
+  version_hash: "c840a54"
 
 text_sensor:
   - platform: template
