@@ -9,6 +9,7 @@ If you like it, help me code all night 😴
 * SmartMeter readings via optical sensor [https://amzn.to/4sbL7va]
 * WaterMeter readings via [https://amzn.to/4sbL7va]
 * Controlling a Tecalor THZ 504 (or other Tecalor | Stiebel Eltron heat pumps) via ESP32 + CAN using an MCP2515 [https://amzn.to/4rJ538H] or the Waveshare Industrial ESP32-S3 Control Board with RS485 and CAN Communication [https://amzn.to/4scTlDk]. If you want a more reliable connection, ESP32-S3 ETH development board [https://amzn.to/40qj5zU] might the right choice. There is also a PoE version of that [https://amzn.to/4sbZjnS]
+* Dallas DS18B20 1-Wire temperature sensors for precise return flow measurement: [https://amzn.to/4u8ExHr]
 
 ## Community Statistics
 

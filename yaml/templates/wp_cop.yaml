@@ -1,0 +1,41 @@
+defaults:
+  accuracy_decimals: "2"
+  exposed: "true"
+
+sensor:
+  - platform: template
+    name: "${sensor_name}"
+    id: ${sensor_name}
+    update_interval: never
+    state_class: "measurement"
+    filters:
+      - median
+      - delta: 0.01
+    lambda: |-
+      if (id(${output_property}).state && id(${input_property}).state && id(${input_property}).state != 0.0f) {
+        return id(${output_property}).state / id(${input_property}).state;
+      }
+      return {};
+
+  - platform: template
+    id: !extend ${output_property}
+    on_value:
+      then:
+        - component.update: ${sensor_name}
+
+  - platform: template
+    id: !extend ${input_property}
+    on_value:
+      then:
+        - component.update: ${sensor_name}
+
+esphome:
+  on_boot:
+    priority: 110.0 # AFTER_CONNECTION
+    then:
+      - lambda: |-
+          #if defined(ANALYTICS)
+            if(${exposed}) {
+              getWhitelistedEntities().insert(id(${sensor_name}));
+            }
+          #endif
