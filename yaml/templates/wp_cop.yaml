@@ -1,0 +1,51 @@
+defaults:
+  accuracy_decimals: "2"
+  exposed: "true"
+
+sensor:
+  - platform: template
+    name: "${sensor_name}"
+    id: ${sensor_name}
+    update_interval: never
+    state_class: "measurement"
+    filters:
+      - or:
+        - throttle: 15min
+        - delta: 0.5
+      - clamp:
+          min_value: 1
+          max_value: 10
+          ignore_out_of_range: true
+      - median:
+    lambda: |-
+        float energy_in = id(${input_property}).state;
+        float energy_out = id(${output_property}).state;
+
+        // Only calculate if input is valid AND high enough to avoid reset-noise
+        if (energy_in > 0.5f && energy_out > 0.0f) {
+          return energy_out / energy_in;
+        }
+        return {};
+
+  - platform: template
+    id: !extend ${output_property}
+    on_value:
+      then:
+        - component.update: ${sensor_name}
+
+  - platform: template
+    id: !extend ${input_property}
+    on_value:
+      then:
+        - component.update: ${sensor_name}
+
+esphome:
+  on_boot:
+    priority: 110.0 # AFTER_CONNECTION
+    then:
+      - lambda: |-
+          #if defined(ANALYTICS)
+            if(${exposed}) {
+              getWhitelistedEntities().insert(id(${sensor_name}));
+            }
+          #endif

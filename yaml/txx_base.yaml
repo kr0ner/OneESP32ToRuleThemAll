@@ -12,19 +12,6 @@ substitutions:
 
 #########################################
 #                                       #
-#   Global variables                    #
-#                                       #
-#########################################
-globals:
-  - id: gCOP_WW_TAG
-    type: float
-    initial_value: "1.0"
-  - id: gCOP_HEIZ_TAG
-    type: float
-    initial_value: "1.0"
-
-#########################################
-#                                       #
 #   Home Assistant Sensors              #
 #                                       #
 #########################################
@@ -63,43 +50,17 @@ sensor:
 
 #########################################
 #                                       #
-#   Template Sensors                    #
-#                                       #
-#########################################
-  - platform: template
-    name: "COP WW TAG"
-    update_interval: $interval_very_slow
-    state_class: "measurement"
-    filters:
-      - median
-    lambda: |-
-      if (id(WAERMEERTRAG_WW_TAG_SUMME_KWH).state && id(EL_ENERGIEAUFNAHME_WW_SUMME_KWH).state && id(EL_ENERGIEAUFNAHME_WW_SUMME_KWH).state != 0.0f) {
-        id(gCOP_WW_TAG) = id(WAERMEERTRAG_WW_TAG_SUMME_KWH).state / id(EL_ENERGIEAUFNAHME_WW_SUMME_KWH).state;
-      }
-      return id(gCOP_WW_TAG);
-  - platform: template
-    name: "COP HEIZ TAG"
-    update_interval: $interval_very_slow
-    state_class: "measurement"
-    filters:
-      - median
-    lambda: |-
-      if (id(WAERMEERTRAG_HEIZ_TAG_SUMME_KWH).state && id(EL_ENERGIEAUFNAHME_HEIZ_SUMME_KWH).state && id(EL_ENERGIEAUFNAHME_HEIZ_SUMME_KWH).state != 0.0f) {
-        id(gCOP_HEIZ_TAG) = id(WAERMEERTRAG_HEIZ_TAG_SUMME_KWH).state / id(EL_ENERGIEAUFNAHME_HEIZ_SUMME_KWH).state;
-      }
-      return id(gCOP_HEIZ_TAG);
-
-#########################################
-#                                       #
 #   Packages                            #
 #                                       #
 #########################################
 packages:
   CORE:                              !include { file: core.yaml }
 
-  VERDICHTER_STARTS:                 !include { file: templates/wp_generic_combined.yaml, vars: { sensor_name: "VERDICHTER_STARTS"           , scaled_property: "VERDICHTER_STARTS_K"       , property: "VERDICHTER_STARTS"         , unit: ""   , accuracy_decimals: "0", scaler: "1000", icon: "mdi:counter" }}
-  WAERMEERTRAG_WW_SUMME_MWH:         !include { file: templates/wp_generic_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_WW_SUMME_MWH"   , scaled_property: "WAERMEERTRAG_WW_SUM_KWH"   , property: "WAERMEERTRAG_WW_SUM_MWH"   , unit: "MWh", accuracy_decimals: "3", icon: "mdi:fire" }}
-  WAERMEERTRAG_HEIZ_SUMME_MWH:       !include { file: templates/wp_generic_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_HEIZ_SUMME_MWH" , scaled_property: "WAERMEERTRAG_HEIZ_SUM_KWH" , property: "WAERMEERTRAG_HEIZ_SUM_MWH" , unit: "MWh", accuracy_decimals: "3", icon: "mdi:fire" }}
+  VERDICHTER_STARTS:                 !include { file: templates/wp_generic_combined.yaml, vars: { sensor_name: "VERDICHTER_STARTS"                , scaled_property: "VERDICHTER_STARTS_K"            , property: "VERDICHTER_STARTS"              , unit: ""   , accuracy_decimals: "0", scaler: "1000", icon: "mdi:counter" }}
+  WAERMEERTRAG_WW_SUMME_MWH:         !include { file: templates/wp_generic_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_WW_SUMME_MWH"        , scaled_property: "WAERMEERTRAG_WW_SUM_KWH"        , property: "WAERMEERTRAG_WW_SUM_MWH"        , unit: "MWh", accuracy_decimals: "3", icon: "mdi:fire" }}
+  WAERMEERTRAG_HEIZ_SUMME_MWH:       !include { file: templates/wp_generic_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_HEIZ_SUMME_MWH"      , scaled_property: "WAERMEERTRAG_HEIZ_SUM_KWH"      , property: "WAERMEERTRAG_HEIZ_SUM_MWH"      , unit: "MWh", accuracy_decimals: "3", icon: "mdi:fire" }}
+  EL_ENERGIEAUFNAHME_WW_SUMME_MWH:   !include { file: templates/wp_generic_combined.yaml, vars: { sensor_name: "EL_ENERGIEAUFNAHME_WW_SUMME_MWH"  , scaled_property: "EL_ENERGIEAUFNAHME_WW_SUM_KWH"  , property: "EL_ENERGIEAUFNAHME_WW_SUM_MWH"  , unit: "MWh", accuracy_decimals: "3", icon: "mdi:lightning-bolt" }}
+  EL_ENERGIEAUFNAHME_HEIZ_SUMME_MWH: !include { file: templates/wp_generic_combined.yaml, vars: { sensor_name: "EL_ENERGIEAUFNAHME_HEIZ_SUMME_MWH", scaled_property: "EL_ENERGIEAUFNAHME_HEIZ_SUM_KWH", property: "EL_ENERGIEAUFNAHME_HEIZ_SUM_MWH", unit: "MWh", accuracy_decimals: "3", icon: "mdi:lightning-bolt" }}
 
   SPEICHERSOLLTEMP:                  !include { file: templates/wp_temperature.yaml, vars: { property: "SPEICHERSOLLTEMP"          }}
   SPEICHERISTTEMP:                   !include { file: templates/wp_temperature.yaml, vars: { property: "SPEICHERISTTEMP"          , update_interval: $interval_medium }}
@@ -122,3 +83,6 @@ packages:
   WAERMEERTRAG_HEIZ_TAG_SUMME_KWH:   !include { file: templates/wp_daily_energy_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_HEIZ_TAG_SUMME_KWH"   , property_wh: "WAERMEERTRAG_HEIZ_TAG_WH"       , property_kwh: "WAERMEERTRAG_HEIZ_TAG_KWH"       }}
 
   HEATPUMP_DATETIME:                 !include { file: templates/wp_datetime.yaml }
+
+  COP_WW_TAG:                        !include { file: templates/wp_cop.yaml, vars: { sensor_name: COP_WW_TAG  , output_property: "WAERMEERTRAG_WW_TAG_SUMME_KWH"  , input_property: "EL_ENERGIEAUFNAHME_WW_SUMME_KWH"   }}
+  COP_HEIZ_TAG:                      !include { file: templates/wp_cop.yaml, vars: { sensor_name: COP_HEIZ_TAG, output_property: "WAERMEERTRAG_HEIZ_TAG_SUMME_KWH", input_property: "EL_ENERGIEAUFNAHME_HEIZ_SUMME_KWH" }}
