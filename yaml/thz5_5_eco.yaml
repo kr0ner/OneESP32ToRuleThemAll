@@ -27,3 +27,7 @@ packages:
   THZ_BASE:      !include { file: thz_base.yaml }
 
   ZEITSPERRE_NE: !include { file: templates/wp_number.yaml , vars: { property: "ZEITSPERRE_NE" , icon: "mdi:valve" , min: "0", max: "360", step: "5.0" }}
+  LUEFT_ZEIT_AUSSERPLAN_STUFE1: !include { file: templates/wp_number.yaml, vars: { property: "LUEFT_ZEIT_AUSSERPLAN_STUFE1",   icon: "mdi:fan-clock", min: "0", max: "1000",  step: "5"   }}
+  LUEFT_ZEIT_AUSSERPLAN_STUFE2: !include { file: templates/wp_number.yaml, vars: { property: "LUEFT_ZEIT_AUSSERPLAN_STUFE2",   icon: "mdi:fan-clock", min: "0", max: "1000",  step: "5"   }}
+  LUEFT_ZEIT_AUSSERPLAN_STUFE3: !include { file: templates/wp_number.yaml, vars: { property: "LUEFT_ZEIT_AUSSERPLAN_STUFE3",   icon: "mdi:fan-clock", min: "0", max: "1000",  step: "5"   }}
+  LUEFT_STUFE_AUSSERPLAN: !include { file: templates/wp_number.yaml, vars: { property: "LUEFT_STUFE_AUSSERPLAN", icon: "mdi:fan-chevron-up", min: "1", max: "3", step: "1" }}
