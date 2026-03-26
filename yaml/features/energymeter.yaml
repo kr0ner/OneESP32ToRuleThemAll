@@ -1,17 +1,6 @@
 defaults:
   rx_pin: "GPIO2"
 
-esphome:
-  includes:
-    - OneESP32ToRuleThemAll/src/sml_reader.h
-
-esp32:
-  framework:
-    components:
-      - name: libsml
-        source: https://github.com/kr0ner/libsml
-        ref: master
-
 #########################################
 #                                       #
 #   UART configuration                  #
@@ -35,12 +24,25 @@ substitutions:
 external_components:
   - source: OneESP32ToRuleThemAll/components
 
-custom_component:
-  - lambda: |-
-      auto sml_reader = new SMLReader(id(smartmeter_uart),"${mqtt_server}","${mqtt_user}","${mqtt_password}");
-      return {sml_reader};
-    components:
-      - id: sml_reader_component
+sml_reader:
+  id: sml_reader_component
+  uart_id: smartmeter_uart
+  mqtt_server: "${mqtt_server}"
+  mqtt_user: "${mqtt_user}"
+  mqtt_password: "${mqtt_password}"
+  total_incoming: Total_Incoming
+  total_outgoing: Total_Outgoing
+  instantaneous_power: Instantaneous_Power
+  frequency: Frequency
+  instantaneous_power_l1: Instantaneous_Power_L1
+  instantaneous_power_l2: Instantaneous_Power_L2
+  instantaneous_power_l3: Instantaneous_Power_L3
+  instantaneous_voltage_l1: Instantaneous_Voltage_L1
+  instantaneous_voltage_l2: Instantaneous_Voltage_L2
+  instantaneous_voltage_l3: Instantaneous_Voltage_L3
+  instantaneous_current_l1: Instantaneous_Current_L1
+  instantaneous_current_l2: Instantaneous_Current_L2
+  instantaneous_current_l3: Instantaneous_Current_L3
 
 #########################################
 #                                       #
