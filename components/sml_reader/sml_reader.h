@@ -11,6 +11,8 @@
 #include <vector>
 #include "esphome.h"
 #include "esphome/components/network/util.h"
+#include "esphome/components/sensor/sensor.h"
+#include "esphome/components/uart/uart.h"
 #include "mqtt_client.h"
 
 namespace {
@@ -68,11 +70,26 @@ struct Readings {
     float frequency{0.0f};
 };
 
-class SMLReader : public Component, public UARTDevice {
+class SMLReader : public esphome::Component, public esphome::uart::UARTDevice {
     std::vector<std::uint8_t> _buffer;
     State _current_state{State::kWaitingForStartSequence};
     sml_file* _file;
     std::optional<Readings> _readings;
+
+    // ESPHome sensors
+    esphome::sensor::Sensor* instantaneous_power_{nullptr};
+    esphome::sensor::Sensor* instantaneous_power_l1_{nullptr};
+    esphome::sensor::Sensor* instantaneous_power_l2_{nullptr};
+    esphome::sensor::Sensor* instantaneous_power_l3_{nullptr};
+    esphome::sensor::Sensor* instantaneous_voltage_l1_{nullptr};
+    esphome::sensor::Sensor* instantaneous_voltage_l2_{nullptr};
+    esphome::sensor::Sensor* instantaneous_voltage_l3_{nullptr};
+    esphome::sensor::Sensor* instantaneous_current_l1_{nullptr};
+    esphome::sensor::Sensor* instantaneous_current_l2_{nullptr};
+    esphome::sensor::Sensor* instantaneous_current_l3_{nullptr};
+    esphome::sensor::Sensor* frequency_{nullptr};
+    esphome::sensor::Sensor* total_incoming_{nullptr};
+    esphome::sensor::Sensor* total_outgoing_{nullptr};
 
     // Native MQTT Client & State
     esp_mqtt_client_handle_t _private_client{nullptr};
@@ -105,13 +122,13 @@ class SMLReader : public Component, public UARTDevice {
 
     template <typename T, typename F>
     void waitForSequence(const T& sequence, F func) {
-        while (available()) {
+        while (this->available()) {
             if (_buffer.size() == _buffer.capacity()) {
                 // start over
                 ESP_LOGV("SMLReader", "clearing buffer");
                 _buffer.clear();
             }
-            _buffer.push_back(read());
+            _buffer.push_back(this->read());
 
             // wait until there are at least as many bytes as the sequence to start comparison
             if (_buffer.size() >= sequence.size()) {
@@ -241,19 +258,45 @@ class SMLReader : public Component, public UARTDevice {
     }
 
     void publishHA(const Readings& readings) const {
-        id(Instantaneous_Power).publish_state(readings.power);
-        id(Instantaneous_Power_L1).publish_state(readings.power_l1);
-        id(Instantaneous_Power_L2).publish_state(readings.power_l2);
-        id(Instantaneous_Power_L3).publish_state(readings.power_l3);
-        id(Instantaneous_Voltage_L1).publish_state(readings.voltage_l1);
-        id(Instantaneous_Voltage_L2).publish_state(readings.voltage_l2);
-        id(Instantaneous_Voltage_L3).publish_state(readings.voltage_l3);
-        id(Instantaneous_Current_L1).publish_state(readings.current_l1);
-        id(Instantaneous_Current_L2).publish_state(readings.current_l2);
-        id(Instantaneous_Current_L3).publish_state(readings.current_l3);
-        id(Frequency).publish_state(readings.frequency);
-        id(Total_Incoming).publish_state(readings.total_incoming);
-        id(Total_Outgoing).publish_state(readings.total_outgoing);
+        if (this->instantaneous_power_ != nullptr) {
+            this->instantaneous_power_->publish_state(readings.power);
+        }
+        if (this->instantaneous_power_l1_ != nullptr) {
+            this->instantaneous_power_l1_->publish_state(readings.power_l1);
+        }
+        if (this->instantaneous_power_l2_ != nullptr) {
+            this->instantaneous_power_l2_->publish_state(readings.power_l2);
+        }
+        if (this->instantaneous_power_l3_ != nullptr) {
+            this->instantaneous_power_l3_->publish_state(readings.power_l3);
+        }
+        if (this->instantaneous_voltage_l1_ != nullptr) {
+            this->instantaneous_voltage_l1_->publish_state(readings.voltage_l1);
+        }
+        if (this->instantaneous_voltage_l2_ != nullptr) {
+            this->instantaneous_voltage_l2_->publish_state(readings.voltage_l2);
+        }
+        if (this->instantaneous_voltage_l3_ != nullptr) {
+            this->instantaneous_voltage_l3_->publish_state(readings.voltage_l3);
+        }
+        if (this->instantaneous_current_l1_ != nullptr) {
+            this->instantaneous_current_l1_->publish_state(readings.current_l1);
+        }
+        if (this->instantaneous_current_l2_ != nullptr) {
+            this->instantaneous_current_l2_->publish_state(readings.current_l2);
+        }
+        if (this->instantaneous_current_l3_ != nullptr) {
+            this->instantaneous_current_l3_->publish_state(readings.current_l3);
+        }
+        if (this->frequency_ != nullptr) {
+            this->frequency_->publish_state(readings.frequency);
+        }
+        if (this->total_incoming_ != nullptr) {
+            this->total_incoming_->publish_state(readings.total_incoming);
+        }
+        if (this->total_outgoing_ != nullptr) {
+            this->total_outgoing_->publish_state(readings.total_outgoing);
+        }
     }
 
     void initMQTT() {
@@ -282,8 +325,8 @@ class SMLReader : public Component, public UARTDevice {
     }
 
    public:
-    SMLReader(UARTComponent* parent, std::string server, std::string user, std::string password)
-        : UARTDevice(parent), _mqtt_user(std::move(user)), _mqtt_pass(std::move(password)) {
+    SMLReader(esphome::uart::UARTComponent* parent, std::string server, std::string user, std::string password)
+        : esphome::uart::UARTDevice(parent), _mqtt_user(std::move(user)), _mqtt_pass(std::move(password)) {
         _mqtt_uri = "mqtt://" + server + ":1883";
     }
 
@@ -323,4 +366,18 @@ class SMLReader : public Component, public UARTDevice {
                 break;
         }
     }
+
+    void set_instantaneous_power(esphome::sensor::Sensor* s) { instantaneous_power_ = s; }
+    void set_instantaneous_power_l1(esphome::sensor::Sensor* s) { instantaneous_power_l1_ = s; }
+    void set_instantaneous_power_l2(esphome::sensor::Sensor* s) { instantaneous_power_l2_ = s; }
+    void set_instantaneous_power_l3(esphome::sensor::Sensor* s) { instantaneous_power_l3_ = s; }
+    void set_instantaneous_voltage_l1(esphome::sensor::Sensor* s) { instantaneous_voltage_l1_ = s; }
+    void set_instantaneous_voltage_l2(esphome::sensor::Sensor* s) { instantaneous_voltage_l2_ = s; }
+    void set_instantaneous_voltage_l3(esphome::sensor::Sensor* s) { instantaneous_voltage_l3_ = s; }
+    void set_instantaneous_current_l1(esphome::sensor::Sensor* s) { instantaneous_current_l1_ = s; }
+    void set_instantaneous_current_l2(esphome::sensor::Sensor* s) { instantaneous_current_l2_ = s; }
+    void set_instantaneous_current_l3(esphome::sensor::Sensor* s) { instantaneous_current_l3_ = s; }
+    void set_frequency(esphome::sensor::Sensor* s) { frequency_ = s; }
+    void set_total_incoming(esphome::sensor::Sensor* s) { total_incoming_ = s; }
+    void set_total_outgoing(esphome::sensor::Sensor* s) { total_outgoing_ = s; }
 };
