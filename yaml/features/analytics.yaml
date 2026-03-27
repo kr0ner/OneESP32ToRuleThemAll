@@ -94,6 +94,28 @@ script:
           if (id(homeassistant_time).now().is_valid()) {
             id(analytics_last_update).publish_state(id(homeassistant_time).now().timestamp);
           }
+  - id: check_for_update
+    then:
+      - http_request.get:
+          url: "https://raw.githubusercontent.com/kr0ner/OneESP32ToRuleThemAll/refs/heads/master/version"
+          capture_response: true
+          on_response:
+            then:
+              - lambda: |-
+                  std::string remote_version = body;
+                  remote_version.erase(remote_version.find_last_not_of(" \n\r\t") + 1);
+                  std::string local_version = "${version_hash}";
+
+                  if (remote_version != local_version) {
+                    ESP_LOGI("update", "New version found: %s (Local: %s)", remote_version.c_str(), local_version.c_str());
+                    id(update_available_sensor).publish_state(true);
+                  } else {
+                    ESP_LOGI("update", "Versions match. No update needed.");
+                    id(update_available_sensor).publish_state(false);
+                  }
+          on_error:
+            then:
+              - logger.log: "Request failed!"
 
 interval:
   - interval: 15min
@@ -117,23 +139,7 @@ interval:
           }
   - interval: 12h
     then:
-      - http_request.get:
-          url: "https://raw.githubusercontent.com/kr0ner/OneESP32ToRuleThemAll/master/version"
-          capture_response: true
-          on_response:
-            then:
-              - lambda: |-
-                  std::string remote_version = body;
-                  remote_version.erase(remote_version.find_last_not_of(" \n\r\t") + 1);
-                  std::string local_version = "${version_hash}";
-
-                  if (remote_version != local_version) {
-                    ESP_LOGW("update", "New version found: %s (Local: %s)", remote_version.c_str(), local_version.c_str());
-                    id(update_available_sensor).publish_state(true);
-                  } else {
-                    ESP_LOGD("update", "Versions match. No update needed.");
-                    id(update_available_sensor).publish_state(false);
-                  }
+      - script.execute: check_for_update
 
 binary_sensor:
   - platform: template
@@ -143,7 +149,7 @@ binary_sensor:
     device_class: "connectivity"
   - platform: template
     name: "Github"
-    entity_category: "config"
+    entity_category: "diagnostic"
     id: update_available_sensor
     device_class: update
 
