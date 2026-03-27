@@ -3,12 +3,13 @@ defaults:
   scaler: "0.001"
   update_interval: $interval_very_slow
   exposed: "true"
+  state_class: "measurement"
 
 sensor:
   - platform: template
     name: ${scaled_property}
     id: ${scaled_property}
-    state_class: "measurement"
+    state_class: ${state_class}
     accuracy_decimals: 3
     internal: true
     update_interval: ${update_interval}
