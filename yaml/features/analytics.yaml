@@ -25,7 +25,7 @@ esphome:
       - "-DANALYTICS"
 
 substitutions:
-  version_hash: "c840a54"
+  version_hash: !include ../../version
 
 text_sensor:
   - platform: template
@@ -61,6 +61,11 @@ mqtt:
       - binary_sensor.template.publish:
           id: analytics_mqtt_connected
           state: OFF
+
+http_request:
+  useragent: esphome
+  timeout: 10s
+  verify_ssl: false
 
 script:
   - id: !extend mqtt_push_event
@@ -110,6 +115,25 @@ interval:
           if (id(homeassistant_time).now().is_valid()) {
             id(analytics_last_update).publish_state(id(homeassistant_time).now().timestamp);
           }
+  - interval: 12h
+    then:
+      - http_request.get:
+          url: "https://raw.githubusercontent.com/kr0ner/OneESP32ToRuleThemAll/master/version"
+          capture_response: true
+          on_response:
+            then:
+              - lambda: |-
+                  std::string remote_version = body;
+                  remote_version.erase(remote_version.find_last_not_of(" \n\r\t") + 1);
+                  std::string local_version = "${version_hash}";
+
+                  if (remote_version != local_version) {
+                    ESP_LOGW("update", "New version found: %s (Local: %s)", remote_version.c_str(), local_version.c_str());
+                    id(update_available_sensor).publish_state(true);
+                  } else {
+                    ESP_LOGD("update", "Versions match. No update needed.");
+                    id(update_available_sensor).publish_state(false);
+                  }
 
 binary_sensor:
   - platform: template
@@ -117,6 +141,11 @@ binary_sensor:
     id: analytics_mqtt_connected
     entity_category: "diagnostic"
     device_class: "connectivity"
+  - platform: template
+    name: "Github"
+    entity_category: "config"
+    id: update_available_sensor
+    device_class: update
 
 sensor:
   - platform: template
