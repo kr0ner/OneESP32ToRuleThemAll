@@ -7,6 +7,7 @@ defaults:
   scaler: "1.0"
   name_suffix: ""
   exposed: "true"
+  state_class: "measurement"
 
 sensor:
   - platform: template
@@ -16,7 +17,7 @@ sensor:
     unit_of_measurement: ${unit}
     accuracy_decimals: ${accuracy_decimals}
     update_interval: ${update_interval}
-    state_class: "measurement"
+    state_class: ${state_class}
     lambda: |-
         queueRequest(${target}, Property::k${property});
         return {};
