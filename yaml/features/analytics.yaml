@@ -20,6 +20,7 @@ esphome:
           // Format: variant,district,githash
           std::string info_payload = id(heat_pump_variant) + "," + ${district} + "," + "${version_hash}";
           id(analytics_mqtt).publish("analytics/v1/" + id(global_device_id).state + "/info", info_payload, 0, true);
+      - script.execute: check_for_update
   platformio_options:
     build_flags:
       - "-DANALYTICS"
@@ -160,3 +161,12 @@ sensor:
     device_class: "timestamp"
     entity_category: "diagnostic"
     icon: "mdi:clock-check-outline"
+
+button:
+  - platform: template
+    name: Check for Update
+    entity_category: "diagnostic"
+    icon: "mdi:update"
+    on_press:
+      then:
+        - script.execute: check_for_update
