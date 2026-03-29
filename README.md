@@ -21,6 +21,23 @@ You are highly encouraged to contribute your telemetry data! By opting in and pr
 
 ## Installation Guide
 
+Choose the method that best fits your needs. The **Standard** approach is fastest for most users, while the **Advanced** approach is best if you plan to modify the code or contribute to the repository.
+
+---
+
+### Standard Installation (Recommended)
+This is an easier, automated approach. The code is pulled directly from the repository, making it quick to set up. Note that this method is less flexible and you cannot easily contribute changes back to the source.
+
+1.  **Open ESPHome:** Click **ESPHome** in your Home Assistant sidebar.
+2.  **Create New Device:** Click **+ New Device**, give it a name, and select your board type.
+3.  **Apply Configuration:** Open the editor for your new device. Copy the contents of [`esp32-standalone.yaml`](https://github.com/kr0ner/OneESP32ToRuleThemAll/blob/main/esp32-standalone.yaml) and paste them into your configuration, replacing the default text.
+4.  **Install:** Click **Install** and choose your preferred flashing method (e.g., "Plug into this computer").
+
+---
+
+### Advanced Installation (Flexible)
+Use this method if you want full control over the files, the ability to customize features locally, or if you wish to contribute to the project.
+
 <details>
 <summary><b>Step 1: Prepare Home Assistant</b></summary>
 
@@ -41,13 +58,13 @@ We will use the terminal to ensure everything goes into the correct folders auto
 
 1.  Open **Studio Code Server** from your Home Assistant sidebar.
 2.  **Open a Terminal:** Press **`Ctrl+Shift+C`** or go to **Terminal -> New Terminal** in the top menu.
-3.  **Navigate to the ESPHome folder** Copy and paste the command below into the terminal and press Enter:
+3.  **Navigate to the ESPHome folder:** Copy and paste the command below into the terminal and press Enter:
     ```bash
     cd /config/esphome
     ```
 5.  **Clone the Repository:** Copy and paste the command below into the terminal and press Enter:
     ```bash
-    git clone https://github.com/kr0ner/OneESP32ToRuleThemAll.git
+    git clone [https://github.com/kr0ner/OneESP32ToRuleThemAll.git](https://github.com/kr0ner/OneESP32ToRuleThemAll.git)
     ```
 6.  **Create your local config:** Run this command to copy the "recipe" to your main ESPHome folder so the dashboard can "see" it:
     ```bash
@@ -63,9 +80,9 @@ We will use the terminal to ensure everything goes into the correct folders auto
 1.  **WiFi & Secrets:** Ensure your `secrets.yaml` (located in the main `/config/esphome/` folder) contains your `wifi_ssid` and `wifi_password`.
 2.  **Open your config:** In the VS Code file explorer (left side), click on the `esp32-poe-technik.yaml` file you just copied to the root folder.
 3.  **Analytics Opt-in:** To opt-in to community stats, find the analytics block, uncomment it, and replace `"Landkreis"` with your actual district:
-    ~~~yaml
+    ```yaml
     analytics: !include { file: OneESP32ToRuleThemAll/yaml/features/analytics.yaml, vars: { district: '"Landkreis"' }}
-    ~~~
+    ```
 4.  **Entities:** Provide your Home Assistant entity IDs for temperature and humidity so the ESP32 can use them.
 5.  **Adjust Board/Pins:** If you are using different hardware (not the default POE board), change the `board` type and SPI/CAN pins in this file now.
 

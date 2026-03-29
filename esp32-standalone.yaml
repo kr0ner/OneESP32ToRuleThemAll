@@ -1,0 +1,124 @@
+esphome:
+  name: esp32-poe-technik
+  friendly_name: ESP32-PoE Technik
+
+esp32:
+  board: esp32-poe
+  framework:
+    type: esp-idf
+
+# Enable logging
+logger:
+  level: INFO
+  baud_rate: 0
+  hardware_uart: UART1
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: !secret api_encryption_key
+
+ota:
+  platform: esphome
+  password: !secret ota_password
+
+substitutions:
+  entity_room_temperature: "sensor.durchschnittstemperatur_haus_ohne_keller"
+  entity_humidity: "sensor.durchschnitt_luftfeuchtigkeit_haus"
+  timezone: "Europe/Berlin"
+
+#########################################
+#                                       #
+#   SPI configuration                   #
+#                                       #
+#########################################
+spi:
+  id: McpSpi
+  clk_pin: GPIO14
+  mosi_pin: GPIO13
+  miso_pin: GPIO4
+
+#########################################
+#                                       #
+#   CAN configuration                   #
+#                                       #
+#########################################
+canbus:
+  - id: !extend wp_can
+    platform: mcp2515
+    spi_id: McpSpi
+    cs_pin: GPIO15
+    bit_rate: 20kbps
+    clock: 8MHz        # 8MHz or 16MHz depending on the value of the crystal on your MCP2515
+    data_rate: 4MHz    # 8Mhz (4MHz, 2MHz or 1MHz in case you get CAN bus errors)
+
+#########################################
+#                                       #
+#   Buttons                             #
+#                                       #
+#########################################
+button:
+  - platform: restart
+    name: "Restart ESP32-PoE Technik"
+
+#########################################
+#                                       #
+#   WiFi Configuration                  #
+#                                       #
+#########################################
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "ESP32-PoE Fallback Hotspot"
+    password: !secret fallback_password
+
+#########################################
+#                                       #
+#   Ethernet Konfiguration              #
+#                                       #
+#########################################
+#ethernet:
+#  type: LAN8720
+#  mdc_pin: GPIO23
+#  mdio_pin: GPIO18
+#  clk:
+#    pin: GPIO0
+#    mode: CLK_OUT
+#  phy_addr: 0
+#  power_pin: GPIO12
+
+#########################################
+#                                       #
+#   Packages                            #
+#                                       #
+#########################################
+packages:
+  - url: https://github.com/kr0ner/OneESP32ToRuleThemAll
+    ref: master
+    refresh: 12h
+    files: 
+#      - "/yaml/thz304.yaml"
+#      - "yaml/thz404.yaml"
+      - "yaml/thz504.yaml"
+#      - "yaml/thz5_5_eco.yaml"
+#      - "yaml/ttf07.yaml"
+#      - "yaml/wpl13.yaml"
+#      - "yaml/wpl17.yaml"
+#      - "yaml/features/fan.yaml"
+#      - "yaml/features/kondensatpumpe.yaml"
+#      - "yaml/features/energymeter.yaml"
+#      - "yaml/features/watermeter.yaml"
+#      - "yaml/features/sg_ready.yaml"
+#      - "yaml/features/evu.yaml"
+#
+# This sends anonymous data to an MQTT server:
+# - Events: Triggered by switch/setting changes.
+# - Telemetry: Every 15 minutes for standard sensors (custom sensors are NEVER exposed!).
+# A unique Device ID will be visible as a sensor. This can be used to access the Grafana dashboard and compare your data with the community.
+# To opt-in to community stats, uncomment the line below and remember to change the district.
+#      - path: "yaml/features/analytics.yaml"
+#        vars:
+#          district: '"Landkreis"'
