@@ -52,6 +52,16 @@ canbus:
     clock: 8MHz        # 8MHz or 16MHz depending on the value of the crystal on your MCP2515
     data_rate: 4MHz    # 8Mhz (4MHz, 2MHz or 1MHz in case you get CAN bus errors)
 
+# Waveshare Industrial ESP32-S3 Control Board
+#canbus:
+#  - id: !extend wp_can
+#    platform: esp32_can
+#    tx_pin: GPIO15
+#    rx_pin: GPIO16
+#    bit_rate: 20kbps
+#    rx_queue_len: 512  # Default: 8, increased for high-traffic CAN bus
+#    tx_queue_len: 64   # Default: 16, increased for burst writes
+
 #########################################
 #                                       #
 #   Buttons                             #
@@ -66,29 +76,29 @@ button:
 #   WiFi Configuration                  #
 #                                       #
 #########################################
-wifi:
-  ssid: !secret wifi_ssid
-  password: !secret wifi_password
+#wifi:
+#  ssid: !secret wifi_ssid
+#  password: !secret wifi_password
 
-  # Enable fallback hotspot (captive portal) in case wifi connection fails
-  ap:
-    ssid: "ESP32-PoE Fallback Hotspot"
-    password: !secret fallback_password
+# Enable fallback hotspot (captive portal) in case wifi connection fails
+#  ap:
+#    ssid: "ESP32-PoE Fallback Hotspot"
+#    password: !secret fallback_password
 
 #########################################
 #                                       #
 #   Ethernet Konfiguration              #
 #                                       #
 #########################################
-#ethernet:
-#  type: LAN8720
-#  mdc_pin: GPIO23
-#  mdio_pin: GPIO18
-#  clk:
-#    pin: GPIO0
-#    mode: CLK_OUT
-#  phy_addr: 0
-#  power_pin: GPIO12
+ethernet:
+  type: LAN8720
+  mdc_pin: GPIO23
+  mdio_pin: GPIO18
+  clk:
+    pin: GPIO0
+    mode: CLK_OUT
+  phy_addr: 0
+  power_pin: GPIO12
 
 #########################################
 #                                       #
