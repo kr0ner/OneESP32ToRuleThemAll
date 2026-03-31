@@ -13,7 +13,7 @@ If you like it, help me code all night 😴
 
 ## Community Statistics
 
-<img width="2033" height="1044" alt="Screenshot from 2026-02-24 09-58-46" src="https://github.com/user-attachments/assets/698f1180-7b1c-4e2c-ab42-f3b1ec40256f" />
+<img width="1668" height="1202" alt="Screenshot" src="https://github.com/user-attachments/assets/13122a82-f51c-435a-8014-7a1c10c89716" />
 
 You are highly encouraged to contribute your telemetry data! By opting in and providing your district, you can compare your local heat pump metrics with the wider community. This grants you access to a global Grafana dashboard and allows you to subscribe to the community's minimum, maximum, and average values via an MQTT topic (updated every 15 minutes).
 
