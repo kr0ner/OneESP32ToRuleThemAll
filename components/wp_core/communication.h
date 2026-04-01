@@ -257,13 +257,16 @@ std::pair<Property, SimpleVariant> processCanMessage(const std::vector<std::uint
 }
 
 namespace {
-void requestData(const CanMember& member, const Property& property) {
+void requestData(esphome::canbus::Canbus* can_bus, const CanMember& member, const Property& property) {
+    if (can_bus == nullptr) {
+        return;
+    }
     const auto use_extended_id{false};
     const auto [IdByte1, IdByte2] = asBytes(member.getReadId());
     const auto [IndexByte1, IndexByte2] = asBytes(property.id);
     std::vector<std::uint8_t> data{IdByte1, IdByte2, 0xfa, IndexByte1, IndexByte2, 0x00, 0x00};
 
-    id(wp_can).send_data(ESPClient.canId, use_extended_id, data);
+    can_bus->send_data(ESPClient.canId, use_extended_id, data);
 }
 
 /**
@@ -272,14 +275,18 @@ void requestData(const CanMember& member, const Property& property) {
  * @todo  Instead of passing value as std:.uint16_t, pass a SimpleVariant and automatically convert
  *        the type.
  */
-void sendData(const CanMember& member, const Property property, const std::uint16_t value) {
+void sendData(esphome::canbus::Canbus* can_bus, const CanMember& member, const Property property,
+              const std::uint16_t value) {
+    if (can_bus == nullptr) {
+        return;
+    }
     const auto use_extended_id{false};
     const auto [IdByte1, IdByte2] = asBytes(member.getWriteId());
     const auto [IndexByte1, IndexByte2] = asBytes(property.id);
     const auto [ValueByte1, ValueByte2] = asBytes(value);
     std::vector<std::uint8_t> data{IdByte1, IdByte2, 0xfa, IndexByte1, IndexByte2, ValueByte1, ValueByte2};
 
-    id(wp_can).send_data(ESPClient.canId, use_extended_id, data);
+    can_bus->send_data(ESPClient.canId, use_extended_id, data);
     // Request the value again to make sure the sensor is updated, with a delay of 10s to allow the heatpump to react.
     scheduleRequest(member, property, std::chrono::seconds(10));
 }

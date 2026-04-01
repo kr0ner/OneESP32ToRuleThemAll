@@ -11,8 +11,8 @@
 /**
  * @brief Synchronizes the time of the heat pump to the one received via Home Assistant time platform.
  */
-void syncTime() {
-    const auto time = id(homeassistant_time).now();
+void syncTime(esphome::time::RealTimeClock* time_obj) {
+    const auto time = time_obj->now();
     if (!time.is_valid()) {
         ESP_LOGE("TIMESYNC", "Cannot sync time. Home Assistant time is invalid.");
         return;

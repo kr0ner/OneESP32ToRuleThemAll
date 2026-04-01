@@ -1,7 +1,14 @@
-#include "esphome.h"
-#include "property.h"
+#pragma once
 
-class CustomClimate : public Component, public Climate {
+#include "esphome.h"
+#include "esphome/components/climate/climate.h"
+#include "esphome/components/wp_core/communication.h"
+#include "esphome/components/wp_core/property.h"
+
+namespace esphome {
+namespace wp_climate {
+
+class CustomClimate : public Component, public climate::Climate {
    public:
     CustomClimate(esphome::climate::ClimateModeMask modes, esphome::climate::ClimatePresetMask presets,
                   const std::vector<std::pair<const CanMember, const Property>> targetTemperatureProperties)
@@ -79,25 +86,20 @@ class CustomClimate : public Component, public Climate {
         this->publish_state();
     }
 
-    void control(const ClimateCall& call) override {
-        // only handle the temp adjustment, since there seems to be no way to explicitly set the
-        // heat pump to cooling or heating, other than setting the temperature.
+    void control(const climate::ClimateCall& call) override {
         if (call.get_target_temperature().has_value()) {
-            // User requested target temperature change
             float temp = *call.get_target_temperature();
             this->target_temperature = temp;
 
-            // Send target temp to climate
             for (const auto& targetTemperatureProperty : targetTemperatureProperties_) {
                 queueTransmission(targetTemperatureProperty.first, targetTemperatureProperty.second,
                                   static_cast<std::uint16_t>(temp * 10.0f));
             }
         }
-        // Publish updated state
         this->publish_state();
     }
 
-    ClimateTraits traits() override { return traits_; }
+    climate::ClimateTraits traits() override { return traits_; }
 
    protected:
     climate::ClimateTraits traits_{};
@@ -111,9 +113,7 @@ class CustomClimate : public Component, public Climate {
 
 class Heating : public CustomClimate {
    public:
-    // -------------------------------------------------------------------
-    // Full features (Heating + Cooling + Fan)
-    // -------------------------------------------------------------------
+    // Full features
     template <typename Sensor, typename BinarySensor>
     Heating(Sensor* current_temperature_sensor, Sensor* target_temperature_sensor, BinarySensor* heating_sensor,
             BinarySensor* cooling_sensor, BinarySensor* fan_sensor, const Property targetHeatingTemperature,
@@ -130,9 +130,7 @@ class Heating : public CustomClimate {
         register_fan_callback(fan_sensor);
     }
 
-    // -------------------------------------------------------------------
-    // Heating + Fan (No Cooling)
-    // -------------------------------------------------------------------
+    // Heating + Fan
     template <typename Sensor, typename BinarySensor>
     Heating(Sensor* current_temperature_sensor, Sensor* target_temperature_sensor, BinarySensor* heating_sensor,
             BinarySensor* fan_sensor, const Property targetHeatingTemperature)
@@ -145,9 +143,7 @@ class Heating : public CustomClimate {
         register_fan_callback(fan_sensor);
     }
 
-    // -------------------------------------------------------------------
-    // Basic Heating Only (No Cooling, No Fan)
-    // -------------------------------------------------------------------
+    // Basic Heating Only
     template <typename Sensor, typename BinarySensor>
     Heating(Sensor* current_temperature_sensor, Sensor* target_temperature_sensor, BinarySensor* heating_sensor,
             const Property targetHeatingTemperature)
@@ -173,3 +169,6 @@ class HotWater : public CustomClimate {
         register_heating_callback(heating_sensor);
     }
 };
+
+}  // namespace wp_climate
+}  // namespace esphome

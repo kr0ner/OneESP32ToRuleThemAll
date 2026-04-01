@@ -4,8 +4,6 @@
 #                                       #
 #########################################
 esphome:
-  includes:
-    - OneESP32ToRuleThemAll/src/custom_climate.h
   on_boot:
     priority: 100.0 # AFTER_CONNECTION
     then:
@@ -95,61 +93,68 @@ sensor:
 #   Custom climates                     #
 #                                       #
 #########################################
-external_components:
-  - source: OneESP32ToRuleThemAll/components
-
 climate:
-  - platform: custom
-    lambda: |-
-      auto heating = new Heating(id(RAUMISTTEMP),id(RAUMSOLLTEMP_TAG), id(HEIZEN), id(KUEHLEN), id(LUEFTUNG), Property::kRAUMSOLLTEMP_TAG, Property::kKUEHL_RAUMSOLL_TAG);
-      return {heating};
-    climates:
-      name: "Heating Day"
-      visual:
-        min_temperature: 10.0
-        max_temperature: 30.0
-        temperature_step:
-          target_temperature: 0.1
-          current_temperature: 0.1
+  - platform: wp_climate
+    name: "Heating Day"
+    type: heating
+    current_temp: RAUMISTTEMP
+    target_temp: RAUMSOLLTEMP_TAG
+    heating: HEIZEN
+    cooling: KUEHLEN
+    fan: LUEFTUNG
+    target_property: kRAUMSOLLTEMP_TAG
+    cool_property: kKUEHL_RAUMSOLL_TAG
+    visual:
+      min_temperature: 10.0
+      max_temperature: 30.0
+      temperature_step:
+        target_temperature: 0.1
+        current_temperature: 0.1
 
-  - platform: custom
-    lambda: |-
-      auto heating = new Heating(id(RAUMISTTEMP),id(RAUMSOLLTEMP_NACHT), id(HEIZEN), id(KUEHLEN), id(LUEFTUNG), Property::kRAUMSOLLTEMP_NACHT, Property::kKUEHL_RAUMSOLL_NACHT);
-      return {heating};
-    climates:
-      name: "Heating Night"
-      visual:
-        min_temperature: 10.0
-        max_temperature: 30.0
-        temperature_step:
-          target_temperature: 0.1
-          current_temperature: 0.1
+  - platform: wp_climate
+    name: "Heating Night"
+    type: heating
+    current_temp: RAUMISTTEMP
+    target_temp: RAUMSOLLTEMP_NACHT
+    heating: HEIZEN
+    cooling: KUEHLEN
+    fan: LUEFTUNG
+    target_property: kRAUMSOLLTEMP_NACHT
+    cool_property: kKUEHL_RAUMSOLL_NACHT
+    visual:
+      min_temperature: 10.0
+      max_temperature: 30.0
+      temperature_step:
+        target_temperature: 0.1
+        current_temperature: 0.1
 
-  - platform: custom
-    lambda: |-
-      auto hot_water = new HotWater(id(SPEICHERISTTEMP),id(SPEICHERSOLLTEMP_TAG), id(WARMWASSERBEREITUNG), Property::kSPEICHERSOLLTEMP_TAG);
-      return {hot_water};
-    climates:
-      name: "Hot Water Day"
-      visual:
-        min_temperature: 10.0
-        max_temperature: 65.0
-        temperature_step:
-          target_temperature: 0.5
-          current_temperature: 0.1
+  - platform: wp_climate
+    name: "Hot Water Day"
+    type: hot_water
+    current_temp: SPEICHERISTTEMP
+    target_temp: SPEICHERSOLLTEMP_TAG
+    heating: WARMWASSERBEREITUNG
+    target_property: kSPEICHERSOLLTEMP_TAG
+    visual:
+      min_temperature: 10.0
+      max_temperature: 65.0
+      temperature_step:
+        target_temperature: 0.5
+        current_temperature: 0.1
 
-  - platform: custom
-    lambda: |-
-      auto hot_water = new HotWater(id(SPEICHERISTTEMP),id(SPEICHERSOLLTEMP_NACHT), id(WARMWASSERBEREITUNG), Property::kSPEICHERSOLLTEMP_NACHT);
-      return {hot_water};
-    climates:
-      name: "Hot Water Night"
-      visual:
-        min_temperature: 10.0
-        max_temperature: 65.0
-        temperature_step:
-          target_temperature: 0.5
-          current_temperature: 0.1
+  - platform: wp_climate
+    name: "Hot Water Night"
+    type: hot_water
+    current_temp: SPEICHERISTTEMP
+    target_temp: SPEICHERSOLLTEMP_NACHT
+    heating: WARMWASSERBEREITUNG
+    target_property: kSPEICHERSOLLTEMP_NACHT
+    visual:
+      min_temperature: 10.0
+      max_temperature: 65.0
+      temperature_step:
+        target_temperature: 0.5
+        current_temperature: 0.1
 
 #########################################
 #                                       #

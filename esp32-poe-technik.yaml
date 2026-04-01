@@ -27,6 +27,12 @@ substitutions:
   entity_humidity: "sensor.durchschnitt_luftfeuchtigkeit_haus"
   timezone: "Europe/Berlin"
 
+external_components:
+  - source:
+      type: local
+      path: OneESP32ToRuleThemAll/components
+    components: ["wp_core", "wp_climate", "sml_reader"]
+
 #########################################
 #                                       #
 #   SPI configuration                   #

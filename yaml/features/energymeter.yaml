@@ -21,9 +21,6 @@ substitutions:
 #   SML reader                          #
 #                                       #
 #########################################
-external_components:
-  - source: OneESP32ToRuleThemAll/components
-
 sml_reader:
   id: sml_reader_component
   uart_id: smartmeter_uart
