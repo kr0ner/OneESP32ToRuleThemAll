@@ -156,6 +156,20 @@ climate:
         target_temperature: 0.5
         current_temperature: 0.1
 
+  - platform: wp_climate
+    name: "Hot Water Manual"
+    type: hot_water
+    current_temp: SPEICHERISTTEMP
+    target_temp: SPEICHERSOLLTEMP_HAND
+    heating: WARMWASSERBEREITUNG
+    target_property: kSPEICHERSOLLTEMP_HAND
+    visual:
+      min_temperature: 10.0
+      max_temperature: 65.0
+      temperature_step:
+        target_temperature: 0.5
+        current_temperature: 0.1
+
 #########################################
 #                                       #
 #   Intervals                           #
@@ -209,6 +223,7 @@ packages:
   ABLUFTTEMP:                          !include { file: templates/wp_temperature.yaml, vars: { property: "ABLUFTTEMP"  }}
   SPEICHERSOLLTEMP_TAG:                !include { file: templates/wp_temperature.yaml, vars: { property: "SPEICHERSOLLTEMP_TAG"   , writable: "true" }}
   SPEICHERSOLLTEMP_NACHT:              !include { file: templates/wp_temperature.yaml, vars: { property: "SPEICHERSOLLTEMP_NACHT" , writable: "true" }}
+  SPEICHERSOLLTEMP_HAND:               !include { file: templates/wp_temperature.yaml, vars: { property: "SPEICHERSOLLTEMP_HAND"  , writable: "true" }}
   SAMMLERISTTEMP:                      !include { file: templates/wp_temperature.yaml, vars: { property: "SAMMLERISTTEMP"         , update_interval: $interval_medium }}
   TAUPUNKT_HK1:                        !include { file: templates/wp_temperature.yaml, vars: { property: "TAUPUNKT_HK1"           , target: "HK1" }}
   RAUMSOLLTEMP_TAG:                    !include { file: templates/wp_temperature.yaml, vars: { property: "RAUMSOLLTEMP_TAG"       , target: "HK1" , writable: "true" }}
