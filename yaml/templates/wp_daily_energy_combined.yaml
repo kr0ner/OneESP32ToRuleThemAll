@@ -77,7 +77,7 @@ time:
         then:
           - lambda: |-
               // set the current Wh value as offset for the next day and convert Wh to kWh
-              id(gOFFSET_${property_wh}) = id(${property_wh}).raw_state * 0.001;
+              id(gOFFSET_${property_wh}) = id(${property_wh}).get_raw_state() * 0.001;
           - sensor.template.publish:
               id: ${sensor_name}
               state: 0.0
