@@ -25,7 +25,7 @@ number:
             const auto type = Property::k${property}.type;
             const auto value = GetRawByType(SimpleVariant(x),type);
             if(value.has_value()) {
-                queueTransmission(${target}, Property::k${property}, *value);
+                queueTransmission(CanNode::${target}, Property::k${property}, *value);
             } else {
               ESP_LOGE("Number", "Setting new value failed!");
             }
@@ -48,21 +48,25 @@ number:
 
 esphome:
   on_boot:
-    priority: 100.0 # AFTER_CONNECTION
-    then:
-      - lambda: |-
-          CallbackHandler::instance().addCallbacks({std::make_pair(${target},Property::k${property}),
-                                                    std::make_pair(Manager,Property::k${property})},[](const SimpleVariant& value){
-              const auto newValue{value.get<float>()};
-              auto property{id(${property})};
-              if(!std::is_eq(property->state <=> newValue)) {
-                property->publish_state(newValue);
-              }
-          });
-          queueRequest(${target}, Property::k${property});
+    - priority: -50
+      then:
+        - lambda: |-
+            CallbackHandler::instance().addCallbacks({{CanNode::${target},Property::k${property}},
+                                                      {CanNode::Heizmodul,Property::k${property}}},[](const SimpleVariant& value){
+                const auto newValue{value.get<float>()};
+                auto property{id(${property})};
+                if(!std::is_eq(property->state <=> newValue)) {
+                  property->publish_state(newValue);
+                }
+            });
 
-          #if defined(ANALYTICS)
-            if(${exposed}) {
-              getWhitelistedEntities().insert(id(${property}));
-            }
-          #endif
+            #if defined(ANALYTICS)
+              if(${exposed}) {
+                getWhitelistedEntities().insert(id(${property}));
+              }
+            #endif
+    - priority: -100.0
+      then:
+        - delay: 250ms
+        - lambda: |-
+            queueRequest(CanNode::${target}, Property::k${property});

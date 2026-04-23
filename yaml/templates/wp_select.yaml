@@ -17,7 +17,7 @@ select:
         - lambda: |-
             const auto id_val = Mapper::instance().${mapper_func_set}(x);
             if(id_val.has_value()) {
-              queueTransmission(${target}, Property::k${property}, id_val.value());
+              queueTransmission(CanNode::${target}, Property::k${property}, id_val.value());
             }
     on_value:
       then:
@@ -37,20 +37,24 @@ select:
 
 esphome:
   on_boot:
-    priority: 100.0 # AFTER_CONNECTION
-    then:
-      - lambda: |-
-          CallbackHandler::instance().addCallback(std::make_pair(${target}, Property::k${property}), [](const SimpleVariant& value) {
-            const auto stringValue{value.get<std::string>()};
-            const auto index = id(${property}).index_of(stringValue);
-            if(index.has_value() && id(${property}).active_index() != index.value()) {
-              id(${property}).publish_state(stringValue);
-            }
-          });
-          scheduleRequest(${target}, Property::k${property}, std::chrono::seconds(10));
-          
-          #if defined(ANALYTICS)
-            if(${exposed}) {
-              getWhitelistedEntities().insert(id(${property}));
-            }
-          #endif
+    - priority: -50
+      then:
+        - lambda: |-
+            CallbackHandler::instance().addCallback({CanNode::${target}, Property::k${property}}, [](const SimpleVariant& value) {
+              const auto stringValue{value.get<std::string>()};
+              const auto index = id(${property}).index_of(stringValue);
+              if(index.has_value() && id(${property}).active_index() != index.value()) {
+                id(${property}).publish_state(stringValue);
+              }
+            });
+
+            #if defined(ANALYTICS)
+              if(${exposed}) {
+                getWhitelistedEntities().insert(id(${property}));
+              }
+            #endif
+    - priority: -100.0
+      then:
+        - delay: 250ms
+        - lambda: |-
+            scheduleRequest(CanNode::${target}, Property::k${property}, std::chrono::seconds(10));

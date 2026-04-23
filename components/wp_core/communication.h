@@ -3,39 +3,41 @@
 #include <algorithm>
 #include <chrono>
 #include <cstdint>
+#include <functional>
 #include <list>
-#include <string>
+#include <string_view>
 #include <vector>
 
-#include "esphome.h"
-#include "mapper.h"
 #include "property.h"
 #include "type.h"
 
+namespace esphome::canbus {
+class Canbus;
+}  // namespace esphome::canbus
+
 using CANId = std::uint16_t;
 
-struct CanMember {
-    CANId canId;
-    std::string name;
-    bool operator<(const CanMember& other) const { return canId < other.canId; }
+struct CanNode {
+    CANId canId{0x123};
+    const std::string_view name;
+
     std::uint16_t getWriteId() const { return (((canId & 0x7c0) << 5U) + (canId & 0x3f)); }
     std::uint16_t getReadId() const { return getWriteId() | 0x100; }
     std::uint16_t getResponseId() const { return getWriteId() | 0x200; }
+
+    static std::array<CanNode, 8U> all_nodes;
+
+    static CanNode* ESPClient;
+    static CanNode* Heizmodul;
+    static CanNode* Kessel;
+    static CanNode* HK1;
+    static CanNode* HK2;
+    static CanNode* FET;
+    static CanNode* MFG;
+    static CanNode* Manager;
 };
 
-static const CanMember ESPClient{ESPCLIENT_ID, "ESPClient"};
-static const CanMember Manager{MANAGER_ID, "Manager"};
-static const CanMember Kessel{KESSEL_ID, "Kessel"};
-static const CanMember HK1{HK1_ID, "HK1"};
-static const CanMember HK2{HK2_ID, "HK2"};
-static const CanMember FET{0x402, "FET"};    // TODO: make configurable and double check
-static const CanMember MFG{0x700, "MFG"};    // TODO: make configurable and double check
-static const CanMember WPM2{0x480, "WPM2"};  // TODO: make configurable and double check
-
-static const std::vector<std::reference_wrapper<const CanMember>> canMembers{Kessel,    HK1, HK2, Manager,
-                                                                             ESPClient, FET, MFG, WPM2};
-
-using Task = std::pair<const CanMember, const Property>;
+using Task = std::pair<const CanNode*, const Property>;
 struct ConditionalRequest {
     ConditionalRequest(Task task) : _task(std::move(task)){};
     ConditionalRequest(Task task, std::function<bool()> condition)
@@ -60,234 +62,78 @@ struct ConditionalTransmission {
 /**
  * @brief Singleton accessor to ensure all files share the same list.
  */
-inline std::list<ConditionalRequest>& getConditionalRequests() {
-    static std::list<ConditionalRequest> requests;
-    return requests;
-}
+std::list<ConditionalRequest>& getConditionalRequests();
 
 /**
  * @brief Singleton accessor to ensure all files share the same list.
  */
-inline std::list<ConditionalTransmission>& getConditionalTransmissions() {
-    static std::list<ConditionalTransmission> transmissions;
-    return transmissions;
-}
+std::list<ConditionalTransmission>& getConditionalTransmissions();
 
 /**
- * @brief Splits the given integer into single bytes.
- *
- * @param The integer to be split.
- * @return A tuple of bytes.
- */
-template <typename T, std::size_t Remaining = sizeof(T)>
-constexpr auto asBytes(T value) {
-    if constexpr (Remaining == 1) {
-        return std::make_tuple(static_cast<std::uint8_t>(value & 0xFF));
-    } else {
-        std::uint8_t byte = (value >> ((Remaining - 1) * 8U)) & 0xFF;
-        return std::tuple_cat(std::make_tuple(byte), asBytes<T, Remaining - 1U>(value));
-    }
-}
-
-enum class MessageType : std::uint8_t { Write, Read, Response };
-
-/**
- * @brief Decode a read/write/response ID into its underlying CAN ID and message type.
- *
- * The message type is encoded like this:
- * - Write    : base write ID
- * - Read     : write ID | 0x100
- * - Response : write ID | 0x200
- *
- * This function reconstructs the original CAN ID and MessageType from a given read/write/response ID.
- *
- * @param externalId The 16-bit read/write/response ID.
- * @return A pair consisting of the decoded CAN ID and its MessageType.
- */
-std::pair<CANId, MessageType> decodeCanIdAndMessageType(const std::uint16_t externalId) {
-    MessageType messageType = MessageType::Write;
-    std::uint16_t writeId = externalId;
-
-    if (externalId & 0x200) {
-        messageType = MessageType::Response;
-        writeId &= ~0x200;
-    } else if (externalId & 0x100) {
-        messageType = MessageType::Read;
-        writeId &= ~0x100;
-    }
-
-    std::uint16_t canId = ((writeId >> 5) & 0x7c0) | (writeId & 0x3f);
-
-    return {canId, messageType};
-}
-
-/**
- * @brief Tries to find the CANMember with the given CANId.
+ * @brief Tries to find the CanNode with the given CANId.
  *
  * @param The CANId to look up.
- * @return A reference to the CANMember wrapped in an optional.
+ * @return A pointer to the CanNode.
  */
-std::optional<std::reference_wrapper<const CanMember>> getCanMemberByCanId(CANId canId) {
-    const auto it = std::find_if(canMembers.cbegin(), canMembers.cend(),
-                                 [canId](const auto& member) { return member.get().canId == canId; });
-    if (it != canMembers.cend()) {
-        return it->get();
-    }
-    return std::nullopt;
-}
+const CanNode* getCanNodeByCanId(const CANId id);
 
 /**
- * @brief Tries to find the CANMember with the given name.
+ * @brief Tries to find the CanNode with the given name.
  *
  * @param The name to look up.
- * @return A reference to the CANMember wrapped in an optional.
+ * @return A pointer to the CanNode.
  */
-std::optional<std::reference_wrapper<const CanMember>> getCanMemberByName(const std::string& name) {
-    const auto it = std::find_if(canMembers.cbegin(), canMembers.cend(),
-                                 [name](const auto& member) { return member.get().name == name; });
-    if (it != canMembers.cend()) {
-        return it->get();
-    }
-    return std::nullopt;
-}
+const CanNode* getCanNodeByName(const std::string& name);
 
 /**
- * @brief Checks if the message is a request, sent by another CAN participant.
- */
-bool isRequest(const std::vector<std::uint8_t>& msg) {
-    const auto id{msg[1U] | (msg[0U] << 8U)};
-    const auto [canId, messageType] = decodeCanIdAndMessageType(id);
-    return messageType == MessageType::Read;
-}
-
-/**
- * @brief Checks if the message is a response to a previously sent request. Responses contain the actual sensor value.
- */
-bool isResponse(const std::vector<std::uint8_t>& msg) {
-    const auto id{msg[1U] | (msg[0U] << 8U)};
-    const auto [canId, messageType] = decodeCanIdAndMessageType(id);
-    return messageType == MessageType::Response;
-}
-
-/**
- * @brief Puts a request towards the \c member for the given \c property in the request queue.
+ * @brief Puts a request towards the \c node for the given \c property in the request queue.
  *        This will effectively prevent that requests are all sent at the same time, which might
  *        cause issues. The list of requests is processed one element at a time and according to the interval set in the
  *        common.yaml
  */
-void queueRequest(const CanMember& member, const Property& property) {
-    ESP_LOGI("QUEUE", "Requesting data from %s for %s", member.name.c_str(), std::string(property.name).c_str());
-    getConditionalRequests().emplace_back(std::make_pair(member, property));
-}
+void queueRequest(const CanNode* node, const Property& property);
 
 /**
- * @brief Puts a conditional request towards the \c member for the given \c property. The request will be placed once
+ * @brief Puts a conditional request towards the \c node for the given \c property. The request will be placed once
  *        the \c condition evaluates to true and there are no preceding requests pending. The list of requests is
  *        processed one element at a time and according to the interval set in the common.yaml
  */
-void queueConditionalRequest(const CanMember& member, const Property& property, std::function<bool()> condition) {
-    ESP_LOGI("QUEUE", "Adding conditional request for data from %s for %s", member.name.c_str(),
-             std::string(property.name).c_str());
-    getConditionalRequests().emplace_back(std::make_pair(member, property), std::move(condition));
-}
+void queueConditionalRequest(const CanNode* node, const Property& property, std::function<bool()> condition);
 
 /**
- * @brief Puts a conditional request towards the \c member for the given \c property. The request will be placed once
+ * @brief Puts a conditional request towards the \c node for the given \c property. The request will be placed once
  *        the given \c time in seconds has passed and there are no preceding requests pending. The list of requests is
  *        processed one element at a time and according to the interval set in the common.yaml
  */
-void scheduleRequest(const CanMember& member, const Property& property, std::chrono::seconds seconds) {
-    ESP_LOGI("QUEUE", "Scheduling request for data from %s for %s in %lld seconds", member.name.c_str(),
-             std::string(property.name).c_str(), seconds.count());
-    getConditionalRequests().emplace_back(
-        std::make_pair(member, property),
-        [t = std::chrono::steady_clock::now() + seconds]() { return t < std::chrono::steady_clock::now(); });
-}
+void scheduleRequest(const CanNode* node, const Property& property, std::chrono::seconds seconds);
 
 /**
- * @brief Puts a send request towards the \c member for the given \c property  with the \c value in the task queue. This
+ * @brief Puts a send request towards the \c node for the given \c property  with the \c value in the task queue. This
  *        will effectively prevent that CAN messages are all sent at the same time, which might cause issues.
  * @note  The list of tasks is processed one element at a time and according to the interval set in the common.yaml
  */
-void queueTransmission(const CanMember& member, const Property& property, const std::uint16_t value) {
-    ESP_LOGI("QUEUE", "Sending %d for %s to %s ", value, std::string(property.name).c_str(), member.name.c_str());
-    getConditionalTransmissions().emplace_back(std::make_pair(member, property), value);
-}
+void queueTransmission(const CanNode* node, const Property& property, const std::uint16_t value);
 
 /**
  * @brief Attempts to parse the CAN message and extracts the property and the value. The value will
  *        be converted to the correct type automatically, based the type that was defined for this
  *        entity in \c property.h
  */
-std::pair<Property, SimpleVariant> processCanMessage(const std::vector<std::uint8_t>& msg) {
-    Property property{Property::kINDEX_NOT_FOUND};
-    std::uint8_t byte1{0U};
-    std::uint8_t byte2{0U};
+std::pair<Property, SimpleVariant> processCanMessage(const std::vector<std::uint8_t>& msg);
 
-    // Return if the message is too small
-    if (msg.size() < 7U) {
-        return {Property::kINDEX_NOT_FOUND, {}};
-    }
-
-    if (msg[2U] == 0xfa) {
-        byte1 = msg[5U];
-        byte2 = msg[6U];
-        property = static_cast<Property>(msg[4U] | (msg[3U] << 8U));
-    } else {
-        byte1 = msg[3U];
-        byte2 = msg[4U];
-        property = static_cast<Property>(msg[2U]);
-    }
-
-    const auto value{static_cast<std::uint16_t>((byte1 << 8U) | byte2)};
-    const auto canId{static_cast<std::uint16_t>(((msg[0U] & 0xfc) << 3) | (msg[1U] & 0x3f))};
-    if (isRequest(msg)) {
-        ESP_LOGD("Communication", "Message is a request. Dropping it!");
-        ESP_LOGD("Communication",
-                 "Message received: Read/Write ID 0x%02x 0x%02x(0x%03x) for property %s (0x%04x) with raw value: %d",
-                 msg[0U], msg[1U], canId, std::string(property.name).c_str(), property.id, value);
-        return {Property::kINDEX_NOT_FOUND, value};
-    }
-    ESP_LOGI("Communication",
-             "Message received: Read/Write ID 0x%02x 0x%02x(0x%03x) for property %s (0x%04x) with raw value: %d",
-             msg[0U], msg[1U], canId, std::string(property.name).c_str(), property.id, value);
-    return {property, GetValueByType(value, property.type)};
-}
-
-namespace {
-void requestData(esphome::canbus::Canbus* can_bus, const CanMember& member, const Property& property) {
-    if (can_bus == nullptr) {
-        return;
-    }
-    const auto use_extended_id{false};
-    const auto [IdByte1, IdByte2] = asBytes(member.getReadId());
-    const auto [IndexByte1, IndexByte2] = asBytes(property.id);
-    std::vector<std::uint8_t> data{IdByte1, IdByte2, 0xfa, IndexByte1, IndexByte2, 0x00, 0x00};
-
-    can_bus->send_data(ESPClient.canId, use_extended_id, data);
-}
+/**
+ * @brief Sends a request over the CAN bus to read a specific \c property from the given \c node.
+ * The request message is transmitted using the CAN id of the ESPClient.
+ */
+void requestData(esphome::canbus::Canbus* can_bus, const CanNode* node, const Property& property);
 
 /**
  * @brief Publishes a new \c value for the given \c property on the CAN bus. The message is sent
- *        with the CAN id of the \c member.
- * @todo  Instead of passing value as std:.uint16_t, pass a SimpleVariant and automatically convert
+ *        with the CAN id of the \c node.
+ * @todo  Instead of passing value as std::uint16_t, pass a SimpleVariant and automatically convert
  *        the type.
  */
-void sendData(esphome::canbus::Canbus* can_bus, const CanMember& member, const Property property,
-              const std::uint16_t value) {
-    if (can_bus == nullptr) {
-        return;
-    }
-    const auto use_extended_id{false};
-    const auto [IdByte1, IdByte2] = asBytes(member.getWriteId());
-    const auto [IndexByte1, IndexByte2] = asBytes(property.id);
-    const auto [ValueByte1, ValueByte2] = asBytes(value);
-    std::vector<std::uint8_t> data{IdByte1, IdByte2, 0xfa, IndexByte1, IndexByte2, ValueByte1, ValueByte2};
-
-    can_bus->send_data(ESPClient.canId, use_extended_id, data);
-    // Request the value again to make sure the sensor is updated, with a delay of 10s to allow the heatpump to react.
-    scheduleRequest(member, property, std::chrono::seconds(10));
-}
-}  // namespace
+void sendData(esphome::canbus::Canbus* can_bus, const CanNode* node, const Property property,
+              const std::uint16_t value);
 
 #endif

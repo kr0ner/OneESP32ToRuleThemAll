@@ -27,6 +27,7 @@ substitutions:
   entity_humidity: "sensor.durchschnitt_luftfeuchtigkeit_haus"
   timezone: "Europe/Berlin"
   #can_bus_bit_rate: 50kbps
+  #espclient_can_id: 0x6a2
 
 external_components:
   - source:

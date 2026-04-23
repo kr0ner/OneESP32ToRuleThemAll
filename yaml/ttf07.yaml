@@ -8,25 +8,28 @@ esphome:
     build_flags:
       - "-DTTF_07_C"
   on_boot:
-    priority: 100.0 # AFTER_CONNECTION
-    then:
-      - lambda: |-
-          CallbackHandler::instance().addCallback(std::make_pair(Kessel,Property::kBETRIEBS_STATUS),[](const SimpleVariant& value){
-            const std::bitset<15U> status_bits{static_cast<std::uint16_t>(value)};
-            id(NHZ1).publish_state(status_bits.test(0) && !status_bits.test(1U));
-            id(NHZ2).publish_state(!status_bits.test(0) && status_bits.test(1U));
-            id(NHZ3).publish_state(status_bits.test(0) && status_bits.test(1U));
-            // 2U is unknown
-            id(VERDICHTER).publish_state(status_bits.test(3U));
-            id(WARMWASSERBEREITUNG).publish_state(status_bits.test(4U));
-            id(HEIZKREISPUMPE).publish_state(status_bits.test(5U));
-            id(PUFFERLADEPUMPE).publish_state(status_bits.test(6U));
-            // 7U is unknown
-            id(QUELLENPUMPE).publish_state(status_bits.test(8U));
-            id(KUEHLBETRIEB).publish_state(status_bits.test(9U));
-            // 10 to 15 are unknown
-          });
-          queueRequest(Kessel, Property::kBETRIEBS_STATUS);
+    - priority: -50
+      then:
+        - lambda: |-
+            CallbackHandler::instance().addCallback(std::make_pair(CanNode::Kessel,Property::kBETRIEBS_STATUS),[](const SimpleVariant& value){
+              const std::bitset<15U> status_bits{static_cast<std::uint16_t>(value)};
+              id(NHZ1).publish_state(status_bits.test(0) && !status_bits.test(1U));
+              id(NHZ2).publish_state(!status_bits.test(0) && status_bits.test(1U));
+              id(NHZ3).publish_state(status_bits.test(0) && status_bits.test(1U));
+              // 2U is unknown
+              id(VERDICHTER).publish_state(status_bits.test(3U));
+              id(WARMWASSERBEREITUNG).publish_state(status_bits.test(4U));
+              id(HEIZKREISPUMPE).publish_state(status_bits.test(5U));
+              id(PUFFERLADEPUMPE).publish_state(status_bits.test(6U));
+              // 7U is unknown
+              id(QUELLENPUMPE).publish_state(status_bits.test(8U));
+              id(KUEHLBETRIEB).publish_state(status_bits.test(9U));
+              // 10 to 15 are unknown
+            });
+    - priority: -100
+      then:
+        - lambda: |-
+            queueRequest(CanNode::Kessel, Property::kBETRIEBS_STATUS);
 
 #########################################
 #                                       #

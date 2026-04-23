@@ -8,10 +8,6 @@ esphome:
     build_flags:
       - "-std=gnu++2a"
       - "-DESPCLIENT_ID=$espclient_can_id"
-      - "-DMANAGER_ID=$manager_can_id"
-      - "-DKESSEL_ID=$kessel_can_id"
-      - "-DHK1_ID=$hk1_can_id"
-      - "-DHK2_ID=$hk2_can_id"
     build_unflags:
       - "-std=gnu++11"
       - "-fno-rtti"
@@ -35,6 +31,7 @@ substitutions:
   interval_slow: 5min
   interval_very_slow: 15min
   interval_once_in_a_while: 1h
+  espclient_can_id: 0x6a2
 
 #########################################
 #                                       #
@@ -118,12 +115,12 @@ canbus:
         - lambda: |-
             ESP_LOGD("CAN", "Can message received with CANId 0x%04lx", can_id);
             const auto [property, value] = processCanMessage(x);
-            const auto canMember = getCanMemberByCanId(can_id);
-            if(canMember) {
-              auto callback = CallbackHandler::instance().getCallback(std::make_pair(canMember->get(),property));
+            const auto* canNode = getCanNodeByCanId(can_id);
+            if(canNode != nullptr) {
+              auto callback = CallbackHandler::instance().getCallback(std::make_pair(canNode,property));
               callback(value);
             } else {
-              ESP_LOGD("CAN", "No CANMember with CANId 0x%04lx available.", can_id);
+              ESP_LOGD("CAN", "No CanNode with CANId 0x%04lx available.", can_id);
             }
 
 #########################################
@@ -147,7 +144,7 @@ api:
             std::vector<std::uint8_t> payload;
             payload.resize(data.size());
             std::transform(data.begin(),data.end(),payload.begin(),[](const auto in){ return static_cast<std::uint8_t>(in);});
-            id(wp_can).send_data(ESPClient.canId, use_extended_id, payload);
+            id(wp_can).send_data(CanNode::ESPClient->canId, use_extended_id, payload);
     - action: can_send_value
       variables:
         property: int
@@ -157,11 +154,11 @@ api:
         - lambda: |-
             Property mappedProperty(static_cast<std::uint16_t>(property));
             const auto value{static_cast<std::uint16_t>(raw_value)};
-            if(const auto member = getCanMemberByName(target); member.has_value()) {
+            if(const auto* node = getCanNodeByName(target); node != nullptr) {
               ESP_LOGI("ACTION", "Sending value %d for property %s (0x%04x) to %s", value, std::string(mappedProperty.name).c_str(), mappedProperty.id, target.c_str());
-              queueTransmission(member.value(), mappedProperty, value);
+              queueTransmission(node, mappedProperty, value);
             } else {
-              ESP_LOGI("ACTION","No CanMember with name %s defined!", target.c_str());
+              ESP_LOGI("ACTION","No CanNode with name %s defined!", target.c_str());
             }
 
 #########################################
@@ -176,3 +173,16 @@ script:
       suffix: string
       payload: string
     then:
+
+#########################################
+#                                       #
+#   Packages                            #
+#                                       #
+#########################################
+packages:
+  KESSEL:    !include { file: templates/wp_can_id.yaml, vars: { can_node: "Kessel"   , can_id: "0x180" }}
+  HK1:       !include { file: templates/wp_can_id.yaml, vars: { can_node: "HK1"      , can_id: "0x301" }}
+  HK2:       !include { file: templates/wp_can_id.yaml, vars: { can_node: "HK2"      , can_id: "0x302" }}
+  HEIZMODUL: !include { file: templates/wp_can_id.yaml, vars: { can_node: "Heizmodul", can_id: "0x6a1" }}
+  FET:       !include { file: templates/wp_can_id.yaml, vars: { can_node: "FET"      , can_id: "0x402" }}
+  MFG:       !include { file: templates/wp_can_id.yaml, vars: { can_node: "MFG"      , can_id: "0x700" }}

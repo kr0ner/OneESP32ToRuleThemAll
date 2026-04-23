@@ -8,69 +8,71 @@ esphome:
     build_flags:
       - "-DTHZ_304"
   on_boot:
-    priority: 100.0 # AFTER_CONNECTION
-    then:
-      - lambda: |-
-          CallbackHandler::instance().addCallback(std::make_pair(Kessel,Property::kZULUFT_IST),[](const SimpleVariant& value){
-            // workaround for broken ninth bit of BETRIEBSSTATUS
-            const auto zuluftIst = static_cast<std::uint16_t>(value);
-            id(LUEFTUNG).publish_state(zuluftIst > 0U);
-          });
-          scheduleRequest(Kessel, Property::kZULUFT_IST, std::chrono::seconds(10));
+    - priority: -50
+      then:
+        - lambda: |-
+            CallbackHandler::instance().addCallback(std::make_pair(CanNode::Kessel,Property::kZULUFT_IST),[](const SimpleVariant& value){
+              // workaround for broken ninth bit of BETRIEBSSTATUS
+              const auto zuluftIst = static_cast<std::uint16_t>(value);
+              id(LUEFTUNG).publish_state(zuluftIst > 0U);
+            });
 
-          CallbackHandler::instance().addCallbacks({std::make_pair(Kessel,Property::kABLUFT_SOLL),
-                                                    std::make_pair(Kessel,Property::kZULUFT_SOLL)},
-                                                    [](const SimpleVariant&) {
-            const auto airflowIn{id(ZULUFT_SOLL).state};
-            const auto airflowOut{id(ABLUFT_SOLL).state};
-            auto getPower = [](const float airflow){
-              if(airflow < 0.1f) {
-                return 0.0f;
-              }
-              /* This equation is base on the following measurement:
-               * airflow (l/min)       : 0 140 190 220 300
-               * combined fan power (W): 0  30  50  80 170
-               * @note: the last value is taken as from the THZ504 specification.
-               */
-              return (0.00005f * std::pow(airflow, 2.5f) + 3.0f);
-            };
-            id(FAN_POWER).publish_state(getPower(airflowIn) + getPower(airflowOut));
-          });
+            CallbackHandler::instance().addCallbacks({std::make_pair(CanNode::Kessel,Property::kABLUFT_SOLL),
+                                                      std::make_pair(CanNode::Kessel,Property::kZULUFT_SOLL)},
+                                                      [](const SimpleVariant&) {
+              const auto airflowIn{id(ZULUFT_SOLL).state};
+              const auto airflowOut{id(ABLUFT_SOLL).state};
+              auto getPower = [](const float airflow){
+                if(airflow < 0.1f) {
+                  return 0.0f;
+                }
+                /* This equation is base on the following measurement:
+                * airflow (l/min)       : 0 140 190 220 300
+                * combined fan power (W): 0  30  50  80 170
+                * @note: the last value is taken as from the THZ504 specification.
+                */
+                return (0.00005f * std::pow(airflow, 2.5f) + 3.0f);
+              };
+              id(FAN_POWER).publish_state(getPower(airflowIn) + getPower(airflowOut));
+            });
 
-          id(ELEKTRISCHE_NACHERWAERMUNG).add_on_state_callback([](const bool state){
-            const auto electricHeatingPower = state ? id(NE_STUFE_WW).state * 230.0 /*V*/ * 12.6 /*A*/ : 0.0f;
-            id(ELECTRIC_HEATING_POWER).publish_state(electricHeatingPower);
-          });
+            id(ELEKTRISCHE_NACHERWAERMUNG).add_on_state_callback([](const bool state){
+              const auto electricHeatingPower = state ? id(NE_STUFE_WW).state * 230.0 /*V*/ * 12.6 /*A*/ : 0.0f;
+              id(ELECTRIC_HEATING_POWER).publish_state(electricHeatingPower);
+            });
 
-          CallbackHandler::instance().addCallback(std::make_pair(Kessel,Property::kBETRIEBS_STATUS_2),[](const SimpleVariant& value){
-            const std::bitset<2U> status_bits{static_cast<std::uint16_t>(value)};
-            id(SOMMERBETRIEB_AKTIV).publish_state(status_bits.test(0U));
-            id(OFEN_KAMIN_AKTIV).publish_state(status_bits.test(1U));
-          });
-          scheduleRequest(Kessel, Property::kBETRIEBS_STATUS_2, std::chrono::seconds(10));
+            CallbackHandler::instance().addCallback(std::make_pair(CanNode::Kessel,Property::kBETRIEBS_STATUS_2),[](const SimpleVariant& value){
+              const std::bitset<2U> status_bits{static_cast<std::uint16_t>(value)};
+              id(SOMMERBETRIEB_AKTIV).publish_state(status_bits.test(0U));
+              id(OFEN_KAMIN_AKTIV).publish_state(status_bits.test(1U));
+            });
 
-          CallbackHandler::instance().addCallback(std::make_pair(Kessel,Property::kBETRIEBS_STATUS),[](const SimpleVariant& value){
-            const std::bitset<15U> status_bits{static_cast<std::uint16_t>(value)};
-            id(SCHALTPROGRAMM_AKTIV).publish_state(status_bits.test(0U));
-            id(VERDICHTER).publish_state(status_bits.test(1U));
-            id(HEIZEN).publish_state(status_bits.test(2U));
-            id(KUEHLEN).publish_state(status_bits.test(3U));
-            id(WARMWASSERBEREITUNG).publish_state(status_bits.test(4U));
-            id(ELEKTRISCHE_NACHERWAERMUNG).publish_state(status_bits.test(5U));
-            id(SERVICE).publish_state(status_bits.test(6U));
-            id(EVU_SPERRE).publish_state(status_bits.test(7U));
-            id(FILTERWECHSEL_BEIDE).publish_state(status_bits.test(8U));
-            // seems to be broken id(LUEFTUNG).publish_state(status_bits.test(9U));
-            id(HEIZKREISPUMPE).publish_state(status_bits.test(10U));
-            id(ABTAUEN_VERDAMPFER).publish_state(status_bits.test(11U));
-            id(FILTERWECHSEL_ABLUFT).publish_state(status_bits.test(12U));
-            id(FILTERWECHSEL_ZULUFT).publish_state(status_bits.test(13U));
-            id(AUFHEIZPROGRAMM_AKTIV).publish_state(status_bits.test(14U));
-          });
-          scheduleRequest(Kessel, Property::kBETRIEBS_STATUS, std::chrono::seconds(10));
-
-          // Query firmware only once
-          scheduleRequest(Kessel, Property::kFIRMWARE_VERSION, std::chrono::seconds(10));
+            CallbackHandler::instance().addCallback(std::make_pair(CanNode::Kessel,Property::kBETRIEBS_STATUS),[](const SimpleVariant& value){
+              const std::bitset<15U> status_bits{static_cast<std::uint16_t>(value)};
+              id(SCHALTPROGRAMM_AKTIV).publish_state(status_bits.test(0U));
+              id(VERDICHTER).publish_state(status_bits.test(1U));
+              id(HEIZEN).publish_state(status_bits.test(2U));
+              id(KUEHLEN).publish_state(status_bits.test(3U));
+              id(WARMWASSERBEREITUNG).publish_state(status_bits.test(4U));
+              id(ELEKTRISCHE_NACHERWAERMUNG).publish_state(status_bits.test(5U));
+              id(SERVICE).publish_state(status_bits.test(6U));
+              id(EVU_SPERRE).publish_state(status_bits.test(7U));
+              id(FILTERWECHSEL_BEIDE).publish_state(status_bits.test(8U));
+              // seems to be broken id(LUEFTUNG).publish_state(status_bits.test(9U));
+              id(HEIZKREISPUMPE).publish_state(status_bits.test(10U));
+              id(ABTAUEN_VERDAMPFER).publish_state(status_bits.test(11U));
+              id(FILTERWECHSEL_ABLUFT).publish_state(status_bits.test(12U));
+              id(FILTERWECHSEL_ZULUFT).publish_state(status_bits.test(13U));
+              id(AUFHEIZPROGRAMM_AKTIV).publish_state(status_bits.test(14U));
+            });
+    - priority: -100.0
+      then:
+        - lambda: |-
+            scheduleRequest(CanNode::Kessel, Property::kZULUFT_IST, std::chrono::seconds(10));
+            scheduleRequest(CanNode::Kessel, Property::kBETRIEBS_STATUS_2, std::chrono::seconds(10));
+            scheduleRequest(CanNode::Kessel, Property::kBETRIEBS_STATUS, std::chrono::seconds(10));
+            // Query firmware only once
+            scheduleRequest(CanNode::Kessel, Property::kFIRMWARE_VERSION, std::chrono::seconds(10));
 
 #########################################
 #                                       #
@@ -174,7 +176,7 @@ interval:
   - interval: $interval_once_in_a_while
     then:
     - lambda: |-
-        queueRequest(Kessel, Property::kBETRIEBS_STATUS_2);
+        queueRequest(CanNode::Kessel, Property::kBETRIEBS_STATUS_2);
 
 #########################################
 #                                       #
@@ -186,8 +188,8 @@ button:
     name: "Reset Filter"
     on_press:
         lambda: |-
-            queueTransmission(Kessel, Property::kRESET_FILTER, 1U);
-            scheduleRequest(Kessel, Property::kLAUFZEIT_FILTER_TAGE, std::chrono::seconds(30));
+            queueTransmission(CanNode::Kessel, Property::kRESET_FILTER, 1U);
+            scheduleRequest(CanNode::Kessel, Property::kLAUFZEIT_FILTER_TAGE, std::chrono::seconds(30));
 
 #########################################
 #                                       #

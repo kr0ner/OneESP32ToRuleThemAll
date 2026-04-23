@@ -11,10 +11,10 @@ switch:
     restore_mode: DISABLED
     turn_on_action:
       - lambda: |-
-          queueTransmission(${target}, Property::k${property}, static_cast<std::uint16_t>(true));
+          queueTransmission(CanNode::${target}, Property::k${property}, static_cast<std::uint16_t>(true));
     turn_off_action:
       - lambda: |-
-          queueTransmission(${target}, Property::k${property}, static_cast<std::uint16_t>(false));
+          queueTransmission(CanNode::${target}, Property::k${property}, static_cast<std::uint16_t>(false));
     on_state:
       then:
         - if:
@@ -33,23 +33,27 @@ switch:
 
 esphome:
   on_boot:
-    priority: 100.0 # AFTER_CONNECTION
-    then:
-      - lambda: |-
-          static_assert(Property::k${property}.type == Type::et_bool, "Only properties of type bool are supported by wp_switch.");
+    - priority: -50
+      then:
+        - lambda: |-
+            static_assert(Property::k${property}.type == Type::et_bool, "Only properties of type bool are supported by wp_switch.");
+            ESP_LOGE("DEBUG_LAMBDA", "Lambda executing for: %s", "${property}");
+            CallbackHandler::instance().addCallbacks({{CanNode::${target},Property::k${property}},
+                                                      {CanNode::Heizmodul,Property::k${property}}}, [](const SimpleVariant& value){
+                const auto newValue{value.get<bool>()};
+                auto property{id(${property})};
+                if(property->state != newValue) {
+                  property->publish_state(newValue);
+                }
+            });
 
-          CallbackHandler::instance().addCallbacks({std::make_pair(${target},Property::k${property}),
-                                                    std::make_pair(Manager,Property::k${property})}, [](const SimpleVariant& value){
-              const auto newValue{value.get<bool>()};
-              auto property{id(${property})};
-              if(property->state != newValue) {
-                property->publish_state(newValue);
+            #if defined(ANALYTICS)
+              if(${exposed}) {
+                getWhitelistedEntities().insert(id(${property}));
               }
-          });
-          queueRequest(${target}, Property::k${property});
-
-          #if defined(ANALYTICS)
-            if(${exposed}) {
-              getWhitelistedEntities().insert(id(${property}));
-            }
-          #endif
+            #endif
+    - priority: -100.0
+      then:
+        - delay: 250ms
+        - lambda: |-
+            queueRequest(CanNode::${target}, Property::k${property});

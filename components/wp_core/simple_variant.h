@@ -3,9 +3,9 @@
 
 #include <cstdint>
 #include <string>
-#include <tuple>
 #include <type_traits>
 #include <typeinfo>
+#include <variant>
 
 template <typename T>
 struct is_string
@@ -52,13 +52,10 @@ template <typename T>
 using normalized_t = typename normalized<T>::type;
 
 struct SimpleVariant {
-    SimpleVariant() : type_id(typeid(void)){};
+    SimpleVariant() : type_id(typeid(void)) {}
 
     template <typename T>
-    SimpleVariant(const T& value) : type_id(typeid(T)) {
-        auto& t_element = std::get<normalized_t<T>>(t);
-        t_element = value;
-    }
+    SimpleVariant(const T& value) : type_id(typeid(T)), v(static_cast<normalized_t<T>>(value)) {}
 
     template <typename T>
     bool holds_alternative() const {
@@ -67,7 +64,7 @@ struct SimpleVariant {
 
     template <typename T>
     const T get() const {
-        return std::get<normalized_t<T>>(t);
+        return static_cast<T>(std::get<normalized_t<T>>(v));
     }
 
     template <typename T>
@@ -76,7 +73,7 @@ struct SimpleVariant {
     }
 
    private:
-    std::tuple<bool, float, std::string> t;
+    std::variant<std::monostate, bool, float, std::string> v;
     const std::type_info& type_id;
 };
 

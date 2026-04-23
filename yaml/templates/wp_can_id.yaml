@@ -1,0 +1,49 @@
+esphome:
+  on_boot:
+    - priority: 0
+      then:
+        - lambda: |-
+            std::string saved_val = id(${can_node}_CAN_ID).state;
+            if (!saved_val.empty()) {
+              CanNode::${can_node}->canId = static_cast<std::uint16_t>(std::strtol(saved_val.c_str(), nullptr, 16));
+              ESP_LOGD("CanNode", "${can_node} Boot: Restored ID to %s", saved_val.c_str());
+            }
+
+text:
+  - platform: template
+    name: "${can_node} CAN ID"
+    id: "${can_node}_CAN_ID"
+    min_length: 5
+    max_length: 5
+    initial_value: "${can_id}"
+    restore_value: true
+    entity_category: config
+    mode: text
+    icon: "mdi:identifier"
+    set_action:
+      - lambda: |-
+          // Check length and "0x" prefix
+          bool valid = (x.length() == 5) && 
+                       (x[0] == '0') && 
+                       (x[1] == 'x' || x[1] == 'X');
+          
+          // Check if the remaining 3 characters are valid hex (0-9, a-f, A-F)
+          if (valid) {
+            for (int i = 2; i < 5; i++) {
+              if (!isxdigit(x[i])) {
+                valid = false;
+                break;
+              }
+            }
+          }
+
+          if (valid) {
+            id(${can_node}_CAN_ID).publish_state(x);
+            const auto new_id = static_cast<std::uint16_t>(std::strtol(x.c_str(), nullptr, 16));
+            CanNode::${can_node}->canId = new_id;
+            ESP_LOGD("CanNode", "${can_node} CAN ID permanently updated: %s", x.c_str());
+          } else {
+            ESP_LOGE("CanNode", "Invalid input: %s. Must be 0xXXX.", x.c_str());
+            // Republish the current valid state to Home Assistant to revert the bad input
+            id(${can_node}_CAN_ID).publish_state(id(${can_node}_CAN_ID).state);
+          }
