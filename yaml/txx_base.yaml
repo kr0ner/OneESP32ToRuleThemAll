@@ -4,11 +4,6 @@
 #                                       #
 #########################################
 substitutions:
-  kessel_can_id: "0x180"
-  hk1_can_id: "0x301"
-  hk2_can_id: "0x302"
-  manager_can_id: "0x6a1"
-  espclient_can_id: "0x6a2"
   can_bus_bit_rate: 20kbps
 
 #########################################
@@ -39,7 +34,7 @@ sensor:
         - lambda: |-
             if (x > 0.0f) {
               ESP_LOGI("SET", "Sending room temperature %f to heatpump", x);
-              queueTransmission(HK1, Property::kRAUMISTTEMP, static_cast<std::uint16_t>(x * 10.0f));
+              queueTransmission(CanNode::HK1, Property::kRAUMISTTEMP, static_cast<std::uint16_t>(x * 10.0f));
             }
 
   - platform: homeassistant
@@ -55,7 +50,7 @@ sensor:
         - lambda: |-
             if (x > 0.0f) {
               ESP_LOGI("SET", "Sending humidity %f to heatpump", x);
-              queueTransmission(HK1, Property::kRAUMFEUCHTE, static_cast<std::uint16_t>(x * 10.0f));
+              queueTransmission(CanNode::HK1, Property::kRAUMFEUCHTE, static_cast<std::uint16_t>(x * 10.0f));
             }
 
 #########################################

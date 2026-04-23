@@ -35,29 +35,33 @@ sensor:
 
 esphome:
   on_boot:
-    priority: 100.0 # AFTER_CONNECTION
-    then:
-      - lambda: |-
-          // Handle the values received from the heat pump. Wh value is just stored in an internal sensor and published together with the kWh value on reception.
-          CallbackHandler::instance().addCallback(std::make_pair(${target},Property::k${property_wh}),[](const SimpleVariant& value){
-            id(${property_wh}).publish_state(value.get<std::uint16_t>());
-          });
-          CallbackHandler::instance().addCallback(std::make_pair(${target},Property::k${property_kwh}),[](const SimpleVariant& value){
-            const auto newValue{value.get<std::uint16_t>() + id(${property_wh}).state};
-            auto property{id(${sensor_name})};
-            if(!std::is_eq(property->state <=> newValue)) {
-              property->publish_state(newValue);
-            }
-          });
-          // initial queueing of the Wh and kWh value
-          queueRequest(${target}, Property::k${property_wh});
-          queueRequest(${target}, Property::k${property_kwh});
+    - priority: -50
+      then:
+        - lambda: |-
+            // Handle the values received from the heat pump. Wh value is just stored in an internal sensor and published together with the kWh value on reception.
+            CallbackHandler::instance().addCallback({CanNode::${target},Property::k${property_wh}},[](const SimpleVariant& value){
+              id(${property_wh}).publish_state(value.get<std::uint16_t>());
+            });
+            CallbackHandler::instance().addCallback({CanNode::${target},Property::k${property_kwh}},[](const SimpleVariant& value){
+              const auto newValue{value.get<std::uint16_t>() + id(${property_wh}).state};
+              auto property{id(${sensor_name})};
+              if(!std::is_eq(property->state <=> newValue)) {
+                property->publish_state(newValue);
+              }
+            });
 
-          #if defined(ANALYTICS)
-            if(${exposed}) {
-              getWhitelistedEntities().insert(id(${sensor_name}));
-            }
-          #endif
+            #if defined(ANALYTICS)
+              if(${exposed}) {
+                getWhitelistedEntities().insert(id(${sensor_name}));
+              }
+            #endif
+    - priority: -100.0 
+      then:
+        - delay: 250ms
+        - lambda: |-
+            // initial queueing of the Wh and kWh value
+            queueRequest(CanNode::${target}, Property::k${property_wh});
+            queueRequest(CanNode::${target}, Property::k${property_kwh});
 
 time:
   - platform: homeassistant
@@ -68,8 +72,8 @@ time:
         minutes: 4/5
         then:
           - lambda: |-
-              queueRequest(${target}, Property::k${property_wh});
-              queueRequest(${target}, Property::k${property_kwh});
+              queueRequest(CanNode::${target}, Property::k${property_wh});
+              queueRequest(CanNode::${target}, Property::k${property_kwh});
       # At midnight reset power consumptions. And save offset for the next day.
       - seconds: 0
         minutes: 0
