@@ -26,6 +26,7 @@ substitutions:
   entity_room_temperature: "sensor.durchschnittstemperatur_haus_ohne_keller"
   entity_humidity: "sensor.durchschnitt_luftfeuchtigkeit_haus"
   timezone: "Europe/Berlin"
+  #can_bus_bit_rate: 50kbps
 
 external_components:
   - source:
@@ -54,7 +55,6 @@ canbus:
     platform: mcp2515
     spi_id: McpSpi
     cs_pin: GPIO15
-    bit_rate: 20kbps
     clock: 8MHz        # 8MHz or 16MHz depending on the value of the crystal on your MCP2515
     data_rate: 4MHz    # 8Mhz (4MHz, 2MHz or 1MHz in case you get CAN bus errors)
 
