@@ -9,6 +9,16 @@ substitutions:
   hk2_can_id: "0x602"
   manager_can_id: "0x514"
   espclient_can_id: "0x6a2"
+  can_bus_bit_rate: 50kbps
+
+#########################################
+#                                       #
+#   CAN Bus                             #
+#                                       #
+#########################################
+canbus:
+  - id: !extend wp_can
+    bit_rate: $can_bus_bit_rate
 
 #########################################
 #                                       #
