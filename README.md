@@ -120,8 +120,12 @@ After the pull finishes, go back to your **ESPHome Dashboard** and click **Insta
 
 ~~~mermaid
 flowchart LR
-    core[core.yaml<br>System Core] --> wpl13([wpl13.yaml<br>Manifest])
+    core[core.yaml<br>System Core] --> wpl_base[wpl_base.yaml<br>Common WPL Base]
     core --> txx[txx_base.yaml<br>Common TXX Base]
+
+    wpl_base --> wpl13([wpl13.yaml<br>Manifest])
+    wpl_base --> wpl17([wpl17.yaml<br>Manifest])
+    wpl_base --> wpl23([wpl23.yaml<br>Manifest])
 
     txx --> ttf07([ttf07.yaml<br>Manifest])
     txx --> thz[thz_base.yaml<br>Common THZ Base]
@@ -133,6 +137,8 @@ flowchart LR
 
     style core stroke-width:2px,stroke-dasharray: 5 5
     style wpl13 stroke-width:2px
+    style wpl17 stroke-width:2px
+    style wpl23 stroke-width:2px
     style ttf07 stroke-width:2px
     style thz304 stroke-width:2px
     style thz404 stroke-width:2px
@@ -166,7 +172,7 @@ flowchart LR
 ***
 
 Heavily inspired by this post in the HA community forum:
-https://community.home-assistant.io/t/configured-my-esphome-with-mcp2515-can-bus-for-stiebel-eltron-heating-pump/366053
+[Configured my ESPHome with MCP2515 CAN-Bus for Stiebel Eltron heating pump](https://community.home-assistant.io/t/configured-my-esphome-with-mcp2515-can-bus-for-stiebel-eltron-heating-pump/366053)
 
 and
 
@@ -175,4 +181,4 @@ https://github.com/bullitt186/ha-stiebel-control
 Special thanks to [@hovhannes85](https://github.com/hovhannes85)
 
 ### Useful links
-https://www.stiebel-eltron.de/content/dam/ste/cdbassets/historic/bedienungs-_u_installationsanleitungen/ISG_Modbus__b89c1c53-6d34-4243-a630-b42cf0633361.pdf
+[Stiebel Eltron Modbus TCP/IP](https://assets.stiebel-eltron.com/celum/Docs/originalFile/DOC-00081716.pdf)
