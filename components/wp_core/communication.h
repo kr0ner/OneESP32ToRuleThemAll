@@ -54,9 +54,7 @@ struct ConditionalTransmission {
 
     Task _task;
     std::uint16_t _value;
-    std::function<bool()> _condition = []() {
-        return true;
-    };
+    std::function<bool()> _condition = nullptr;
 };
 
 /**
