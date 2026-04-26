@@ -9,9 +9,13 @@ esp32:
 
 # Enable logging
 logger:
-  level: INFO
+  level: VERBOSE
+  initial_level: INFO
   baud_rate: 0
   hardware_uart: UART1
+select:
+  - platform: logger
+    name: "Log level"
 
 # Enable Home Assistant API
 api:
