@@ -2,40 +2,17 @@
 #define UTIL_H
 
 #include <unordered_set>
-#include "communication.h"
-#include "esp_log.h"
 #include "esphome.h"
-#include "property.h"
-#include "type.h"
 
 /**
  * @brief Synchronizes the time of the heat pump to the one received via Home Assistant time platform.
  */
-void syncTime(esphome::time::RealTimeClock* time_obj) {
-    const auto time = time_obj->now();
-    if (!time.is_valid()) {
-        ESP_LOGE("TIMESYNC", "Cannot sync time. Home Assistant time is invalid.");
-        return;
-    }
-    ESP_LOGI("TIMESYNC", "Synchronizing heat pump time to %d.%d.%d %d:%d", time.day_of_month, time.month, time.year,
-             time.hour, time.minute);
-#if !defined(THZ_304)
-    queueTransmission(Kessel, Property::kSEKUNDE, toggleEndianness(time.second));
-#endif
-    queueTransmission(Kessel, Property::kMINUTE, toggleEndianness(time.minute));
-    queueTransmission(Kessel, Property::kSTUNDE, toggleEndianness(time.hour));
-    queueTransmission(Kessel, Property::kTAG, toggleEndianness(time.day_of_month));
-    queueTransmission(Kessel, Property::kMONAT, toggleEndianness(time.month));
-    queueTransmission(Kessel, Property::kJAHR, toggleEndianness(time.year - 2000U));
-}
+void syncTime(esphome::time::RealTimeClock* time_obj);
 
 /**
  * @brief Singleton access to whitelisted entities that shall be included in analytics.
  */
-std::unordered_set<esphome::EntityBase*>& getWhitelistedEntities() {
-    static std::unordered_set<esphome::EntityBase*> entities;
-    return entities;
-}
+std::unordered_set<esphome::EntityBase*>& getWhitelistedEntities();
 
 /**
  * @brief Whitelist a set of entities that shall be included in analytics.

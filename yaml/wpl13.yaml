@@ -8,34 +8,25 @@ esphome:
     build_flags:
       - "-DWPL_13"
   on_boot:
-    priority: 100.0
-    then:
-      - lambda: |-
-          CallbackHandler::instance().addCallback(std::make_pair(Manager,Property::kWAERMEPUMPEN_STATUS),[](const SimpleVariant& value){
-            const std::bitset<9U> status_bits{static_cast<std::uint16_t>(value)};
-            id(VERDICHTER).publish_state(status_bits.test(0U));
-            id(OELSUMPFHEIZUNG).publish_state(status_bits.test(1U));
-            id(SICHERHEITSKETTE).publish_state(status_bits.test(2U));
-            id(NETZVERSORGUNG_INVERTER).publish_state(status_bits.test(3U));
-            id(STOERUNG).publish_state(status_bits.test(4U));
-            id(SOLEDRUCK_WAECHTER).publish_state(status_bits.test(5U));
-            id(WAERMEQUELLENPUMPE).publish_state(status_bits.test(6U));
-            id(PASSIVKUEHLVENTIL_HEIZEN).publish_state(status_bits.test(7U));
-            id(PASSIVKUEHLVENTIL_KUEHLEN).publish_state(status_bits.test(8U));
-          });
-          queueRequest(Manager, Property::kWAERMEPUMPEN_STATUS);
-
-#########################################
-#                                       #
-#   Substitutions                       #
-#                                       #
-#########################################
-substitutions:
-  kessel_can_id: "0x180"
-  hk1_can_id: "0x601"
-  hk2_can_id: "0x602"
-  manager_can_id: "0x514"
-  espclient_can_id: "0x6a2"
+    - priority: -50
+      then:
+        - lambda: |-
+            CallbackHandler::instance().addCallback(std::make_pair(CanNode::Heizmodul,Property::kWAERMEPUMPEN_STATUS),[](const SimpleVariant& value){
+              const std::bitset<9U> status_bits{static_cast<std::uint16_t>(value)};
+              id(VERDICHTER).publish_state(status_bits.test(0U));
+              id(OELSUMPFHEIZUNG).publish_state(status_bits.test(1U));
+              id(SICHERHEITSKETTE).publish_state(status_bits.test(2U));
+              id(NETZVERSORGUNG_INVERTER).publish_state(status_bits.test(3U));
+              id(STOERUNG).publish_state(status_bits.test(4U));
+              id(SOLEDRUCK_WAECHTER).publish_state(status_bits.test(5U));
+              id(WAERMEQUELLENPUMPE).publish_state(status_bits.test(6U));
+              id(PASSIVKUEHLVENTIL_HEIZEN).publish_state(status_bits.test(7U));
+              id(PASSIVKUEHLVENTIL_KUEHLEN).publish_state(status_bits.test(8U));
+            });
+    - priority: -100
+      then:
+        - lambda: |-
+            queueRequest(CanNode::Heizmodul, Property::kWAERMEPUMPEN_STATUS);
 
 #########################################
 #                                       #

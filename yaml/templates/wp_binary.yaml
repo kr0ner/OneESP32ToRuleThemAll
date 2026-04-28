@@ -24,11 +24,11 @@ binary_sensor:
 
 esphome:
   on_boot:
-    priority: 100.0 # AFTER_CONNECTION
-    then:
-      - lambda: |-
-          #if defined(ANALYTICS)
-            if(${exposed}) {
-              getWhitelistedEntities().insert(id(${name}));
-            }
-          #endif
+    - priority: -50
+      then:
+        - lambda: |-
+            #if defined(ANALYTICS)
+              if(${exposed}) {
+                getWhitelistedEntities().insert(id(${name}));
+              }
+            #endif
