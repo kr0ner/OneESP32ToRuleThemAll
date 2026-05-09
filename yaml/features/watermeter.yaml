@@ -9,6 +9,8 @@ sensor:
     name: "Active water consumption"
     id: active_water_consumption
     unit_of_measurement: "L/min"
+    device_class: volume_flow_rate
+    state_class: measurement
     icon: "mdi:water"
     internal_filter: 100ms
     internal_filter_mode: PULSE
