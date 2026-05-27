@@ -17,44 +17,6 @@ canbus:
 
 #########################################
 #                                       #
-#   Home Assistant Sensors              #
-#                                       #
-#########################################
-sensor:
-  - platform: homeassistant
-    name: Temperature Sensor From Home Assistant
-    id: ha_temperature_sensor
-    entity_id: $entity_room_temperature
-    filters:
-      - heartbeat:
-          period: $interval_medium
-          optimistic: true
-    on_value:
-      then:
-        - lambda: |-
-            if (x > 0.0f) {
-              ESP_LOGI("SET", "Sending room temperature %f to heatpump", x);
-              queueTransmission(CanNode::HK1, Property::kRAUMISTTEMP, static_cast<std::uint16_t>(x * 10.0f));
-            }
-
-  - platform: homeassistant
-    name: Humidity Sensor From Home Assistant
-    id: ha_humidity_sensor
-    entity_id: $entity_humidity
-    filters:
-      - heartbeat:
-          period: $interval_medium
-          optimistic: true
-    on_value:
-      then:
-        - lambda: |-
-            if (x > 0.0f) {
-              ESP_LOGI("SET", "Sending humidity %f to heatpump", x);
-              queueTransmission(CanNode::HK1, Property::kRAUMFEUCHTE, static_cast<std::uint16_t>(x * 10.0f));
-            }
-
-#########################################
-#                                       #
 #   Packages                            #
 #                                       #
 #########################################
