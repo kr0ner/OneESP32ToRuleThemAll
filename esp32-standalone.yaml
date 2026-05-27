@@ -41,6 +41,7 @@ external_components:
       url: https://github.com/kr0ner/OneESP32ToRuleThemAll
       ref: master
     components: ["wp_core", "wp_climate", "sml_reader"]
+    refresh: 1h
 
 #########################################
 #                                       #
@@ -122,7 +123,7 @@ wifi:
 packages:
   - url: https://github.com/kr0ner/OneESP32ToRuleThemAll
     ref: master
-    refresh: 0h
+    refresh: 1h
     files:
 #      - "/yaml/thz304.yaml"
 #      - "yaml/thz404.yaml"
