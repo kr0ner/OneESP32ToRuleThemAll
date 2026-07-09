@@ -1,0 +1,44 @@
+#########################################
+#                                       #
+#   ESPHome                             #
+#                                       #
+#########################################
+# Stiebel Eltron WPE-I ... H(K) (brine/water, no integrated DHW).
+# Panel-verified on a WPE-I 08 HK 230 Premium. Shares the WPL13 property
+# set except: no Warmwasser energy counters, adds runtime counters, and
+# 0x02e2 is WP_WASSERVOLUMENSTROM (as on WPL17), NOT the WPL13 status
+# word — the WPL13 status-bit binaries are omitted until the WPE-I's
+# real status property is identified.
+esphome:
+  platformio_options:
+    build_flags:
+      - "-DWPE_I"
+
+#########################################
+#                                       #
+#   Global variables                    #
+#                                       #
+#########################################
+globals:
+  - id: heat_pump_variant
+    type: std::string
+    initial_value: '"WPE-I"'
+
+#########################################
+#                                       #
+#   Packages                            #
+#                                       #
+#########################################
+
+packages:
+  wpl_base:                             !include { file: wpl_base.yaml }
+
+  # 0x02e2 fluctuates with the circulation flow (raw 280/285 = 28.0/28.5 l/min,
+  # consistent with VOLUMENSTROM 0x4f47) — same meaning as on the WPL17
+  WP_WASSERVOLUMENSTROM:                !include { file: templates/wp_generic.yaml, vars: { property: "WP_WASSERVOLUMENSTROM", unit: "l/min", icon: "mdi:water", accuracy_decimals: "1", target: "Heizmodul" }}
+
+  # runtime counters (panel: Info -> Wärmepumpe -> Laufzeit)
+  LAUFZEIT_VD_HEIZEN:                   !include { file: templates/wp_generic.yaml, vars: { property: "LAUFZEIT_VD_HEIZEN", unit: "h", target: "Heizmodul" }}
+  LAUFZEIT_NHZ1:                        !include { file: templates/wp_generic.yaml, vars: { property: "LAUFZEIT_NHZ1", unit: "h", target: "Heizmodul" }}
+  LAUFZEIT_NHZ2:                        !include { file: templates/wp_generic.yaml, vars: { property: "LAUFZEIT_NHZ2", unit: "h", target: "Heizmodul" }}
+  LAUFZEIT_NHZ1_2:                      !include { file: templates/wp_generic.yaml, vars: { property: "LAUFZEIT_NHZ1_2", unit: "h", target: "Heizmodul" }}
