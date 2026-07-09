@@ -360,6 +360,14 @@ struct Property : public oe32trta::detail::Property {
     // WPL13 status word (observed raw 280/285 = 28.0/28.5 l/min while idle
     // in passive cooling, matching VOLUMENSTROM 0x4f47 = 27.7 l/min)
     PROPERTY(WP_WASSERVOLUMENSTROM, 0x02e2, Type::et_dec_val);
+    // the WPE-I's Wärmepumpen-Status word (broadcast by Kessel; 0x8000 while
+    // in standby). Panel-verified bits: 4 = passive cooling active; two of
+    // {2, 13} = Kühlbetrieb mode / Netzversorgung Inverter.
+    PROPERTY(WAERMEPUMPEN_STATUS, 0x4eda);
+    PROPERTY(EVU_SPERRE_AKTIV, 0x0074);
+    PROPERTY(REGELABWEICHUNG, 0x033d, Type::et_dec_val);
+    PROPERTY(WAERMEERTRAG_2WE_HEIZ_SUM_KWH, 0x0928);
+    PROPERTY(WAERMEERTRAG_2WE_HEIZ_SUM_MWH, 0x0929, Type::et_double_val);
     // runtime counters; property ids shared with WPL17 (0x4efb..) / WPL17+23 (NHZ)
     PROPERTY(LAUFZEIT_VD_HEIZEN, 0x4efb);
     PROPERTY(LAUFZEIT_NHZ1, 0x0259);
