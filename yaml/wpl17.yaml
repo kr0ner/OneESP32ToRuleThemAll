@@ -142,3 +142,9 @@ packages:
   FESTWERTBETRIEB:                          !include { file: templates/wp_temperature.yaml, vars: { property: "FESTWERTBETRIEB", target: "Kessel" }}
   WW_SOLLTEMPERATUR:                        !include { file: templates/wp_temperature.yaml, vars: { property: "WW_SOLLTEMPERATUR", target: "Kessel" }}
   GRENZE_KUEHLEN:                           !include { file: templates/wp_temperature.yaml, vars: { property: "GRENZE_KUEHLEN", target: "Kessel" }}
+
+  # DHW (Warmwasser) energy counters — models without integrated DHW (e.g. WPE-I) omit these
+  WAERMEERTRAG_WW_SUMME_MWH:                !include { file: templates/wp_generic_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_WW_SUMME_MWH"   , scaled_property: "WAERMEERTRAG_WW_SUM_KWH"   , property: "WAERMEERTRAG_WW_SUM_MWH"   , unit: "MWh", accuracy_decimals: "3", icon: "mdi:fire" , target: "Heizmodul", state_class: "total_increasing" }}
+  EL_ENERGIEAUFNAHME_WW_SUMME_KWH:          !include { file: templates/wp_generic_combined.yaml, vars: { sensor_name: "EL_ENERGIEAUFNAHME_WW_SUMME_KWH"   , scaled_property: "EL_ENERGIEAUFNAHME_WW_SUM_MWH"   , property: "EL_ENERGIEAUFNAHME_WW_SUM_KWH"   , unit: "kWh", accuracy_decimals: "0", scaler: "1000", icon: "mdi:flash", target: "Heizmodul", state_class: "total_increasing" }}
+  EL_ENERGIEAUFNAHME_WW_TAG_SUMME_KWH:      !include { file: templates/wp_daily_energy_combined.yaml, vars: { sensor_name: "EL_ENERGIEAUFNAHME_WW_TAG_SUMME_KWH"   , property_wh: "EL_ENERGIEAUFNAHME_WW_TAG_WH"   , property_kwh: "EL_ENERGIEAUFNAHME_WW_TAG_KWH"   , target: "Heizmodul" }}
+  WAERMEERTRAG_WW_TAG_SUMME_KWH:            !include { file: templates/wp_daily_energy_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_WW_TAG_SUMME_KWH"     , property_wh: "WAERMEERTRAG_WW_TAG_WH"         , property_kwh: "WAERMEERTRAG_WW_TAG_KWH"         , target: "Heizmodul" }}
