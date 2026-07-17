@@ -125,6 +125,7 @@ packages:
 # wpl13: !include OneESP32ToRuleThemAll/yaml/wpl13.yaml
 # wpl17: !include OneESP32ToRuleThemAll/yaml/wpl17.yaml
 # wpl23: !include OneESP32ToRuleThemAll/yaml/wpl23.yaml
+# wpl33: !include OneESP32ToRuleThemAll/yaml/wpl33.yaml
 # energymeter: !include OneESP32ToRuleThemAll/yaml/features/energymeter.yaml
 # evu: !include OneESP32ToRuleThemAll/yaml/features/evu.yaml
 # watermeter: !include OneESP32ToRuleThemAll/yaml/features/watermeter.yaml

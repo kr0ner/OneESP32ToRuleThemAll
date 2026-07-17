@@ -61,7 +61,11 @@ struct Property : public oe32trta::detail::Property {
     // 1. COMMON PROPERTIES (Shared across all device families)
     // =======================================================================
     PROPERTY(INDEX_NOT_FOUND, 0x0000);
+#if defined(WPL_33)
+    PROPERTY(FEHLERMELDUNG, 0x0001, Type::et_err_nr);
+#else
     PROPERTY(FEHLERMELDUNG, 0x0001);
+#endif
     PROPERTY(SPEICHERSOLLTEMP, 0x0003, Type::et_dec_val);
     PROPERTY(VORLAUFSOLLTEMP, 0x0004, Type::et_dec_val);
     PROPERTY(AUSSENTEMP, 0x000c, Type::et_dec_val);
@@ -479,6 +483,130 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(LAUFZEIT_VD_HEIZEN, 0x07fc);
     PROPERTY(LAUFZEIT_VD_WW, 0x0802);
     PROPERTY(LAUFZEIT_VD_ABTAUEN, 0x0808);
+#endif
+
+#if defined(WPL_33)
+    PROPERTY(GERAETE_ID, 0x000b, Type::et_dec_val);
+    PROPERTY(EINSTELL_SPEICHERSOLLTEMP, 0x0013, Type::et_dec_val);
+    PROPERTY(KESSELSOLLTEMP, 0x0002, Type::et_dec_val);
+    PROPERTY(RAUMSOLLTEMP_I, 0x0005, Type::et_dec_val);
+    PROPERTY(RAUMSOLLTEMP_NACHT, 0x0008, Type::et_dec_val);
+    PROPERTY(VORLAUFISTTEMP, 0x000f, Type::et_dec_val);
+    PROPERTY(VERDAMPFERTEMP, 0x0014, Type::et_dec_val);
+    PROPERTY(RUECKLAUFTEMP, 0x0016, Type::et_dec_val);
+    PROPERTY(PROGRAMMSCHALTER, 0x0112, Type::et_betriebsart);
+    PROPERTY(BETRIEBS_STATUS, 0x0176);
+    PROPERTY(PUFFERISTTEMPERATUR, 0x0078, Type::et_dec_val);
+    PROPERTY(MAX_HYSTERESE, 0x0023, Type::et_little_endian);
+    PROPERTY(ANFAHRENT, 0x005d, Type::et_little_endian);
+    PROPERTY(SPEICHER_STATUS, 0x005a, Type::et_little_endian);
+    PROPERTY(SPEICHERBEDARF, 0x005f, Type::et_little_endian);
+    PROPERTY(SCHALTFKT_IWS, 0x0060);
+    PROPERTY(ABTAUUNGAKTIV, 0x0061, Type::et_little_endian);
+    PROPERTY(WAERMEPUMPEN_STATUS, 0x0062, Type::et_little_endian);
+    // Untyped (et_default) rather than et_bool/et_little_bool -- these are wired up as plain
+    // numeric sensors via templates/wp_generic.yaml (0.0/1.0), not binary_sensors, matching
+    // how WPL17's own SOMMERBETRIEB is declared. wp_generic.yaml's callback always does
+    // value.get<float>(), which throws bad_variant_access (crashes the device) if the
+    // property's Type produces a bool/string SimpleVariant instead.
+    PROPERTY(TEILVORRANG_WW, 0x005e);
+    PROPERTY(EVU_SPERRE_AKTIV, 0x0074);
+    PROPERTY(WW_ECO, 0x027e);
+    PROPERTY(PUFFERSOLLTEMPERATUR, 0x01d5, Type::et_dec_val);
+    PROPERTY(VORLAUFTEMP, 0x01d6, Type::et_dec_val);
+    PROPERTY(HILFSKESSELSOLL, 0x01d7, Type::et_dec_val);
+    PROPERTY(LAUFZEIT_WP1, 0x01c4);
+    PROPERTY(LAUFZEIT_WP2, 0x01c5);
+    PROPERTY(LAUFZEIT_2WE, 0x01cb);
+    PROPERTY(STILLSTANDZEIT_0, 0x01cc);
+    PROPERTY(STILLSTANDZEIT_1, 0x01cd);
+    PROPERTY(MAXVORLAUFTEMP, 0x01e8, Type::et_dec_val);
+    PROPERTY(EL_NACHERW_ANZ_STUFEN, 0x059f);
+    PROPERTY(EL_NACHERW_VERZ_ZEIT, 0x05a0);
+    PROPERTY(SPANNUNG_INVERTER, 0x06b1, Type::et_dec_val);
+    PROPERTY(STROM_INVERTER, 0x06b2, Type::et_dec_val);
+    PROPERTY(VERDICHTER_EINTRITTSTEMP, 0x06d9, Type::et_dec_val);
+    PROPERTY(ISTDREHZAHL_VERDICHTER, 0x06eb);
+    PROPERTY(SOLLDREHZAHL_VERDICHTER, 0x06ec);
+    PROPERTY(VORLAUFISTTEMP_WP, 0x0822, Type::et_dec_val);
+    PROPERTY(RUECKLAUFISTTEMP_WP, 0x0823, Type::et_dec_val);
+    PROPERTY(LAUFZEIT_VERD_BEI_SPEICHERBEDARF, 0x081d);
+    PROPERTY(WAERMEERTRAG_2WE_WW_TAG_WH, 0x0922);
+    PROPERTY(WAERMEERTRAG_2WE_WW_TAG_KWH, 0x0923, Type::et_double_val);
+    PROPERTY(WAERMEERTRAG_2WE_WW_SUM_KWH, 0x0924);
+    PROPERTY(WAERMEERTRAG_2WE_WW_SUM_MWH, 0x0925, Type::et_double_val);
+    PROPERTY(WAERMEERTRAG_2WE_HEIZ_TAG_WH, 0x0926);
+    PROPERTY(WAERMEERTRAG_2WE_HEIZ_TAG_KWH, 0x0927, Type::et_double_val);
+    PROPERTY(WAERMEERTRAG_2WE_HEIZ_SUM_KWH, 0x0928);
+    PROPERTY(WAERMEERTRAG_2WE_HEIZ_SUM_MWH, 0x0929, Type::et_double_val);
+    PROPERTY(VERFLUESSIGER_TEMP, 0x0a37, Type::et_dec_val);
+    PROPERTY(OELSUMPFTEMP, 0x0a39, Type::et_dec_val);
+    PROPERTY(EINSTELL_SPEICHERSOLLTEMP2, 0x0a06, Type::et_dec_val);
+    PROPERTY(DRUCK_HOCHDRUCK, 0x07a6, Type::et_dec_val);
+    PROPERTY(DRUCK_NIEDERDRUCK, 0x07a7, Type::et_dec_val);
+    PROPERTY(VERDICHTER, 0x07a8, Type::et_dec_val);
+    PROPERTY(MINTEMP, 0x4ea7, Type::et_dec_val);
+    PROPERTY(MAXTEMP, 0x4ea8, Type::et_dec_val);
+    PROPERTY(MISCHERDYNAMIK, 0x4ea9);
+    PROPERTY(SOLLTEMPERATUR, 0x4eb0, Type::et_dec_val);
+    PROPERTY(ISTTEMPERATUR, 0x4eb4, Type::et_dec_val);
+    PROPERTY(KOMFORTTEMPERATUR, 0x4eb8, Type::et_dec_val);
+    PROPERTY(ECOTEMPERATUR, 0x4eb9, Type::et_dec_val);
+    PROPERTY(RAUMISTTEMP, 0x4ec7, Type::et_dec_val);
+    PROPERTY(RAUMFEUCHTE, 0x4ec8, Type::et_dec_val);
+    PROPERTY(RAUMSOLLTEMP, 0x4ece, Type::et_dec_val);
+    PROPERTY(TAUPUNKTTEMP, 0x4ee0, Type::et_dec_val);
+    PROPERTY(VERDICHTER_STARTS_K, 0x4ef0);
+    PROPERTY(VERDICHTER_STARTS, 0x4ef1);
+    PROPERTY(HYSTERESE_VORLAUFTEMP_KUEHLEN, 0x4f00, Type::et_dec_val);
+    PROPERTY(STEIGUNG_HEIZKURVE, 0x4f2b, Type::et_dec_val);
+    PROPERTY(HEIZUNGSDRUCK, 0x4f46, Type::et_cent_val);
+    PROPERTY(VOLUMENSTROM, 0x4f47, Type::et_cent_val);
+    PROPERTY(RUECKLAUFTEMP_QUELLE, 0x4fa6, Type::et_dec_val);
+    PROPERTY(VORLAUFTEMP_QUELLE, 0x4fa7, Type::et_dec_val);
+    PROPERTY(QUELLENDRUCK, 0x4fa8, Type::et_dec_val);
+    PROPERTY(LEISTUNG_QUELLENPUMPE, 0x4fa9, Type::et_dec_val);
+    PROPERTY(STARTTEMPERATUR, 0x4fbe, Type::et_dec_val);
+    PROPERTY(HEIZEN_EFFIZIENZ_TAG, 0x501d, Type::et_cent_val);
+    PROPERTY(HEIZEN_EFFIZIENZ_JAHR, 0x501e, Type::et_cent_val);
+    PROPERTY(FROSTSCHUTZ, 0xfe07, Type::et_dec_val);
+    PROPERTY(SOMMERBETRIEB, 0xfdb4);
+    PROPERTY(STILLSTANDZEIT, 0xfdb1, Type::et_little_endian);
+    PROPERTY(WP_STATUS, 0xfdae, Type::et_little_endian);
+
+    // Properties wpl_base.yaml (shared across the whole WPL family) assumes exist for every
+    // WPL variant. Values match what WPL13/17/23 already use for these -- verify against your
+    // WPL33 unit if in doubt.
+    PROPERTY(MAXRUECKLAUFTEMP, 0x0028, Type::et_dec_val);
+    PROPERTY(BIVALENZTEMPERATUR_HZG, 0x01ac, Type::et_dec_val);
+    PROPERTY(ANLAGEFROST, 0x0a00, Type::et_dec_val);
+    PROPERTY(UNTERK_COND, 0x0aff, Type::et_dec_val);
+    PROPERTY(RAUMEINFLUSS, 0x4ea4);
+    PROPERTY(STROM_MOTOR, 0x06b4, Type::et_dec_val);
+    PROPERTY(VORLAUFISTTEMP_NHZ, 0x4f40, Type::et_dec_val);
+    PROPERTY(RAUMSOLLTEMP_KUEHLEN, 0x4f04, Type::et_dec_val);
+    PROPERTY(ISTTEMPERATUR_KK_2, 0x4f09, Type::et_dec_val);
+    PROPERTY(SOLLTEMPERATUR_KK_2, 0x4f0a, Type::et_dec_val);
+    PROPERTY(KUEHLEN_ISTTEMP, 0x4f44, Type::et_dec_val);
+    PROPERTY(KUEHLEN_SOLLTEMP, 0x4f45, Type::et_dec_val);
+    PROPERTY(VERDICHTERDREHZAHLGRENZE, 0x4fac, Type::et_dec_val);
+    PROPERTY(STEIGUNG_KUEHLKURVE, 0x4fb9, Type::et_dec_val);
+    PROPERTY(LAUFZEIT_PASSIVKUEHLUNG, 0x4f9a, Type::et_dec_val);
+    PROPERTY(SOLL_UEBERHITZUNG_SAUGGAS_VERDICHTER, 0x4fa1, Type::et_dec_val);
+    PROPERTY(IST_UEBERHITZUNG_SAUGGAS_VERDICHTER, 0x4fa2, Type::et_dec_val);
+    PROPERTY(ADAPTION_UEBERHITZUNG, 0x4f9e, Type::et_dec_val);
+    PROPERTY(LEISTUNG_KUEHLEN, 0x7a40, Type::et_dec_val);
+    PROPERTY(UMGEBUNGSTEMPERATUR_INVERTER, 0xc1e6, Type::et_dec_val);
+    PROPERTY(TEMPERATUR_INV_VERDICHTER, 0xc1e7, Type::et_dec_val);
+    // WPL13/17's value; WPL23 uses 0x0691 instead -- unconfirmed for WPL33, verify against
+    // your unit.
+    PROPERTY(ZEITINTERVALL, 0x4f4d, Type::et_dec_val);
+    // Placeholder id only: wpl_base.yaml separately wires up RUECKLAUFISTTEMP (from MFG) and
+    // RUECKLAUFTEMP (from Heizmodul, defined above at 0x0016) as distinct sensors, but this
+    // unit's real CAN id for the MFG-sourced reading is unknown/unconfirmed -- 0x0016 is
+    // already taken by RUECKLAUFTEMP above. This placeholder just satisfies the compiler; the
+    // resulting HA entity won't report real data until you find and substitute the real id.
+    PROPERTY(RUECKLAUFISTTEMP, 0xffff, Type::et_dec_val);
 #endif
 };
 

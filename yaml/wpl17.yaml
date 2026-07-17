@@ -142,3 +142,5 @@ packages:
   FESTWERTBETRIEB:                          !include { file: templates/wp_temperature.yaml, vars: { property: "FESTWERTBETRIEB", target: "Kessel" }}
   WW_SOLLTEMPERATUR:                        !include { file: templates/wp_temperature.yaml, vars: { property: "WW_SOLLTEMPERATUR", target: "Kessel" }}
   GRENZE_KUEHLEN:                           !include { file: templates/wp_temperature.yaml, vars: { property: "GRENZE_KUEHLEN", target: "Kessel" }}
+
+  PROGRAMMSCHALTER:                         !include { file: templates/wp_select.yaml, vars: { property: PROGRAMMSCHALTER, target: "Manager", mapper_func_set: getBetriebsartId, mapper_func_get: getBetriebsart, options: ["Notbetrieb", "Bereitschaft", "Programm", "Komfort", "Eco", "Unbekannt"] }}

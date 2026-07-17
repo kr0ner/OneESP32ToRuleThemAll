@@ -56,3 +56,5 @@ packages:
   WAERMEQUELLENPUMPE:                   !include { file: templates/wp_binary.yaml, vars: { name: "WAERMEQUELLENPUMPE" }}
   PASSIVKUEHLVENTIL_HEIZEN:             !include { file: templates/wp_binary.yaml, vars: { name: "PASSIVKUEHLVENTIL_HEIZEN" }}
   PASSIVKUEHLVENTIL_KUEHLEN:            !include { file: templates/wp_binary.yaml, vars: { name: "PASSIVKUEHLVENTIL_KUEHLEN" }}
+
+  PROGRAMMSCHALTER:                     !include { file: templates/wp_select.yaml, vars: { property: PROGRAMMSCHALTER, target: "Manager", mapper_func_set: getBetriebsartId, mapper_func_get: getBetriebsart, options: ["Notbetrieb", "Bereitschaft", "Programm", "Komfort", "Eco", "Unbekannt"] }}

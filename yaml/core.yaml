@@ -16,6 +16,10 @@ esp32:
   framework:
     advanced:
       loop_task_stack_size: 16384
+    sdkconfig_options:
+      # ESP-IDF disables RTTI by default via its own Kconfig regardless of the
+      # "-fno-rtti" build_unflag above -- typeid() in simple_variant.h needs it enabled.
+      CONFIG_COMPILER_CXX_RTTI: "y"
 
 wp_core:
 
@@ -31,6 +35,7 @@ substitutions:
   interval_slow: 5min
   interval_very_slow: 15min
   interval_once_in_a_while: 1h
+  interval_once_a_day: 24h
   espclient_can_id: 0x6a2
 
 #########################################
