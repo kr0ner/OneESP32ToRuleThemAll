@@ -4,7 +4,6 @@
 #include <cstdint>
 #include <string>
 #include <type_traits>
-#include <typeinfo>
 #include <variant>
 
 template <typename T>
@@ -52,14 +51,14 @@ template <typename T>
 using normalized_t = typename normalized<T>::type;
 
 struct SimpleVariant {
-    SimpleVariant() : type_id(typeid(void)) {}
+    SimpleVariant() = default;
 
     template <typename T>
-    SimpleVariant(const T& value) : type_id(typeid(T)), v(static_cast<normalized_t<T>>(value)) {}
+    SimpleVariant(const T& value) : v(static_cast<normalized_t<T>>(value)) {}
 
     template <typename T>
     bool holds_alternative() const {
-        return (typeid(T) == type_id);
+        return std::holds_alternative<normalized_t<T>>(v);
     }
 
     template <typename T>
@@ -74,7 +73,6 @@ struct SimpleVariant {
 
    private:
     std::variant<std::monostate, bool, float, std::string> v;
-    const std::type_info& type_id;
 };
 
 #endif
