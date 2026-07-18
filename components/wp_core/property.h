@@ -501,12 +501,15 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(SCHALTFKT_IWS, 0x0060);
     PROPERTY(ABTAUUNGAKTIV, 0x0061, Type::et_little_endian);
     PROPERTY(WAERMEPUMPEN_STATUS, 0x0062, Type::et_little_endian);
-    // Proper bool types -- wired up as binary_sensors via templates/wp_binary_property.yaml
-    // (uses value.get<bool>()), not templates/wp_generic.yaml (which always does
-    // value.get<float>() and would throw bad_variant_access/crash on a bool-holding variant).
+
+    // TEILVORRANG_WW, EVU_SPERRE_AKTIV, WW_ECO: proper bool types -- wired up as binary_sensors
+    // via templates/wp_binary_property.yaml (uses value.get<bool>()), not templates/wp_generic.yaml
+    // (which always does value.get<float>() and would throw bad_variant_access/crash on a
+    // bool-holding variant).
     PROPERTY(TEILVORRANG_WW, 0x005e, Type::et_little_bool);
     PROPERTY(EVU_SPERRE_AKTIV, 0x0074, Type::et_bool);
     PROPERTY(WW_ECO, 0x027e, Type::et_bool);
+
     PROPERTY(PUFFERSOLLTEMPERATUR, 0x01d5, Type::et_dec_val);
     PROPERTY(HILFSKESSELSOLL, 0x01d7, Type::et_dec_val);
     PROPERTY(LAUFZEIT_WP1, 0x01c4);
@@ -517,14 +520,24 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(MAXVORLAUFTEMP, 0x01e8, Type::et_dec_val);
     PROPERTY(EINSTELL_SPEICHERSOLLTEMP2, 0x0a06, Type::et_dec_val);
     PROPERTY(VERDICHTER, 0x07a8, Type::et_dec_val);
-    // Not polled by wpl33.yaml itself (confirmed dead as a read via the FET CAN node), but
-    // core.yaml's Home Assistant Sensors block unconditionally writes HA's own room
-    // temperature/humidity to CanNode::HK1 using these -- needed by every device family.
+
+    // RAUMISTTEMP, RAUMFEUCHTE: not polled by wpl33.yaml itself (confirmed dead as a read via
+    // the FET CAN node), but core.yaml's Home Assistant Sensors block unconditionally writes
+    // HA's own room temperature/humidity to CanNode::HK1 using these -- needed by every device
+    // family.
     PROPERTY(RAUMISTTEMP, 0x4ec7, Type::et_dec_val);
     PROPERTY(RAUMFEUCHTE, 0x4ec8, Type::et_dec_val);
+
     PROPERTY(SOMMERBETRIEB, 0xfdb4, Type::et_little_bool);
     PROPERTY(STILLSTANDZEIT, 0xfdb1, Type::et_little_endian);
     PROPERTY(WP_STATUS, 0xfdae, Type::et_little_endian);
+
+    // GERAETEKONFIGURATION, ACCESS_EEPROM, INITIALISIERUNG: broadcast unsolicited by the unit
+    // on multiple CAN nodes -- never queried, see templates/wp_generic_passive.yaml.
+    PROPERTY(GERAETEKONFIGURATION, 0x0010);
+    PROPERTY(ACCESS_EEPROM, 0x0030, Type::et_little_endian);
+    PROPERTY(INITIALISIERUNG, 0x00fe, Type::et_little_endian);
+
     PROPERTY(MAXRUECKLAUFTEMP, 0x0028, Type::et_dec_val);
     PROPERTY(BIVALENZTEMPERATUR_HZG, 0x01ac, Type::et_dec_val);
     PROPERTY(ANLAGEFROST, 0x0a00, Type::et_dec_val);

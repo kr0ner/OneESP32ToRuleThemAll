@@ -1,0 +1,40 @@
+defaults:
+  icon: "mdi:blank"
+  accuracy_decimals: "0"
+  target: "Kessel"
+  unit: ""
+  scaler: "1.0"
+  name_suffix: ""
+  exposed: "true"
+  state_class: "measurement"
+
+# For properties the heat pump broadcasts unsolicited (never in response to a request) --
+# registers a passive receive-only callback, unlike wp_generic.yaml this never calls
+# queueRequest (no self-poll, no one-shot request at boot).
+sensor:
+  - platform: template
+    name: ${property}${name_suffix}
+    id: ${property}${name_suffix}
+    icon: ${icon}
+    unit_of_measurement: ${unit}
+    accuracy_decimals: ${accuracy_decimals}
+    state_class: ${state_class}
+
+esphome:
+  on_boot:
+    - priority: -50
+      then:
+        - lambda: |-
+            CallbackHandler::instance().addCallback({CanNode::${target},Property::k${property}},[](const SimpleVariant& value){
+                const auto newValue{${scaler} * value.get<float>()};
+                auto property{id(${property}${name_suffix})};
+                if(!std::is_eq(property->state <=> newValue)) {
+                  property->publish_state(newValue);
+                }
+            });
+
+            #if defined(ANALYTICS)
+              if(${exposed}) {
+                getWhitelistedEntities().insert(id(${property}${name_suffix}));
+              }
+            #endif

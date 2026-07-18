@@ -144,6 +144,15 @@ packages:
   LAUFZEIT_2WE:                !include { file: templates/wp_generic.yaml, vars: { property: "LAUFZEIT_2WE", update_interval: "${interval_once_in_a_while}", unit: "h", target: "Manager" }}
   WP_STATUS:                   !include { file: templates/wp_generic.yaml, vars: { property: "WP_STATUS", update_interval: "$interval_medium", target: "Manager" }}
 
+  # Broadcast unsolicited by the unit (seen on the bus without us ever requesting them) --
+  # passive receive-only, never queried.
+  GERAETEKONFIGURATION:        !include { file: templates/wp_generic_passive.yaml, vars: { property: "GERAETEKONFIGURATION", target: "Manager" }}
+  ACCESS_EEPROM:               !include { file: templates/wp_generic_passive.yaml, vars: { property: "ACCESS_EEPROM", target: "Manager" }}
+  INITIALISIERUNG_HK1:         !include { file: templates/wp_generic_passive.yaml, vars: { property: "INITIALISIERUNG", name_suffix: "_HK1", target: "HK1" }}
+  INITIALISIERUNG_KESSEL:      !include { file: templates/wp_generic_passive.yaml, vars: { property: "INITIALISIERUNG", name_suffix: "_KESSEL", target: "Kessel" }}
+  INITIALISIERUNG_MANAGER:     !include { file: templates/wp_generic_passive.yaml, vars: { property: "INITIALISIERUNG", name_suffix: "_MANAGER", target: "Manager" }}
+  INITIALISIERUNG_HEIZMODUL:   !include { file: templates/wp_generic_passive.yaml, vars: { property: "INITIALISIERUNG", name_suffix: "_HEIZMODUL", target: "Heizmodul" }}
+
   # Disabled by default -- not wired up in the original draft, and this unit has no secondary
   # heat generator ("2. Waermeerzeuger") so the WAERMEERTRAG_2WE_* energy sensors that used to
   # be listed here were removed outright (not just commented) -- see property.h.
