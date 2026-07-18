@@ -216,6 +216,10 @@ struct Property : public oe32trta::detail::Property {
 // =======================================================================
 // 5. THZ VARIANT SPECIFICS
 // =======================================================================
+#if defined(THZ_504)
+    PROPERTY(LAUFZEIT_VERDICHTER_KUEHLEN, 0x05a5);
+#endif
+
 #if defined(THZ_504) || defined(THZ_5_5_ECO)
     PROPERTY(PUMPENZYKLEN_AUSSENTEMP_MIN, 0x05bb);
     PROPERTY(PUMPENZYKLEN_AUSSENTEMP_MAX, 0x05bc);

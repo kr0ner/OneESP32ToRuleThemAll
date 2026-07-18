@@ -28,4 +28,5 @@ packages:
 
   ABLUFT_TAUPUNKT: !include { file: templates/wp_temperature.yaml, vars: { property: "ABLUFT_TAUPUNKT" }}
 
-  DIFFERENZDRUCK:  !include { file: templates/wp_generic.yaml, vars: { property: "DIFFERENZDRUCK" , icon: "mdi:air-filter", unit: "Pa", update_interval: $interval_medium }}
+  DIFFERENZDRUCK:              !include { file: templates/wp_generic.yaml, vars: { property: "DIFFERENZDRUCK"              , update_interval: $interval_medium, unit: "Pa", icon: "mdi:air-filter"}}
+  LAUFZEIT_VERDICHTER_KUEHLEN: !include { file: templates/wp_generic.yaml, vars: { property: "LAUFZEIT_VERDICHTER_KUEHLEN" , update_interval: $interval_slow  , unit: "h" , icon: "mdi:timer-sand-complete", state_class: "total_increasing" }}
