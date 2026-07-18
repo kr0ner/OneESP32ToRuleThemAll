@@ -479,6 +479,70 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(LAUFZEIT_VD_WW, 0x0802);
     PROPERTY(LAUFZEIT_VD_ABTAUEN, 0x0808);
 #endif
+
+#if defined(WPL_33)
+    PROPERTY(EINSTELL_SPEICHERSOLLTEMP, 0x0013, Type::et_dec_val);
+    PROPERTY(KESSELSOLLTEMP, 0x0002, Type::et_dec_val);
+    PROPERTY(RAUMSOLLTEMP_TAG, 0x0005, Type::et_dec_val);
+    PROPERTY(RAUMSOLLTEMP_NACHT, 0x0008, Type::et_dec_val);
+    PROPERTY(VORLAUFISTTEMP, 0x000f, Type::et_dec_val);
+    PROPERTY(VERDAMPFERTEMP, 0x0014, Type::et_dec_val);
+    PROPERTY(RUECKLAUFISTTEMP, 0x0016, Type::et_dec_val);
+    PROPERTY(PROGRAMMSCHALTER, 0x0112, Type::et_betriebsart);
+    PROPERTY(MAX_HYSTERESE, 0x0023, Type::et_little_endian);
+    PROPERTY(ANFAHRENT, 0x005d, Type::et_little_endian);
+    PROPERTY(SPEICHER_STATUS, 0x005a, Type::et_little_endian);
+    PROPERTY(SPEICHERBEDARF, 0x005f, Type::et_little_endian);
+    PROPERTY(SCHALTFKT_IWS, 0x0060);
+    PROPERTY(ABTAUUNGAKTIV, 0x0061, Type::et_little_endian);
+    PROPERTY(WAERMEPUMPEN_STATUS, 0x0062, Type::et_little_endian);
+
+    // TEILVORRANG_WW, EVU_SPERRE_AKTIV, WW_ECO: proper bool types -- wired up as binary_sensors
+    // via templates/wp_binary_property.yaml (uses value.get<bool>()), not templates/wp_generic.yaml
+    // (which always does value.get<float>() and would throw bad_variant_access/crash on a
+    // bool-holding variant).
+    PROPERTY(TEILVORRANG_WW, 0x005e, Type::et_little_bool);
+    PROPERTY(EVU_SPERRE_AKTIV, 0x0074, Type::et_bool);
+    PROPERTY(WW_ECO, 0x027e, Type::et_bool);
+
+    PROPERTY(PUFFERSOLLTEMPERATUR, 0x01d5, Type::et_dec_val);
+    PROPERTY(HILFSKESSELSOLL, 0x01d7, Type::et_dec_val);
+    PROPERTY(LAUFZEIT_WP1, 0x01c4);
+    PROPERTY(LAUFZEIT_WP2, 0x01c5);
+    PROPERTY(LAUFZEIT_2WE, 0x01cb);
+    PROPERTY(STILLSTANDZEIT_0, 0x01cc);
+    PROPERTY(STILLSTANDZEIT_1, 0x01cd);
+    PROPERTY(MAXVORLAUFTEMP, 0x01e8, Type::et_dec_val);
+    PROPERTY(EINSTELL_SPEICHERSOLLTEMP2, 0x0a06, Type::et_dec_val);
+    PROPERTY(VERDICHTER, 0x07a8, Type::et_dec_val);
+
+    // RAUMISTTEMP, RAUMFEUCHTE: not polled by wpl33.yaml itself (confirmed dead as a read via
+    // the FET CAN node), but core.yaml's Home Assistant Sensors block unconditionally writes
+    // HA's own room temperature/humidity to CanNode::HK1 using these -- needed by every device
+    // family.
+    PROPERTY(RAUMISTTEMP, 0x4ec7, Type::et_dec_val);
+    PROPERTY(RAUMFEUCHTE, 0x4ec8, Type::et_dec_val);
+
+    PROPERTY(SOMMERBETRIEB, 0xfdb4, Type::et_little_bool);
+    PROPERTY(STILLSTANDZEIT, 0xfdb1, Type::et_little_endian);
+    PROPERTY(WP_STATUS, 0xfdae, Type::et_little_endian);
+
+    // GERAETEKONFIGURATION, ACCESS_EEPROM, INITIALISIERUNG, BUSKONFIGURATION: broadcast
+    // unsolicited by the unit on multiple CAN nodes -- never queried, see
+    // templates/wp_generic_passive.yaml.
+    PROPERTY(GERAETEKONFIGURATION, 0x0010);
+    PROPERTY(ACCESS_EEPROM, 0x0030, Type::et_little_endian);
+    PROPERTY(INITIALISIERUNG, 0x00fe, Type::et_little_endian);
+    PROPERTY(BUSKONFIGURATION, 0x00fd);
+
+    // GERAETE_ID: also broadcast unsolicited (Heizmodul) -- string-valued (major-minor device
+    // id), see templates/wp_text_passive.yaml.
+    PROPERTY(GERAETE_ID, 0x000b, Type::et_dev_id);
+
+    PROPERTY(MAXRUECKLAUFTEMP, 0x0028, Type::et_dec_val);
+    PROPERTY(BIVALENZTEMPERATUR_HZG, 0x01ac, Type::et_dec_val);
+    PROPERTY(ANLAGEFROST, 0x0a00, Type::et_dec_val);
+#endif
 };
 
 #endif

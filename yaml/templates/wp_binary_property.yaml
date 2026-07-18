@@ -1,0 +1,43 @@
+defaults:
+  target: "Kessel"
+  update_interval: "1h"
+  name_suffix: ""
+  exposed: "true"
+
+binary_sensor:
+  - platform: template
+    name: ${property}${name_suffix}
+    id: ${property}${name_suffix}
+
+esphome:
+  on_boot:
+    - priority: -50
+      then:
+        - lambda: |-
+            CallbackHandler::instance().addCallback({CanNode::${target},Property::k${property}},[](const SimpleVariant& value){
+                const auto newValue{value.get<bool>()};
+                auto property{id(${property}${name_suffix})};
+                if(!property->has_state() || property->state != newValue) {
+                  property->publish_state(newValue);
+                }
+            });
+
+            #if defined(ANALYTICS)
+              if(${exposed}) {
+                getWhitelistedEntities().insert(id(${property}${name_suffix}));
+              }
+            #endif
+    - priority: -100.0
+      then:
+        - delay: 250ms
+        - lambda: |-
+            queueRequest(CanNode::${target}, Property::k${property});
+
+# binary_sensor (unlike sensor) has no update_interval+lambda self-polling, so re-request
+# periodically via a plain interval instead -- same approach the project's old wp_binary_sensor.yaml
+# template used before the component restructure.
+interval:
+  - interval: ${update_interval}
+    then:
+      - lambda: |-
+          queueRequest(CanNode::${target}, Property::k${property});

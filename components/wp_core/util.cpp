@@ -12,14 +12,19 @@ void syncTime(esphome::time::RealTimeClock* time_obj) {
     }
     ESP_LOGI("TIMESYNC", "Synchronizing heat pump time to %d.%d.%d %d:%d", time.day_of_month, time.month, time.year,
              time.hour, time.minute);
-#if !defined(THZ_304)
-    queueTransmission(CanNode::Kessel, Property::kSEKUNDE, toggleEndianness(time.second));
+#if defined(WPL_33)
+    const auto* target = CanNode::Manager;
+#else
+    const auto* target = CanNode::Kessel;
 #endif
-    queueTransmission(CanNode::Kessel, Property::kMINUTE, toggleEndianness(time.minute));
-    queueTransmission(CanNode::Kessel, Property::kSTUNDE, toggleEndianness(time.hour));
-    queueTransmission(CanNode::Kessel, Property::kTAG, toggleEndianness(time.day_of_month));
-    queueTransmission(CanNode::Kessel, Property::kMONAT, toggleEndianness(time.month));
-    queueTransmission(CanNode::Kessel, Property::kJAHR, toggleEndianness(time.year - 2000U));
+#if !defined(THZ_304)
+    queueTransmission(target, Property::kSEKUNDE, toggleEndianness(time.second));
+#endif
+    queueTransmission(target, Property::kMINUTE, toggleEndianness(time.minute));
+    queueTransmission(target, Property::kSTUNDE, toggleEndianness(time.hour));
+    queueTransmission(target, Property::kTAG, toggleEndianness(time.day_of_month));
+    queueTransmission(target, Property::kMONAT, toggleEndianness(time.month));
+    queueTransmission(target, Property::kJAHR, toggleEndianness(time.year - 2000U));
 }
 
 std::unordered_set<esphome::EntityBase*>& getWhitelistedEntities() {

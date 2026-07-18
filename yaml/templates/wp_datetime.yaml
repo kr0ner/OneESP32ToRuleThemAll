@@ -1,3 +1,6 @@
+defaults:
+  target: "Kessel"
+
 esphome:
   on_boot:
     - priority: -50
@@ -19,28 +22,28 @@ esphome:
                 // publish the value
                 id(HEATPUMP_DATETIME).state = std::string(buf);
             };
-            CallbackHandler::instance().addCallback({CanNode::Kessel,Property::kJAHR},[updateTime](const SimpleVariant& value){
+            CallbackHandler::instance().addCallback({CanNode::${target},Property::kJAHR},[updateTime](const SimpleVariant& value){
               updateTime([&value](ESPTime& timeToSet){
                 timeToSet.year = 2000U + static_cast<std::uint16_t>(value);
               });
             });
-            CallbackHandler::instance().addCallback({CanNode::Kessel,Property::kMONAT},[updateTime](const SimpleVariant& value){
+            CallbackHandler::instance().addCallback({CanNode::${target},Property::kMONAT},[updateTime](const SimpleVariant& value){
               updateTime([&value](ESPTime& timeToSet){
                 timeToSet.month = static_cast<std::uint16_t>(value);
               });
             });
-            CallbackHandler::instance().addCallback({CanNode::Kessel,Property::kWOCHENTAG},[](const SimpleVariant&){});
-            CallbackHandler::instance().addCallback({CanNode::Kessel,Property::kTAG},[updateTime](const SimpleVariant& value){
+            CallbackHandler::instance().addCallback({CanNode::${target},Property::kWOCHENTAG},[](const SimpleVariant&){});
+            CallbackHandler::instance().addCallback({CanNode::${target},Property::kTAG},[updateTime](const SimpleVariant& value){
               updateTime([&value](ESPTime& timeToSet){
                 timeToSet.day_of_month = static_cast<std::uint16_t>(value);
               });
             });
-            CallbackHandler::instance().addCallback({CanNode::Kessel,Property::kSTUNDE},[updateTime](const SimpleVariant& value){
+            CallbackHandler::instance().addCallback({CanNode::${target},Property::kSTUNDE},[updateTime](const SimpleVariant& value){
               updateTime([&value](ESPTime& timeToSet){
                 timeToSet.hour = static_cast<std::uint16_t>(value);
               });
             });
-            CallbackHandler::instance().addCallback({CanNode::Kessel,Property::kMINUTE},[updateTime](const SimpleVariant& value){
+            CallbackHandler::instance().addCallback({CanNode::${target},Property::kMINUTE},[updateTime](const SimpleVariant& value){
               updateTime([&value](ESPTime& timeToSet){
                 timeToSet.minute = static_cast<std::uint16_t>(value);
               });
@@ -50,11 +53,11 @@ esphome:
       then:
         - delay: 250ms
         - lambda: |-
-            queueRequest(CanNode::Kessel, Property::kJAHR);
-            queueRequest(CanNode::Kessel, Property::kMONAT);
-            queueRequest(CanNode::Kessel, Property::kTAG);
-            queueRequest(CanNode::Kessel, Property::kSTUNDE);
-            queueRequest(CanNode::Kessel, Property::kMINUTE);
+            queueRequest(CanNode::${target}, Property::kJAHR);
+            queueRequest(CanNode::${target}, Property::kMONAT);
+            queueRequest(CanNode::${target}, Property::kTAG);
+            queueRequest(CanNode::${target}, Property::kSTUNDE);
+            queueRequest(CanNode::${target}, Property::kMINUTE);
 
 text_sensor:
   - platform: template

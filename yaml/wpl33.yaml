@@ -1,0 +1,159 @@
+#########################################
+#                                       #
+#   ESPHome                             #
+#                                       #
+#########################################
+esphome:
+  build_flags:
+    - "-DWPL_33"
+  on_boot:
+    - priority: -50
+      then:
+        - lambda: |-
+            CallbackHandler::instance().addCallback(std::make_pair(CanNode::Manager,Property::kWAERMEPUMPEN_STATUS),[](const SimpleVariant& value){
+              const std::bitset<9U> status_bits{static_cast<std::uint16_t>(value)};
+              id(VERDICHTER).publish_state(status_bits.test(0U));
+              id(STOERUNG).publish_state(status_bits.test(4U));
+            });
+    - priority: -100
+      then:
+        - lambda: |-
+            queueRequest(CanNode::Manager, Property::kWAERMEPUMPEN_STATUS);
+
+#########################################
+#                                       #
+#   Global variables                    #
+#                                       #
+#########################################
+globals:
+  - id: heat_pump_variant
+    type: std::string
+    initial_value: '"WPL33"'
+
+#########################################
+#                                       #
+#   Substitutions                       #
+#                                       #
+#########################################
+substitutions:
+  # WPL33's datetime is read from/written to the Manager CAN node, not Kessel like the rest
+  # of the WPL family (see wpl_base.yaml).
+  datetime_target: "Manager"
+  # WPL33's CAN bus runs at 20kbps, unlike the 50kbps default wpl_base.yaml sets for WPL13/17/23.
+  can_bus_bit_rate: 20kbps
+
+#########################################
+#                                       #
+#   CAN Bus                             #
+#                                       #
+#########################################
+# WPL33 no longer inherits wpl_base.yaml wholesale (see below) -- it applies the bit rate
+# override itself instead of relying on wpl_base.yaml to do it.
+canbus:
+  - id: !extend wp_can
+    bit_rate: $can_bus_bit_rate
+
+text:
+  - id: !extend HK1_CAN_ID
+    initial_value: "0x601"
+  - id: !extend HK2_CAN_ID
+    initial_value: "0x602"
+  # WPL33's Heizmodul is on 0x500, unlike the 0x514 default wpl_base.yaml sets for WPL13/17/23.
+  - id: !extend Heizmodul_CAN_ID
+    initial_value: "0x500"
+
+#########################################
+#                                       #
+#   Packages                            #
+#                                       #
+#########################################
+# WPL33 does NOT include wpl_base.yaml as a whole -- unlike WPL13/17/23, a large fraction of
+# its properties are confirmed (via live logs) to never return real data on this unit, and
+# every time we found more it meant either duplicating exceptions across 3 sibling files or
+# fighting !remove's inability to clean up baked on_boot lambda code. Instead this opts in
+# explicitly to everything wpl_base.yaml provides, one section at a time, omitting only the
+# properties already confirmed dead (below). If more turn out to be dead later, just delete
+# their line here -- no other file is affected.
+packages:
+  CORE:                         !include { file: core.yaml }
+  MANAGER:                      !include { file: templates/wp_can_id.yaml, vars: { can_node: "Manager" , can_id: "0x480" }}
+
+  # wpl_base.yaml also decodes BETRIEBS_STATUS into 12 binary sensors (HEIZKREISPUMPE_1/2,
+  # PUFFERLADEPUMPE_1, QUELLENPUMPE, STOERAUSGANG, KUEHLBETRIEB, MISCHER_AUF/ZU_HEIZKREIS_2,
+  # NHZ_1/2/3, EVU_SPERRE). Omitted entirely: BETRIEBS_STATUS itself is confirmed dead on this
+  # unit (always returns the sentinel 32768), so none of those 12 would ever publish anything
+  # but "unknown".
+
+  # Everything else wpl_base.yaml provides turned out to be dead on this unit too (confirmed
+  # via further live logs) -- only these few survive:
+  VERDAMPFERTEMP:              !include { file: templates/wp_temperature.yaml, vars: { property: "VERDAMPFERTEMP"     , target: "Heizmodul"  }}
+  MAXVORLAUFTEMP:              !include { file: templates/wp_temperature.yaml, vars: { property: "MAXVORLAUFTEMP"     , target: "Kessel"  }}
+  MAXRUECKLAUFTEMP:            !include { file: templates/wp_temperature.yaml, vars: { property: "MAXRUECKLAUFTEMP"   , target: "Kessel"  }}
+  AUSSENTEMP:                  !include { file: templates/wp_temperature.yaml, vars: { property: "AUSSENTEMP"         , update_interval: $interval_medium , target: "Kessel" }}
+  ANLAGEFROST:                 !include { file: templates/wp_temperature.yaml, vars: { property: "ANLAGEFROST"        , update_interval: $interval_medium , target: "Kessel" }}
+  BIVALENZTEMPERATUR_HZG:      !include { file: templates/wp_temperature.yaml, vars: { property: "BIVALENZTEMPERATUR_HZG", target: "Kessel"  }}
+
+  HEATPUMP_DATETIME:           !include { file: templates/wp_datetime.yaml, vars: { target: "$datetime_target" } }
+
+  VERDICHTER:                  !include { file: templates/wp_binary.yaml, vars: { name: "VERDICHTER" }}
+  STOERUNG:                    !include { file: templates/wp_binary.yaml, vars: { name: "STOERUNG" }}
+
+  # WPL33 uses different Betriebsart strings than the rest of the WPL family (see
+  # components/wp_core/mapper.cpp's WPL_33 betriebsartMap branch), so it declares its own
+  # PROGRAMMSCHALTER here instead of inheriting wpl_base.yaml's shared one.
+  PROGRAMMSCHALTER:            !include { file: templates/wp_select.yaml, vars: { property: PROGRAMMSCHALTER, target: "Manager", mapper_func_set: getBetriebsartId, mapper_func_get: getBetriebsart, options: ["Automatik", "Warmwasser", "Bereitschaft", "Tagbetrieb", "Absenkbetrieb", "Notbetrieb", "Unbekannt"] }}
+
+  SOMMERBETRIEB:               !include { file: templates/wp_binary_property.yaml, vars: { property: "SOMMERBETRIEB", update_interval: $interval_very_slow, target: "Manager" }}
+  WW_ECO:                      !include { file: templates/wp_binary_property.yaml, vars: { property: "WW_ECO", update_interval: $interval_very_slow, target: "Manager" }}
+
+  PUFFERSOLLTEMPERATUR:        !include { file: templates/wp_temperature.yaml, vars: { property: "PUFFERSOLLTEMPERATUR", update_interval: $interval_medium }}
+  SPEICHERSOLLTEMP:            !include { file: templates/wp_temperature.yaml, vars: { property: "SPEICHERSOLLTEMP", update_interval: $interval_medium }}
+  SPEICHERISTTEMP:             !include { file: templates/wp_temperature.yaml, vars: { property: "SPEICHERISTTEMP", update_interval: $interval_medium }}
+  EINSTELL_SPEICHERSOLLTEMP:   !include { file: templates/wp_temperature.yaml, vars: { property: "EINSTELL_SPEICHERSOLLTEMP", update_interval: $interval_once_a_day }}
+  EINSTELL_SPEICHERSOLLTEMP2:  !include { file: templates/wp_temperature.yaml, vars: { property: "EINSTELL_SPEICHERSOLLTEMP2", update_interval: $interval_once_a_day }}
+  HILFSKESSELSOLL:             !include { file: templates/wp_temperature.yaml, vars: { property: "HILFSKESSELSOLL", update_interval: $interval_once_in_a_while }}
+  KESSELSOLLTEMP:              !include { file: templates/wp_temperature.yaml, vars: { property: "KESSELSOLLTEMP", update_interval: $interval_once_in_a_while }}
+  RAUMSOLLTEMP_TAG:            !include { file: templates/wp_temperature.yaml, vars: { property: "RAUMSOLLTEMP_TAG", update_interval: $interval_once_a_day, target: "Manager" }}
+  RAUMSOLLTEMP_NACHT:          !include { file: templates/wp_temperature.yaml, vars: { property: "RAUMSOLLTEMP_NACHT", update_interval: $interval_once_a_day, target: "Manager" }}
+
+  # wpl_base.yaml assumes MFG/HK1/MFG for these three (matching WPL13/17/23), but this unit
+  # only responds on the targets below -- declared here instead of relying on the shared ones.
+  VORLAUFISTTEMP:              !include { file: templates/wp_temperature.yaml, vars: { property: "VORLAUFISTTEMP", update_interval: $interval_medium, target: "HK1" }}
+  VORLAUFSOLLTEMP:             !include { file: templates/wp_temperature.yaml, vars: { property: "VORLAUFSOLLTEMP", update_interval: $interval_medium }}
+  RUECKLAUFISTTEMP:            !include { file: templates/wp_temperature.yaml, vars: { property: "RUECKLAUFISTTEMP", update_interval: $interval_medium, target: "Manager" }}
+
+  TEILVORRANG_WW:              !include { file: templates/wp_binary_property.yaml, vars: { property: "TEILVORRANG_WW", update_interval: $interval_medium, target: "Manager" }}
+  EVU_SPERRE_AKTIV:            !include { file: templates/wp_binary_property.yaml, vars: { property: "EVU_SPERRE_AKTIV", target: "Manager" }}
+  SPEICHERBEDARF:              !include { file: templates/wp_generic.yaml, vars: { property: "SPEICHERBEDARF", target: "Manager" }}
+  ANFAHRENT:                   !include { file: templates/wp_generic.yaml, vars: { property: "ANFAHRENT", target: "Manager", update_interval: $interval_medium }}
+  MAX_HYSTERESE:               !include { file: templates/wp_generic.yaml, vars: { property: "MAX_HYSTERESE", target: "Kessel", accuracy_decimals: "0" }}
+  # BETRIEBS_STATUS: never returns real data on this unit -- confirmed via logs, always 32768.
+  SPEICHER_STATUS:             !include { file: templates/wp_generic.yaml, vars: { property: "SPEICHER_STATUS", update_interval: $interval_medium, target: "Heizmodul" }}
+  ABTAUUNGAKTIV:               !include { file: templates/wp_generic.yaml, vars: { property: "ABTAUUNGAKTIV", target: "Heizmodul", update_interval: $interval_medium }}
+  SCHALTFKT_IWS:               !include { file: templates/wp_generic.yaml, vars: { property: "SCHALTFKT_IWS", target: "Heizmodul" }}
+  FEHLERMELDUNG:               !include { file: templates/wp_generic.yaml, vars: { property: "FEHLERMELDUNG", target: "Manager", icon: "mdi:alert-circle" }}
+  FEHLERMELDUNG_HM:            !include { file: templates/wp_generic.yaml, vars: { property: "FEHLERMELDUNG", name_suffix: "_HM", target: "Heizmodul", icon: "mdi:alert-circle" }}
+  STILLSTANDZEIT:              !include { file: templates/wp_generic.yaml, vars: { property: "STILLSTANDZEIT", update_interval: "${interval_once_in_a_while}", unit: "min", target: "Manager" }}
+  STILLSTANDZEIT_0:            !include { file: templates/wp_generic.yaml, vars: { property: "STILLSTANDZEIT_0", update_interval: "$interval_medium", unit: "s", target: "Manager" }}
+  STILLSTANDZEIT_1:            !include { file: templates/wp_generic.yaml, vars: { property: "STILLSTANDZEIT_1", update_interval: "$interval_medium", unit: "s", target: "Manager" }}
+  LAUFZEIT_WP1:                !include { file: templates/wp_generic.yaml, vars: { property: "LAUFZEIT_WP1", update_interval: "${interval_once_in_a_while}", unit: "h", target: "Manager" }}
+  LAUFZEIT_WP2:                !include { file: templates/wp_generic.yaml, vars: { property: "LAUFZEIT_WP2", update_interval: "${interval_once_in_a_while}", unit: "h", target: "Manager" }}
+  LAUFZEIT_2WE:                !include { file: templates/wp_generic.yaml, vars: { property: "LAUFZEIT_2WE", update_interval: "${interval_once_in_a_while}", unit: "h", target: "Manager" }}
+  WP_STATUS:                   !include { file: templates/wp_generic.yaml, vars: { property: "WP_STATUS", update_interval: "$interval_medium", target: "Manager" }}
+
+  # Broadcast unsolicited by the unit (seen on the bus without us ever requesting them) --
+  # passive receive-only, never queried.
+  GERAETEKONFIGURATION:        !include { file: templates/wp_generic_passive.yaml, vars: { property: "GERAETEKONFIGURATION", target: "Manager" }}
+  ACCESS_EEPROM:               !include { file: templates/wp_generic_passive.yaml, vars: { property: "ACCESS_EEPROM", target: "Manager" }}
+  INITIALISIERUNG_HK1:         !include { file: templates/wp_generic_passive.yaml, vars: { property: "INITIALISIERUNG", name_suffix: "_HK1", target: "HK1" }}
+  INITIALISIERUNG_KESSEL:      !include { file: templates/wp_generic_passive.yaml, vars: { property: "INITIALISIERUNG", name_suffix: "_KESSEL", target: "Kessel" }}
+  INITIALISIERUNG_MANAGER:     !include { file: templates/wp_generic_passive.yaml, vars: { property: "INITIALISIERUNG", name_suffix: "_MANAGER", target: "Manager" }}
+  INITIALISIERUNG_HEIZMODUL:   !include { file: templates/wp_generic_passive.yaml, vars: { property: "INITIALISIERUNG", name_suffix: "_HEIZMODUL", target: "Heizmodul" }}
+  BUSKONFIGURATION:            !include { file: templates/wp_generic_passive.yaml, vars: { property: "BUSKONFIGURATION", target: "Heizmodul" }}
+  GERAETE_ID:                  !include { file: templates/wp_text_passive.yaml, vars: { property: "GERAETE_ID", target: "Heizmodul" }}
+
+  # Disabled by default -- not wired up in the original draft, and this unit has no secondary
+  # heat generator ("2. Waermeerzeuger") so the WAERMEERTRAG_2WE_* energy sensors that used to
+  # be listed here were removed outright (not just commented) -- see property.h.
+  # VERDICHTER_RAW:                       !include { file: templates/wp_generic.yaml, vars: { property: "VERDICHTER", target: "Manager", accuracy_decimals: "1" }}
+  # WAERMEPUMPEN_STATUS_RAW:              !include { file: templates/wp_generic.yaml, vars: { property: "WAERMEPUMPEN_STATUS", target: "Manager" }}
