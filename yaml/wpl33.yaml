@@ -4,9 +4,8 @@
 #                                       #
 #########################################
 esphome:
-  platformio_options:
-    build_flags:
-      - "-DWPL_33"
+  build_flags:
+    - "-DWPL_33"
   on_boot:
     - priority: -50
       then:

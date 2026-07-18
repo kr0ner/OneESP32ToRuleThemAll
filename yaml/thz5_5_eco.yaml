@@ -4,9 +4,8 @@
 #                                       #
 #########################################
 esphome:
-  platformio_options:
-    build_flags:
-      - "-DTHZ_5_5_ECO"
+  build_flags:
+    - "-DTHZ_5_5_ECO"
 
 #########################################
 #                                       #

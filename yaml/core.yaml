@@ -4,13 +4,11 @@
 #                                       #
 #########################################
 esphome:
-  platformio_options:
-    build_flags:
-      - "-std=gnu++2a"
-      - "-DESPCLIENT_ID=$espclient_can_id"
-    build_unflags:
-      - "-std=gnu++11"
-      - "-fno-rtti"
+  # build_unflags ("-std=gnu++11", "-fno-rtti") dropped -- ignored under the native ESP-IDF
+  # toolchain anyway; RTTI is instead enabled via the sdkconfig_options below.
+  build_flags:
+    - "-std=gnu++2a"
+    - "-DESPCLIENT_ID=$espclient_can_id"
 
 esp32:
   framework:
