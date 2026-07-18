@@ -1,0 +1,103 @@
+#########################################
+#                                       #
+#   ESPHome                             #
+#                                       #
+#########################################
+# Stiebel Eltron WPE-I ... H(K) (brine/water, no integrated DHW).
+# Panel-verified on a WPE-I 08 HK 230 Premium. Shares the WPL13 property
+# set except: no Warmwasser energy counters, adds runtime counters, and
+# 0x02e2 is WP_WASSERVOLUMENSTROM (as on WPL17), NOT the WPL13 status
+# word — the WPL13 status-bit binaries are omitted until the WPE-I's
+# real status property is identified.
+esphome:
+  platformio_options:
+    build_flags:
+      - "-DWPE_I"
+  on_boot:
+    - priority: -50
+      then:
+        - lambda: |-
+            // Wärmepumpen-Status word 0x4eda: only panel-verified bits are decoded.
+            // The raw word is exposed as a sensor so the remaining bits can be
+            // identified from recorded history when the pump changes state.
+            CallbackHandler::instance().addCallback(std::make_pair(CanNode::Kessel,Property::kWAERMEPUMPEN_STATUS),[](const SimpleVariant& value){
+              const auto word{static_cast<std::uint16_t>(value)};
+              id(WP_STATUS_RAW).publish_state(word);
+              if (word != 0x8000U) {  // 0x8000 = standby (Bereitschaft)
+                const std::bitset<16U> status_bits{word};
+                id(PASSIVKUEHLUNG_AKTIV).publish_state(status_bits.test(4U));
+              }
+            });
+            // Anlagen-Status word 0x4ecd is broadcast by the pump towards the
+            // room unit and arrives carrying HK2's sender id.
+            CallbackHandler::instance().addCallback(std::make_pair(CanNode::HK2,Property::kBETRIEBS_STATUS),[](const SimpleVariant& value){
+              const auto word{static_cast<std::uint16_t>(value)};
+              const std::bitset<16U> status_bits{word};
+              id(ANLAGE_STATUS_RAW).publish_state(word);
+              id(HEIZKREISPUMPE_2).publish_state(status_bits.test(2U));
+            });
+            // EVU-Sperre-aktiv flag 0x0074, broadcast periodically (Manager id)
+            CallbackHandler::instance().addCallback(std::make_pair(CanNode::Manager,Property::kEVU_SPERRE_AKTIV),[](const SimpleVariant& value){
+              id(EVU_SPERRE_AKTIV).publish_state(static_cast<std::uint16_t>(value) == 1U);
+            });
+    - priority: -100
+      then:
+        - lambda: |-
+            queueRequest(CanNode::Kessel, Property::kWAERMEPUMPEN_STATUS);
+
+#########################################
+#                                       #
+#   Status raw words (diagnostic)       #
+#                                       #
+#########################################
+sensor:
+  - platform: template
+    name: WP_STATUS_RAW
+    id: WP_STATUS_RAW
+    icon: "mdi:numeric"
+    accuracy_decimals: 0
+    update_interval: never
+  - platform: template
+    name: ANLAGE_STATUS_RAW
+    id: ANLAGE_STATUS_RAW
+    icon: "mdi:numeric"
+    accuracy_decimals: 0
+    update_interval: never
+
+#########################################
+#                                       #
+#   Global variables                    #
+#                                       #
+#########################################
+globals:
+  - id: heat_pump_variant
+    type: std::string
+    initial_value: '"WPE-I"'
+
+#########################################
+#                                       #
+#   Packages                            #
+#                                       #
+#########################################
+
+packages:
+  wpl_base:                             !include { file: wpl_base.yaml }
+
+  # 0x02e2 fluctuates with the circulation flow (raw 280/285 = 28.0/28.5 l/min,
+  # consistent with VOLUMENSTROM 0x4f47) — same meaning as on the WPL17
+  WP_WASSERVOLUMENSTROM:                !include { file: templates/wp_generic.yaml, vars: { property: "WP_WASSERVOLUMENSTROM", unit: "l/min", icon: "mdi:water", accuracy_decimals: "1", target: "Heizmodul" }}
+
+  # runtime counters (panel: Info -> Wärmepumpe -> Laufzeit)
+  LAUFZEIT_VD_HEIZEN:                   !include { file: templates/wp_generic.yaml, vars: { property: "LAUFZEIT_VD_HEIZEN", unit: "h", target: "Heizmodul" }}
+  LAUFZEIT_NHZ1:                        !include { file: templates/wp_generic.yaml, vars: { property: "LAUFZEIT_NHZ1", unit: "h", target: "Heizmodul" }}
+  LAUFZEIT_NHZ2:                        !include { file: templates/wp_generic.yaml, vars: { property: "LAUFZEIT_NHZ2", unit: "h", target: "Heizmodul" }}
+  LAUFZEIT_NHZ1_2:                      !include { file: templates/wp_generic.yaml, vars: { property: "LAUFZEIT_NHZ1_2", unit: "h", target: "Heizmodul" }}
+
+  # status binaries decoded from the WPE-I's own status words (panel-verified bits only)
+  PASSIVKUEHLUNG_AKTIV:                 !include { file: templates/wp_binary.yaml, vars: { name: "PASSIVKUEHLUNG_AKTIV" }}
+  HEIZKREISPUMPE_2:                     !include { file: templates/wp_binary.yaml, vars: { name: "HEIZKREISPUMPE_2" }}
+  EVU_SPERRE_AKTIV:                     !include { file: templates/wp_binary.yaml, vars: { name: "EVU_SPERRE_AKTIV" }}
+
+  # further panel-verified values
+  REGELABWEICHUNG:                      !include { file: templates/wp_generic.yaml, vars: { property: "REGELABWEICHUNG", unit: "K", accuracy_decimals: "1", target: "Manager" }}
+  WAERMEERTRAG_2WE_HEIZ_SUMME_MWH:      !include { file: templates/wp_generic_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_2WE_HEIZ_SUMME_MWH" , scaled_property: "WAERMEERTRAG_2WE_HEIZ_SUM_KWH" , property: "WAERMEERTRAG_2WE_HEIZ_SUM_MWH" , unit: "MWh", accuracy_decimals: "3", icon: "mdi:fire" , target: "Heizmodul", state_class: "total_increasing" }}

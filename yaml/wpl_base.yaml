@@ -17,55 +17,12 @@ canbus:
 
 #########################################
 #                                       #
-#   ESPHome Base Setup                  #
-#                                       #
-#########################################
-esphome:
-  on_boot:
-    - priority: -50
-      then:
-        - lambda: |-
-            CallbackHandler::instance().addCallback(std::make_pair(CanNode::Manager,Property::kBETRIEBS_STATUS),[](const SimpleVariant& value){
-              const std::bitset<12U> status_bits{static_cast<std::uint16_t>(value)};
-              id(HEIZKREISPUMPE_1).publish_state(status_bits.test(0U));
-              id(HEIZKREISPUMPE_2).publish_state(status_bits.test(1U));
-              id(PUFFERLADEPUMPE_1).publish_state(status_bits.test(2U));
-              id(QUELLENPUMPE).publish_state(status_bits.test(3U));
-              id(STOERAUSGANG).publish_state(status_bits.test(4U));
-              id(KUEHLBETRIEB).publish_state(status_bits.test(5U));
-              id(MISCHER_AUF_HEIZKREIS_2).publish_state(status_bits.test(6U));
-              id(MISCHER_ZU_HEIZKREIS_2).publish_state(status_bits.test(7U));
-              id(NHZ_1).publish_state(status_bits.test(8U));
-              id(NHZ_2).publish_state(status_bits.test(9U));
-              id(NHZ_3).publish_state(status_bits.test(10U));
-              id(EVU_SPERRE).publish_state(status_bits.test(11U));
-            });
-    - priority: -100
-      then:
-        - lambda: |-
-            queueRequest(CanNode::Manager, Property::kBETRIEBS_STATUS);
-
-#########################################
-#                                       #
 #   Packages                            #
 #                                       #
 #########################################
 packages:
   CORE:                                  !include { file: core.yaml }
   MANAGER:                               !include { file: templates/wp_can_id.yaml, vars: { can_node: "Manager" , can_id: "0x480" }}
-
-  HEIZKREISPUMPE_1:                      !include { file: templates/wp_binary.yaml, vars: { name: "HEIZKREISPUMPE_1" }}
-  HEIZKREISPUMPE_2:                      !include { file: templates/wp_binary.yaml, vars: { name: "HEIZKREISPUMPE_2" }}
-  PUFFERLADEPUMPE_1:                     !include { file: templates/wp_binary.yaml, vars: { name: "PUFFERLADEPUMPE_1" }}
-  QUELLENPUMPE:                          !include { file: templates/wp_binary.yaml, vars: { name: "QUELLENPUMPE" }}
-  STOERAUSGANG:                          !include { file: templates/wp_binary.yaml, vars: { name: "STOERAUSGANG" }}
-  KUEHLBETRIEB:                          !include { file: templates/wp_binary.yaml, vars: { name: "KUEHLBETRIEB" }}
-  MISCHER_AUF_HEIZKREIS_2:               !include { file: templates/wp_binary.yaml, vars: { name: "MISCHER_AUF_HEIZKREIS_2" }}
-  MISCHER_ZU_HEIZKREIS_2:                !include { file: templates/wp_binary.yaml, vars: { name: "MISCHER_ZU_HEIZKREIS_2" }}
-  NHZ_1:                                 !include { file: templates/wp_binary.yaml, vars: { name: "NHZ_1" }}
-  NHZ_2:                                 !include { file: templates/wp_binary.yaml, vars: { name: "NHZ_2" }}
-  NHZ_3:                                 !include { file: templates/wp_binary.yaml, vars: { name: "NHZ_3" }}
-  EVU_SPERRE:                            !include { file: templates/wp_binary.yaml, vars: { name: "EVU_SPERRE" }}
 
   ISTTEMPERATUR_HK1:                     !include { file: templates/wp_temperature.yaml, vars: { property: "ISTTEMPERATUR"     , name_suffix: "_HK1" , target: "HK1"  }}
   SOLLTEMPERATUR_HK1:                    !include { file: templates/wp_temperature.yaml, vars: { property: "SOLLTEMPERATUR"    , name_suffix: "_HK1" , target: "HK1"  }}
@@ -144,14 +101,10 @@ packages:
   RAUMEINFLUSS:                          !include { file: templates/wp_number.yaml, vars: { property: "RAUMEINFLUSS", target: "HK2" }}
 
   VERDICHTER_STARTS:                     !include { file: templates/wp_generic_combined.yaml, vars: { sensor_name: "VERDICHTER_STARTS"           , scaled_property: "VERDICHTER_STARTS_K"       , property: "VERDICHTER_STARTS"         , unit: ""   , accuracy_decimals: "0", scaler: "1000", icon: "mdi:counter" , target: "Heizmodul", state_class: "total_increasing" }}
-  WAERMEERTRAG_WW_SUMME_MWH:             !include { file: templates/wp_generic_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_WW_SUMME_MWH"   , scaled_property: "WAERMEERTRAG_WW_SUM_KWH"   , property: "WAERMEERTRAG_WW_SUM_MWH"   , unit: "MWh", accuracy_decimals: "3", icon: "mdi:fire" , target: "Heizmodul", state_class: "total_increasing" }}
   WAERMEERTRAG_HEIZ_SUMME_MWH:           !include { file: templates/wp_generic_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_HEIZ_SUMME_MWH" , scaled_property: "WAERMEERTRAG_HEIZ_SUM_KWH" , property: "WAERMEERTRAG_HEIZ_SUM_MWH" , unit: "MWh", accuracy_decimals: "3", icon: "mdi:fire" , target: "Heizmodul", state_class: "total_increasing" }}
-  EL_ENERGIEAUFNAHME_WW_SUMME_KWH:       !include { file: templates/wp_generic_combined.yaml, vars: { sensor_name: "EL_ENERGIEAUFNAHME_WW_SUMME_KWH"   , scaled_property: "EL_ENERGIEAUFNAHME_WW_SUM_KWH"   , property: "EL_ENERGIEAUFNAHME_WW_SUM_MWH"   , unit: "kWh", accuracy_decimals: "0", scaler: "1000", icon: "mdi:flash", target: "Heizmodul", state_class: "total_increasing" }}
-  EL_ENERGIEAUFNAHME_HEIZ_SUMME_KWH:     !include { file: templates/wp_generic_combined.yaml, vars: { sensor_name: "EL_ENERGIEAUFNAHME_HEIZ_SUMME_KWH" , scaled_property: "EL_ENERGIEAUFNAHME_HEIZ_SUM_KWH" , property: "EL_ENERGIEAUFNAHME_HEIZ_SUM_MWH" , unit: "kWh", accuracy_decimals: "0", scaler: "1000", icon: "mdi:flash", target: "Heizmodul", state_class: "total_increasing" }}
+  EL_ENERGIEAUFNAHME_HEIZ_SUMME_KWH:     !include { file: templates/wp_generic_combined.yaml, vars: { sensor_name: "EL_ENERGIEAUFNAHME_HEIZ_SUMME_KWH" , scaled_property: "EL_ENERGIEAUFNAHME_HEIZ_SUM_MWH" , property: "EL_ENERGIEAUFNAHME_HEIZ_SUM_KWH" , unit: "kWh", accuracy_decimals: "0", scaler: "1000", icon: "mdi:flash", target: "Heizmodul", state_class: "total_increasing" }}
 
-  EL_ENERGIEAUFNAHME_WW_TAG_SUMME_KWH:   !include { file: templates/wp_daily_energy_combined.yaml, vars: { sensor_name: "EL_ENERGIEAUFNAHME_WW_TAG_SUMME_KWH"   , property_wh: "EL_ENERGIEAUFNAHME_WW_TAG_WH"   , property_kwh: "EL_ENERGIEAUFNAHME_WW_TAG_KWH"   , target: "Heizmodul" }}
   EL_ENERGIEAUFNAHME_HEIZ_TAG_SUMME_KWH: !include { file: templates/wp_daily_energy_combined.yaml, vars: { sensor_name: "EL_ENERGIEAUFNAHME_HEIZ_TAG_SUMME_KWH" , property_wh: "EL_ENERGIEAUFNAHME_HEIZ_TAG_WH" , property_kwh: "EL_ENERGIEAUFNAHME_HEIZ_TAG_KWH" , target: "Heizmodul" }}
-  WAERMEERTRAG_WW_TAG_SUMME_KWH:         !include { file: templates/wp_daily_energy_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_WW_TAG_SUMME_KWH"     , property_wh: "WAERMEERTRAG_WW_TAG_WH"         , property_kwh: "WAERMEERTRAG_WW_TAG_KWH"         , target: "Heizmodul" }}
   WAERMEERTRAG_HEIZ_TAG_SUMME_KWH:       !include { file: templates/wp_daily_energy_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_HEIZ_TAG_SUMME_KWH"   , property_wh: "WAERMEERTRAG_HEIZ_TAG_WH"       , property_kwh: "WAERMEERTRAG_HEIZ_TAG_KWH"       , target: "Heizmodul" }}
 
   HEATPUMP_DATETIME:                     !include { file: templates/wp_datetime.yaml }
