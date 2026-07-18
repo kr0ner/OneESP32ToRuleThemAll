@@ -8,6 +8,7 @@
 #include <string_view>
 
 #include "esphome.h"
+#include "property.h"
 
 // Tracks CAN property ids that arrive on the bus but have no entry in property.h (shown as
 // "UNKNOWN" by Mapper::getProperty). Meant purely as a discovery aid for extending property.h --
@@ -69,6 +70,24 @@ class UnmappedPropertyTracker {
         pref_ = esphome::global_preferences->make_preference<State>(esphome::fnv1_hash("wp_unmapped_tracker_v1"));
         if (!pref_.load(&state_)) {
             state_ = State{};
+            return;
+        }
+        prune();
+    }
+
+    // Drops entries for property ids that have since been added to property.h -- the flash
+    // state is an append-only log of "first seen as unmapped", not a live view, so without this
+    // fixed properties would keep showing up here forever.
+    void prune() {
+        bool changed{false};
+        for (auto& entry : state_.entries) {
+            if (entry.propertyId != 0xFFFFU && Property{entry.propertyId}.name != "UNKNOWN") {
+                entry = Entry{};
+                changed = true;
+            }
+        }
+        if (changed) {
+            pref_.save(&state_);
         }
     }
 
