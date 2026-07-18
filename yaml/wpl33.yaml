@@ -69,8 +69,8 @@ packages:
   # PROGRAMMSCHALTER here instead of inheriting wpl_base.yaml's shared one.
   PROGRAMMSCHALTER:            !include { file: templates/wp_select.yaml, vars: { property: PROGRAMMSCHALTER, target: "Manager", mapper_func_set: getBetriebsartId, mapper_func_get: getBetriebsart, options: ["Automatik", "Warmwasser", "Bereitschaft", "Tagbetrieb", "Absenkbetrieb", "Notbetrieb", "Unbekannt"] }}
 
-  SOMMERBETRIEB:                !include { file: templates/wp_generic.yaml, vars: { property: "SOMMERBETRIEB", update_interval: $interval_very_slow, target: "Manager" }}
-  WW_ECO:                       !include { file: templates/wp_generic.yaml, vars: { property: "WW_ECO", update_interval: $interval_very_slow, target: "Manager" }}
+  SOMMERBETRIEB:                !include { file: templates/wp_binary_property.yaml, vars: { property: "SOMMERBETRIEB", update_interval: $interval_very_slow, target: "Manager" }}
+  WW_ECO:                       !include { file: templates/wp_binary_property.yaml, vars: { property: "WW_ECO", update_interval: $interval_very_slow, target: "Manager" }}
 
   PUFFERSOLLTEMPERATUR:        !include { file: templates/wp_temperature.yaml, vars: { property: "PUFFERSOLLTEMPERATUR", update_interval: $interval_medium }}
   SPEICHERSOLLTEMP:            !include { file: templates/wp_temperature.yaml, vars: { property: "SPEICHERSOLLTEMP", update_interval: $interval_medium }}
@@ -82,8 +82,8 @@ packages:
   RAUMSOLLTEMP_I:              !include { file: templates/wp_temperature.yaml, vars: { property: "RAUMSOLLTEMP_I", update_interval: $interval_once_a_day, target: "Manager" }}
   RAUMSOLLTEMP_NACHT:          !include { file: templates/wp_temperature.yaml, vars: { property: "RAUMSOLLTEMP_NACHT", update_interval: $interval_once_a_day, target: "Manager" }}
 
-  TEILVORRANG_WW:              !include { file: templates/wp_generic.yaml, vars: { property: "TEILVORRANG_WW", update_interval: $interval_medium, target: "Manager" }}
-  EVU_SPERRE_AKTIV:            !include { file: templates/wp_generic.yaml, vars: { property: "EVU_SPERRE_AKTIV", target: "Manager" }}
+  TEILVORRANG_WW:              !include { file: templates/wp_binary_property.yaml, vars: { property: "TEILVORRANG_WW", update_interval: $interval_medium, target: "Manager" }}
+  EVU_SPERRE_AKTIV:            !include { file: templates/wp_binary_property.yaml, vars: { property: "EVU_SPERRE_AKTIV", target: "Manager" }}
   SPEICHERBEDARF:              !include { file: templates/wp_generic.yaml, vars: { property: "SPEICHERBEDARF", target: "Manager" }}
   ANFAHRENT:                   !include { file: templates/wp_generic.yaml, vars: { property: "ANFAHRENT", target: "Manager", update_interval: $interval_medium }}
   MAX_HYSTERESE:               !include { file: templates/wp_generic.yaml, vars: { property: "MAX_HYSTERESE", target: "Kessel", accuracy_decimals: "0" }}

@@ -504,14 +504,12 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(SCHALTFKT_IWS, 0x0060);
     PROPERTY(ABTAUUNGAKTIV, 0x0061, Type::et_little_endian);
     PROPERTY(WAERMEPUMPEN_STATUS, 0x0062, Type::et_little_endian);
-    // Untyped (et_default) rather than et_bool/et_little_bool -- these are wired up as plain
-    // numeric sensors via templates/wp_generic.yaml (0.0/1.0), not binary_sensors, matching
-    // how WPL17's own SOMMERBETRIEB is declared. wp_generic.yaml's callback always does
-    // value.get<float>(), which throws bad_variant_access (crashes the device) if the
-    // property's Type produces a bool/string SimpleVariant instead.
-    PROPERTY(TEILVORRANG_WW, 0x005e);
-    PROPERTY(EVU_SPERRE_AKTIV, 0x0074);
-    PROPERTY(WW_ECO, 0x027e);
+    // Proper bool types -- wired up as binary_sensors via templates/wp_binary_property.yaml
+    // (uses value.get<bool>()), not templates/wp_generic.yaml (which always does
+    // value.get<float>() and would throw bad_variant_access/crash on a bool-holding variant).
+    PROPERTY(TEILVORRANG_WW, 0x005e, Type::et_little_bool);
+    PROPERTY(EVU_SPERRE_AKTIV, 0x0074, Type::et_bool);
+    PROPERTY(WW_ECO, 0x027e, Type::et_bool);
     PROPERTY(PUFFERSOLLTEMPERATUR, 0x01d5, Type::et_dec_val);
     PROPERTY(VORLAUFTEMP, 0x01d6, Type::et_dec_val);
     PROPERTY(HILFSKESSELSOLL, 0x01d7, Type::et_dec_val);
@@ -570,7 +568,7 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(HEIZEN_EFFIZIENZ_TAG, 0x501d, Type::et_cent_val);
     PROPERTY(HEIZEN_EFFIZIENZ_JAHR, 0x501e, Type::et_cent_val);
     PROPERTY(FROSTSCHUTZ, 0xfe07, Type::et_dec_val);
-    PROPERTY(SOMMERBETRIEB, 0xfdb4);
+    PROPERTY(SOMMERBETRIEB, 0xfdb4, Type::et_little_bool);
     PROPERTY(STILLSTANDZEIT, 0xfdb1, Type::et_little_endian);
     PROPERTY(WP_STATUS, 0xfdae, Type::et_little_endian);
 
