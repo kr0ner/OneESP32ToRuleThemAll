@@ -1,0 +1,33 @@
+defaults:
+  icon: "mdi:blank"
+  target: "Kessel"
+  name_suffix: ""
+  exposed: "true"
+
+# For string-valued properties the heat pump broadcasts unsolicited (never in response to a
+# request) -- registers a passive receive-only callback, unlike wp_text.yaml this never calls
+# queueRequest (no one-shot request at boot).
+text_sensor:
+  - platform: template
+    name: ${property}${name_suffix}
+    id: ${property}${name_suffix}
+    icon: ${icon}
+
+esphome:
+  on_boot:
+    - priority: -50
+      then:
+        - lambda: |-
+            CallbackHandler::instance().addCallback({CanNode::${target},Property::k${property}},[](const SimpleVariant& value){
+                const auto newValue{value.get<std::string>()};
+                auto property{id(${property}${name_suffix})};
+                if(property->state != newValue) {
+                  property->publish_state(newValue);
+                }
+            });
+
+            #if defined(ANALYTICS)
+              if(${exposed}) {
+                getWhitelistedEntities().insert(id(${property}${name_suffix}));
+              }
+            #endif

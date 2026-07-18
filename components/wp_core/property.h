@@ -528,11 +528,17 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(STILLSTANDZEIT, 0xfdb1, Type::et_little_endian);
     PROPERTY(WP_STATUS, 0xfdae, Type::et_little_endian);
 
-    // GERAETEKONFIGURATION, ACCESS_EEPROM, INITIALISIERUNG: broadcast unsolicited by the unit
-    // on multiple CAN nodes -- never queried, see templates/wp_generic_passive.yaml.
+    // GERAETEKONFIGURATION, ACCESS_EEPROM, INITIALISIERUNG, BUSKONFIGURATION: broadcast
+    // unsolicited by the unit on multiple CAN nodes -- never queried, see
+    // templates/wp_generic_passive.yaml.
     PROPERTY(GERAETEKONFIGURATION, 0x0010);
     PROPERTY(ACCESS_EEPROM, 0x0030, Type::et_little_endian);
     PROPERTY(INITIALISIERUNG, 0x00fe, Type::et_little_endian);
+    PROPERTY(BUSKONFIGURATION, 0x00fd);
+
+    // GERAETE_ID: also broadcast unsolicited (Heizmodul) -- string-valued (major-minor device
+    // id), see templates/wp_text_passive.yaml.
+    PROPERTY(GERAETE_ID, 0x000b, Type::et_dev_id);
 
     PROPERTY(MAXRUECKLAUFTEMP, 0x0028, Type::et_dec_val);
     PROPERTY(BIVALENZTEMPERATUR_HZG, 0x01ac, Type::et_dec_val);

@@ -149,6 +149,8 @@ packages:
   INITIALISIERUNG_KESSEL:      !include { file: templates/wp_generic_passive.yaml, vars: { property: "INITIALISIERUNG", name_suffix: "_KESSEL", target: "Kessel" }}
   INITIALISIERUNG_MANAGER:     !include { file: templates/wp_generic_passive.yaml, vars: { property: "INITIALISIERUNG", name_suffix: "_MANAGER", target: "Manager" }}
   INITIALISIERUNG_HEIZMODUL:   !include { file: templates/wp_generic_passive.yaml, vars: { property: "INITIALISIERUNG", name_suffix: "_HEIZMODUL", target: "Heizmodul" }}
+  BUSKONFIGURATION:            !include { file: templates/wp_generic_passive.yaml, vars: { property: "BUSKONFIGURATION", target: "Heizmodul" }}
+  GERAETE_ID:                  !include { file: templates/wp_text_passive.yaml, vars: { property: "GERAETE_ID", target: "Heizmodul" }}
 
   # Disabled by default -- not wired up in the original draft, and this unit has no secondary
   # heat generator ("2. Waermeerzeuger") so the WAERMEERTRAG_2WE_* energy sensors that used to
