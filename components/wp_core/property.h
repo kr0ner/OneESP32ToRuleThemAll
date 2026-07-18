@@ -61,11 +61,7 @@ struct Property : public oe32trta::detail::Property {
     // 1. COMMON PROPERTIES (Shared across all device families)
     // =======================================================================
     PROPERTY(INDEX_NOT_FOUND, 0x0000);
-#if defined(WPL_33)
-    PROPERTY(FEHLERMELDUNG, 0x0001, Type::et_err_nr);
-#else
     PROPERTY(FEHLERMELDUNG, 0x0001);
-#endif
     PROPERTY(SPEICHERSOLLTEMP, 0x0003, Type::et_dec_val);
     PROPERTY(VORLAUFSOLLTEMP, 0x0004, Type::et_dec_val);
     PROPERTY(AUSSENTEMP, 0x000c, Type::et_dec_val);

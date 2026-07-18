@@ -131,11 +131,8 @@ packages:
   SPEICHER_STATUS:             !include { file: templates/wp_generic.yaml, vars: { property: "SPEICHER_STATUS", update_interval: $interval_medium, target: "Heizmodul" }}
   ABTAUUNGAKTIV:               !include { file: templates/wp_generic.yaml, vars: { property: "ABTAUUNGAKTIV", target: "Heizmodul", update_interval: $interval_medium }}
   SCHALTFKT_IWS:               !include { file: templates/wp_generic.yaml, vars: { property: "SCHALTFKT_IWS", target: "Heizmodul" }}
-  # FEHLERMELDUNG resolves to a decoded string (Type::et_err_nr) for WPL33, unlike every other
-  # device family where it's a plain numeric error code -- needs templates/wp_text.yaml
-  # (text_sensor), not templates/wp_generic.yaml (numeric sensor, would crash on receipt).
-  FEHLERMELDUNG:               !include { file: templates/wp_text.yaml, vars: { property: "FEHLERMELDUNG", target: "Manager" }}
-  FEHLERMELDUNG_HM:            !include { file: templates/wp_text.yaml, vars: { property: "FEHLERMELDUNG", name_suffix: "_HM", target: "Heizmodul" }}
+  FEHLERMELDUNG:               !include { file: templates/wp_generic.yaml, vars: { property: "FEHLERMELDUNG", target: "Manager", icon: "mdi:alert-circle" }}
+  FEHLERMELDUNG_HM:            !include { file: templates/wp_generic.yaml, vars: { property: "FEHLERMELDUNG", name_suffix: "_HM", target: "Heizmodul", icon: "mdi:alert-circle" }}
   STILLSTANDZEIT:              !include { file: templates/wp_generic.yaml, vars: { property: "STILLSTANDZEIT", update_interval: "${interval_once_in_a_while}", unit: "min", target: "Manager" }}
   STILLSTANDZEIT_0:            !include { file: templates/wp_generic.yaml, vars: { property: "STILLSTANDZEIT_0", update_interval: "$interval_medium", unit: "s", target: "Manager" }}
   STILLSTANDZEIT_1:            !include { file: templates/wp_generic.yaml, vars: { property: "STILLSTANDZEIT_1", update_interval: "$interval_medium", unit: "s", target: "Manager" }}
