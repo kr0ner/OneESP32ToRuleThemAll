@@ -6,7 +6,7 @@ esphome:
             // 1. Generate the unique Hash from MAC
             uint32_t hash = fnv1_hash(get_mac_address());
             char id_buf[16];
-            sprintf(id_buf, "%08x", hash);
+            sprintf(id_buf, "%08lx", hash);
             std::string my_obfuscated_id = std::string(id_buf);
 
             // 2. Set IDs and Enable MQTT

@@ -17,15 +17,13 @@ struct Property {
     constexpr Property(const std::string_view _name, const std::uint16_t _id, const Type _type)
         : name(_name), id(_id), type(_type) {}
     constexpr Property(const std::string_view _name, const std::uint16_t _id) : name(_name), id(_id) {}
+    constexpr Property(const Property&) = default;
+    constexpr Property(Property&&) = default;
+    Property& operator=(const Property&) = default;
+    Property& operator=(Property&&) = default;
+    ~Property() = default;
 
     constexpr operator std::uint16_t() const { return id; }
-
-    Property& operator=(const Property& p) {
-        name = p.name;
-        id = p.id;
-        type = p.type;
-        return *this;
-    }
 
    protected:
     Property getProperty(const std::uint16_t id);
@@ -56,6 +54,7 @@ struct Property : public oe32trta::detail::Property {
     constexpr Property(const Property& p) : oe32trta::detail::Property{p.name, p.id, p.type} {}
     constexpr Property(const oe32trta::detail::Property& p) : oe32trta::detail::Property{p.name, p.id, p.type} {}
     Property(const std::uint16_t _id) : oe32trta::detail::Property{getProperty(_id)} {}
+    constexpr Property& operator=(const Property&) = default;
 
     // =======================================================================
     // 1. COMMON PROPERTIES (Shared across all device families)
