@@ -82,6 +82,12 @@ packages:
   RAUMSOLLTEMP_I:              !include { file: templates/wp_temperature.yaml, vars: { property: "RAUMSOLLTEMP_I", update_interval: $interval_once_a_day, target: "Manager" }}
   RAUMSOLLTEMP_NACHT:          !include { file: templates/wp_temperature.yaml, vars: { property: "RAUMSOLLTEMP_NACHT", update_interval: $interval_once_a_day, target: "Manager" }}
 
+  # wpl_base.yaml assumes MFG/HK1/MFG for these three (matching WPL13/17/23), but this unit
+  # only responds on the targets below -- declared here instead of relying on the shared ones.
+  VORLAUFISTTEMP:              !include { file: templates/wp_temperature.yaml, vars: { property: "VORLAUFISTTEMP", update_interval: $interval_medium, target: "HK1" }}
+  VORLAUFSOLLTEMP:             !include { file: templates/wp_temperature.yaml, vars: { property: "VORLAUFSOLLTEMP", update_interval: $interval_medium }}
+  RUECKLAUFISTTEMP:            !include { file: templates/wp_temperature.yaml, vars: { property: "RUECKLAUFISTTEMP", update_interval: $interval_medium, target: "Manager" }}
+
   TEILVORRANG_WW:              !include { file: templates/wp_binary_property.yaml, vars: { property: "TEILVORRANG_WW", update_interval: $interval_medium, target: "Manager" }}
   EVU_SPERRE_AKTIV:            !include { file: templates/wp_binary_property.yaml, vars: { property: "EVU_SPERRE_AKTIV", target: "Manager" }}
   SPEICHERBEDARF:              !include { file: templates/wp_generic.yaml, vars: { property: "SPEICHERBEDARF", target: "Manager" }}

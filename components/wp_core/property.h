@@ -493,7 +493,7 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(RAUMSOLLTEMP_NACHT, 0x0008, Type::et_dec_val);
     PROPERTY(VORLAUFISTTEMP, 0x000f, Type::et_dec_val);
     PROPERTY(VERDAMPFERTEMP, 0x0014, Type::et_dec_val);
-    PROPERTY(RUECKLAUFTEMP, 0x0016, Type::et_dec_val);
+    PROPERTY(RUECKLAUFISTTEMP, 0x0016, Type::et_dec_val);
     PROPERTY(PROGRAMMSCHALTER, 0x0112, Type::et_betriebsart);
     PROPERTY(BETRIEBS_STATUS, 0x0176);
     PROPERTY(PUFFERISTTEMPERATUR, 0x0078, Type::et_dec_val);
@@ -599,12 +599,12 @@ struct Property : public oe32trta::detail::Property {
     // WPL13/17's value; WPL23 uses 0x0691 instead -- unconfirmed for WPL33, verify against
     // your unit.
     PROPERTY(ZEITINTERVALL, 0x4f4d, Type::et_dec_val);
-    // Placeholder id only: wpl_base.yaml separately wires up RUECKLAUFISTTEMP (from MFG) and
-    // RUECKLAUFTEMP (from Heizmodul, defined above at 0x0016) as distinct sensors, but this
-    // unit's real CAN id for the MFG-sourced reading is unknown/unconfirmed -- 0x0016 is
-    // already taken by RUECKLAUFTEMP above. This placeholder just satisfies the compiler; the
+    // Placeholder id only: wpl_base.yaml still wires up a separate RUECKLAUFTEMP (from
+    // Heizmodul) for the whole WPL family. This unit's real CAN id for that reading is
+    // unknown/unconfirmed -- 0x0016 is the confirmed, real id for RUECKLAUFISTTEMP (from
+    // Manager) instead, defined above. This placeholder just satisfies the compiler; the
     // resulting HA entity won't report real data until you find and substitute the real id.
-    PROPERTY(RUECKLAUFISTTEMP, 0xffff, Type::et_dec_val);
+    PROPERTY(RUECKLAUFTEMP, 0xffff, Type::et_dec_val);
 #endif
 };
 

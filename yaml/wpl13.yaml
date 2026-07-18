@@ -58,3 +58,7 @@ packages:
   PASSIVKUEHLVENTIL_KUEHLEN:            !include { file: templates/wp_binary.yaml, vars: { name: "PASSIVKUEHLVENTIL_KUEHLEN" }}
 
   PROGRAMMSCHALTER:                     !include { file: templates/wp_select.yaml, vars: { property: PROGRAMMSCHALTER, target: "Manager", mapper_func_set: getBetriebsartId, mapper_func_get: getBetriebsart, options: ["Notbetrieb", "Bereitschaft", "Programm", "Komfort", "Eco", "Unbekannt"] }}
+
+  VORLAUFISTTEMP:                       !include { file: templates/wp_temperature.yaml, vars: { property: "VORLAUFISTTEMP", update_interval: $interval_medium, target: "MFG" }}
+  VORLAUFSOLLTEMP:                      !include { file: templates/wp_temperature.yaml, vars: { property: "VORLAUFSOLLTEMP", target: "HK1" }}
+  RUECKLAUFISTTEMP:                     !include { file: templates/wp_temperature.yaml, vars: { property: "RUECKLAUFISTTEMP", update_interval: $interval_medium, target: "MFG" }}

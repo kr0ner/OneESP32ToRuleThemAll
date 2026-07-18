@@ -82,10 +82,7 @@ packages:
   FROSTSCHUTZ:                           !include { file: templates/wp_temperature.yaml, vars: { property: "FROSTSCHUTZ"       , target: "MFG"  }}
   VORLAUFTEMP_QUELLE:                    !include { file: templates/wp_temperature.yaml, vars: { property: "VORLAUFTEMP_QUELLE" , target: "Heizmodul"  }}
   RUECKLAUFTEMP_QUELLE:                  !include { file: templates/wp_temperature.yaml, vars: { property: "RUECKLAUFTEMP_QUELLE" , target: "Heizmodul"  }}
-  VORLAUFISTTEMP:                        !include { file: templates/wp_temperature.yaml, vars: { property: "VORLAUFISTTEMP"     , update_interval: $interval_medium, target: "MFG"  }}
-  VORLAUFSOLLTEMP:                       !include { file: templates/wp_temperature.yaml, vars: { property: "VORLAUFSOLLTEMP"    , target: "HK1"  }}
   VERDAMPFERTEMP:                        !include { file: templates/wp_temperature.yaml, vars: { property: "VERDAMPFERTEMP"     , target: "Heizmodul"  }}
-  RUECKLAUFISTTEMP:                      !include { file: templates/wp_temperature.yaml, vars: { property: "RUECKLAUFISTTEMP"   , update_interval: $interval_medium , target: "MFG" }}
   MAXVORLAUFTEMP:                        !include { file: templates/wp_temperature.yaml, vars: { property: "MAXVORLAUFTEMP"     , target: "Kessel"  }}
   MAXRUECKLAUFTEMP:                      !include { file: templates/wp_temperature.yaml, vars: { property: "MAXRUECKLAUFTEMP"   , target: "Kessel"  }}
   AUSSENTEMP:                            !include { file: templates/wp_temperature.yaml, vars: { property: "AUSSENTEMP"         , update_interval: $interval_medium , target: "Kessel" }}
