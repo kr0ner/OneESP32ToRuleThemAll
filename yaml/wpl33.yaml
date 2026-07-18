@@ -114,7 +114,7 @@ packages:
   EINSTELL_SPEICHERSOLLTEMP2:  !include { file: templates/wp_temperature.yaml, vars: { property: "EINSTELL_SPEICHERSOLLTEMP2", update_interval: $interval_once_a_day }}
   HILFSKESSELSOLL:             !include { file: templates/wp_temperature.yaml, vars: { property: "HILFSKESSELSOLL", update_interval: $interval_once_in_a_while }}
   KESSELSOLLTEMP:              !include { file: templates/wp_temperature.yaml, vars: { property: "KESSELSOLLTEMP", update_interval: $interval_once_in_a_while }}
-  RAUMSOLLTEMP_I:              !include { file: templates/wp_temperature.yaml, vars: { property: "RAUMSOLLTEMP_I", update_interval: $interval_once_a_day, target: "Manager" }}
+  RAUMSOLLTEMP_TAG:            !include { file: templates/wp_temperature.yaml, vars: { property: "RAUMSOLLTEMP_TAG", update_interval: $interval_once_a_day, target: "Manager" }}
   RAUMSOLLTEMP_NACHT:          !include { file: templates/wp_temperature.yaml, vars: { property: "RAUMSOLLTEMP_NACHT", update_interval: $interval_once_a_day, target: "Manager" }}
 
   # wpl_base.yaml assumes MFG/HK1/MFG for these three (matching WPL13/17/23), but this unit
@@ -145,11 +145,8 @@ packages:
   LAUFZEIT_2WE:                !include { file: templates/wp_generic.yaml, vars: { property: "LAUFZEIT_2WE", update_interval: "${interval_once_in_a_while}", unit: "h", target: "Manager" }}
   WP_STATUS:                   !include { file: templates/wp_generic.yaml, vars: { property: "WP_STATUS", update_interval: "$interval_medium", target: "Manager" }}
 
-  # Disabled by default -- not wired up in the original draft. Uncomment if your WPL33 unit
-  # reports a secondary heat generator ("2. Waermeerzeuger").
+  # Disabled by default -- not wired up in the original draft, and this unit has no secondary
+  # heat generator ("2. Waermeerzeuger") so the WAERMEERTRAG_2WE_* energy sensors that used to
+  # be listed here were removed outright (not just commented) -- see property.h.
   # VERDICHTER_RAW:                       !include { file: templates/wp_generic.yaml, vars: { property: "VERDICHTER", target: "Manager", accuracy_decimals: "1" }}
   # WAERMEPUMPEN_STATUS_RAW:              !include { file: templates/wp_generic.yaml, vars: { property: "WAERMEPUMPEN_STATUS", target: "Manager" }}
-  # WAERMEERTRAG_2WE_WW_SUMME_MWH:        !include { file: templates/wp_generic_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_2WE_WW_SUMME_MWH", scaled_property: "WAERMEERTRAG_2WE_WW_SUM_KWH", property: "WAERMEERTRAG_2WE_WW_SUM_MWH", unit: "MWh", accuracy_decimals: "3", icon: "mdi:fire", target: "Heizmodul", state_class: "total_increasing" }}
-  # WAERMEERTRAG_2WE_HEIZ_SUMME_MWH:      !include { file: templates/wp_generic_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_2WE_HEIZ_SUMME_MWH", scaled_property: "WAERMEERTRAG_2WE_HEIZ_SUM_KWH", property: "WAERMEERTRAG_2WE_HEIZ_SUM_MWH", unit: "MWh", accuracy_decimals: "3", icon: "mdi:fire", target: "Heizmodul", state_class: "total_increasing" }}
-  # WAERMEERTRAG_2WE_WW_TAG_SUMME_KWH:    !include { file: templates/wp_daily_energy_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_2WE_WW_TAG_SUMME_KWH", property_wh: "WAERMEERTRAG_2WE_WW_TAG_WH", property_kwh: "WAERMEERTRAG_2WE_WW_TAG_KWH", target: "Heizmodul" }}
-  # WAERMEERTRAG_2WE_HEIZ_TAG_SUMME_KWH:  !include { file: templates/wp_daily_energy_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_2WE_HEIZ_TAG_SUMME_KWH", property_wh: "WAERMEERTRAG_2WE_HEIZ_TAG_WH", property_kwh: "WAERMEERTRAG_2WE_HEIZ_TAG_KWH", target: "Heizmodul" }}
