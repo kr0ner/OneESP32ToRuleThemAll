@@ -517,6 +517,11 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(MAXVORLAUFTEMP, 0x01e8, Type::et_dec_val);
     PROPERTY(EINSTELL_SPEICHERSOLLTEMP2, 0x0a06, Type::et_dec_val);
     PROPERTY(VERDICHTER, 0x07a8, Type::et_dec_val);
+    // Not polled by wpl33.yaml itself (confirmed dead as a read via the FET CAN node), but
+    // core.yaml's Home Assistant Sensors block unconditionally writes HA's own room
+    // temperature/humidity to CanNode::HK1 using these -- needed by every device family.
+    PROPERTY(RAUMISTTEMP, 0x4ec7, Type::et_dec_val);
+    PROPERTY(RAUMFEUCHTE, 0x4ec8, Type::et_dec_val);
     PROPERTY(SOMMERBETRIEB, 0xfdb4, Type::et_little_bool);
     PROPERTY(STILLSTANDZEIT, 0xfdb1, Type::et_little_endian);
     PROPERTY(WP_STATUS, 0xfdae, Type::et_little_endian);
