@@ -48,7 +48,17 @@ substitutions:
 #   CAN Bus                             #
 #                                       #
 #########################################
+# WPL33 no longer inherits wpl_base.yaml wholesale (see below) -- it applies the bit rate
+# override itself instead of relying on wpl_base.yaml to do it.
+canbus:
+  - id: !extend wp_can
+    bit_rate: $can_bus_bit_rate
+
 text:
+  - id: !extend HK1_CAN_ID
+    initial_value: "0x601"
+  - id: !extend HK2_CAN_ID
+    initial_value: "0x602"
   # WPL33's Heizmodul is on 0x500, unlike the 0x514 default wpl_base.yaml sets for WPL13/17/23.
   - id: !extend Heizmodul_CAN_ID
     initial_value: "0x500"
@@ -58,8 +68,33 @@ text:
 #   Packages                            #
 #                                       #
 #########################################
+# WPL33 does NOT include wpl_base.yaml as a whole -- unlike WPL13/17/23, a large fraction of
+# its properties are confirmed (via live logs) to never return real data on this unit, and
+# every time we found more it meant either duplicating exceptions across 3 sibling files or
+# fighting !remove's inability to clean up baked on_boot lambda code. Instead this opts in
+# explicitly to everything wpl_base.yaml provides, one section at a time, omitting only the
+# properties already confirmed dead (below). If more turn out to be dead later, just delete
+# their line here -- no other file is affected.
 packages:
-  wpl_base:                    !include { file: wpl_base.yaml }
+  CORE:                         !include { file: core.yaml }
+  MANAGER:                      !include { file: templates/wp_can_id.yaml, vars: { can_node: "Manager" , can_id: "0x480" }}
+
+  # wpl_base.yaml also decodes BETRIEBS_STATUS into 12 binary sensors (HEIZKREISPUMPE_1/2,
+  # PUFFERLADEPUMPE_1, QUELLENPUMPE, STOERAUSGANG, KUEHLBETRIEB, MISCHER_AUF/ZU_HEIZKREIS_2,
+  # NHZ_1/2/3, EVU_SPERRE). Omitted entirely: BETRIEBS_STATUS itself is confirmed dead on this
+  # unit (always returns the sentinel 32768), so none of those 12 would ever publish anything
+  # but "unknown".
+
+  # Everything else wpl_base.yaml provides turned out to be dead on this unit too (confirmed
+  # via further live logs) -- only these few survive:
+  VERDAMPFERTEMP:              !include { file: templates/wp_temperature.yaml, vars: { property: "VERDAMPFERTEMP"     , target: "Heizmodul"  }}
+  MAXVORLAUFTEMP:              !include { file: templates/wp_temperature.yaml, vars: { property: "MAXVORLAUFTEMP"     , target: "Kessel"  }}
+  MAXRUECKLAUFTEMP:            !include { file: templates/wp_temperature.yaml, vars: { property: "MAXRUECKLAUFTEMP"   , target: "Kessel"  }}
+  AUSSENTEMP:                  !include { file: templates/wp_temperature.yaml, vars: { property: "AUSSENTEMP"         , update_interval: $interval_medium , target: "Kessel" }}
+  ANLAGEFROST:                 !include { file: templates/wp_temperature.yaml, vars: { property: "ANLAGEFROST"        , update_interval: $interval_medium , target: "Kessel" }}
+  BIVALENZTEMPERATUR_HZG:      !include { file: templates/wp_temperature.yaml, vars: { property: "BIVALENZTEMPERATUR_HZG", target: "Kessel"  }}
+
+  HEATPUMP_DATETIME:           !include { file: templates/wp_datetime.yaml, vars: { target: "$datetime_target" } }
 
   VERDICHTER:                  !include { file: templates/wp_binary.yaml, vars: { name: "VERDICHTER" }}
   STOERUNG:                    !include { file: templates/wp_binary.yaml, vars: { name: "STOERUNG" }}
@@ -69,8 +104,8 @@ packages:
   # PROGRAMMSCHALTER here instead of inheriting wpl_base.yaml's shared one.
   PROGRAMMSCHALTER:            !include { file: templates/wp_select.yaml, vars: { property: PROGRAMMSCHALTER, target: "Manager", mapper_func_set: getBetriebsartId, mapper_func_get: getBetriebsart, options: ["Automatik", "Warmwasser", "Bereitschaft", "Tagbetrieb", "Absenkbetrieb", "Notbetrieb", "Unbekannt"] }}
 
-  SOMMERBETRIEB:                !include { file: templates/wp_binary_property.yaml, vars: { property: "SOMMERBETRIEB", update_interval: $interval_very_slow, target: "Manager" }}
-  WW_ECO:                       !include { file: templates/wp_binary_property.yaml, vars: { property: "WW_ECO", update_interval: $interval_very_slow, target: "Manager" }}
+  SOMMERBETRIEB:               !include { file: templates/wp_binary_property.yaml, vars: { property: "SOMMERBETRIEB", update_interval: $interval_very_slow, target: "Manager" }}
+  WW_ECO:                      !include { file: templates/wp_binary_property.yaml, vars: { property: "WW_ECO", update_interval: $interval_very_slow, target: "Manager" }}
 
   PUFFERSOLLTEMPERATUR:        !include { file: templates/wp_temperature.yaml, vars: { property: "PUFFERSOLLTEMPERATUR", update_interval: $interval_medium }}
   SPEICHERSOLLTEMP:            !include { file: templates/wp_temperature.yaml, vars: { property: "SPEICHERSOLLTEMP", update_interval: $interval_medium }}
@@ -93,7 +128,7 @@ packages:
   SPEICHERBEDARF:              !include { file: templates/wp_generic.yaml, vars: { property: "SPEICHERBEDARF", target: "Manager" }}
   ANFAHRENT:                   !include { file: templates/wp_generic.yaml, vars: { property: "ANFAHRENT", target: "Manager", update_interval: $interval_medium }}
   MAX_HYSTERESE:               !include { file: templates/wp_generic.yaml, vars: { property: "MAX_HYSTERESE", target: "Kessel", accuracy_decimals: "0" }}
-  BETRIEBS_STATUS:             !include { file: templates/wp_generic.yaml, vars: { property: "BETRIEBS_STATUS", update_interval: $interval_medium, target: "Manager" }}
+  # BETRIEBS_STATUS: never returns real data on this unit -- confirmed via logs, always 32768.
   SPEICHER_STATUS:             !include { file: templates/wp_generic.yaml, vars: { property: "SPEICHER_STATUS", update_interval: $interval_medium, target: "Heizmodul" }}
   ABTAUUNGAKTIV:               !include { file: templates/wp_generic.yaml, vars: { property: "ABTAUUNGAKTIV", target: "Heizmodul", update_interval: $interval_medium }}
   SCHALTFKT_IWS:               !include { file: templates/wp_generic.yaml, vars: { property: "SCHALTFKT_IWS", target: "Heizmodul" }}
