@@ -10,7 +10,6 @@ esphome:
       - "-DESPCLIENT_ID=$espclient_can_id"
     build_unflags:
       - "-std=gnu++11"
-      - "-fno-rtti"
 
 esp32:
   framework:
@@ -177,7 +176,7 @@ api:
               ESP_LOGE("ACTION", "Data is expected to have 7 elements, but has %zd .", data.size());
               return;
             }
-            ESP_LOGI("ACTION", "Sending data (0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x 0x%02x)", data[0], data[1], data[2], data[3], data[4], data[5], data[6]);
+            ESP_LOGI("ACTION", "Sending data (0x%02lx 0x%02lx 0x%02lx 0x%02lx 0x%02lx 0x%02lx 0x%02lx)", data[0], data[1], data[2], data[3], data[4], data[5], data[6]);
             const auto use_extended_id{false};
             std::vector<std::uint8_t> payload;
             payload.resize(data.size());

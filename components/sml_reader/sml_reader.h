@@ -155,20 +155,19 @@ class SMLReader : public esphome::Component, public esphome::uart::UARTDevice {
         return 0.0f;
     }
 
-    void parseFile() {
+    bool parseFile() {
         ESP_LOGV("SMLReader", "parsing file");
         if (_buffer.size() <= 24U) {
-            // reset
-            ESP_LOGV("SMLReader", "clearing buffer");
-            _buffer.clear();
-            _current_state = State::kWaitingForStartSequence;
-            return;
+            ESP_LOGV("SMLReader", "buffer too small");
+            return false;
         }
+
         _file = sml_file_parse(_buffer.data(), _buffer.size() - end_sequence.size() - 3U);
         if (_file == nullptr) {
             ESP_LOGV("SMLReader", "file is nullptr");
-            return;
+            return false;
         }
+        return true;
     }
 
     void processMessages() {
@@ -225,7 +224,7 @@ class SMLReader : public esphome::Component, public esphome::uart::UARTDevice {
                 }
                 _readings = readings;
             }
-            ESP_LOGV("SMLReader", "is not SML_MESSAGE_GET_LIST_RESPONSE %d", *message->message_body->tag);
+            ESP_LOGV("SMLReader", "is not SML_MESSAGE_GET_LIST_RESPONSE %lu", *message->message_body->tag);
         }
         sml_file_free(_file);
         _buffer.clear();
@@ -350,9 +349,12 @@ class SMLReader : public esphome::Component, public esphome::uart::UARTDevice {
                 waitForSequence(end_sequence, [this]() { _current_state = State::kParseFile; });
                 break;
             case (State::kParseFile):
-                parseFile();
+                if (parseFile()) {
+                    _current_state = State::kProcessMessages;
+                } else {
+                    _current_state = State::kWaitingForStartSequence;
+                }
                 _buffer.clear();
-                _current_state = State::kProcessMessages;
                 break;
             case (State::kProcessMessages):
                 processMessages();

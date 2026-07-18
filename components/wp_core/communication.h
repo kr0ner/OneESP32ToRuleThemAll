@@ -52,7 +52,7 @@ struct ConditionalRequest {
 struct ConditionalTransmission {
     ConditionalTransmission(Task task, std::uint16_t value) : _task(std::move(task)), _value(value){};
     ConditionalTransmission(Task task, std::function<bool()> condition, std::uint16_t value)
-        : _task(std::move(task)), _condition(std::move(condition)), _value(value){};
+        : _task(std::move(task)), _value(value), _condition(std::move(condition)){};
 
     Task _task;
     std::uint16_t _value;
