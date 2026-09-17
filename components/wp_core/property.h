@@ -95,6 +95,8 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(WAERMEERTRAG_HEIZ_TAG_KWH, 0x092f, Type::et_double_val);
     PROPERTY(WAERMEERTRAG_HEIZ_SUM_KWH, 0x0930);
     PROPERTY(WAERMEERTRAG_HEIZ_SUM_MWH, 0x0931, Type::et_double_val);
+    PROPERTY(WAERMEERTRAG_2WE_HEIZ_SUM_KWH, 0x0928);
+    PROPERTY(WAERMEERTRAG_2WE_HEIZ_SUM_MWH, 0x0929, Type::et_double_val);
 
 // =======================================================================
 // 2. THZ & TTF SHARED PROPERTIES
@@ -173,8 +175,6 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(DRUCK_NIEDERDRUCK, 0x07a7, Type::et_cent_val);
     PROPERTY(WAERMEERTRAG_2WE_WW_SUM_KWH, 0x0924);
     PROPERTY(WAERMEERTRAG_2WE_WW_SUM_MWH, 0x0925, Type::et_double_val);
-    PROPERTY(WAERMEERTRAG_2WE_HEIZ_SUM_KWH, 0x0928);
-    PROPERTY(WAERMEERTRAG_2WE_HEIZ_SUM_MWH, 0x0929, Type::et_double_val);
     PROPERTY(HEIZ_KUEHL_LEISTUNG, 0xc0ee, Type::et_cent_val);
     PROPERTY(ABLUFTFEUCHTE, 0xc0ef);
     PROPERTY(VERDICHTER_STARTS, 0xc0f4);
@@ -271,7 +271,7 @@ struct Property : public oe32trta::detail::Property {
 // =======================================================================
 // 7. WPL VARIANTS
 // =======================================================================
-#if defined(WPL_13) || defined(WPL_17) || defined(WPL_23)
+#if defined(WPL_13) || defined(WPL_17) || defined(WPL_23) || defined(WPE_I)
     PROPERTY(RUECKLAUFTEMP, 0x0016, Type::et_dec_val);
     PROPERTY(MAXRUECKLAUFTEMP, 0x0028, Type::et_dec_val);
     PROPERTY(PUFFERISTTEMPERATUR, 0x0078, Type::et_dec_val);
@@ -341,16 +341,28 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(FROSTSCHUTZ, 0xfe07, Type::et_dec_val);
 #endif
 
-#if defined(WPL_13) || defined(WPL_17)
+#if defined(WPL_13) || defined(WPL_17) || defined(WPE_I)
     PROPERTY(VERDICHTER_STARTS_K, 0x4ef0);
     PROPERTY(VERDICHTER_STARTS, 0x4ef1);
     PROPERTY(ZEITINTERVALL, 0x4f4d, Type::et_dec_val);
 #endif
 
-#if defined(WPL_17) || defined(WPL_23)
+#if defined(WPE_I) || defined(WPL_17)
+    // 0x02e2 carries the water volume flow on these models, unlike the WPL13
+    // where the same index is the WAERMEPUMPEN_STATUS word (on the WPE-I it was
+    // observed as raw 280/285 = 28.0/28.5 l/min next to VOLUMENSTROM 0x4f47)
+    PROPERTY(WP_WASSERVOLUMENSTROM, 0x02e2, Type::et_dec_val);
+    PROPERTY(REGELABWEICHUNG, 0x033d, Type::et_dec_val);
+    PROPERTY(LAUFZEIT_VD_HEIZEN, 0x4efb);
+#endif
+
+#if defined(WPE_I) || defined(WPL_17) || defined(WPL_23)
     PROPERTY(LAUFZEIT_NHZ1, 0x0259);
     PROPERTY(LAUFZEIT_NHZ2, 0x025a);
     PROPERTY(LAUFZEIT_NHZ1_2, 0x0805);
+#endif
+
+#if defined(WPL_17) || defined(WPL_23)
     PROPERTY(STARTS_ABTAUEN, 0x0806);
     PROPERTY(ZEIT_ABTAUEN, 0x0807);
 #endif
@@ -359,16 +371,22 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(WAERMEPUMPEN_STATUS, 0x02e2);
 #endif
 
+#if defined(WPE_I)
+    // the WPE-I's Waermepumpen-Status word (broadcast by Kessel, 0x8000 while
+    // in standby). Panel verified bits: 4 = passive cooling active, two of
+    // {2, 13} = Kuehlbetrieb mode / Netzversorgung Inverter.
+    PROPERTY(WAERMEPUMPEN_STATUS, 0x4eda);
+    PROPERTY(EVU_SPERRE_AKTIV, 0x0074);
+#endif
+
 #if defined(WPL_17)
     PROPERTY(MAXIMALE_VORLAUFTEMP_WW, 0x0181, Type::et_dec_val);
-    PROPERTY(WP_WASSERVOLUMENSTROM, 0x02e2, Type::et_dec_val);
     PROPERTY(BIVALENZTEMPERATUR_WW, 0x01ad, Type::et_dec_val);
     PROPERTY(EINSATZGRENZE_HZG, 0x01ae, Type::et_dec_val);
     PROPERTY(EINSATZGRENZE_WW, 0x01af, Type::et_dec_val);
     PROPERTY(AUSSENTEMPERATUR_EINST, 0x01bf, Type::et_dec_val);
     PROPERTY(FESTWERTBETRIEB, 0x01c0, Type::et_dec_val);
     PROPERTY(WW_LERNFUNKTION, 0x027e);
-    PROPERTY(REGELABWEICHUNG, 0x033d, Type::et_dec_val);
     PROPERTY(GRENZE_KUEHLEN, 0x03dc, Type::et_dec_val);
     PROPERTY(VORLAUFANTEIL_HEIZKREIS, 0x049d);
     PROPERTY(SENSORABGLEICH_VORLAUF_WP, 0x0658, Type::et_dec_val);
@@ -422,7 +440,6 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(INBETRIEBNAHME_NOTBETRIEB, 0x4ef5);
     PROPERTY(WW_SOLLTEMPERATUR, 0x4ef9, Type::et_dec_val);
     PROPERTY(EINGESCHALTETE_STUFEN, 0x4efa);
-    PROPERTY(LAUFZEIT_VD_HEIZEN, 0x4efb);
     PROPERTY(LAUFZEIT_VD_KUEHLEN, 0x4efc);
     PROPERTY(LAUFZEIT_VD_WW, 0x4efd);
     PROPERTY(KUEHLART, 0x4f05);
