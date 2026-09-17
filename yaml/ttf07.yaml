@@ -4,9 +4,8 @@
 #                                       #
 #########################################
 esphome:
-  platformio_options:
-    build_flags:
-      - "-DTTF_07_C"
+  build_flags:
+    - "-DTTF_07_C"
   on_boot:
     - priority: -50
       then:

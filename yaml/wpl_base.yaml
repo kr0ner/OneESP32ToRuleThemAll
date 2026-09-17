@@ -5,6 +5,7 @@
 #########################################
 substitutions:
   can_bus_bit_rate: 50kbps
+  datetime_target: "Kessel"
 
 #########################################
 #                                       #
@@ -81,10 +82,7 @@ packages:
   FROSTSCHUTZ:                           !include { file: templates/wp_temperature.yaml, vars: { property: "FROSTSCHUTZ"       , target: "MFG"  }}
   VORLAUFTEMP_QUELLE:                    !include { file: templates/wp_temperature.yaml, vars: { property: "VORLAUFTEMP_QUELLE" , target: "Heizmodul"  }}
   RUECKLAUFTEMP_QUELLE:                  !include { file: templates/wp_temperature.yaml, vars: { property: "RUECKLAUFTEMP_QUELLE" , target: "Heizmodul"  }}
-  VORLAUFISTTEMP:                        !include { file: templates/wp_temperature.yaml, vars: { property: "VORLAUFISTTEMP"     , update_interval: $interval_medium, target: "MFG"  }}
-  VORLAUFSOLLTEMP:                       !include { file: templates/wp_temperature.yaml, vars: { property: "VORLAUFSOLLTEMP"    , target: "HK1"  }}
   VERDAMPFERTEMP:                        !include { file: templates/wp_temperature.yaml, vars: { property: "VERDAMPFERTEMP"     , target: "Heizmodul"  }}
-  RUECKLAUFISTTEMP:                      !include { file: templates/wp_temperature.yaml, vars: { property: "RUECKLAUFISTTEMP"   , update_interval: $interval_medium , target: "MFG" }}
   MAXVORLAUFTEMP:                        !include { file: templates/wp_temperature.yaml, vars: { property: "MAXVORLAUFTEMP"     , target: "Kessel"  }}
   MAXRUECKLAUFTEMP:                      !include { file: templates/wp_temperature.yaml, vars: { property: "MAXRUECKLAUFTEMP"   , target: "Kessel"  }}
   AUSSENTEMP:                            !include { file: templates/wp_temperature.yaml, vars: { property: "AUSSENTEMP"         , update_interval: $interval_medium , target: "Kessel" }}
@@ -154,9 +152,8 @@ packages:
   WAERMEERTRAG_WW_TAG_SUMME_KWH:         !include { file: templates/wp_daily_energy_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_WW_TAG_SUMME_KWH"     , property_wh: "WAERMEERTRAG_WW_TAG_WH"         , property_kwh: "WAERMEERTRAG_WW_TAG_KWH"         , target: "Heizmodul" }}
   WAERMEERTRAG_HEIZ_TAG_SUMME_KWH:       !include { file: templates/wp_daily_energy_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_HEIZ_TAG_SUMME_KWH"   , property_wh: "WAERMEERTRAG_HEIZ_TAG_WH"       , property_kwh: "WAERMEERTRAG_HEIZ_TAG_KWH"       , target: "Heizmodul" }}
 
-  HEATPUMP_DATETIME:                     !include { file: templates/wp_datetime.yaml }
+  HEATPUMP_DATETIME:                     !include { file: templates/wp_datetime.yaml, vars: { target: "$datetime_target" } }
 
-  PROGRAMMSCHALTER:                      !include { file: templates/wp_select.yaml, vars: { property: PROGRAMMSCHALTER, target: "Manager", mapper_func_set: getBetriebsartId, mapper_func_get: getBetriebsart, options: ["Notbetrieb", "Bereitschaft", "Programm", "Komfort", "Eco", "Unbekannt"] }}
 
 text:
   - id: !extend HK1_CAN_ID

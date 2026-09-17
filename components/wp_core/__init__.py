@@ -8,6 +8,7 @@ def to_code(config):
     cg.add_global(cg.RawStatement('#include "esphome/components/wp_core/property.h"'))
     cg.add_global(cg.RawStatement('#include "esphome/components/wp_core/simple_variant.h"'))
     cg.add_global(cg.RawStatement('#include "esphome/components/wp_core/type.h"'))
+    cg.add_global(cg.RawStatement('#include "esphome/components/wp_core/unmapped_tracker.h"'))
     cg.add_global(cg.RawStatement('#include "esphome/components/wp_core/util.h"'))
 
 CONFIG_SCHEMA = cv.Schema({ cv.GenerateID(): cv.declare_id(cg.Component) })

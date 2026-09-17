@@ -4,12 +4,11 @@
 #                                       #
 #########################################
 esphome:
-  platformio_options:
-    build_flags:
-      - "-std=gnu++2a"
-      - "-DESPCLIENT_ID=$espclient_can_id"
-    build_unflags:
-      - "-std=gnu++11"
+  # build_unflags ("-std=gnu++11", "-fno-rtti") dropped -- ignored under the native ESP-IDF
+  # toolchain anyway; simple_variant.h no longer relies on RTTI either.
+  build_flags:
+    - "-std=gnu++2a"
+    - "-DESPCLIENT_ID=$espclient_can_id"
 
 esp32:
   framework:
@@ -30,7 +29,12 @@ substitutions:
   interval_slow: 5min
   interval_very_slow: 15min
   interval_once_in_a_while: 1h
+  interval_once_a_day: 24h
   espclient_can_id: 0x6a2
+  # Logs+persists (via flash) CAN property ids that arrive but have no property.h entry -- a
+  # discovery aid for extending property.h. Off by default since it writes to flash on every
+  # newly-seen id; override per-device to "true" to enable.
+  track_unmapped_properties: "false"
 
 #########################################
 #                                       #
@@ -87,6 +91,25 @@ sensor:
               ESP_LOGI("SET", "Sending humidity %f to heatpump", x);
               queueTransmission(CanNode::HK1, Property::kRAUMFEUCHTE, static_cast<std::uint16_t>(x * 10.0f));
             }
+
+#########################################
+#                                       #
+#   Diagnostics                        #
+#                                       #
+#########################################
+text_sensor:
+  - platform: template
+    name: Unmapped Properties
+    id: unmapped_properties
+    icon: "mdi:help-network"
+    entity_category: diagnostic
+    update_interval: $interval_once_in_a_while
+    lambda: |-
+      if constexpr(${track_unmapped_properties}) {
+        return UnmappedPropertyTracker::instance().getSummary();
+      } else {
+        return std::string{"disabled"};
+      }
 
 #########################################
 #                                       #
@@ -154,6 +177,11 @@ canbus:
             const auto [property, value] = processCanMessage(x);
             const auto* canNode = getCanNodeByCanId(can_id);
             if(canNode != nullptr) {
+              if constexpr(${track_unmapped_properties}) {
+                if(property.name == "UNKNOWN") {
+                  UnmappedPropertyTracker::instance().track(canNode->name, property.id);
+                }
+              }
               auto callback = CallbackHandler::instance().getCallback(std::make_pair(canNode,property));
               callback(value);
             } else {

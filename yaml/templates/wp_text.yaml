@@ -1,0 +1,37 @@
+defaults:
+  icon: "mdi:blank"
+  target: "Kessel"
+  update_interval: "never"
+  name_suffix: ""
+  exposed: "true"
+
+text_sensor:
+  - platform: template
+    name: ${property}${name_suffix}
+    id: ${property}${name_suffix}
+    icon: ${icon}
+    update_interval: ${update_interval}
+
+esphome:
+  on_boot:
+    - priority: -50
+      then:
+        - lambda: |-
+            CallbackHandler::instance().addCallback({CanNode::${target},Property::k${property}},[](const SimpleVariant& value){
+                const auto newValue{value.get<std::string>()};
+                auto property{id(${property}${name_suffix})};
+                if(property->state != newValue) {
+                  property->publish_state(newValue);
+                }
+            });
+
+            #if defined(ANALYTICS)
+              if(${exposed}) {
+                getWhitelistedEntities().insert(id(${property}${name_suffix}));
+              }
+            #endif
+    - priority: -100.0
+      then:
+        - delay: 250ms
+        - lambda: |-
+            queueRequest(CanNode::${target}, Property::k${property});
