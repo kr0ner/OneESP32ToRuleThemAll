@@ -18,6 +18,7 @@
 #include "type.h"
 
 #include <algorithm>
+#include <cmath>
 #include <string>
 
 #include "mapper.h"
@@ -28,10 +29,20 @@ SimpleVariant GetValueByType(const std::uint16_t value, const Type type) {
         case Type::et_byte:
             return (static_cast<float>(value & 0xFF));
         case Type::et_dec_val:
+            // 0x8000 = "not available", 0x9000 = "AUS" (e.g. MINTEMP shows "AUS" on the panel)
+            if (value == 0x8000U || value == 0x9000U) {
+                return NAN;
+            }
             return (static_cast<std::int16_t>(value) / 10.0f);
         case Type::et_cent_val:
+            if (value == 0x8000U) {  // "not available"
+                return NAN;
+            }
             return (static_cast<std::int16_t>(value) / 100.0f);
         case Type::et_mil_val:
+            if (value == 0x8000U) {  // "not available"
+                return NAN;
+            }
             return (static_cast<std::int16_t>(value) / 1000.0f);
         case Type::et_little_endian:
             return static_cast<float>((((value >> 8U) & 0xFF) | ((value & 0xff) << 8U)));
@@ -96,6 +107,9 @@ SimpleVariant GetValueByType(const std::uint16_t value, const Type type) {
         case Type::et_double_val:
             [[fallthrough]];
         case Type::et_triple_val:
+            if (value == 0x8000U) {  // "not available"
+                return NAN;
+            }
             return static_cast<std::int16_t>(value) * 1.0f;
         case Type::et_default:
             [[fallthrough]];
