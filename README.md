@@ -120,8 +120,10 @@ After the pull finishes, go back to your **ESPHome Dashboard** and click **Insta
 
 ~~~mermaid
 flowchart LR
-    core[core.yaml<br>System Core] --> wpl_base[wpl_base.yaml<br>Common WPL Base]
+    core[core.yaml<br>System Core] --> wxx[wxx_base.yaml<br>Common WXX Base]
     core --> txx[txx_base.yaml<br>Common TXX Base]
+
+    wxx --> wpl_base[wpl_base.yaml<br>Common WPL Base]
 
     wpl_base --> wpl13([wpl13.yaml<br>Manifest])
     wpl_base --> wpl17([wpl17.yaml<br>Manifest])
