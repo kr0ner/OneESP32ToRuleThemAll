@@ -128,8 +128,12 @@ flowchart LR
     wpl_base --> wpl13([wpl13.yaml<br>Manifest])
     wpl_base --> wpl17([wpl17.yaml<br>Manifest])
     wpl_base --> wpl23([wpl23.yaml<br>Manifest])
-    wpl_base --> wpla5([wpl_a_5.yaml<br>Manifest])
+    wpl_base --> wpl25([wpl25.yaml<br>Manifest])
     wpl_base --> wpei([wpe-i.yaml<br>Manifest])
+
+    wpla5base[wpl_a_base.yaml<br>Common WPL-A Base]
+    wpla5base --> wpla5([wpl_a_5.yaml<br>Manifest])
+    wpla5base --> wpla7([wpl_a_7.yaml<br>Manifest])
 
     txx --> ttf07([ttf07.yaml<br>Manifest])
     txx --> thz[thz_base.yaml<br>Common THZ Base]
@@ -143,8 +147,11 @@ flowchart LR
     style wpl13 stroke-width:2px
     style wpl17 stroke-width:2px
     style wpl23 stroke-width:2px
-    style wpla5 stroke-width:2px
+    style wpl25 stroke-width:2px
     style wpei stroke-width:2px
+    style wpla5base stroke-width:2px
+    style wpla5 stroke-width:2px
+    style wpla7 stroke-width:2px
     style ttf07 stroke-width:2px
     style thz304 stroke-width:2px
     style thz404 stroke-width:2px
@@ -154,7 +161,7 @@ flowchart LR
 
 * **System Core (`core.yaml`)**: Fundamental hardware and network operations.
 * **Series Common Layer (`txx_base.yaml`)**: Shared logic specifically for the TXX (THZ/TTF) family.
-* **Model Base Layer (`thz_base.yaml`)**: Heavy lifting and C++ logic for specific sub-families.
+* **Model Base Layer (`thz_base.yaml`, `wpl_a_base.yaml`)**: Heavy lifting and C++ logic for specific sub-families.
 * **Device Manifests (e.g. `thz304.yaml`, `thz504.yaml`, `wpl13.yaml`)**: The clean, top-level "recipes" used to compile the firmware.
 
 ## Add new readings from heat pump / adopt to your device
