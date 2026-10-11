@@ -126,6 +126,7 @@ flowchart LR
     wpl_base --> wpl13([wpl13.yaml<br>Manifest])
     wpl_base --> wpl17([wpl17.yaml<br>Manifest])
     wpl_base --> wpl23([wpl23.yaml<br>Manifest])
+    wpl_base --> wpl25ac([wpl25ac.yaml<br>Manifest])
 
     txx --> ttf07([ttf07.yaml<br>Manifest])
     txx --> thz[thz_base.yaml<br>Common THZ Base]
@@ -139,6 +140,7 @@ flowchart LR
     style wpl13 stroke-width:2px
     style wpl17 stroke-width:2px
     style wpl23 stroke-width:2px
+    style wpl25ac stroke-width:2px
     style ttf07 stroke-width:2px
     style thz304 stroke-width:2px
     style thz404 stroke-width:2px

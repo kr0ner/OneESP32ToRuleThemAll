@@ -1,0 +1,49 @@
+#########################################
+#                                       #
+#   ESPHome                             #
+#                                       #
+#########################################
+# Stiebel Eltron WPL 25 AC (Inverter, Zwischeneinspritzung) am WPM 4.
+# Register aus Mitschnitten der FES-Abfragen (0x100 -> 0x514/0x601) und gegen das WPM-Display
+# verifiziert (FES 502-04, WPM4 449-07, WP1 393-13).
+esphome:
+  platformio_options:
+    build_flags:
+      - "-DWPL_25_AC"
+
+#########################################
+#                                       #
+#   Global variables                    #
+#                                       #
+#########################################
+globals:
+  - id: heat_pump_variant
+    type: std::string
+    initial_value: '"WPL25AC"'
+
+#########################################
+#                                       #
+#   Packages                            #
+#                                       #
+#########################################
+packages:
+  wpl_base:                  !include { file: wpl_base.yaml }
+
+  ZWISCHENEINSPRITZUNGSTEMP: !include { file: templates/wp_temperature.yaml, vars: { property: "ZWISCHENEINSPRITZUNGSTEMP", target: "Heizmodul" }}
+  WP_WASSERVOLUMENSTROM:     !include { file: templates/wp_generic.yaml, vars: { property: "WP_WASSERVOLUMENSTROM", unit: "l/min", icon: "mdi:water", accuracy_decimals: "1", target: "Heizmodul" }}
+  LUEFTERLEISTUNG_REL:       !include { file: templates/wp_generic.yaml, vars: { property: "LUEFTERLEISTUNG_REL", unit: "%", icon: "mdi:fan", target: "Heizmodul" }}
+  DRUCK_MITTELDRUCK:         !include { file: templates/wp_generic.yaml, vars: { property: "DRUCK_MITTELDRUCK", unit: "bar", icon: "mdi:water-pressure", accuracy_decimals: "2", target: "Heizmodul" }}
+  FROSTSCHUTZTEMPERATUR:     !include { file: templates/wp_temperature.yaml, vars: { property: "FROSTSCHUTZTEMPERATUR", target: "Heizmodul" }}
+  FORTLUFTTEMP:              !include { file: templates/wp_temperature.yaml, vars: { property: "FORTLUFTTEMP", target: "Heizmodul" }}
+  AUSSENTEMPERATUR_WP:       !include { file: templates/wp_temperature.yaml, vars: { property: "AUSSENTEMPERATUR_WP", target: "Heizmodul" }}
+
+  LAUFZEIT_VD_HEIZEN:        !include { file: templates/wp_generic.yaml, vars: { property: "LAUFZEIT_VD_HEIZEN", unit: "h", target: "Heizmodul" }}
+  LAUFZEIT_VD_WW:            !include { file: templates/wp_generic.yaml, vars: { property: "LAUFZEIT_VD_WW", unit: "h", target: "Heizmodul" }}
+  LAUFZEIT_VD_KUEHLEN:       !include { file: templates/wp_generic.yaml, vars: { property: "LAUFZEIT_VD_KUEHLEN", unit: "h", target: "Heizmodul" }}
+  LAUFZEIT_VD_ABTAUEN:       !include { file: templates/wp_generic.yaml, vars: { property: "LAUFZEIT_VD_ABTAUEN", unit: "h", target: "Heizmodul" }}
+  LAUFZEIT_NHZ1:             !include { file: templates/wp_generic.yaml, vars: { property: "LAUFZEIT_NHZ1", unit: "h", target: "Heizmodul" }}
+  LAUFZEIT_NHZ2:             !include { file: templates/wp_generic.yaml, vars: { property: "LAUFZEIT_NHZ2", unit: "h", target: "Heizmodul" }}
+  LAUFZEIT_NHZ1_2:           !include { file: templates/wp_generic.yaml, vars: { property: "LAUFZEIT_NHZ1_2", unit: "h", target: "Heizmodul" }}
+  ZEIT_ABTAUEN:              !include { file: templates/wp_generic.yaml, vars: { property: "ZEIT_ABTAUEN", unit: "min", target: "Heizmodul" }}
+  STARTS_ABTAUEN:            !include { file: templates/wp_generic.yaml, vars: { property: "STARTS_ABTAUEN", target: "Heizmodul" }}
+  KUEHLART:                  !include { file: templates/wp_generic.yaml, vars: { property: "KUEHLART", target: "HK1" }}

@@ -271,7 +271,7 @@ struct Property : public oe32trta::detail::Property {
 // =======================================================================
 // 7. WPL VARIANTS
 // =======================================================================
-#if defined(WPL_13) || defined(WPL_17) || defined(WPL_23)
+#if defined(WPL_13) || defined(WPL_17) || defined(WPL_23) || defined(WPL_25_AC)
     PROPERTY(RUECKLAUFTEMP, 0x0016, Type::et_dec_val);
     PROPERTY(MAXRUECKLAUFTEMP, 0x0028, Type::et_dec_val);
     PROPERTY(PUFFERISTTEMPERATUR, 0x0078, Type::et_dec_val);
@@ -341,13 +341,13 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(FROSTSCHUTZ, 0xfe07, Type::et_dec_val);
 #endif
 
-#if defined(WPL_13) || defined(WPL_17)
+#if defined(WPL_13) || defined(WPL_17) || defined(WPL_25_AC)
     PROPERTY(VERDICHTER_STARTS_K, 0x4ef0);
     PROPERTY(VERDICHTER_STARTS, 0x4ef1);
     PROPERTY(ZEITINTERVALL, 0x4f4d, Type::et_dec_val);
 #endif
 
-#if defined(WPL_17) || defined(WPL_23)
+#if defined(WPL_17) || defined(WPL_23) || defined(WPL_25_AC)
     PROPERTY(LAUFZEIT_NHZ1, 0x0259);
     PROPERTY(LAUFZEIT_NHZ2, 0x025a);
     PROPERTY(LAUFZEIT_NHZ1_2, 0x0805);
@@ -473,8 +473,25 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(OEFFNUNGSGRAD_BYPASSVENT, 0xc2c3, Type::et_dec_val);
 #endif
 
-#if defined(WPL_23)
+#if defined(WPL_23) || defined(WPL_25_AC)
     PROPERTY(ZWISCHENEINSPRITZUNGSTEMP, 0x05d7, Type::et_dec_val);
+#endif
+
+#if defined(WPL_25_AC)
+    PROPERTY(WP_WASSERVOLUMENSTROM, 0x02e2, Type::et_dec_val);
+    PROPERTY(LUEFTERLEISTUNG_REL, 0x0833);
+    PROPERTY(LAUFZEIT_VD_HEIZEN, 0x4efb);
+    PROPERTY(LAUFZEIT_VD_KUEHLEN, 0x4efc);
+    PROPERTY(LAUFZEIT_VD_WW, 0x4efd);
+    PROPERTY(KUEHLART, 0x4f05);
+    PROPERTY(LAUFZEIT_VD_ABTAUEN, 0x4f06);
+    PROPERTY(DRUCK_MITTELDRUCK, 0x0832, Type::et_cent_val);
+    PROPERTY(FROSTSCHUTZTEMPERATUR, 0x0a36, Type::et_dec_val);
+    PROPERTY(FORTLUFTTEMP, 0x0a38, Type::et_dec_val);
+    PROPERTY(AUSSENTEMPERATUR_WP, 0x4f4f, Type::et_dec_val);
+#endif
+
+#if defined(WPL_23)
     PROPERTY(ZEITINTERVALL, 0x0691, Type::et_dec_val);
     PROPERTY(VERDICHTER_STARTS_K, 0x071c);
     PROPERTY(VERDICHTER_STARTS, 0x071d);

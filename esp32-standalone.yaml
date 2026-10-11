@@ -133,6 +133,7 @@ packages:
 #      - "yaml/wpl13.yaml"
 #      - "yaml/wpl17.yaml"
 #      - "yaml/wpl23.yaml"
+#      - "yaml/wpl25ac.yaml"
 #      - "yaml/features/fan.yaml"
 #      - "yaml/features/kondensatpumpe.yaml"
 #      - "yaml/features/energymeter.yaml"
