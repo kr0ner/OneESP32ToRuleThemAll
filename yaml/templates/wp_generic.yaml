@@ -28,6 +28,7 @@ esphome:
       then:
         - lambda: |-
             CallbackHandler::instance().addCallback({CanNode::${target},Property::k${property}},[](const SimpleVariant& value){
+                static_assert(holds_float<Property::k${property}.type>, "Only float-backed properties are supported by wp_generic.");
                 const auto newValue{${scaler} * value.get<float>()};
                 auto property{id(${property}${name_suffix})};
                 if(!std::is_eq(property->state <=> newValue)) {

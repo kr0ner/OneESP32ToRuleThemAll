@@ -25,10 +25,20 @@ esphome:
               id(KUEHLBETRIEB).publish_state(status_bits.test(9U));
               // 10 to 15 are unknown
             });
+
+            CallbackHandler::instance().addCallback(std::make_pair(CanNode::Kessel,Property::kEINPHASIGER_BETRIEB),[](const SimpleVariant& value){
+              id(EINPHASIGER_BETRIEB).publish_state(value.get<bool>());
+            });
+
+            CallbackHandler::instance().addCallback(std::make_pair(CanNode::Kessel,Property::kKUEHLEN_EINGESCHALTET),[](const SimpleVariant& value){
+              id(KUEHLEN_EINGESCHALTET).publish_state(value.get<bool>());
+            });
     - priority: -100
       then:
         - lambda: |-
             queueRequest(CanNode::Kessel, Property::kBETRIEBS_STATUS);
+            queueRequest(CanNode::Kessel, Property::kEINPHASIGER_BETRIEB);
+            queueRequest(CanNode::Kessel, Property::kKUEHLEN_EINGESCHALTET);
 
 #########################################
 #                                       #
@@ -75,9 +85,9 @@ packages:
   LEISTUNG_HEIZKREISPUMPE:  !include { file: templates/wp_generic.yaml, vars: { property: "LEISTUNG_HEIZKREISPUMPE" , update_interval: "${interval_once_in_a_while}", unit: "%", icon: "mdi:water-percent", accuracy_decimals: "1" }}
   LEISTUNG_SOLEPUMPE:       !include { file: templates/wp_generic.yaml, vars: { property: "LEISTUNG_SOLEPUMPE"      , update_interval: "${interval_once_in_a_while}", unit: "%", icon: "mdi:water-percent", accuracy_decimals: "1" }}
   LEISTUNG_WARMWASSERPUMPE: !include { file: templates/wp_generic.yaml, vars: { property: "LEISTUNG_WARMWASSERPUMPE", update_interval: "${interval_once_in_a_while}", unit: "%", icon: "mdi:water-percent", accuracy_decimals: "1" }}
-  EINPHASIGER_BETRIEB:      !include { file: templates/wp_generic.yaml, vars: { property: "EINPHASIGER_BETRIEB"     , update_interval: "${interval_once_in_a_while}" }}
+  EINPHASIGER_BETRIEB:      !include { file: templates/wp_binary.yaml, vars: { name: "EINPHASIGER_BETRIEB" }}
   VERDICHTER_STILLSTAND:    !include { file: templates/wp_generic.yaml, vars: { property: "VERDICHTER_STILLSTAND"   , update_interval: "${interval_once_in_a_while}", unit: "min" }}
   REGLERDYNAMIK:            !include { file: templates/wp_generic.yaml, vars: { property: "REGLERDYNAMIK"           , update_interval: "${interval_once_in_a_while}" }}
-  KUEHLEN_EINGESCHALTET:    !include { file: templates/wp_generic.yaml, vars: { property: "KUEHLEN_EINGESCHALTET"   , update_interval: "${interval_slow}" }}
+  KUEHLEN_EINGESCHALTET:    !include { file: templates/wp_binary.yaml, vars: { name: "KUEHLEN_EINGESCHALTET" }}
 
   PROGRAMMSCHALTER:         !include { file: templates/wp_select.yaml, vars: { property: PROGRAMMSCHALTER, mapper_func_set: getBetriebsartId, mapper_func_get: getBetriebsart, options: ["Notbetrieb", "Bereitschaft", "Programm", "Komfort", "Eco", "Warmwasser", "Unbekannt"] }}

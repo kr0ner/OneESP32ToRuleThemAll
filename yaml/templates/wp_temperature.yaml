@@ -26,6 +26,7 @@ esphome:
       then:
         - lambda: |-
             auto callback= [](const SimpleVariant& value){
+                static_assert(holds_float<Property::k${property}.type>, "Only float-backed properties are supported by wp_temperature.");
                 const auto newValue{value.get<float>()};
                 auto property{id(${property}${name_suffix})};
                 if(!std::is_eq(property->state <=> newValue)) {

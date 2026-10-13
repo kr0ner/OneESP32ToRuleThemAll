@@ -55,6 +55,7 @@ esphome:
         - lambda: |-
             CallbackHandler::instance().addCallbacks({{CanNode::Kessel,Property::k${property}},
                                                     {CanNode::Heizmodul,Property::k${property}}},[](const SimpleVariant& value){
+                static_assert(holds_float<Property::k${property}.type>, "Only float-backed properties are supported by wp_ventilation.");
                 const auto fan_speed = std::min(static_cast<std::uint16_t>(3U),static_cast<std::uint16_t>(value));
                 auto fan = id(${property});
 

@@ -41,6 +41,7 @@ esphome:
       then:
         - lambda: |-
             CallbackHandler::instance().addCallback({CanNode::${target}, Property::k${property}}, [](const SimpleVariant& value) {
+              static_assert(holds_string<Property::k${property}.type>, "Only string-backed properties (et_betriebsart, et_passivkuehlung, et_err_nr, ...) are supported by wp_select.");
               const auto stringValue{value.get<std::string>()};
               const auto index = id(${property}).index_of(stringValue);
               if(index.has_value() && id(${property}).active_index() != index.value()) {
