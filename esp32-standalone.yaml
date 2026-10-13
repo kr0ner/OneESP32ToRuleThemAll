@@ -26,7 +26,8 @@ captive_portal:
 
 ota:
   platform: esphome
-  password: !secret ota_password
+  encryption:
+    key: !secret api_encryption_key
 
 substitutions:
   entity_room_temperature: "sensor.durchschnittstemperatur_haus_ohne_keller"
