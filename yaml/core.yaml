@@ -7,9 +7,6 @@ esphome:
   build_flags:
     - "-std=gnu++2a"
     - "-DESPCLIENT_ID=$espclient_can_id"
-  platformio_options:
-    build_unflags:
-      - "-std=gnu++11"
 
 esp32:
   framework:

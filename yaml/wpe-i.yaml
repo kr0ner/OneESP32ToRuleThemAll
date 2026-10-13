@@ -10,9 +10,8 @@
 # word — the WPL13 status-bit binaries are omitted until the WPE-I's
 # real status property is identified.
 esphome:
-  platformio_options:
-    build_flags:
-      - "-DWPE_I"
+  build_flags:
+    - "-DWPE_I"
   on_boot:
     - priority: -50
       then:
