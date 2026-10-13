@@ -59,7 +59,11 @@ sensor:
     id: WP_STATUS_RAW
     icon: "mdi:numeric"
     accuracy_decimals: 0
-    update_interval: never
+    # the WPM does not broadcast this word on its own, so it has to be polled
+    update_interval: $interval_medium
+    lambda: |-
+        queueRequest(CanNode::Kessel, Property::kWAERMEPUMPEN_STATUS);
+        return {};
   - platform: template
     name: ANLAGE_STATUS_RAW
     id: ANLAGE_STATUS_RAW
@@ -78,6 +82,30 @@ sensor:
   - id: !extend MAXTEMP
     filters:
       - clamp: { min_value: -60.0, max_value: 100.0, ignore_out_of_range: true }
+  # Operational values from the shared base use the template default
+  # update_interval (never) and are only read at boot. On the WPE-I no other bus
+  # participant requests them, so they would stay at their boot value while the
+  # compressor runs. Poll them here instead.
+  - id: !extend ISTDREHZAHL_VERDICHTER
+    update_interval: $interval_medium
+  - id: !extend SOLLDREHZAHL_VERDICHTER
+    update_interval: $interval_medium
+  - id: !extend STROM_INVERTER
+    update_interval: $interval_medium
+  - id: !extend LEISTUNG_QUELLENPUMPE
+    update_interval: $interval_medium
+  - id: !extend VOLUMENSTROM
+    update_interval: $interval_medium
+  - id: !extend QUELLENDRUCK
+    update_interval: $interval_slow
+  - id: !extend DRUCK_NIEDERDRUCK
+    update_interval: $interval_slow
+  - id: !extend DRUCK_HOCHDRUCK
+    update_interval: $interval_slow
+  - id: !extend HEIZEN_EFFIZIENZ_TAG
+    update_interval: $interval_very_slow
+  - id: !extend HEIZEN_EFFIZIENZ_JAHR
+    update_interval: $interval_once_in_a_while
   - id: !extend REGELABWEICHUNG
     filters:
       - clamp: { min_value: -50.0, max_value: 50.0, ignore_out_of_range: true }
@@ -103,13 +131,13 @@ packages:
 
   # 0x02e2 fluctuates with the circulation flow (raw 280/285 = 28.0/28.5 l/min,
   # consistent with VOLUMENSTROM 0x4f47) — same meaning as on the WPL17
-  WP_WASSERVOLUMENSTROM:                !include { file: templates/wp_generic.yaml, vars: { property: "WP_WASSERVOLUMENSTROM", unit: "l/min", icon: "mdi:water", accuracy_decimals: "1", target: "Heizmodul" }}
+  WP_WASSERVOLUMENSTROM:                !include { file: templates/wp_generic.yaml, vars: { property: "WP_WASSERVOLUMENSTROM", unit: "l/min", icon: "mdi:water", accuracy_decimals: "1", update_interval: $interval_medium, target: "Heizmodul" }}
 
   # runtime counters (panel: Info -> Wärmepumpe -> Laufzeit)
-  LAUFZEIT_VD_HEIZEN:                   !include { file: templates/wp_generic.yaml, vars: { property: "LAUFZEIT_VD_HEIZEN", unit: "h", target: "Heizmodul" }}
-  LAUFZEIT_NHZ1:                        !include { file: templates/wp_generic.yaml, vars: { property: "LAUFZEIT_NHZ1", unit: "h", target: "Heizmodul" }}
-  LAUFZEIT_NHZ2:                        !include { file: templates/wp_generic.yaml, vars: { property: "LAUFZEIT_NHZ2", unit: "h", target: "Heizmodul" }}
-  LAUFZEIT_NHZ1_2:                      !include { file: templates/wp_generic.yaml, vars: { property: "LAUFZEIT_NHZ1_2", unit: "h", target: "Heizmodul" }}
+  LAUFZEIT_VD_HEIZEN:                   !include { file: templates/wp_generic.yaml, vars: { property: "LAUFZEIT_VD_HEIZEN", unit: "h", update_interval: $interval_once_in_a_while, target: "Heizmodul" }}
+  LAUFZEIT_NHZ1:                        !include { file: templates/wp_generic.yaml, vars: { property: "LAUFZEIT_NHZ1", unit: "h", update_interval: $interval_once_in_a_while, target: "Heizmodul" }}
+  LAUFZEIT_NHZ2:                        !include { file: templates/wp_generic.yaml, vars: { property: "LAUFZEIT_NHZ2", unit: "h", update_interval: $interval_once_in_a_while, target: "Heizmodul" }}
+  LAUFZEIT_NHZ1_2:                      !include { file: templates/wp_generic.yaml, vars: { property: "LAUFZEIT_NHZ1_2", unit: "h", update_interval: $interval_once_in_a_while, target: "Heizmodul" }}
 
   # status binaries decoded from the WPE-I's own status words (panel-verified bits only)
   PASSIVKUEHLUNG_AKTIV:                 !include { file: templates/wp_binary.yaml, vars: { name: "PASSIVKUEHLUNG_AKTIV" }}
