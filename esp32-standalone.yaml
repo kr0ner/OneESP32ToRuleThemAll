@@ -126,7 +126,7 @@ packages:
     ref: master
     refresh: 1h
     files:
-#      - "/yaml/thz304.yaml"
+#      - "yaml/thz304.yaml"
 #      - "yaml/thz404.yaml"
       - "yaml/thz504.yaml"
 #      - "yaml/thz5_5_eco.yaml"

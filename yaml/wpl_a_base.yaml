@@ -1,0 +1,98 @@
+#########################################
+#                                       #
+#   ESPHome                             #
+#                                       #
+#########################################
+# WPL-A family base (WPL-A-05, WPL-A-07, ...).
+#
+# Air/water heat pumps without a ventilation unit. They do NOT use the classic
+# WPL BETRIEBS_STATUS word (0x4ecd, decoded in wpl_base.yaml): the A-series
+# Manager reports its own 12-bit status word at 0x4eef with a different bit
+# assignment, so the decode lives here instead of wpl_base.yaml.
+#
+# Everything in this file is shared by all WPL-A variants. Variant files
+# (wpl_a_5.yaml, wpl_a_7.yaml, ...) include this and add only their deltas.
+esphome:
+  build_flags:
+    # family-level define, used to group the property.h gates so new
+    # A-series members don't require touching every #if
+    - "-DWPL_A"
+
+  on_boot:
+    - priority: -50
+      then:
+        - lambda: |-
+            CallbackHandler::instance().addCallback(std::make_pair(CanNode::Manager,Property::kBETRIEBS_STATUS),[](const SimpleVariant& value){
+              const std::bitset<12U> status_bits{static_cast<std::uint16_t>(value)};
+              id(HEIZKREISPUMPE_1).publish_state(status_bits.test(0U));
+              id(HEIZKREISPUMPE_2).publish_state(status_bits.test(1U));
+              id(AUFHEIZPROGRAMM).publish_state(status_bits.test(2U));
+              id(NHZ_STUFEN_IN_BETRIEB).publish_state(status_bits.test(3U));
+              id(WP_IM_HEIZBETRIEB).publish_state(status_bits.test(4U));
+              id(WP_IM_WW_BETRIEB).publish_state(status_bits.test(5U));
+              id(VERDICHTER_IN_BETRIEB).publish_state(status_bits.test(6U));
+              id(SOMMERBETRIEB_AKTIV).publish_state(status_bits.test(7U));
+              id(KUEHLBETRIEB_AKTIV).publish_state(status_bits.test(8U));
+              id(ABTAUBETRIEB).publish_state(status_bits.test(9U));
+              id(SILENT_MODE_1).publish_state(status_bits.test(10U));
+              id(SILENT_MODE_2).publish_state(status_bits.test(11U));
+            });
+    - priority: -100
+      then:
+        - lambda: |-
+            queueRequest(CanNode::Manager, Property::kBETRIEBS_STATUS);
+
+#########################################
+#                                       #
+#   Packages                            #
+#                                       #
+#########################################
+packages:
+  WXX_BASE:                             !include { file: wxx_base.yaml }
+
+  # status binaries decoded from the ANLAGE-Status word above
+  HEIZKREISPUMPE_1:                     !include { file: templates/wp_binary.yaml, vars: { name: "HEIZKREISPUMPE_1" }}
+  HEIZKREISPUMPE_2:                     !include { file: templates/wp_binary.yaml, vars: { name: "HEIZKREISPUMPE_2" }}
+  AUFHEIZPROGRAMM:                      !include { file: templates/wp_binary.yaml, vars: { name: "AUFHEIZPROGRAMM" }}
+  NHZ_STUFEN_IN_BETRIEB:                !include { file: templates/wp_binary.yaml, vars: { name: "NHZ_STUFEN_IN_BETRIEB" }}
+  WP_IM_HEIZBETRIEB:                    !include { file: templates/wp_binary.yaml, vars: { name: "WP_IM_HEIZBETRIEB" }}
+  WP_IM_WW_BETRIEB:                     !include { file: templates/wp_binary.yaml, vars: { name: "WP_IM_WW_BETRIEB" }}
+  VERDICHTER_IN_BETRIEB:                !include { file: templates/wp_binary.yaml, vars: { name: "VERDICHTER_IN_BETRIEB" }}
+  SOMMERBETRIEB_AKTIV:                  !include { file: templates/wp_binary.yaml, vars: { name: "SOMMERBETRIEB_AKTIV" }}
+  KUEHLBETRIEB_AKTIV:                   !include { file: templates/wp_binary.yaml, vars: { name: "KUEHLBETRIEB_AKTIV" }}
+  ABTAUBETRIEB:                         !include { file: templates/wp_binary.yaml, vars: { name: "ABTAUBETRIEB" }}
+  SILENT_MODE_1:                        !include { file: templates/wp_binary.yaml, vars: { name: "SILENT_MODE_1" }}
+  SILENT_MODE_2:                        !include { file: templates/wp_binary.yaml, vars: { name: "SILENT_MODE_2" }}
+
+  # EVU lock flag 0xabe1, served by the Manager (single-wire tariff signal)
+  EVU_SPERRE:                           !include { file: templates/wp_binary.yaml, vars: { name: "EVU_SPERRE", property: "EVU_SPERRE", target: "Manager" }}
+
+  # runtime counters (panel: Info -> Waermepumpe -> Laufzeit). The A-series
+  # answers these on the Heizmodul, unlike WPL-13/17 which report them via
+  # Kessel.
+  LAUFZEIT_VD_HEIZEN:                   !include { file: templates/wp_generic.yaml, vars: { property: "LAUFZEIT_VD_HEIZEN", unit: "h", target: "Heizmodul" }}
+  LAUFZEIT_VD_WW:                       !include { file: templates/wp_generic.yaml, vars: { property: "LAUFZEIT_VD_WW", unit: "h", target: "Heizmodul" }}
+  LAUFZEIT_VD_KUEHLEN:                  !include { file: templates/wp_generic.yaml, vars: { property: "LAUFZEIT_VD_KUEHLEN", unit: "h", target: "Heizmodul" }}
+  LAUFZEIT_VD_ABTAUEN:                  !include { file: templates/wp_generic.yaml, vars: { property: "LAUFZEIT_VD_ABTAUEN", unit: "h", target: "Heizmodul" }}
+  LAUFZEIT_NHZ1:                        !include { file: templates/wp_generic.yaml, vars: { property: "LAUFZEIT_NHZ1", unit: "h", target: "Heizmodul" }}
+  LAUFZEIT_NHZ2:                        !include { file: templates/wp_generic.yaml, vars: { property: "LAUFZEIT_NHZ2", unit: "h", target: "Heizmodul" }}
+  LAUFZEIT_NHZ1_2:                      !include { file: templates/wp_generic.yaml, vars: { property: "LAUFZEIT_NHZ1_2", unit: "h", target: "Heizmodul" }}
+  STARTS_ABTAUEN:                       !include { file: templates/wp_generic.yaml, vars: { property: "STARTS_ABTAUEN", target: "Heizmodul" }}
+  ZEIT_ABTAUEN:                         !include { file: templates/wp_generic.yaml, vars: { property: "ZEIT_ABTAUEN", unit: "min", target: "Heizmodul" }}
+
+  # statistics not part of the shared base
+  WAERMEERTRAG_2WE_HEIZ_SUMME_MWH:      !include { file: templates/wp_generic_combined.yaml, vars: { sensor_name: "WAERMEERTRAG_2WE_HEIZ_SUMME_MWH" , scaled_property: "WAERMEERTRAG_2WE_HEIZ_SUM_KWH" , property: "WAERMEERTRAG_2WE_HEIZ_SUM_MWH" , unit: "MWh", accuracy_decimals: "3", icon: "mdi:fire" , target: "Heizmodul", state_class: "total_increasing" }}
+  EL_ENERGIEAUFNAHME_WW_NHZ_SUMME_KWH:  !include { file: templates/wp_generic_combined.yaml, vars: { sensor_name: "EL_ENERGIEAUFNAHME_WW_NHZ_SUMME_KWH" , scaled_property: "EL_ENERGIEAUFNAHME_WW_NHZ_SUM_MWH" , property: "EL_ENERGIEAUFNAHME_WW_NHZ_SUM_KWH" , unit: "kWh", accuracy_decimals: "0", scaler: "1000", icon: "mdi:flash" , target: "Heizmodul", state_class: "total_increasing" }}
+
+  # warm water. The WPL-A models have no integrated DHW tank, the comfort/eco
+  # setpoints 0x0013/0x0a06 address the external storage via Kessel.
+  KOMFORTTEMPERATUR_WW:                 !include { file: templates/wp_number.yaml, vars: { property: "KOMFORTTEMPERATUR_WW", min: "30", max: "65", step: "0.5", accuracy_decimals: "1", unit: "°C", target: "Kessel" }}
+  WW_ECO_TEMP:                          !include { file: templates/wp_number.yaml, vars: { property: "ECOTEMPERATUR_WW", min: "30", max: "65", step: "0.5", accuracy_decimals: "1", unit: "°C", target: "Kessel" }}
+  SOLLTEMP_WW:                          !include { file: templates/wp_temperature.yaml, vars: { property: "SPEICHERSOLLTEMP", update_interval: $interval_medium }}
+  ISTTEMP_WW:                           !include { file: templates/wp_temperature.yaml, vars: { property: "SPEICHERISTTEMP", update_interval: $interval_medium }}
+
+  # circulation pump power (panel-verified values only)
+  PUMPENLEISTUNG_STANDBY:               !include { file: templates/wp_number.yaml, vars: { property: "PUMPENLEISTUNG_STANDBY", min: "0", max: "100", step: "1", accuracy_decimals: "0", unit: "%", icon: "mdi:percent-box", target: "Manager" }}
+  PUMPENLEISTUNG_HEIZEN:                !include { file: templates/wp_number.yaml, vars: { property: "PUMPENLEISTUNG_HEIZEN", min: "0", max: "100", step: "1", accuracy_decimals: "0", unit: "%", icon: "mdi:percent-box", target: "Manager" }}
+  PUMPENLEISTUNG_WW:                    !include { file: templates/wp_number.yaml, vars: { property: "PUMPENLEISTUNG_WW", min: "0", max: "100", step: "1", accuracy_decimals: "0", unit: "%", icon: "mdi:percent-box", target: "Manager" }}
+  PUMPENLEISTUNG_KUEHLEN:               !include { file: templates/wp_number.yaml, vars: { property: "PUMPENLEISTUNG_KUEHLEN", min: "0", max: "100", step: "1", accuracy_decimals: "0", unit: "%", icon: "mdi:percent-box", target: "Manager" }}
