@@ -123,6 +123,7 @@ packages:
   thz504: !include OneESP32ToRuleThemAll/yaml/thz504.yaml
 # thz55eco: !include OneESP32ToRuleThemAll/yaml/thz5_5_eco.yaml
 # ttf07: !include OneESP32ToRuleThemAll/yaml/ttf07.yaml
+# wpei: !include OneESP32ToRuleThemAll/yaml/wpe-i.yaml
 # wpl13: !include OneESP32ToRuleThemAll/yaml/wpl13.yaml
 # wpl17: !include OneESP32ToRuleThemAll/yaml/wpl17.yaml
 # wpl23: !include OneESP32ToRuleThemAll/yaml/wpl23.yaml

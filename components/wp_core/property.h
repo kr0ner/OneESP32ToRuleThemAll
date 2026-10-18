@@ -304,7 +304,9 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(ECOTEMPERATUR, 0x4eb9, Type::et_dec_val);
     PROPERTY(RAUMISTTEMP, 0x4ec7, Type::et_dec_val);
     PROPERTY(RAUMFEUCHTE, 0x4ec8, Type::et_dec_val);
+#if !defined(WPL_A_5)
     PROPERTY(BETRIEBS_STATUS, 0x4ecd);
+#endif
     PROPERTY(RAUMSOLLTEMP, 0x4ece, Type::et_dec_val);
     PROPERTY(TAUPUNKTTEMP, 0x4ee0, Type::et_dec_val);
     PROPERTY(HYSTERESE_VORLAUFTEMP_KUEHLEN, 0x4f00, Type::et_dec_val);
@@ -348,9 +350,6 @@ struct Property : public oe32trta::detail::Property {
 #endif
 
 #if defined(WPE_I) || defined(WPL_17) || defined(WPL_A_5)
-    // 0x02e2 carries the water volume flow on these models, unlike the WPL13
-    // where the same index is the WAERMEPUMPEN_STATUS word (on the WPE-I it was
-    // observed as raw 280/285 = 28.0/28.5 l/min next to VOLUMENSTROM 0x4f47)
     PROPERTY(WP_WASSERVOLUMENSTROM, 0x02e2, Type::et_dec_val);
     PROPERTY(REGELABWEICHUNG, 0x033d, Type::et_dec_val);
     PROPERTY(LAUFZEIT_VD_HEIZEN, 0x4efb);
@@ -378,6 +377,7 @@ struct Property : public oe32trta::detail::Property {
 #endif
 
 #if defined(WPL_A_5)
+    PROPERTY(EVU_SPERRE_AKTIV, 0x0074);
     PROPERTY(BETRIEBS_STATUS, 0x4eef);
     PROPERTY(VORLAUFSOLLTEMPERATUR_KUEHLEN, 0x4f03, Type::et_dec_val);
     PROPERTY(RESTSTILLSTANDSZEIT, 0x4f4e);
@@ -390,11 +390,6 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(PUMPENZYKLEN_AUSSENTEMP_MIN, 0x05bb);
     PROPERTY(EL_ENERGIEAUFNAHME_WW_NHZ_SUM_KWH, 0x0924);
     PROPERTY(EL_ENERGIEAUFNAHME_WW_NHZ_SUM_MWH, 0x0925, Type::et_double_val);
-    PROPERTY(EL_ENERGIEAUFNAHME_HEIZ_NHZ_SUM_KWH, 0x0928);
-    PROPERTY(EL_ENERGIEAUFNAHME_HEIZ_NHZ_SUM_MWH, 0x0929, Type::et_double_val);
-    PROPERTY(WW_LEISTUNG_WINTER, 0x0691);
-    PROPERTY(LEISTUNG_VOLT_X1_16, 0x071c, Type::et_dec_val);
-    PROPERTY(FUNKTION_X1_17, 0x071d);
 #endif
 
 #if defined(WPL_17) || defined(WPL_A_5)
@@ -508,6 +503,11 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(OEFFNUNGSGRAD_BYPASSVENT, 0xc2c3, Type::et_dec_val);
 #endif
 
+#if defined(WPL_A_5)
+    PROPERTY(KOMFORTTEMPERATUR_WW, 0x0013, Type::et_dec_val);
+    PROPERTY(ECOTEMPERATUR_WW, 0x0a06, Type::et_dec_val);
+#endif
+
 #if defined(WPL_23)
     PROPERTY(ZWISCHENEINSPRITZUNGSTEMP, 0x05d7, Type::et_dec_val);
     PROPERTY(ZEITINTERVALL, 0x0691, Type::et_dec_val);
@@ -525,6 +525,7 @@ struct Property : public oe32trta::detail::Property {
 #if defined(FET)
     PROPERTY(HEARTBEAT, 0x4eb3);
     PROPERTY(FET_SOFTWARE, 0x0199);
+    PROPERTY(FET_SOFTWARESTAND, 0x019a);
     PROPERTY(FET_REVISIONSNUMMER, 0x4e68);
     PROPERTY(FET_INIT, 0x4ec0);
     PROPERTY(FET_BOARDCAST, 0x0100);
