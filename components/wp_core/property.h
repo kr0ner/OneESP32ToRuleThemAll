@@ -377,6 +377,17 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(WAERMEPUMPEN_STATUS, 0x4eda);
 #endif
 
+#if defined(WPL_A_5)
+    PROPERTY(BETRIEBS_STATUS, 0x4eef);
+    PROPERTY(VORLAUFSOLLTEMPERATUR_KUEHLEN, 0x4f03, Type::et_dec_val);
+    PROPERTY(RESTSTILLSTANDSZEIT, 0x4f4e);
+    PROPERTY(PUMPENLEISTUNG_STANDBY, 0x4f8a);
+    PROPERTY(PUMPENLEISTUNG_HEIZEN, 0x4f8c);
+    PROPERTY(PUMPENLEISTUNG_WW, 0x4f8f);
+    PROPERTY(PUMPENLEISTUNG_KUEHLEN, 0x4f92);
+    PROPERTY(EVU_SPERRE, 0xabe1);
+#endif
+
 #if defined(WPL_17) || defined(WPL_A_5)
     PROPERTY(MAXIMALE_VORLAUFTEMP_WW, 0x0181, Type::et_dec_val);
     PROPERTY(BIVALENZTEMPERATUR_WW, 0x01ad, Type::et_dec_val);
@@ -384,7 +395,7 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(EINSATZGRENZE_WW, 0x01af, Type::et_dec_val);
     PROPERTY(AUSSENTEMPERATUR_EINST, 0x01bf, Type::et_dec_val);
     PROPERTY(FESTWERTBETRIEB, 0x01c0, Type::et_dec_val);
-    PROPERTY(WW_LERNFUNKTION, 0x027e);
+    PROPERTY(WW_LERNFUNKTION, 0x027e, Type::et_bool);
     PROPERTY(GRENZE_KUEHLEN, 0x03dc, Type::et_dec_val);
     PROPERTY(VORLAUFANTEIL_HEIZKREIS, 0x049d);
     PROPERTY(SENSORABGLEICH_VORLAUF_WP, 0x0658, Type::et_dec_val);
@@ -442,15 +453,15 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(LAUFZEIT_VD_WW, 0x4efd);
     PROPERTY(KUEHLART, 0x4f05);
     PROPERTY(LAUFZEIT_VD_ABTAUEN, 0x4f06);
-    PROPERTY(KUEHLEN, 0x4f07);
+    PROPERTY(KUEHLEN, 0x4f07, Type::et_bool);
     PROPERTY(KUEHLKREIS, 0x4f08);
     PROPERTY(MELDUNGSLISTE, 0x4f0c);
-    PROPERTY(SOMMERBETRIEB, 0x4f1e);
+    PROPERTY(SOMMERBETRIEB, 0x4f1e, Type::et_bool);
     PROPERTY(GEBAEUDEDAEMPFUNG, 0x4f1f);
     PROPERTY(PUMPENZYKLEN, 0x4f21);
     PROPERTY(WARMWASSERBETRIEB, 0x4f24);
     PROPERTY(WARMWASSERHYSTERESE, 0x4f25, Type::et_dec_val);
-    PROPERTY(ANTILEGIONELLENBEHANDLUNG, 0x4f28);
+    PROPERTY(ANTILEGIONELLENBEHANDLUNG, 0x4f28, Type::et_bool);
     PROPERTY(ABTAUEN_EINLEITEN, 0x4f2d);
     PROPERTY(STILLSTANDSZEIT, 0x4f2e);
     PROPERTY(MINIMALE_ABTAUZEIT, 0x4f2f);
@@ -497,6 +508,17 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(LAUFZEIT_VD_HEIZEN, 0x07fc);
     PROPERTY(LAUFZEIT_VD_WW, 0x0802);
     PROPERTY(LAUFZEIT_VD_ABTAUEN, 0x0808);
+#endif
+
+// =======================================================================
+// 8. FET PANEL (independent entity, works across many heat pump variants)
+// =======================================================================
+#if defined(FET)
+    PROPERTY(HEARTBEAT, 0x4eb3);
+    PROPERTY(FET_SOFTWARE, 0x0199);
+    PROPERTY(FET_REVISIONSNUMMER, 0x4e68);
+    PROPERTY(FET_INIT, 0x4ec0);
+    PROPERTY(FET_BOARDCAST, 0x0100);
 #endif
 };
 
