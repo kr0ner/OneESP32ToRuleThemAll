@@ -271,7 +271,7 @@ struct Property : public oe32trta::detail::Property {
 // =======================================================================
 // 7. WPL VARIANTS
 // =======================================================================
-#if defined(WPL_13) || defined(WPL_17) || defined(WPL_23) || defined(WPE_I)
+#if defined(WPL_13) || defined(WPL_17) || defined(WPL_23) || defined(WPE_I) || defined(WPL_A_5)
     PROPERTY(RUECKLAUFTEMP, 0x0016, Type::et_dec_val);
     PROPERTY(MAXRUECKLAUFTEMP, 0x0028, Type::et_dec_val);
     PROPERTY(PUFFERISTTEMPERATUR, 0x0078, Type::et_dec_val);
@@ -341,13 +341,13 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(FROSTSCHUTZ, 0xfe07, Type::et_dec_val);
 #endif
 
-#if defined(WPL_13) || defined(WPL_17) || defined(WPE_I)
+#if defined(WPL_13) || defined(WPL_17) || defined(WPE_I) || defined(WPL_A_5)
     PROPERTY(VERDICHTER_STARTS_K, 0x4ef0);
     PROPERTY(VERDICHTER_STARTS, 0x4ef1);
     PROPERTY(ZEITINTERVALL, 0x4f4d, Type::et_dec_val);
 #endif
 
-#if defined(WPE_I) || defined(WPL_17)
+#if defined(WPE_I) || defined(WPL_17) || defined(WPL_A_5)
     // 0x02e2 carries the water volume flow on these models, unlike the WPL13
     // where the same index is the WAERMEPUMPEN_STATUS word (on the WPE-I it was
     // observed as raw 280/285 = 28.0/28.5 l/min next to VOLUMENSTROM 0x4f47)
@@ -356,13 +356,13 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(LAUFZEIT_VD_HEIZEN, 0x4efb);
 #endif
 
-#if defined(WPE_I) || defined(WPL_17) || defined(WPL_23)
+#if defined(WPE_I) || defined(WPL_17) || defined(WPL_23) || defined(WPL_A_5)
     PROPERTY(LAUFZEIT_NHZ1, 0x0259);
     PROPERTY(LAUFZEIT_NHZ2, 0x025a);
     PROPERTY(LAUFZEIT_NHZ1_2, 0x0805);
 #endif
 
-#if defined(WPL_17) || defined(WPL_23)
+#if defined(WPL_17) || defined(WPL_23) || defined(WPL_A_5)
     PROPERTY(STARTS_ABTAUEN, 0x0806);
     PROPERTY(ZEIT_ABTAUEN, 0x0807);
 #endif
@@ -377,7 +377,7 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(WAERMEPUMPEN_STATUS, 0x4eda);
 #endif
 
-#if defined(WPL_17)
+#if defined(WPL_17) || defined(WPL_A_5)
     PROPERTY(MAXIMALE_VORLAUFTEMP_WW, 0x0181, Type::et_dec_val);
     PROPERTY(BIVALENZTEMPERATUR_WW, 0x01ad, Type::et_dec_val);
     PROPERTY(EINSATZGRENZE_HZG, 0x01ae, Type::et_dec_val);
