@@ -372,11 +372,9 @@ struct Property : public oe32trta::detail::Property {
 #endif
 
 #if defined(WPE_I)
-    // the WPE-I's Waermepumpen-Status word (broadcast by Kessel, 0x8000 while
-    // in standby). Panel verified bits: 4 = passive cooling active, two of
-    // {2, 13} = Kuehlbetrieb mode / Netzversorgung Inverter.
+    // the WPE-I's Waermepumpen-Status word (Kessel, polled, 0x8000 while in
+    // standby). Panel verified bits are decoded in yaml/wpe-i.yaml.
     PROPERTY(WAERMEPUMPEN_STATUS, 0x4eda);
-    PROPERTY(EVU_SPERRE_AKTIV, 0x0074);
 #endif
 
 #if defined(WPL_17)
