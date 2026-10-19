@@ -47,6 +47,10 @@ mqtt:
   discover_ip: false
   reboot_timeout: 0s
   keepalive: 60s
+  # The interval below publishes from the main loop. Without this the ESP-IDF
+  # client sends synchronously and a slow broker blocks for up to 10 s, which
+  # trips the 5 s task watchdog and reboots the device.
+  idf_send_async: true
   on_connect:
     then:
       - binary_sensor.template.publish:
