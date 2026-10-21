@@ -1,0 +1,38 @@
+#########################################
+#                                       #
+#   ESPHome                             #
+#                                       #
+#########################################
+# Stiebel Eltron WPL-A-05 (air/water, no ventilation unit).
+#
+# Delta on top of wpl_a_base.yaml - the family base provides the
+# BETRIEBS_STATUS decode, status binaries, runtime counters, energy
+# statistics, DHW setpoints and pump power numbers.
+esphome:
+  build_flags:
+    - "-DWPL_A_5"
+
+#########################################
+#                                       #
+#   Global variables                    #
+#                                       #
+#########################################
+globals:
+  - id: heat_pump_variant
+    type: std::string
+    initial_value: '"WPL-A-5"'
+
+#########################################
+#                                       #
+#   Packages                            #
+#                                       #
+#########################################
+packages:
+  WPL_A_BASE:                           !include { file: wpl_a_base.yaml }
+
+  # A-05 specific properties (0x4f4e/0x4f8a.. live in the WPL_A_5 block of
+  # property.h)
+  RESTSTILLSTANDSZEIT:                  !include { file: templates/wp_generic.yaml, vars: { property: "RESTSTILLSTANDSZEIT", unit: "min", target: "Heizmodul" }}
+  MOTORSPANNUNG:                        !include { file: templates/wp_generic.yaml, vars: { property: "MOTORSPANNUNG", unit: "V", target: "Heizmodul", accuracy_decimals: "1" }}
+  PUMPENZYKLEN_AUSSENTEMP_MIN:          !include { file: templates/wp_temperature.yaml, vars: { property: "PUMPENZYKLEN_AUSSENTEMP_MIN", target: "Manager" }}
+  VORLAUFSOLLTEMPERATUR_KUEHLEN:        !include { file: templates/wp_temperature.yaml, vars: { property: "VORLAUFSOLLTEMPERATUR_KUEHLEN", target: "Kessel" }}

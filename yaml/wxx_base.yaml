@@ -34,7 +34,7 @@ packages:
   ECOTEMPERATUR_HK2:                     !include { file: templates/wp_temperature.yaml, vars: { property: "ECOTEMPERATUR"     , name_suffix: "_HK2" , target: "HK2"  }}
   RAUMISTTEMP:                           !include { file: templates/wp_temperature.yaml, vars: { property: "RAUMISTTEMP"       , target: "FET"  }}
   RAUMSOLLTEMP:                          !include { file: templates/wp_temperature.yaml, vars: { property: "RAUMSOLLTEMP"      , target: "FET"  }}
-  PUFFERISTTEMPERATUR:                   !include { file: templates/wp_temperature.yaml, vars: { property: "PUFFERISTTEMPERATUR" }}
+  PUFFERISTTEMP:                         !include { file: templates/wp_temperature.yaml, vars: { property: "PUFFERISTTEMP" }}
   FROSTSCHUTZ:                           !include { file: templates/wp_temperature.yaml, vars: { property: "FROSTSCHUTZ"       , target: "MFG"  }}
   VORLAUFTEMP_QUELLE:                    !include { file: templates/wp_temperature.yaml, vars: { property: "VORLAUFTEMP_QUELLE" , target: "Heizmodul"  }}
   RUECKLAUFTEMP_QUELLE:                  !include { file: templates/wp_temperature.yaml, vars: { property: "RUECKLAUFTEMP_QUELLE" , target: "Heizmodul"  }}
@@ -56,7 +56,7 @@ packages:
   KUEHLEN_ISTTEMP:                       !include { file: templates/wp_temperature.yaml, vars: { property: "KUEHLEN_ISTTEMP"    , update_interval: $interval_medium , target: "Kessel" }}
   ISTTEMPERATUR_KK_2:                    !include { file: templates/wp_temperature.yaml, vars: { property: "ISTTEMPERATUR_KK_2" , update_interval: $interval_medium , target: "HK2" }}
   SOLLTEMPERATUR_KK_2:                   !include { file: templates/wp_temperature.yaml, vars: { property: "SOLLTEMPERATUR_KK_2", update_interval: $interval_medium , target: "HK2" }}
-  ANLAGEFROST:                           !include { file: templates/wp_temperature.yaml, vars: { property: "ANLAGEFROST"        , update_interval: $interval_medium , target: "Kessel" }}
+  ANLAGENFROST:                          !include { file: templates/wp_temperature.yaml, vars: { property: "ANLAGENFROST"       , update_interval: $interval_medium , target: "Kessel" }}
   VORLAUFISTTEMP_NHZ:                    !include { file: templates/wp_temperature.yaml, vars: { property: "VORLAUFISTTEMP_NHZ" , update_interval: $interval_medium , target: "Kessel" }}
   HYSTERESE_VORLAUFTEMP_KUEHLEN:         !include { file: templates/wp_temperature.yaml, vars: { property: "HYSTERESE_VORLAUFTEMP_KUEHLEN", target: "Kessel", unit: "°K"  }}
   STARTTEMPERATUR:                       !include { file: templates/wp_temperature.yaml, vars: { property: "STARTTEMPERATUR"              , target: "HK2"  }}

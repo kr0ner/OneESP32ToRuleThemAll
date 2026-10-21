@@ -93,10 +93,30 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(WAERMEERTRAG_WW_SUM_MWH, 0x092d, Type::et_double_val);
     PROPERTY(WAERMEERTRAG_HEIZ_TAG_WH, 0x092e);
     PROPERTY(WAERMEERTRAG_HEIZ_TAG_KWH, 0x092f, Type::et_double_val);
-    PROPERTY(WAERMEERTRAG_HEIZ_SUM_KWH, 0x0930);
-    PROPERTY(WAERMEERTRAG_HEIZ_SUM_MWH, 0x0931, Type::et_double_val);
     PROPERTY(WAERMEERTRAG_2WE_HEIZ_SUM_KWH, 0x0928);
     PROPERTY(WAERMEERTRAG_2WE_HEIZ_SUM_MWH, 0x0929, Type::et_double_val);
+    PROPERTY(WAERMEERTRAG_HEIZ_SUM_KWH, 0x0930);
+    PROPERTY(WAERMEERTRAG_HEIZ_SUM_MWH, 0x0931, Type::et_double_val);
+
+// =======================================================================
+// 1b. CROSS-FAMILY SHARED PROPERTIES (TTF and WPL families)
+// =======================================================================
+#if defined(TTF_07_C) || defined(WPL_13) || defined(WPL_17) || defined(WPL_23) || defined(WPE_I) || defined(WPL_A_5)
+    PROPERTY(PUFFERISTTEMP, 0x0078, Type::et_dec_val);
+    PROPERTY(PUFFERSOLLTEMP, 0x01d5, Type::et_dec_val);
+    PROPERTY(ANLAGENFROST, 0x0a00, Type::et_dec_val);
+    PROPERTY(WW_ECO_TEMP, 0x0a06, Type::et_dec_val);
+    PROPERTY(MAXVORLAUFTEMP, 0x01e8, Type::et_dec_val);
+#endif
+
+#if defined(TTF_07_C) || defined(WPL_23)
+    PROPERTY(VERDICHTER_STARTS_K, 0x071c);
+    PROPERTY(VERDICHTER_STARTS, 0x071d);
+#endif
+
+#if defined(THZ_504) || defined(THZ_5_5_ECO) || defined(WPL_A_5)
+    PROPERTY(PUMPENZYKLEN_AUSSENTEMP_MIN, 0x05bb);
+#endif
 
 // =======================================================================
 // 2. THZ & TTF SHARED PROPERTIES
@@ -221,7 +241,6 @@ struct Property : public oe32trta::detail::Property {
 #endif
 
 #if defined(THZ_504) || defined(THZ_5_5_ECO)
-    PROPERTY(PUMPENZYKLEN_AUSSENTEMP_MIN, 0x05bb);
     PROPERTY(PUMPENZYKLEN_AUSSENTEMP_MAX, 0x05bc);
 #endif
 
@@ -239,10 +258,7 @@ struct Property : public oe32trta::detail::Property {
 #if defined(TTF_07_C)
     PROPERTY(WW_KOMF_TEMP, 0x0013, Type::et_dec_val);
     PROPERTY(WW_HYSTERESE, 0x0022, Type::et_dec_val);
-    PROPERTY(PUFFERISTTEMP, 0x0078, Type::et_dec_val);
     PROPERTY(QUELLE_IST, 0x01d4, Type::et_dec_val);
-    PROPERTY(PUFFERSOLLTEMP, 0x01d5, Type::et_dec_val);
-    PROPERTY(MAXVORLAUFTEMP, 0x01e8, Type::et_dec_val);
     PROPERTY(HKSOLLTEMP, 0x01d7, Type::et_dec_val);
     PROPERTY(HDSENSORMAX, 0x01a2, Type::et_dec_val);
     PROPERTY(QUELLENTEMP_MIN, 0x01b0, Type::et_dec_val);
@@ -257,12 +273,8 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(LEISTUNG_WARMWASSERPUMPE, 0x070b, Type::et_byte);
     PROPERTY(LEISTUNG_SOLEPUMPE, 0x070c, Type::et_byte);
     PROPERTY(EINPHASIGER_BETRIEB, 0x070e, Type::et_bool);
-    PROPERTY(VERDICHTER_STARTS, 0x071d);
-    PROPERTY(VERDICHTER_STARTS_K, 0x071c);
     PROPERTY(DRUCK_NIEDERDRUCK, 0x07a5, Type::et_cent_val);
-    PROPERTY(ANLAGENFROST, 0x0a00, Type::et_dec_val);
     PROPERTY(BETRIEBS_STATUS, 0x0a20, Type::et_default);
-    PROPERTY(WW_ECO_TEMP, 0x0a06, Type::et_dec_val);
     PROPERTY(QUELLENMEDIUM, 0xfdae, Type::et_byte);
     PROPERTY(REGLERDYNAMIK, 0xfdb0, Type::et_little_endian);
     PROPERTY(VERDICHTER_STILLSTAND, 0xfdb1, Type::et_little_endian);
@@ -271,14 +283,11 @@ struct Property : public oe32trta::detail::Property {
 // =======================================================================
 // 7. WPL VARIANTS
 // =======================================================================
-#if defined(WPL_13) || defined(WPL_17) || defined(WPL_23) || defined(WPE_I)
+#if defined(WPL_13) || defined(WPL_17) || defined(WPL_23) || defined(WPE_I) || defined(WPL_A_5)
     PROPERTY(RUECKLAUFTEMP, 0x0016, Type::et_dec_val);
     PROPERTY(MAXRUECKLAUFTEMP, 0x0028, Type::et_dec_val);
-    PROPERTY(PUFFERISTTEMPERATUR, 0x0078, Type::et_dec_val);
     PROPERTY(BIVALENZTEMPERATUR_HZG, 0x01ac, Type::et_dec_val);
-    PROPERTY(PUFFERSOLLTEMPERATUR, 0x01d5, Type::et_dec_val);
     PROPERTY(VORLAUFTEMP, 0x01d6, Type::et_dec_val);
-    PROPERTY(MAXVORLAUFTEMP, 0x01e8, Type::et_dec_val);
     PROPERTY(EL_NACHERW_ANZ_STUFEN, 0x059f);
     PROPERTY(EL_NACHERW_VERZ_ZEIT, 0x05a0);
     PROPERTY(SPANNUNG_INVERTER, 0x06b1, Type::et_dec_val);
@@ -290,7 +299,6 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(DRUCK_HOCHDRUCK, 0x07a6, Type::et_dec_val);
     PROPERTY(DRUCK_NIEDERDRUCK, 0x07a7, Type::et_dec_val);
     PROPERTY(VERDAMPFERTEMP, 0x07a9, Type::et_dec_val);
-    PROPERTY(ANLAGEFROST, 0x0a00, Type::et_dec_val);
     PROPERTY(VERFLUESSIGER_TEMP, 0x0a37, Type::et_dec_val);
     PROPERTY(OELSUMPFTEMP, 0x0a39, Type::et_dec_val);
     PROPERTY(UNTERK_COND, 0x0aff, Type::et_dec_val);
@@ -304,7 +312,9 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(ECOTEMPERATUR, 0x4eb9, Type::et_dec_val);
     PROPERTY(RAUMISTTEMP, 0x4ec7, Type::et_dec_val);
     PROPERTY(RAUMFEUCHTE, 0x4ec8, Type::et_dec_val);
+#if !defined(WPL_A_5)
     PROPERTY(BETRIEBS_STATUS, 0x4ecd);
+#endif
     PROPERTY(RAUMSOLLTEMP, 0x4ece, Type::et_dec_val);
     PROPERTY(TAUPUNKTTEMP, 0x4ee0, Type::et_dec_val);
     PROPERTY(HYSTERESE_VORLAUFTEMP_KUEHLEN, 0x4f00, Type::et_dec_val);
@@ -341,28 +351,25 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(FROSTSCHUTZ, 0xfe07, Type::et_dec_val);
 #endif
 
-#if defined(WPL_13) || defined(WPL_17) || defined(WPE_I)
+#if defined(WPL_13) || defined(WPL_17) || defined(WPE_I) || defined(WPL_A_5)
     PROPERTY(VERDICHTER_STARTS_K, 0x4ef0);
     PROPERTY(VERDICHTER_STARTS, 0x4ef1);
     PROPERTY(ZEITINTERVALL, 0x4f4d, Type::et_dec_val);
 #endif
 
-#if defined(WPE_I) || defined(WPL_17)
-    // 0x02e2 carries the water volume flow on these models, unlike the WPL13
-    // where the same index is the WAERMEPUMPEN_STATUS word (on the WPE-I it was
-    // observed as raw 280/285 = 28.0/28.5 l/min next to VOLUMENSTROM 0x4f47)
+#if defined(WPE_I) || defined(WPL_17) || defined(WPL_A_5)
     PROPERTY(WP_WASSERVOLUMENSTROM, 0x02e2, Type::et_dec_val);
     PROPERTY(REGELABWEICHUNG, 0x033d, Type::et_dec_val);
     PROPERTY(LAUFZEIT_VD_HEIZEN, 0x4efb);
 #endif
 
-#if defined(WPE_I) || defined(WPL_17) || defined(WPL_23)
+#if defined(WPE_I) || defined(WPL_17) || defined(WPL_23) || defined(WPL_A_5)
     PROPERTY(LAUFZEIT_NHZ1, 0x0259);
     PROPERTY(LAUFZEIT_NHZ2, 0x025a);
     PROPERTY(LAUFZEIT_NHZ1_2, 0x0805);
 #endif
 
-#if defined(WPL_17) || defined(WPL_23)
+#if defined(WPL_17) || defined(WPL_23) || defined(WPL_A_5)
     PROPERTY(STARTS_ABTAUEN, 0x0806);
     PROPERTY(ZEIT_ABTAUEN, 0x0807);
 #endif
@@ -377,7 +384,23 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(WAERMEPUMPEN_STATUS, 0x4eda);
 #endif
 
-#if defined(WPL_17)
+#if defined(WPL_A_5)
+    PROPERTY(KOMFORTTEMPERATUR_WW, 0x0013, Type::et_dec_val);
+    PROPERTY(EVU_SPERRE_AKTIV, 0x0074);
+    PROPERTY(BETRIEBS_STATUS, 0x4eef);
+    PROPERTY(VORLAUFSOLLTEMPERATUR_KUEHLEN, 0x4f03, Type::et_dec_val);
+    PROPERTY(RESTSTILLSTANDSZEIT, 0x4f4e);
+    PROPERTY(PUMPENLEISTUNG_STANDBY, 0x4f8a);
+    PROPERTY(PUMPENLEISTUNG_HEIZEN, 0x4f8c);
+    PROPERTY(PUMPENLEISTUNG_WW, 0x4f8f);
+    PROPERTY(PUMPENLEISTUNG_KUEHLEN, 0x4f92);
+    PROPERTY(EVU_SPERRE, 0xabe1);
+    PROPERTY(MOTORSPANNUNG, 0x06a1);
+    PROPERTY(EL_ENERGIEAUFNAHME_WW_NHZ_SUM_KWH, 0x0924);
+    PROPERTY(EL_ENERGIEAUFNAHME_WW_NHZ_SUM_MWH, 0x0925, Type::et_double_val);
+#endif
+
+#if defined(WPL_17) || defined(WPL_A_5)
     PROPERTY(MAXIMALE_VORLAUFTEMP_WW, 0x0181, Type::et_dec_val);
     PROPERTY(BIVALENZTEMPERATUR_WW, 0x01ad, Type::et_dec_val);
     PROPERTY(EINSATZGRENZE_HZG, 0x01ae, Type::et_dec_val);
@@ -491,12 +514,22 @@ struct Property : public oe32trta::detail::Property {
 #if defined(WPL_23)
     PROPERTY(ZWISCHENEINSPRITZUNGSTEMP, 0x05d7, Type::et_dec_val);
     PROPERTY(ZEITINTERVALL, 0x0691, Type::et_dec_val);
-    PROPERTY(VERDICHTER_STARTS_K, 0x071c);
-    PROPERTY(VERDICHTER_STARTS, 0x071d);
     PROPERTY(REKUPERATORTEMPERATUR, 0x07a3, Type::et_dec_val);
     PROPERTY(LAUFZEIT_VD_HEIZEN, 0x07fc);
     PROPERTY(LAUFZEIT_VD_WW, 0x0802);
     PROPERTY(LAUFZEIT_VD_ABTAUEN, 0x0808);
+#endif
+
+// =======================================================================
+// 8. FET PANEL (independent entity, works across many heat pump variants)
+// =======================================================================
+#if defined(FET)
+    PROPERTY(HEARTBEAT, 0x4eb3);
+    PROPERTY(FET_SOFTWARE, 0x0199);
+    PROPERTY(FET_SOFTWARESTAND, 0x019a);
+    PROPERTY(FET_REVISIONSNUMMER, 0x4e68);
+    PROPERTY(FET_INIT, 0x4ec0);
+    PROPERTY(FET_BOARDCAST, 0x0100);
 #endif
 };
 
