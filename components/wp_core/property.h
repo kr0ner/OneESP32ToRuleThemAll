@@ -2,10 +2,12 @@
 #define PROPERTY_H
 
 #include <cstdint>
+#include <map>
 #include <sstream>
 #include <string>
-#include <unordered_map>
 #include "type.h"
+
+struct CanNode;
 
 namespace oe32trta {
 namespace detail {
@@ -26,18 +28,23 @@ struct Property {
     constexpr operator std::uint16_t() const { return id; }
 
    protected:
-    Property getProperty(const std::uint16_t id);
+    static Property getProperty(const CanNode* node, const std::uint16_t id);
 };
 
 class Mapper {
    public:
     Mapper() = default;
-    inline Mapper(const Property& other) { map.insert({other.id, other}); }
 
-    Property getProperty(const std::uint16_t id);
+    static Mapper& instance() {
+        static Mapper mapper;
+        return mapper;
+    }
+
+    void registerProperty(const CanNode* node, const Property& property);
+    Property getProperty(const CanNode* node, const std::uint16_t id);
 
    private:
-    static inline std::unordered_map<std::uint16_t, Property> map;
+    static inline std::map<std::pair<const CanNode*, std::uint16_t>, Property> map;
 };
 
 }  // namespace detail
@@ -45,16 +52,25 @@ class Mapper {
 
 #define PROPERTY(NAME, VALUE, ...)                                                    \
     static constexpr oe32trta::detail::Property k##NAME{#NAME, VALUE, ##__VA_ARGS__}; \
-    static constexpr bool unique##VALUE{true};                                        \
-    static inline oe32trta::detail::Mapper k##NAME##_MAPPING {                        \
-        k##NAME                                                                       \
+    static constexpr bool unique##VALUE {                                             \
+        true                                                                          \
+    }
+
+#define PROPERTY_NODE(NAME, NODE, VALUE, ...)                                         \
+    static constexpr oe32trta::detail::Property k##NAME{#NAME, VALUE, ##__VA_ARGS__}; \
+    static constexpr bool unique_##NODE##_##VALUE {                                   \
+        true                                                                          \
     }
 
 struct Property : public oe32trta::detail::Property {
     constexpr Property(const Property& p) : oe32trta::detail::Property{p.name, p.id, p.type} {}
     constexpr Property(const oe32trta::detail::Property& p) : oe32trta::detail::Property{p.name, p.id, p.type} {}
-    Property(const std::uint16_t _id) : oe32trta::detail::Property{getProperty(_id)} {}
+    Property(const std::uint16_t _id) : Property{getProperty(nullptr, _id)} {}
     constexpr Property& operator=(const Property&) = default;
+
+    static Property getProperty(const CanNode* node, const std::uint16_t id) {
+        return Property{oe32trta::detail::Property::getProperty(node, id)};
+    }
 
     // =======================================================================
     // 1. COMMON PROPERTIES (Shared across all device families)
@@ -66,7 +82,8 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(AUSSENTEMP, 0x000c, Type::et_dec_val);
     PROPERTY(SPEICHERISTTEMP, 0x000e, Type::et_dec_val);
     PROPERTY(VERSTELLTE_RAUMSOLLTEMP, 0x0012, Type::et_dec_val);
-    PROPERTY(STEIGUNG_HK1, 0x010e, Type::et_cent_val);
+    PROPERTY_NODE(STEIGUNG_HK1, HK1, 0x010e, Type::et_cent_val);
+    PROPERTY_NODE(STEIGUNG_HK2, HK2, 0x010e, Type::et_cent_val);
     PROPERTY(WOCHENTAG, 0x0121, Type::et_little_endian);
     PROPERTY(TAG, 0x0122, Type::et_little_endian);
     PROPERTY(MONAT, 0x0123, Type::et_little_endian);
@@ -77,8 +94,10 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(SEKUNDE, 0x0127, Type::et_little_endian);
 #endif
     PROPERTY(HEISSGAS_TEMP, 0x0265, Type::et_dec_val);
-    PROPERTY(ANTEIL_VORLAUF_HK1, 0x059d);
-    PROPERTY(FUSSPUNKT_HK1, 0x059e, Type::et_dec_val);
+    PROPERTY_NODE(ANTEIL_VORLAUF_HK1, HK1, 0x059d);
+    PROPERTY_NODE(ANTEIL_VORLAUF_HK2, HK2, 0x059d);
+    PROPERTY_NODE(FUSSPUNKT_HK1, HK1, 0x059e, Type::et_dec_val);
+    PROPERTY_NODE(FUSSPUNKT_HK2, HK2, 0x059e, Type::et_dec_val);
     PROPERTY(EL_ENERGIEAUFNAHME_WW_TAG_WH, 0x091a);
     PROPERTY(EL_ENERGIEAUFNAHME_WW_TAG_KWH, 0x091b, Type::et_double_val);
     PROPERTY(EL_ENERGIEAUFNAHME_WW_SUM_KWH, 0x091c);
@@ -139,9 +158,11 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(SAMMLERISTTEMP, 0x000d, Type::et_dec_val);
     PROPERTY(VORLAUFISTTEMP, 0x000f, Type::et_dec_val);
     PROPERTY(SPEICHERSOLLTEMP_TAG, 0x0013, Type::et_dec_val);
-    PROPERTY(SOLLWERT_MAX_HK1, 0x0028, Type::et_dec_val);
+    PROPERTY_NODE(SOLLWERT_MAX_HK1, HK1, 0x0028, Type::et_dec_val);
+    PROPERTY_NODE(SOLLWERT_MAX_HK2, HK2, 0x0028, Type::et_dec_val);
     PROPERTY(SOMMERBETRIEB_TEMP, 0x0116, Type::et_dec_val);
-    PROPERTY(SOLLWERT_MIN_HK1, 0x012b, Type::et_dec_val);
+    PROPERTY_NODE(SOLLWERT_MIN_HK1, HK1, 0x012b, Type::et_dec_val);
+    PROPERTY_NODE(SOLLWERT_MIN_HK2, HK2, 0x012b, Type::et_dec_val);
     PROPERTY(HYSTERESE_WW, 0x0140, Type::et_dec_val);
     PROPERTY(BETRIEBS_STATUS, 0x0176);
     PROPERTY(FIRMWARE_VERSION, 0x019a, et_cent_val);
