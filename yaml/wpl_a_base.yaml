@@ -87,7 +87,7 @@ packages:
   # warm water. The WPL-A models have no integrated DHW tank, the comfort/eco
   # setpoints 0x0013/0x0a06 address the external storage via Kessel.
   KOMFORTTEMPERATUR_WW:                 !include { file: templates/wp_number.yaml, vars: { property: "KOMFORTTEMPERATUR_WW", min: "30", max: "65", step: "0.5", accuracy_decimals: "1", unit: "°C", target: "Kessel" }}
-  WW_ECO_TEMP:                          !include { file: templates/wp_number.yaml, vars: { property: "ECOTEMPERATUR_WW", min: "30", max: "65", step: "0.5", accuracy_decimals: "1", unit: "°C", target: "Kessel" }}
+  WW_ECO_TEMP:                          !include { file: templates/wp_number.yaml, vars: { property: "WW_ECO_TEMP", min: "30", max: "65", step: "0.5", accuracy_decimals: "1", unit: "°C", target: "Kessel" }}
   SOLLTEMP_WW:                          !include { file: templates/wp_temperature.yaml, vars: { property: "SPEICHERSOLLTEMP", update_interval: $interval_medium }}
   ISTTEMP_WW:                           !include { file: templates/wp_temperature.yaml, vars: { property: "SPEICHERISTTEMP", update_interval: $interval_medium }}
 
