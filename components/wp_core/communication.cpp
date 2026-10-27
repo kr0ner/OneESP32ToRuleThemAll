@@ -168,18 +168,20 @@ std::pair<Property, SimpleVariant> processCanMessage(const std::vector<std::uint
         return {Property::kINDEX_NOT_FOUND, {}};
     }
 
+    const auto canId{static_cast<std::uint16_t>(((msg[0U] & 0xfc) << 3) | (msg[1U] & 0x3f))};
+    const auto* node{getCanNodeByCanId(canId)};
+
     if (msg[2U] == 0xfa) {
         byte1 = msg[5U];
         byte2 = msg[6U];
-        property = static_cast<Property>(msg[4U] | (msg[3U] << 8U));
+        property = Property::getProperty(node, static_cast<std::uint16_t>(msg[4U] | (msg[3U] << 8U)));
     } else {
         byte1 = msg[3U];
         byte2 = msg[4U];
-        property = static_cast<Property>(msg[2U]);
+        property = Property::getProperty(node, msg[2U]);
     }
 
     const auto value{static_cast<std::uint16_t>((byte1 << 8U) | byte2)};
-    const auto canId{static_cast<std::uint16_t>(((msg[0U] & 0xfc) << 3) | (msg[1U] & 0x3f))};
     if (isRequest(msg)) {
         ESP_LOGD("Communication", "Message is a request. Dropping it!");
         ESP_LOGD("Communication",
