@@ -1,0 +1,34 @@
+# Enables a CSV export endpoint at http://<esp-ip>/export/csv
+# The export lists all public ESPHome entities with their current state.
+#
+# REQUIRED: You MUST have an active web_server and a web_server_base with
+# an explicit ID so the exporter can attach to it. The web_server block
+# must reference the same web_server_base ID.
+#
+# Minimal example:
+#
+#   web_server_base:
+#     id: ws_base                   # <-- creates the shared HTTP server with ID "ws_base"
+#
+#   web_server:
+#     web_server_base_id: ws_base   # <-- tells web_server to use the base above
+#
+#   wp_web_exporter:
+#     id: wp_web_exporter_id
+#     web_server_base_id: ws_base   # <-- same ID as above
+#
+# The downloaded filename includes an ISO-8601 timestamp suffix (e.g.
+# thz_export_2026-10-25T12-34-56.csv) if the ESP has synchronized its clock.
+# If no time is available, the file is named thz_export.csv.
+#
+# Also make sure wp_web_exporter is available via external_components.
+
+external_components:
+  - source:
+      type: local
+      path: components
+    components: ["wp_web_exporter"]
+
+wp_web_exporter:
+  id: wp_web_exporter_id
+  web_server_base_id: ws_base
