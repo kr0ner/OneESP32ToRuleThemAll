@@ -13,11 +13,6 @@
 # Everything in this file is shared by all WPL-A variants. Variant files
 # (wpl_a_5.yaml, wpl_a_7.yaml, ...) include this and add only their deltas.
 esphome:
-  build_flags:
-    # family-level define, used to group the property.h gates so new
-    # A-series members don't require touching every #if
-    - "-DWPL_A"
-
   on_boot:
     - priority: -50
       then:

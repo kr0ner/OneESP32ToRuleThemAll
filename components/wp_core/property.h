@@ -101,7 +101,8 @@ struct Property : public oe32trta::detail::Property {
 // =======================================================================
 // 1b. CROSS-FAMILY SHARED PROPERTIES (TTF and WPL families)
 // =======================================================================
-#if defined(TTF_07_C) || defined(WPL_13) || defined(WPL_17) || defined(WPL_23) || defined(WPE_I) || defined(WPL_A_5)
+#if defined(TTF_07_C) || defined(WPL_13) || defined(WPL_17) || defined(WPL_23) || defined(WPE_I) || \
+    defined(WPL_A_5) || defined(WPL_A_7)
     PROPERTY(PUFFERISTTEMP, 0x0078, Type::et_dec_val);
     PROPERTY(PUFFERSOLLTEMP, 0x01d5, Type::et_dec_val);
     PROPERTY(ANLAGENFROST, 0x0a00, Type::et_dec_val);
@@ -114,7 +115,7 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(VERDICHTER_STARTS, 0x071d);
 #endif
 
-#if defined(THZ_504) || defined(THZ_5_5_ECO) || defined(WPL_A_5)
+#if defined(THZ_504) || defined(THZ_5_5_ECO) || defined(WPL_A_5) || defined(WPL_A_7)
     PROPERTY(PUMPENZYKLEN_AUSSENTEMP_MIN, 0x05bb);
 #endif
 
@@ -283,7 +284,7 @@ struct Property : public oe32trta::detail::Property {
 // =======================================================================
 // 7. WPL VARIANTS
 // =======================================================================
-#if defined(WPL_13) || defined(WPL_17) || defined(WPL_23) || defined(WPE_I) || defined(WPL_A_5)
+#if defined(WPL_13) || defined(WPL_17) || defined(WPL_23) || defined(WPE_I) || defined(WPL_A_5) || defined(WPL_A_7)
     PROPERTY(RUECKLAUFTEMP, 0x0016, Type::et_dec_val);
     PROPERTY(MAXRUECKLAUFTEMP, 0x0028, Type::et_dec_val);
     PROPERTY(BIVALENZTEMPERATUR_HZG, 0x01ac, Type::et_dec_val);
@@ -312,7 +313,7 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(ECOTEMPERATUR, 0x4eb9, Type::et_dec_val);
     PROPERTY(RAUMISTTEMP, 0x4ec7, Type::et_dec_val);
     PROPERTY(RAUMFEUCHTE, 0x4ec8, Type::et_dec_val);
-#if !defined(WPL_A_5)
+#if !defined(WPL_A_5) && !defined(WPL_A_7)
     PROPERTY(BETRIEBS_STATUS, 0x4ecd);
 #endif
     PROPERTY(RAUMSOLLTEMP, 0x4ece, Type::et_dec_val);
@@ -351,25 +352,25 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(FROSTSCHUTZ, 0xfe07, Type::et_dec_val);
 #endif
 
-#if defined(WPL_13) || defined(WPL_17) || defined(WPE_I) || defined(WPL_A_5)
+#if defined(WPL_13) || defined(WPL_17) || defined(WPE_I) || defined(WPL_A_5) || defined(WPL_A_7)
     PROPERTY(VERDICHTER_STARTS_K, 0x4ef0);
     PROPERTY(VERDICHTER_STARTS, 0x4ef1);
     PROPERTY(ZEITINTERVALL, 0x4f4d, Type::et_dec_val);
 #endif
 
-#if defined(WPE_I) || defined(WPL_17) || defined(WPL_A_5)
+#if defined(WPE_I) || defined(WPL_17) || defined(WPL_A_5) || defined(WPL_A_7)
     PROPERTY(WP_WASSERVOLUMENSTROM, 0x02e2, Type::et_dec_val);
     PROPERTY(REGELABWEICHUNG, 0x033d, Type::et_dec_val);
     PROPERTY(LAUFZEIT_VD_HEIZEN, 0x4efb);
 #endif
 
-#if defined(WPE_I) || defined(WPL_17) || defined(WPL_23) || defined(WPL_A_5)
+#if defined(WPE_I) || defined(WPL_17) || defined(WPL_23) || defined(WPL_A_5) || defined(WPL_A_7)
     PROPERTY(LAUFZEIT_NHZ1, 0x0259);
     PROPERTY(LAUFZEIT_NHZ2, 0x025a);
     PROPERTY(LAUFZEIT_NHZ1_2, 0x0805);
 #endif
 
-#if defined(WPL_17) || defined(WPL_23) || defined(WPL_A_5)
+#if defined(WPL_17) || defined(WPL_23) || defined(WPL_A_5) || defined(WPL_A_7)
     PROPERTY(STARTS_ABTAUEN, 0x0806);
     PROPERTY(ZEIT_ABTAUEN, 0x0807);
 #endif
@@ -378,13 +379,11 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(WAERMEPUMPEN_STATUS, 0x02e2);
 #endif
 
-#if defined(WPE_I)
-    // the WPE-I's Waermepumpen-Status word (Kessel, polled, 0x8000 while in
-    // standby). Panel verified bits are decoded in yaml/wpe-i.yaml.
+#if defined(WPE_I) || defined(WPL_A_7)
     PROPERTY(WAERMEPUMPEN_STATUS, 0x4eda);
 #endif
 
-#if defined(WPL_A_5)
+#if defined(WPL_A_5) || defined(WPL_A_7)
     PROPERTY(KOMFORTTEMPERATUR_WW, 0x0013, Type::et_dec_val);
     PROPERTY(EVU_SPERRE_AKTIV, 0x0074);
     PROPERTY(BETRIEBS_STATUS, 0x4eef);
@@ -400,7 +399,7 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(EL_ENERGIEAUFNAHME_WW_NHZ_SUM_MWH, 0x0925, Type::et_double_val);
 #endif
 
-#if defined(WPL_17) || defined(WPL_A_5)
+#if defined(WPL_17) || defined(WPL_A_5) || defined(WPL_A_7)
     PROPERTY(MAXIMALE_VORLAUFTEMP_WW, 0x0181, Type::et_dec_val);
     PROPERTY(BIVALENZTEMPERATUR_WW, 0x01ad, Type::et_dec_val);
     PROPERTY(EINSATZGRENZE_HZG, 0x01ae, Type::et_dec_val);

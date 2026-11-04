@@ -1,0 +1,85 @@
+#########################################
+#                                       #
+#   ESPHome                             #
+#                                       #
+#########################################
+# Stiebel Eltron WPL-A-07 (air/water, no ventilation unit).
+#
+# DRAFT - delta on top of wpl_a_base.yaml, containing only entities that are
+# CAN-VERIFIED from a real WPL-A-07 log (Manager 0x480 broadcasts and Kessel
+# 0x180 responses). Nothing is assumed from the WPL-A-05 or WPL-17 configs.
+#
+# property.h gates to extend with WPL_A_7 (per-variant defines, no family
+# define WPL_A):
+#   - "#if defined(WPL_17) || defined(WPL_23) || defined(WPL_A_5) || defined(WPL_A_7)"
+#     (STARTS/ZEIT_ABTAUEN block, EINGESCHALTETE_STUFEN 0x4efa) - done
+#   - "#if defined(WPE_I) || defined(WPL_17) || defined(WPL_23) || defined(WPL_A_5) || defined(WPL_A_7)"
+#     (LAUFZEIT_NHZ1/2/1_2) - done
+#   - "#if defined(WPL_17) || defined(WPL_A_5) || defined(WPL_A_7)"
+#     (LAUFZEIT_VD_HEIZEN 0x4efb etc.) - done
+#   - "#if defined(WPE_I)" for WAERMEPUMPEN_STATUS 0x4eda (Manager broadcasts
+#     it on the A-07) - done, separate "#if defined(WPL_A_7)" block added
+#   - EVU_SPERRE_AKTIV 0x0074 WPL_A_5 block now shared with WPL_A_7 - done
+esphome:
+  build_flags:
+    - "-DWPL_A_7"
+
+#########################################
+#                                       #
+#   Global variables                    #
+#                                       #
+#########################################
+globals:
+  - id: heat_pump_variant
+    type: std::string
+    initial_value: '"WPL-A-7"'
+
+#########################################
+#                                       #
+#   Packages                            #
+#                                       #
+#########################################
+packages:
+  WPL_A_BASE:                           !include { file: wpl_a_base.yaml }
+
+  # ---------------------------------------------------------------------
+  # 1. CAN-VERIFIED on the Manager (0x480) broadcast
+  # ---------------------------------------------------------------------
+  # EINGESCHALTETE_STUFEN (0x4efa), raw value received on Manager.
+  EINGESCHALTETE_STUFEN:                !include { file: templates/wp_generic.yaml, vars: { property: "EINGESCHALTETE_STUFEN", target: "Manager" }}
+
+  # WAERMEPUMPEN_STATUS (0x4eda). The Manager broadcasts this status word
+  # (log raw value 2; 0x8000 = standby per WPE-I). Defined in its own
+  # "#if defined(WPL_A_7)" block in property.h.
+  WAERMEPUMPEN_STATUS:                  !include { file: templates/wp_generic.yaml, vars: { property: "WAERMEPUMPEN_STATUS", target: "Manager" }}
+
+  # EVU_SPERRE_AKTIV (0x0074). Manager sends raw value 1 on this ID.
+  # Property is defined in the shared WPL_A_5/WPL_A_7 block of property.h.
+  EVU_SPERRE_AKTIV:                     !include { file: templates/wp_generic.yaml, vars: { property: "EVU_SPERRE_AKTIV", target: "Manager" }}
+
+  # ---------------------------------------------------------------------
+  # 2. CAN-VERIFIED via Kessel (0x180) responses to our poll requests
+  #    NOTE: these are ALL already instantiated by wxx_base.yaml (inherited
+  #    through wpl_a_base.yaml) with the same targets/intervals - only
+  #    entities NOT in wxx_base are added here. Verified against the log.
+  # ---------------------------------------------------------------------
+  # DHW storage temps (SPEICHERSOLLTEMP/ISTTEMP) come from wpl_a_base.yaml.
+
+  # ---------------------------------------------------------------------
+  # TODO: unnamed properties confirmed on the bus, need names + definitions
+  # in property.h before they can be instantiated:
+  #   0x4f33  Manager config range (near MAXIMALER_STROM 0x4f3f), raw 10
+  #   0x4edb  companion of WAERMEPUMPEN_STATUS (0x4eda), raw 0
+  #   0x4e6a  near FET_REVISIONSNUMMER (0x4e68), raw 0
+  #   0x5067  raw 3
+  # Once named, add them in a "#if defined(WPL_A_7)" block and instantiate
+  # here via templates/wp_generic.yaml with target Manager.
+  #
+  # TODO: BETRIEBS_STATUS - never seen on the bus in the log. The A-05 uses
+  # 0x4eef, the other WPLs 0x4ecd. Poll both on the A-07 before deciding.
+  #
+  # TODO: the entity set of the log device matches wpl17.yaml (RELAIS_X_2_*,
+  # SCHRITTMOTOR_PHASE_*, SOLLSPREIZUNG, MAXIMALER_STROM, ...). Those IDs are
+  # in the "#if defined(WPL_17) || defined(WPL_A_5)" block - very likely valid
+  # for the A-07 too, but they were only *configured*, not bus-verified in the
+  # log. Add them incrementally once confirmed.
