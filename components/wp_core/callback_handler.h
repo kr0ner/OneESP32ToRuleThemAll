@@ -32,6 +32,8 @@ class CallbackHandler {
      *        were added.
      */
     void addCallback(std::pair<const CanNode*, Property> key, std::function<void(const SimpleVariant&)> callback) {
+        oe32trta::detail::Mapper::instance().registerProperty(key.first, key.second);
+
         // check if callback already exists
         auto it = callbacks.find(key);
         if (it == callbacks.end()) {

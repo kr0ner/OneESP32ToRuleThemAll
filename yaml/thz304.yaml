@@ -267,6 +267,10 @@ packages:
   AKTIVE_HEIZSTUFEN:                   !include { file: templates/wp_generic.yaml, vars: { property: "AKTIVE_HEIZSTUFEN"         , update_interval: $interval_medium                         , icon: "mdi:heat-pump-outline" }}
 
   FUSSPUNKT_HK1:                       !include { file: templates/wp_number.yaml, vars: { property: "FUSSPUNKT_HK1"              , min: "0"     , max: "20", step: "0.1" , unit: "°C", icon: "mdi:temperature-celsius" , target: "HK1", accuracy_decimals: "1" }}
+  FUSSPUNKT_HK2:                       !include { file: templates/wp_number.yaml, vars: { property: "FUSSPUNKT_HK2"              , min: "0"     , max: "20", step: "0.1" , unit: "°C", icon: "mdi:temperature-celsius" , target: "HK2", accuracy_decimals: "1" }}
+  # already defined in txx_base.yaml
+  # STEIGUNG_HK1:                        !include { file: templates/wp_number.yaml, vars: { property: "STEIGUNG_HK1"               , min: "0.0"   , max: "5.0"  , step: "0.01", unit: "" , icon: "mdi:valve"               , target: "HK1", accuracy_decimals: "2" }}
+  STEIGUNG_HK2:                        !include { file: templates/wp_number.yaml, vars: { property: "STEIGUNG_HK2"               , min: "0.0"   , max: "5.0"  , step: "0.01", unit: "" , icon: "mdi:valve"               , target: "HK2", accuracy_decimals: "2" }}
   NE_STUFE_WW:                         !include { file: templates/wp_number.yaml, vars: { property: "NE_STUFE_WW"                , min: "0"     , max: "3"  }}
   PUMPENDREHZAHL_HEIZEN:               !include { file: templates/wp_number.yaml, vars: { property: "PUMPENDREHZAHL_HEIZEN"      , min: "40"    , max: "100", step: "0.1", unit: "%" }}
   PUMPENDREHZAHL_WW:                   !include { file: templates/wp_number.yaml, vars: { property: "PUMPENDREHZAHL_WW"          , min: "40"    , max: "100", step: "0.1", unit: "%" }}
@@ -281,8 +285,11 @@ packages:
   ANTILEGIONELLEN:                     !include { file: templates/wp_number.yaml, vars: { property: "ANTILEGIONELLEN"            , min: "1.0"   , max: "30.0" , step: "1.0" , unit: "d" , icon: "mdi:bacteria" }}
   WW_TEMP_LEGIONELLEN:                 !include { file: templates/wp_number.yaml, vars: { property: "WW_TEMP_LEGIONELLEN"        , min: "10.0"  , max: "65.0" , step: "0.1" , unit: "°C", icon: "mdi:temperature-celsius" }}
   SOLLWERT_MAX_HK1:                    !include { file: templates/wp_number.yaml, vars: { property: "SOLLWERT_MAX_HK1"           , min: "10.0"  , max: "65.0" , step: "0.1" , unit: "°C", icon: "mdi:temperature-celsius" , target: "HK1", accuracy_decimals: "1" }}
+  SOLLWERT_MAX_HK2:                    !include { file: templates/wp_number.yaml, vars: { property: "SOLLWERT_MAX_HK2"           , min: "10.0"  , max: "65.0" , step: "0.1" , unit: "°C", icon: "mdi:temperature-celsius" , target: "HK2", accuracy_decimals: "1" }}
   SOLLWERT_MIN_HK1:                    !include { file: templates/wp_number.yaml, vars: { property: "SOLLWERT_MIN_HK1"           , min: "0.0"   , max: "40.0" , step: "0.1" , unit: "°C", icon: "mdi:temperature-celsius" , target: "HK1", accuracy_decimals: "1" }}
+  SOLLWERT_MIN_HK2:                    !include { file: templates/wp_number.yaml, vars: { property: "SOLLWERT_MIN_HK2"           , min: "0.0"   , max: "40.0" , step: "0.1" , unit: "°C", icon: "mdi:temperature-celsius" , target: "HK2", accuracy_decimals: "1" }}
   ANTEIL_VORLAUF_HK1:                  !include { file: templates/wp_number.yaml, vars: { property: "ANTEIL_VORLAUF_HK1"         , min: "0.0"   , max: "100.0", unit: "%" , icon: "mdi:percent-box"         , target: "HK1" }}
+  ANTEIL_VORLAUF_HK2:                  !include { file: templates/wp_number.yaml, vars: { property: "ANTEIL_VORLAUF_HK2"         , min: "0.0"   , max: "100.0", unit: "%" , icon: "mdi:percent-box"         , target: "HK2" }}
   PUMPENZYKLEN_AUSSENTEMP_MIN:         !include { file: templates/wp_number.yaml, vars: { property: "PUMPENZYKLEN_AUSSENTEMP_MIN", min: "0.0"   , max: "25.0" , unit: "°C", icon: "mdi:temperature-celsius" }}
   PUMPENZYKLEN_AUSSENTEMP_MAX:         !include { file: templates/wp_number.yaml, vars: { property: "PUMPENZYKLEN_AUSSENTEMP_MAX", min: "0.0"   , max: "20.0" , unit: "°C", icon: "mdi:temperature-celsius" }}
   TEMP_FREIGABE_NE:                    !include { file: templates/wp_number.yaml, vars: { property: "TEMP_FREIGABE_NE"           , min: "-20.0" , max: "10.0" , step: "0.5" , unit: "°C" , icon: "mdi:thermometer-lines" }}
