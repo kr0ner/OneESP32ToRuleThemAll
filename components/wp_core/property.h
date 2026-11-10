@@ -102,7 +102,7 @@ struct Property : public oe32trta::detail::Property {
 // 1b. CROSS-FAMILY SHARED PROPERTIES (TTF and WPL families)
 // =======================================================================
 #if defined(TTF_07_C) || defined(WPL_13) || defined(WPL_17) || defined(WPL_23) || defined(WPE_I) || \
-    defined(WPL_A_5) || defined(WPL_A_7)
+    defined(WPL_A_5) || defined(WPL_A_7) || defined(WPL_25)
     PROPERTY(PUFFERISTTEMP, 0x0078, Type::et_dec_val);
     PROPERTY(PUFFERSOLLTEMP, 0x01d5, Type::et_dec_val);
     PROPERTY(ANLAGENFROST, 0x0a00, Type::et_dec_val);
@@ -284,7 +284,8 @@ struct Property : public oe32trta::detail::Property {
 // =======================================================================
 // 7. WPL VARIANTS
 // =======================================================================
-#if defined(WPL_13) || defined(WPL_17) || defined(WPL_23) || defined(WPE_I) || defined(WPL_A_5) || defined(WPL_A_7)
+#if defined(WPL_13) || defined(WPL_17) || defined(WPL_23) || defined(WPE_I) || defined(WPL_A_5) || defined(WPL_A_7) || \
+    defined(WPL_25)
     PROPERTY(RUECKLAUFTEMP, 0x0016, Type::et_dec_val);
     PROPERTY(MAXRUECKLAUFTEMP, 0x0028, Type::et_dec_val);
     PROPERTY(BIVALENZTEMPERATUR_HZG, 0x01ac, Type::et_dec_val);
@@ -352,25 +353,25 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(FROSTSCHUTZ, 0xfe07, Type::et_dec_val);
 #endif
 
-#if defined(WPL_13) || defined(WPL_17) || defined(WPE_I) || defined(WPL_A_5) || defined(WPL_A_7)
+#if defined(WPL_13) || defined(WPL_17) || defined(WPE_I) || defined(WPL_A_5) || defined(WPL_A_7) || defined(WPL_25)
     PROPERTY(VERDICHTER_STARTS_K, 0x4ef0);
     PROPERTY(VERDICHTER_STARTS, 0x4ef1);
     PROPERTY(ZEITINTERVALL, 0x4f4d, Type::et_dec_val);
 #endif
 
-#if defined(WPE_I) || defined(WPL_17) || defined(WPL_A_5) || defined(WPL_A_7)
+#if defined(WPE_I) || defined(WPL_17) || defined(WPL_A_5) || defined(WPL_A_7) || defined(WPL_25)
     PROPERTY(WP_WASSERVOLUMENSTROM, 0x02e2, Type::et_dec_val);
     PROPERTY(REGELABWEICHUNG, 0x033d, Type::et_dec_val);
     PROPERTY(LAUFZEIT_VD_HEIZEN, 0x4efb);
 #endif
 
-#if defined(WPE_I) || defined(WPL_17) || defined(WPL_23) || defined(WPL_A_5) || defined(WPL_A_7)
+#if defined(WPE_I) || defined(WPL_17) || defined(WPL_23) || defined(WPL_A_5) || defined(WPL_A_7) || defined(WPL_25)
     PROPERTY(LAUFZEIT_NHZ1, 0x0259);
     PROPERTY(LAUFZEIT_NHZ2, 0x025a);
     PROPERTY(LAUFZEIT_NHZ1_2, 0x0805);
 #endif
 
-#if defined(WPL_17) || defined(WPL_23) || defined(WPL_A_5) || defined(WPL_A_7)
+#if defined(WPL_17) || defined(WPL_23) || defined(WPL_A_5) || defined(WPL_A_7) || defined(WPL_25)
     PROPERTY(STARTS_ABTAUEN, 0x0806);
     PROPERTY(ZEIT_ABTAUEN, 0x0807);
 #endif
@@ -510,8 +511,25 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(OEFFNUNGSGRAD_BYPASSVENT, 0xc2c3, Type::et_dec_val);
 #endif
 
-#if defined(WPL_23)
+#if defined(WPL_23) || defined(WPL_25)
     PROPERTY(ZWISCHENEINSPRITZUNGSTEMP, 0x05d7, Type::et_dec_val);
+#endif
+
+// NOTE: WP_WASSERVOLUMENSTROM and LAUFZEIT_VD_HEIZEN are already defined in the
+// shared block above (WPE_I || WPL_17 || WPL_A_5 || WPL_A_7 || WPL_25).
+#if defined(WPL_25)
+    PROPERTY(LUEFTERLEISTUNG_REL, 0x0833);
+    PROPERTY(LAUFZEIT_VD_KUEHLEN, 0x4efc);
+    PROPERTY(LAUFZEIT_VD_WW, 0x4efd);
+    PROPERTY(KUEHLART, 0x4f05);
+    PROPERTY(LAUFZEIT_VD_ABTAUEN, 0x4f06);
+    PROPERTY(DRUCK_MITTELDRUCK, 0x0832, Type::et_cent_val);
+    PROPERTY(FROSTSCHUTZTEMPERATUR, 0x0a36, Type::et_dec_val);
+    PROPERTY(FORTLUFTTEMP, 0x0a38, Type::et_dec_val);
+    PROPERTY(AUSSENTEMPERATUR_WP, 0x4f4f, Type::et_dec_val);
+#endif
+
+#if defined(WPL_23)
     PROPERTY(ZEITINTERVALL, 0x0691, Type::et_dec_val);
     PROPERTY(REKUPERATORTEMPERATUR, 0x07a3, Type::et_dec_val);
     PROPERTY(LAUFZEIT_VD_HEIZEN, 0x07fc);
