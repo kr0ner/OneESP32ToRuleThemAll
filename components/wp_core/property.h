@@ -399,6 +399,12 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(EL_ENERGIEAUFNAHME_WW_NHZ_SUM_MWH, 0x0925, Type::et_double_val);
 #endif
 
+#if defined(THZ_5_5_ECO)
+    PROPERTY(OEFFNUNGSGRAD_EXV, 0x07ca, Type::et_dec_val);
+    PROPERTY(SOLL_UEBERHITZUNG, 0x07f3, Type::et_dec_val);
+    PROPERTY(IST_UEBERHITZUNG_V, 0x07f4, Type::et_dec_val);
+#endif
+
 #if defined(WPL_17) || defined(WPL_A_5) || defined(WPL_A_7)
     PROPERTY(MAXIMALE_VORLAUFTEMP_WW, 0x0181, Type::et_dec_val);
     PROPERTY(BIVALENZTEMPERATUR_WW, 0x01ad, Type::et_dec_val);
