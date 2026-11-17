@@ -30,3 +30,7 @@ packages:
   LUEFT_ZEIT_AUSSERPLAN_STUFE2: !include { file: templates/wp_number.yaml, vars: { property: "LUEFT_ZEIT_AUSSERPLAN_STUFE2",   icon: "mdi:fan-clock", min: "0", max: "1000",  step: "5"   }}
   LUEFT_ZEIT_AUSSERPLAN_STUFE3: !include { file: templates/wp_number.yaml, vars: { property: "LUEFT_ZEIT_AUSSERPLAN_STUFE3",   icon: "mdi:fan-clock", min: "0", max: "1000",  step: "5"   }}
   LUEFT_STUFE_AUSSERPLAN: !include { file: templates/wp_number.yaml, vars: { property: "LUEFT_STUFE_AUSSERPLAN", icon: "mdi:fan-chevron-up", min: "1", max: "3", step: "1" }}
+
+  OEFFNUNGSGRAD_EXV:  !include { file: templates/wp_generic.yaml, vars: { property: "OEFFNUNGSGRAD_EXV",  unit: "%", accuracy_decimals: "1", target: "Kessel", icon: "mdi:valve", update_interval: $interval_medium }}
+  SOLL_UEBERHITZUNG:  !include { file: templates/wp_generic.yaml, vars: { property: "SOLL_UEBERHITZUNG",  unit: "K", accuracy_decimals: "1", target: "Kessel", icon: "mdi:thermometer-lines", update_interval: $interval_medium }}
+  IST_UEBERHITZUNG_V: !include { file: templates/wp_generic.yaml, vars: { property: "IST_UEBERHITZUNG_V", unit: "K", accuracy_decimals: "1", target: "Kessel", icon: "mdi:thermometer-lines", update_interval: $interval_medium }}
