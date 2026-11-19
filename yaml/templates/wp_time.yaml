@@ -1,0 +1,64 @@
+defaults:
+  target: "Kessel"
+  unit: "Uhr"
+  scale: "15"
+  exposed: "true"
+
+number:
+  - platform: template
+    name: ${name}
+    id: ${name}
+    icon: "mdi:clock-outline"
+    unit_of_measurement: ${unit}
+    min_value: "0"
+    max_value: "95"
+    step: "1"
+    initial_value: NAN
+    optimistic: true
+    set_action:
+      - lambda: |-
+          ESP_LOGI("Time", "Setting new time value %f for %s", x, "${property}");
+          if(x != NAN) {
+            const auto rawValue = static_cast<std::uint16_t>(x);
+            queueTransmission(CanNode::${target}, Property::k${property}, rawValue);
+          }
+    on_value:
+      then:
+        - if:
+            condition:
+              lambda: |-
+                #if defined(ANALYTICS)
+                  return getWhitelistedEntities().contains(id(${name}));
+                #else
+                  return false;
+                #endif
+            then:
+              - script.execute:
+                  id: mqtt_push_event
+                  suffix: ${name}
+                  payload: !lambda 'return to_string(x);'
+
+esphome:
+  on_boot:
+    - priority: -50
+      then:
+        - lambda: |-
+            CallbackHandler::instance().addCallback({CanNode::${target},Property::k${property}},[](const SimpleVariant& value){
+                static_assert(holds_float<Property::k${property}.type>, "Only float-backed properties are supported by wp_time.");
+                const auto newValue{value.get<float>()};
+                auto property{id(${name})};
+                if(!std::is_eq(property->state <=> newValue)) {
+                  property->publish_state(newValue);
+                }
+            });
+
+            #if defined(ANALYTICS)
+              if(${exposed}) {
+                getWhitelistedEntities().insert(id(${name}));
+              }
+            #endif
+    - priority: -100.0
+      then:
+        - delay: 250ms
+        - lambda: |-
+            queueRequest(CanNode::${target}, Property::k${property});

@@ -75,6 +75,35 @@ packages:
   # Once named, add them in a "#if defined(WPL_A_7)" block and instantiate
   # here via templates/wp_generic.yaml with target Manager.
   #
+  # ---------------------------------------------------------------------
+  # 3. Supplementary entities (local wpl_a07.remote.yaml, not yet in
+  #    upstream property.h — property.h additions needed separately).
+  #    All verified on Manager 0x480 broadcasts.
+  # ---------------------------------------------------------------------
+  # Antilegionellen-Programm (time + daily enable bits).
+  # Property definitions required in property.h (#if defined(WPL_A_7) block):
+  #   ANTILEGIONELLEN_PROGRAMM_STARTZEIT (scale 15, 0..95 = 00:00..23:45)
+  #   ANTILEGIONELLEN_PROGRAMM_MONTAG .. SONNTAG (bool)
+  ANTILEGIONELLEN_STARTZEIT: !include { file: templates/wp_time.yaml, vars: { name: "ANTILEGIONELLEN_STARTZEIT", property: "ANTILEGIONELLEN_PROGRAMM_STARTZEIT", target: "Manager", unit: "Uhr", scale: "15" }}
+  ANTILEGIONELLEN_MONTAG:     !include { file: templates/wp_binary.yaml, vars: { name: "ANTILEGIONELLEN_MONTAG", property: "ANTILEGIONELLEN_PROGRAMM_MONTAG", target: "Manager" }}
+  ANTILEGIONELLEN_DIENSTAG:   !include { file: templates/wp_binary.yaml, vars: { name: "ANTILEGIONELLEN_DIENSTAG", property: "ANTILEGIONELLEN_PROGRAMM_DIENSTAG", target: "Manager" }}
+  ANTILEGIONELLEN_MITTWOCH:   !include { file: templates/wp_binary.yaml, vars: { name: "ANTILEGIONELLEN_MITTWOCH", property: "ANTILEGIONELLEN_PROGRAMM_MITTWOCH", target: "Manager" }}
+  ANTILEGIONELLEN_DONNERSTAG: !include { file: templates/wp_binary.yaml, vars: { name: "ANTILEGIONELLEN_DONNERSTAG", property: "ANTILEGIONELLEN_PROGRAMM_DONNERSTAG", target: "Manager" }}
+  ANTILEGIONELLEN_FREITAG:    !include { file: templates/wp_binary.yaml, vars: { name: "ANTILEGIONELLEN_FREITAG", property: "ANTILEGIONELLEN_PROGRAMM_FREITAG", target: "Manager" }}
+  ANTILEGIONELLEN_SAMSTAG:    !include { file: templates/wp_binary.yaml, vars: { name: "ANTILEGIONELLEN_SAMSTAG", property: "ANTILEGIONELLEN_PROGRAMM_SAMSTAG", target: "Manager" }}
+  ANTILEGIONELLEN_SONNTAG:    !include { file: templates/wp_binary.yaml, vars: { name: "ANTILEGIONELLEN_SONNTAG", property: "ANTILEGIONELLEN_PROGRAMM_SONNTAG", target: "Manager" }}
+
+  # PUFFERBETRIEB / SOMMERBETRIEB / PUMPENZYKLEN — Manager status bits.
+  # PUFFERBETRIEB and AUSSENTEMP_SOMMERBETRIEB need property.h additions.
+  # SOMMERBETRIEB (0x4f1e) and PUMPENZYKLEN (0x4f21) already defined in
+  # property.h WPL_A_7 block — instantiated here for Manager target.
+  PUFFERBETRIEB: !include { file: templates/wp_binary.yaml, vars: { name: "PUFFERBETRIEB", property: "PUFFERBETRIEB", target: "Manager" }}
+  SOMMERBETRIEB: !include { file: templates/wp_binary.yaml, vars: { name: "SOMMERBETRIEB", property: "SOMMERBETRIEB", target: "Manager" }}
+  PUMPENZYKLEN:  !include { file: templates/wp_binary.yaml, vars: { name: "PUMPENZYKLEN", property: "PUMPENZYKLEN", target: "Manager" }}
+
+  # AUSSENTEMP_SOMMERBETRIEB (Manager). Property definition needed in property.h.
+  AUSSENTEMP_SOMMERBETRIEB: !include { file: templates/wp_temperature.yaml, vars: { name: "AUSSENTEMP_SOMMERBETRIEB", property: "AUSSENTEMP_SOMMERBETRIEB", target: "Manager", unit: "°C", accuracy_decimals: "1", scale: "0.1" }}
+
   # TODO: BETRIEBS_STATUS - never seen on the bus in the log. The A-05 uses
   # 0x4eef, the other WPLs 0x4ecd. Poll both on the A-07 before deciding.
   #
