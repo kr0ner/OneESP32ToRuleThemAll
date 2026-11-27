@@ -548,6 +548,22 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(FET_INIT, 0x4ec0);
     PROPERTY(FET_BOARDCAST, 0x0100);
 #endif
+
+// =======================================================================
+// 9. SOLAR THERMAL (only available on "Sol" firmware variants)
+// =======================================================================
+#if defined(SOLAR)
+    PROPERTY(WM_SOLAR_HZ_TAG_WH, 0x0640);
+    PROPERTY(WM_SOLAR_HZ_TAG_KWH, 0x0641, Type::et_double_val);
+    PROPERTY(WM_SOLAR_HZ_SUM_KWH, 0x0642);
+    PROPERTY(WM_SOLAR_HZ_SUM_MWH, 0x0643, Type::et_double_val);
+    PROPERTY(WM_SOLAR_WW_TAG_WH, 0x0644);
+    PROPERTY(WM_SOLAR_WW_TAG_KWH, 0x0645, Type::et_double_val);
+    PROPERTY(WM_SOLAR_WW_SUM_KWH, 0x0646);
+    PROPERTY(WM_SOLAR_WW_SUM_MWH, 0x0647, Type::et_double_val);
+    PROPERTY(WM_KUEHLEN_SUM_KWH, 0x0648);
+    PROPERTY(WM_KUEHLEN_SUM_MWH, 0x0649, Type::et_double_val);
+#endif
 };
 
 #endif

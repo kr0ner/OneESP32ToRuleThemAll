@@ -1,0 +1,27 @@
+#########################################
+#                                       #
+#   Solar thermal feature (Sol devices) #
+#                                       #
+#   Opt-in package for heat pumps with  #
+#   solar thermal ("Sol" firmware).     #
+#   Adds the -DSOLAR build flag so the  #
+#   solar properties are only compiled  #
+#   in when this file is included.      #
+#                                       #
+#########################################
+esphome:
+  build_flags:
+    - "-DSOLAR"
+
+#########################################
+#                                       #
+#   Packages                            #
+#                                       #
+#########################################
+packages:
+  WM_SOLAR_HZ_TAG:   !include { file: ../templates/wp_daily_energy_combined.yaml, vars: { sensor_name: "WM_SOLAR_HZ_TAG_SUMME_KWH"   , property_wh: "WM_SOLAR_HZ_TAG_WH"   , property_kwh: "WM_SOLAR_HZ_TAG_KWH"   }}
+  WM_SOLAR_WW_TAG:   !include { file: ../templates/wp_daily_energy_combined.yaml, vars: { sensor_name: "WM_SOLAR_WW_TAG_SUMME_KWH"   , property_wh: "WM_SOLAR_WW_TAG_WH"   , property_kwh: "WM_SOLAR_WW_TAG_KWH"   }}
+
+  WM_SOLAR_HZ_SUMME: !include { file: ../templates/wp_generic_combined.yaml, vars: { scaled_property: "WM_SOLAR_HZ_SUM_KWH"  , property: "WM_SOLAR_HZ_SUM_MWH", sensor_name: "WM_SOLAR_HZ_SUMME_MWH"  , unit: "MWh", accuracy_decimals: "3", icon: "mdi:solar-power", state_class: "total_increasing" }}
+  WM_SOLAR_WW_SUMME: !include { file: ../templates/wp_generic_combined.yaml, vars: { scaled_property: "WM_SOLAR_WW_SUM_KWH"  , property: "WM_SOLAR_WW_SUM_MWH", sensor_name: "WM_SOLAR_WW_SUMME_MWH"  , unit: "MWh", accuracy_decimals: "3", icon: "mdi:solar-power", state_class: "total_increasing" }}
+  WM_KUEHLEN_SUMME:  !include { file: ../templates/wp_generic_combined.yaml, vars: { scaled_property: "WM_KUEHLEN_SUM_KWH"   , property: "WM_KUEHLEN_SUM_MWH", sensor_name: "WM_KUEHLEN_SUMME_MWH"   , unit: "MWh", accuracy_decimals: "3", icon: "mdi:snowflake", state_class: "total_increasing" }}
