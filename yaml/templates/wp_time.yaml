@@ -1,0 +1,74 @@
+defaults:
+  target: "Kessel"
+  exposed: "true"
+
+# HA renders this as an hour/minute picker. No polling: the value only changes
+# from HA (set_action) or from the heatpump (CAN callback) - read once at boot.
+# Like wp_ventilation/wp_switch: write the fields and publish_state() directly,
+# so a received value is never echoed back onto the bus (no set_action re-entry).
+datetime:
+  - platform: template
+    type: TIME
+    name: ${name}
+    id: ${name}
+    icon: "mdi:clock-outline"
+    optimistic: false
+    update_interval: never
+    set_action:
+      - lambda: |-
+          // x is the ESPTime the user picked in HA; round to nearest quarter and wrap midnight (96 -> 0).
+          const auto blocks = static_cast<std::uint16_t>(std::round((x.hour * 60.0f + x.minute) / 15.0f)) % 96U;
+          const auto snapped_hour = static_cast<uint8_t>(blocks / 4U);
+          const auto snapped_minute = static_cast<uint8_t>((blocks % 4U) * 15U);
+
+          ESP_LOGI("Time", "Setting new time %02u:%02u (block %u) for %s", snapped_hour, snapped_minute, blocks, "${property}");
+
+          // Publish snapped value directly to HA (optimistic: false prevents ESPHome from overwriting it).
+          auto &ent = id(${name});
+          const_cast<uint8_t &>(ent.hour) = snapped_hour;
+          const_cast<uint8_t &>(ent.minute) = snapped_minute;
+          const_cast<uint8_t &>(ent.second) = 0;
+          ent.publish_state();
+
+          queueTransmission(CanNode::${target}, Property::k${property}, blocks);
+    on_value:
+      then:
+        - if:
+            condition:
+              lambda: |-
+                #if defined(ANALYTICS)
+                  return getWhitelistedEntities().contains(id(${name}));
+                #else
+                  return false;
+                #endif
+            then:
+              - script.execute:
+                  id: mqtt_push_event
+                  suffix: ${property}
+                  payload: !lambda 'return to_string((x.hour * 4U) + (x.minute / 15U));'
+
+esphome:
+  on_boot:
+    - priority: -50
+      then:
+        - lambda: |-
+            CallbackHandler::instance().addCallback({CanNode::${target}, Property::k${property}}, [](const SimpleVariant& value) {
+                static_assert(holds_float<Property::k${property}.type>, "Only float-backed properties are supported by wp_time.");
+                const auto blocks = static_cast<std::uint16_t>(value.get<float>()) % 96U;
+                auto &ent = id(${name});
+                const_cast<uint8_t &>(ent.hour) = blocks / 4U;
+                const_cast<uint8_t &>(ent.minute) = (blocks % 4U) * 15U;
+                const_cast<uint8_t &>(ent.second) = 0;
+                ent.publish_state();
+            });
+
+            #if defined(ANALYTICS)
+              if (${exposed}) {
+                getWhitelistedEntities().insert(id(${name}));
+              }
+            #endif
+    - priority: -100.0
+      then:
+        - delay: 250ms
+        - lambda: |-
+            queueRequest(CanNode::${target}, Property::k${property});
