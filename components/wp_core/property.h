@@ -119,6 +119,12 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(PUMPENZYKLEN_AUSSENTEMP_MIN, 0x05bb);
 #endif
 
+#if defined(THZ_5_5_ECO) || defined(WPL_17) || defined(WPL_A_5) || defined(WPL_A_7)
+    PROPERTY(OEFFNUNGSGRAD_EXV, 0x07ca, Type::et_dec_val);
+    PROPERTY(SOLL_UEBERHITZUNG, 0x07f3, Type::et_dec_val);
+    PROPERTY(IST_UEBERHITZUNG_V, 0x07f4, Type::et_dec_val);
+#endif
+
 // =======================================================================
 // 2. THZ & TTF SHARED PROPERTIES
 // =======================================================================
@@ -456,9 +462,6 @@ struct Property : public oe32trta::detail::Property {
     PROPERTY(LEISTUNG_PWM_X1_17, 0x071f);
     PROPERTY(LEISTUNG_VOLT_X1_17, 0x0720, Type::et_dec_val);
     PROPERTY(FEHLERAUSGANG, 0x0730);
-    PROPERTY(OEFFNUNGSGRAD_EXV, 0x07ca, Type::et_dec_val);
-    PROPERTY(SOLL_UEBERHITZUNG, 0x07f3, Type::et_dec_val);
-    PROPERTY(IST_UEBERHITZUNG_V, 0x07f4, Type::et_dec_val);
     PROPERTY(VORSTEUER_OEFFNUNGSGRAD_EXV, 0x07f6, Type::et_dec_val);
     PROPERTY(P_FAKTOR, 0x07f7, Type::et_cent_val);
     PROPERTY(I_FAKTOR, 0x07f8, Type::et_cent_val);
