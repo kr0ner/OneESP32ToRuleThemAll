@@ -135,6 +135,7 @@ packages:
 # watermeter: !include OneESP32ToRuleThemAll/yaml/features/watermeter.yaml
 # kondensatpumpe: !include OneESP32ToRuleThemAll/yaml/features/kondensatpumpe.yaml
 # sgready: !include OneESP32ToRuleThemAll/yaml/features/sg_ready.yaml
+# solar: !include OneESP32ToRuleThemAll/yaml/features/solar.yaml
 
 # This sends anonymous data to an MQTT server:
 # - Events: Triggered by switch/setting changes.

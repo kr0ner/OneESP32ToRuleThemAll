@@ -144,6 +144,7 @@ packages:
 #      - "yaml/features/watermeter.yaml"
 #      - "yaml/features/sg_ready.yaml"
 #      - "yaml/features/evu.yaml"
+#      - "yaml/features/solar.yaml"
 #
 # This sends anonymous data to an MQTT server:
 # - Events: Triggered by switch/setting changes.

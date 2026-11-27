@@ -83,8 +83,13 @@ We will use the terminal to ensure everything goes into the correct folders auto
     ```yaml
     analytics: !include { file: OneESP32ToRuleThemAll/yaml/features/analytics.yaml, vars: { district: '"Landkreis"' }}
     ```
-4.  **Entities:** Provide your Home Assistant entity IDs for temperature and humidity so the ESP32 can use them.
-5.  **Adjust Board/Pins:** If you are using different hardware (not the default POE board), change the `board` type and SPI/CAN pins in this file now.
+4.  **Solar Opt-in (only for "Sol" devices):** If your heat pump is a solar thermal variant (e.g. THZ 304 SOL), add the solar feature to the `packages:` section:
+    ```yaml
+    solar: !include { file: OneESP32ToRuleThemAll/yaml/features/solar.yaml }
+    ```
+    This adds solar thermal energy sensors (heating, hot water and cooling energy counters). All other device types can skip this step.
+5.  **Entities:** Provide your Home Assistant entity IDs for temperature and humidity so the ESP32 can use them.
+6.  **Adjust Board/Pins:** If you are using different hardware (not the default POE board), change the `board` type and SPI/CAN pins in this file now.
 
 </details>
 
