@@ -47,3 +47,6 @@ packages:
   MAX_DAUER_WW_ERZEUGUNG:  !include { file: templates/wp_generic.yaml    , vars: { property: "MAX_DAUER_WW_ERZEUGUNG" , update_interval: $interval_very_slow, unit: "h", icon: "mdi:timer-sand" }}
   WW_PUFFERBETRIEB:        !include { file: templates/wp_generic.yaml    , vars: { property: "WW_PUFFERBETRIEB"       , update_interval: $interval_very_slow, icon: "mdi:water-boiler" }}
   ANTILEGIONELLEN_ZEIT:    !include { file: templates/wp_generic.yaml    , vars: { property: "ANTILEGIONELLEN_ZEIT"   , update_interval: $interval_very_slow, unit: "h", scaler: "0.25", accuracy_decimals: "2", icon: "mdi:clock-outline" }}
+  OEFFNUNGSGRAD_EXV:  !include { file: templates/wp_generic.yaml, vars: { property: "OEFFNUNGSGRAD_EXV",  unit: "%", accuracy_decimals: "1", target: "Kessel", icon: "mdi:valve", update_interval: $interval_medium }}
+  SOLL_UEBERHITZUNG:  !include { file: templates/wp_generic.yaml, vars: { property: "SOLL_UEBERHITZUNG",  unit: "K", accuracy_decimals: "1", target: "Kessel", icon: "mdi:thermometer-lines", update_interval: $interval_medium }}
+  IST_UEBERHITZUNG_V: !include { file: templates/wp_generic.yaml, vars: { property: "IST_UEBERHITZUNG_V", unit: "K", accuracy_decimals: "1", target: "Kessel", icon: "mdi:thermometer-lines", update_interval: $interval_medium }}
